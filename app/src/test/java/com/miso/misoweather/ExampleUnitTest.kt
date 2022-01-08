@@ -1,4 +1,4 @@
-package com.miso.weatherchat
+package com.miso.misoweather
 
 import org.junit.Test
 

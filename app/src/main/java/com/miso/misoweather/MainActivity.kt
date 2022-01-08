@@ -1,8 +1,8 @@
-package com.miso.weatherchat
+package com.miso.misoweather
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.miso.weatherchat.databinding.ActivityLoginBinding
+import com.miso.misoweather.databinding.ActivityLoginBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding:ActivityLoginBinding
