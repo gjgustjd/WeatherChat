@@ -32,6 +32,20 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_logo"
         app:layout_constraintVertical_weight="2">
 
+        <ImageView
+            android:id="@+id/img_icon_kakao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:adjustViewBounds="true"
+            android:cropToPadding="true"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_kakao_login"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_kakao_login"
+            app:srcCompat="@drawable/icon_kakao" />
+
         <Button
             android:id="@+id/btn_kakao_login"
             android:layout_width="0dp"
