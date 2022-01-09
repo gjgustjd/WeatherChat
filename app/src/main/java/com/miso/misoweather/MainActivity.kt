@@ -8,6 +8,8 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.KakaoSdkError
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.databinding.ActivityLoginBinding
+import com.miso.misoweather.databinding.ActivityMainBinding
+import com.miso.misoweather.databinding.ActivitySplashBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityLoginBinding
