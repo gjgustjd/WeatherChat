@@ -3,8 +3,11 @@ package com.miso.misoweather
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.kakao.sdk.auth.AuthApiClient
+import com.kakao.sdk.common.model.KakaoSdkError
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.databinding.ActivityLoginBinding
+import com.miso.misoweather.databinding.ActivitySplashBinding
 
 class LoginActivity : AppCompatActivity() {
     lateinit var binding: ActivityLoginBinding
@@ -14,11 +17,31 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.clBtnKakaoLogin.setOnClickListener {
-//          checkKakaoTokenAndLogin()
+          checkKakaoTokenAndLogin()
         }
     }
 
-
+    fun checkKakaoTokenAndLogin(){
+        if (AuthApiClient.instance.hasToken()) {
+            UserApiClient.instance.accessTokenInfo { _, error ->
+                if (error != null) {
+                    if (error is KakaoSdkError && error.isInvalidTokenError() == true) {
+                        //로그인 필요
+                        kakaoLogin()
+                    }
+                    else {
+                        //기타 에러
+                    }
+                }
+                else {
+                    //토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
+                }
+            }
+        }
+        else {
+            kakaoLogin()
+        }
+    }
     fun kakaoLogin()
     {
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@LoginActivity)) {
