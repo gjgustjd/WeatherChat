@@ -39,22 +39,38 @@
         android:id="@+id/grid_regions"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@id/buttonLayout"
         app:layout_constraintEnd_toEndOf="@+id/txt_titleText"
         app:layout_constraintStart_toStartOf="@+id/txt_titleText"
         app:layout_constraintTop_toBottomOf="@+id/txt_titleText"
-        app:layout_constraintVertical_weight="3" />
+        app:layout_constraintVertical_chainStyle="spread"
+        app:layout_constraintVertical_weight="3"
+        tools:listitem="@layout/grid_region">
 
-    <Button
-        android:id="@+id/button"
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/buttonLayout"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        android:background="@drawable/button_black_background"
-        android:text="다음"
-        android:textColor="@android:color/white"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/txt_titleText"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/txt_titleText" />
+        app:layout_constraintEnd_toEndOf="@+id/grid_regions"
+        app:layout_constraintStart_toStartOf="@+id/grid_regions"
+        app:layout_constraintTop_toBottomOf="@+id/grid_regions"
+        app:layout_constraintVertical_weight="2">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_black_background"
+            android:text="다음"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

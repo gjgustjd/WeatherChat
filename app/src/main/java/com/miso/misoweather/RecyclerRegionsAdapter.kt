@@ -15,13 +15,16 @@ class RecyclerRegionsAdapter(var context: Context, var regions:Array<String>):Re
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
+        val layoutParams = holder.itemView.layoutParams
+        layoutParams.height=140
+        holder.itemView.requestLayout()
         val data = regions.get(position)
        holder.setText(data)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder{
         val view = LayoutInflater.from(parent.context).inflate(R.layout.grid_region,parent,false)
-        return Holder(view)
+            return Holder(view)
     }
 
     class Holder(itemView:View):RecyclerView.ViewHolder(itemView){
