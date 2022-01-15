@@ -39,15 +39,29 @@
         android:id="@+id/grid_regions"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@id/buttonLayout"
         app:layout_constraintEnd_toEndOf="@+id/txt_titleText"
         app:layout_constraintStart_toStartOf="@+id/txt_titleText"
         app:layout_constraintTop_toBottomOf="@+id/txt_titleText"
         app:layout_constraintVertical_chainStyle="spread"
         app:layout_constraintVertical_weight="3"
-        tools:listitem="@layout/grid_region">
+        tools:listitem="@layout/grid_region"
+        tools:visibility="invisible">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_towns"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/buttonLayout"
+        app:layout_constraintEnd_toEndOf="@+id/txt_titleText"
+        app:layout_constraintStart_toStartOf="@+id/txt_titleText"
+        app:layout_constraintTop_toBottomOf="@+id/txt_titleText"
+        app:layout_constraintVertical_chainStyle="spread"
+        app:layout_constraintVertical_weight="3"
+        tools:listitem="@layout/list_item_town" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/buttonLayout"

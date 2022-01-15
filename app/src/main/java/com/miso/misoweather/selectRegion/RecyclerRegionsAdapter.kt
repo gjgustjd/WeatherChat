@@ -1,15 +1,13 @@
-package com.miso.misoweather
+package com.miso.misoweather.selectRegion
 
 import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import lombok.Getter
+import com.miso.misoweather.R
 
 class RecyclerRegionsAdapter(var context: Context, var regions:Array<String>):RecyclerView.Adapter<RecyclerRegionsAdapter.Holder>(){
 
@@ -42,7 +40,7 @@ class RecyclerRegionsAdapter(var context: Context, var regions:Array<String>):Re
         viewHolders.add(holder)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder{
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.grid_region,parent,false)
             return Holder(view)
     }

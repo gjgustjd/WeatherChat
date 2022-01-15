@@ -21,4 +21,23 @@
         <item>강원</item>
         <item>제주</item>
     </string-array>
+    <string-array name="towns">
+        <item>강남구</item>
+        <item>강동구</item>
+        <item>강북구</item>
+        <item>강서구</item>
+        <item>관악구</item>
+        <item>광진구</item>
+        <item>구로구</item>
+        <item>광주</item>
+        <item>전북</item>
+        <item>전남</item>
+        <item>대구</item>
+        <item>부산</item>
+        <item>울산</item>
+        <item>경북</item>
+        <item>경남</item>
+        <item>강원</item>
+        <item>제주</item>
+    </string-array>
 </resources>

@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:name=".SocketApplication"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".SelectRegionActivity">
+        <activity android:name=".selectRegion.SelectRegionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
