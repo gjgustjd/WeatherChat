@@ -35,7 +35,7 @@
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintVertical_weight="2" />
 
-    <GridView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/grid_regions"
         android:layout_width="0dp"
         android:layout_height="0dp"

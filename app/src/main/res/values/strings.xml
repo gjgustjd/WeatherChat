@@ -2,4 +2,11 @@
     <string name="app_name">WeatherChat</string>
     <string name="kakao_app_key">43a4e22b7b63572e7025afaf34a56966</string>
     <string name="kakao_native_key">43a4e22b7b63572e7025afaf34a56966</string>
+    <string-array name="regions">
+        <item>서울</item>
+        <item>경기</item>
+        <item>강원도</item>
+        <item>서울</item>
+        <item>충청</item>
+    </string-array>
 </resources>

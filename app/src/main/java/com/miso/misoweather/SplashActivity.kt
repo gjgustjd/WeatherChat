@@ -26,25 +26,4 @@ class SplashActivity :AppCompatActivity(){
        },5000)
     }
 
-    fun checkKakaoTokenAndLogin(){
-        if (AuthApiClient.instance.hasToken()) {
-            UserApiClient.instance.accessTokenInfo { _, error ->
-                if (error != null) {
-                    if (error is KakaoSdkError && error.isInvalidTokenError() == true) {
-                        //로그인 필요
-                        kakaoLogin()
-                    }
-                    else {
-                        //기타 에러
-                    }
-                }
-                else {
-                    //토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
-                }
-            }
-        }
-        else {
-            kakaoLogin()
-        }
-    }
 }
