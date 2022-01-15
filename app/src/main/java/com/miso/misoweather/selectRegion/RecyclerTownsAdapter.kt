@@ -2,7 +2,6 @@ package com.miso.misoweather.selectRegion
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Typeface.BOLD
 import android.graphics.Typeface.NORMAL
 import android.view.LayoutInflater
