@@ -19,14 +19,14 @@ class RecyclerRegionsAdapter(var context: Context, var regions:Array<String>):Re
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val layoutParams = holder.itemView.layoutParams
-        layoutParams.height=140
+        layoutParams.height=120
         holder.itemView.requestLayout()
         val data = regions.get(position)
        holder.setText(data)
         holder.itemView.setOnClickListener{
             if(holder.isSelected) {
                 holder.itemView.setBackgroundResource(R.drawable.grid_region_background)
-                holder.txt_name.setTextColor(Color.BLACK)
+                holder.txt_name.setTextColor(context.resources.getColor(R.color.primaryPurple))
             }
             else
             {

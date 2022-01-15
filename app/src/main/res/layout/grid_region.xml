@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/itemView"
-    android:layout_width="60dp"
-    android:layout_height="40dp"
+    android:layout_width="50dp"
+    android:layout_height="30dp"
     android:background="@drawable/grid_region_background">
 
     <TextView
@@ -13,8 +13,8 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="경기"
-        android:textColor="@color/black"
-        android:textSize="18sp"
+        android:textColor="@color/primaryPurple"
+        android:textSize="14dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

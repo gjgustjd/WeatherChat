@@ -35,7 +35,7 @@ class SelectRegionActivity :AppCompatActivity(){
         var adapter: RecyclerRegionsAdapter = RecyclerRegionsAdapter(this@SelectRegionActivity,regions)
         grid_region.adapter=adapter
         grid_region.layoutManager = GridLayoutManager(this,4)
-        val spaceDecoration = VerticalSpaceItemDecoration(40)
+        val spaceDecoration = VerticalSpaceItemDecoration(30)
         grid_region.addItemDecoration(spaceDecoration)
     }
     fun setRecyclerTowns()
