@@ -13,7 +13,6 @@ import lombok.Getter
 
 class RecyclerRegionsAdapter(var context: Context, var regions:Array<String>):RecyclerView.Adapter<RecyclerRegionsAdapter.Holder>(){
 
-    var selectedPosition:Int=-1
     var viewHolders:ArrayList<Holder> = ArrayList()
     
     override fun getItemCount(): Int {
@@ -27,15 +26,17 @@ class RecyclerRegionsAdapter(var context: Context, var regions:Array<String>):Re
         val data = regions.get(position)
        holder.setText(data)
         holder.itemView.setOnClickListener{
-            if(selectedPosition!=-1) {
-                var previousSelectedViewHolder = viewHolders.get(selectedPosition)
-                previousSelectedViewHolder.itemView.setBackgroundResource(R.drawable.grid_region_background)
-                previousSelectedViewHolder.txt_name.setTextColor(Color.BLACK)
+            if(holder.isSelected) {
+                holder.itemView.setBackgroundResource(R.drawable.grid_region_background)
+                holder.txt_name.setTextColor(Color.BLACK)
             }
+            else
+            {
+                holder.itemView.setBackgroundResource(R.drawable.grid_region_background_purple)
+                holder.txt_name.setTextColor(Color.WHITE)
+            }
+            holder.isSelected=!holder.isSelected
 
-            selectedPosition = position
-            viewHolders.get(selectedPosition).itemView.setBackgroundResource(R.drawable.grid_region_background_purple)
-            viewHolders.get(selectedPosition).txt_name.setTextColor(Color.WHITE)
 
         }
         viewHolders.add(holder)
@@ -48,6 +49,7 @@ class RecyclerRegionsAdapter(var context: Context, var regions:Array<String>):Re
 
     class Holder(itemView:View):RecyclerView.ViewHolder(itemView){
         var txt_name = itemView.findViewById<TextView>(R.id.txt_region_name)
+        var isSelected = false
         fun setText(listData:String)
         {
             txt_name.text = "${listData}"
