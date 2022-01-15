@@ -14,6 +14,7 @@ class SelectRegionActivity :AppCompatActivity(){
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        initializeViews()
 
     }
     fun initializeViews()
