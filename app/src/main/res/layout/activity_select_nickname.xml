@@ -22,11 +22,15 @@
         android:id="@+id/greetingLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/titleLayout"
-        app:layout_constraintEnd_toEndOf="@+id/titleLayout"
-        app:layout_constraintStart_toStartOf="@+id/titleLayout"
-        app:layout_constraintTop_toTopOf="@+id/titleLayout">
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintBottom_toTopOf="@id/imogeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgbtn_back"
+        app:layout_constraintVertical_bias="1"
+        app:layout_constraintVertical_chainStyle="spread"
+        app:layout_constraintVertical_weight="1">
 
         <TextView
             android:id="@+id/txt_greeting"
@@ -40,6 +44,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
@@ -59,99 +64,75 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/titleLayout"
+        android:id="@+id/imogeLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/grid_regions"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgbtn_back"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintVertical_weight="1">
+        app:layout_constraintBottom_toTopOf="@id/buttonLayout"
+        app:layout_constraintEnd_toEndOf="@+id/greetingLayout"
+        app:layout_constraintStart_toStartOf="@+id/greetingLayout"
+        app:layout_constraintTop_toBottomOf="@+id/greetingLayout"
+        app:layout_constraintVertical_chainStyle="spread"
+        app:layout_constraintVertical_weight="3">
 
-        <TextView
-            android:id="@+id/txt_titleText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="어떤 지역의 날씨를 위한"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            app:layout_constraintBottom_toTopOf="@id/txt_itemText"
+        <ImageView
+            android:id="@+id/img_Imoge"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintBottom_toTopOf="@id/explainLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintVertical_weight="3"
+            app:srcCompat="@drawable/icon_lion" />
 
-        <TextView
-            android:id="@+id/txt_titleText2"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/explainLayout"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="를 볼까요?"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            app:layout_constraintBottom_toBottomOf="@+id/txt_itemText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txt_itemText"
-            app:layout_constraintTop_toTopOf="@+id/txt_itemText"
-            app:layout_constraintVertical_chainStyle="packed" />
-
-        <TextView
-            android:id="@+id/txt_itemText"
-            android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:gravity="center_vertical"
-            android:text="간식거리"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold"
+            android:layout_marginTop="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/txt_titleText"
-            app:layout_constraintTop_toBottomOf="@+id/txt_titleText" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_Imoge"
+            app:layout_constraintVertical_weight="1">
 
+            <TextView
+                android:id="@+id/txt_get_new_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="닉네임 새로받기"
+                android:textColor="@android:color/black"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="닉네임이 마음에 들지 않으면 새로 받아보세요!\n한 번 결정된 닉네임은 바꿀 수 없어요."
+                android:textColor="@color/black"
+                android:textSize="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_get_new_nickname" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/grid_regions"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/buttonLayout"
-        app:layout_constraintEnd_toEndOf="@+id/titleLayout"
-        app:layout_constraintStart_toStartOf="@+id/titleLayout"
-        app:layout_constraintTop_toBottomOf="@+id/titleLayout"
-        app:layout_constraintVertical_chainStyle="spread"
-        app:layout_constraintVertical_weight="3"
-        tools:listitem="@layout/grid_region"
-        tools:visibility="invisible">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_towns"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="60dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonLayout"
-        app:layout_constraintEnd_toEndOf="@+id/titleLayout"
-        app:layout_constraintStart_toStartOf="@+id/titleLayout"
-        app:layout_constraintTop_toBottomOf="@+id/titleLayout"
-        app:layout_constraintVertical_chainStyle="spread"
-        app:layout_constraintVertical_weight="3"
-        tools:listitem="@layout/list_item_town" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/buttonLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/grid_regions"
-        app:layout_constraintStart_toStartOf="@+id/grid_regions"
-        app:layout_constraintTop_toBottomOf="@+id/grid_regions"
+        app:layout_constraintEnd_toEndOf="@+id/imogeLayout"
+        app:layout_constraintStart_toStartOf="@+id/imogeLayout"
+        app:layout_constraintTop_toBottomOf="@+id/imogeLayout"
         app:layout_constraintVertical_weight="2">
 
         <Button
@@ -160,7 +141,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button_black_background"
             android:backgroundTint="#7165E3"
-            android:text="다음"
+            android:text="이걸로 결정했어요!"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

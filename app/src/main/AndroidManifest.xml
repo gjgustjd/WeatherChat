@@ -11,11 +11,13 @@
         android:supportsRtl="true"
         android:name=".SocketApplication"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".selectRegion.SelectRegionActivity">
+        <activity android:name=".selectRegion.SelectNickNameActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".selectRegion.SelectRegionActivity">
         </activity>
         <activity android:name="com.miso.misoweather.SplashActivity">
         </activity>
