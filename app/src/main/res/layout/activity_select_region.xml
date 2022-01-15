@@ -18,22 +18,61 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/icon_arrow_back" />
 
-    <TextView
-        android:id="@+id/txt_titleText"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/titleLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
-        android:gravity="center_vertical"
-        android:text="어떤 지역의 날씨를 위한\n간식거리를 볼까요?"
-        android:textColor="@color/black"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@id/grid_regions"
+        app:layout_constraintBottom_toTopOf="@+id/grid_regions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgbtn_back"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintVertical_weight="2" />
+        app:layout_constraintVertical_weight="2">
+
+        <TextView
+            android:id="@+id/txt_titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="어떤 지역의 날씨를 위한"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@id/txt_itemText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/txt_titleText2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="를 볼까요?"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_itemText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txt_itemText"
+            app:layout_constraintTop_toTopOf="@+id/txt_itemText"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/txt_itemText"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:text="간식거리"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/txt_titleText"
+            app:layout_constraintTop_toBottomOf="@+id/txt_titleText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/grid_regions"
@@ -41,9 +80,9 @@
         android:layout_height="0dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@id/buttonLayout"
-        app:layout_constraintEnd_toEndOf="@+id/txt_titleText"
-        app:layout_constraintStart_toStartOf="@+id/txt_titleText"
-        app:layout_constraintTop_toBottomOf="@+id/txt_titleText"
+        app:layout_constraintEnd_toEndOf="@+id/titleLayout"
+        app:layout_constraintStart_toStartOf="@+id/titleLayout"
+        app:layout_constraintTop_toBottomOf="@+id/titleLayout"
         app:layout_constraintVertical_chainStyle="spread"
         app:layout_constraintVertical_weight="3"
         tools:listitem="@layout/grid_region"
@@ -56,9 +95,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/buttonLayout"
-        app:layout_constraintEnd_toEndOf="@+id/txt_titleText"
-        app:layout_constraintStart_toStartOf="@+id/txt_titleText"
-        app:layout_constraintTop_toBottomOf="@+id/txt_titleText"
+        app:layout_constraintEnd_toEndOf="@+id/titleLayout"
+        app:layout_constraintStart_toStartOf="@+id/titleLayout"
+        app:layout_constraintTop_toBottomOf="@+id/titleLayout"
         app:layout_constraintVertical_chainStyle="spread"
         app:layout_constraintVertical_weight="3"
         tools:listitem="@layout/list_item_town" />
