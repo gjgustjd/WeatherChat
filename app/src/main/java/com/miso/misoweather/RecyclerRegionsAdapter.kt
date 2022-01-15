@@ -10,13 +10,15 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerRegionsAdapter(var context: Context, var regions:Array<String>):RecyclerView.Adapter<RecyclerRegionsAdapter.Holder>(){
+
+    
     override fun getItemCount(): Int {
         return regions.size
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val layoutParams = holder.itemView.layoutParams
-        layoutParams.height=140
+        layoutParams.height=180
         holder.itemView.requestLayout()
         val data = regions.get(position)
        holder.setText(data)
