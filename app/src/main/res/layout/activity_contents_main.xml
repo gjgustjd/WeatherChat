@@ -43,6 +43,7 @@
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/imgbtn_profile"
         app:layout_constraintStart_toStartOf="@+id/imgbtn_banner"
@@ -56,7 +57,6 @@
                 android:id="@+id/txt_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:gravity="start|center_vertical"
                 android:text="서울의 유쾌한 뚱뚱보사자님"
                 android:textColor="@color/black"
@@ -229,6 +229,79 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/label_max"
                     app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/mainLayout"
+                android:layout_width="match_parent"
+                android:layout_height="1000dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/unit_background"
+                app:layout_constraintEnd_toEndOf="@+id/weatherLayout"
+                app:layout_constraintStart_toStartOf="@+id/weatherLayout"
+                app:layout_constraintTop_toBottomOf="@+id/weatherLayout">
+
+                <ImageButton
+                    android:id="@+id/imgbtn_show_detail2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/btn_arrow_next_small" />
+
+                <TextView
+                    android:id="@+id/txt_apparell_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:text="오늘 서울 사람들이\n가장 많이 입은 외투는?"
+                    android:textColor="@color/textBlack"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/imgbtn_show_detail2" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/chartLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@drawable/unit_background"
+                    android:backgroundTint="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_apparell_title">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/txt_chat_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:text="오늘 날씨에 대해\n다들 무슨 얘기하고 있을까?"
+                    android:textColor="@color/textBlack"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/txt_apparell_title"
+                    app:layout_constraintTop_toBottomOf="@+id/chartLayout" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_chats"
+                    android:layout_width="0dp"
+                    android:layout_height="400dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintEnd_toEndOf="@+id/chartLayout"
+                    app:layout_constraintStart_toStartOf="@+id/chartLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_chat_title"
+                    tools:listitem="@layout/list_item_chat" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
