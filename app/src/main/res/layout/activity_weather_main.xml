@@ -443,7 +443,6 @@
                 android:layout_height="400dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/unit_background"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dustLayout">
@@ -484,6 +483,126 @@
                     app:layout_constraintStart_toStartOf="@+id/txt_title_projection_day"
                     app:layout_constraintTop_toBottomOf="@+id/label_title_projection"
                     tools:listitem="@layout/list_weather_day" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/windLayout"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/unit_background"
+                app:layout_constraintEnd_toStartOf="@id/humidLayout"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/projectionLayout">
+
+                <TextView
+                    android:id="@+id/txt_degree_wind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="약간 강해요"
+                    android:textColor="@color/textBlack"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/img_leaf"
+                    app:layout_constraintStart_toEndOf="@+id/img_leaf"
+                    app:layout_constraintTop_toBottomOf="@id/label_wind_degree"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <TextView
+                    android:id="@+id/label_wind_degree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="바람이"
+                    android:textColor="@color/textBlack"
+                    app:layout_constraintBottom_toTopOf="@id/txt_degree_wind"
+                    app:layout_constraintStart_toEndOf="@+id/img_leaf"
+                    app:layout_constraintTop_toTopOf="@+id/img_leaf"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <TextView
+                    android:id="@+id/label_wind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="풍속"
+                    android:textColor="@color/textBlack"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <ImageView
+                    android:id="@+id/img_leaf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/label_wind"
+                    app:layout_constraintTop_toBottomOf="@+id/label_wind"
+                    app:srcCompat="@drawable/icon_leaf" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/humidLayout"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/unit_background"
+                app:layout_constraintBottom_toBottomOf="@id/windLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/windLayout"
+                app:layout_constraintTop_toTopOf="@+id/windLayout">
+
+                <TextView
+                    android:id="@+id/label_humid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:text="습도"
+                    android:textColor="@color/textBlack"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <TextView
+                    android:id="@+id/txt_degree_humid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="40%"
+                    android:textColor="@color/textBlack"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_humid"
+                    app:layout_constraintStart_toEndOf="@+id/img_humid"
+                    app:layout_constraintTop_toTopOf="@+id/img_humid"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <ImageView
+                    android:id="@+id/img_humid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/label_humid"
+                    app:layout_constraintTop_toBottomOf="@+id/label_humid"
+                    app:srcCompat="@drawable/icon_drop" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
