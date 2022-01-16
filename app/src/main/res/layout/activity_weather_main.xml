@@ -248,6 +248,7 @@
                 android:id="@+id/dustLayout"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/unit_background"
                 app:layout_constraintEnd_toStartOf="@id/rainLayout"
@@ -373,7 +374,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@+id/dustLayout"
-                app:layout_constraintTop_toBottomOf="@+id/wheatherOnDaysLayout">
+                app:layout_constraintTop_toTopOf="@+id/dustLayout">
 
                 <TextView
                     android:id="@+id/label_rain"
@@ -434,6 +435,55 @@
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toEndOf="@+id/label_rain_emotion"
                     app:layout_constraintTop_toTopOf="@+id/label_rain_emotion" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/projectionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/unit_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dustLayout">
+
+                <TextView
+                    android:id="@+id/txt_title_projection_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:text="10"
+                    android:textColor="@color/textBlack"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/label_title_projection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="일 예보"
+                    android:textColor="@color/textBlack"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/txt_title_projection_day"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/txt_title_projection_day"
+                    app:layout_constraintTop_toBottomOf="@+id/label_title_projection"
+                    tools:listitem="@layout/list_weather_day" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
