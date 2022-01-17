@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -604,6 +604,133 @@
                     app:layout_constraintTop_toBottomOf="@+id/label_humid"
                     app:srcCompat="@drawable/icon_drop" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/sunLayout"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/unit_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/humidLayout"
+                app:layout_constraintStart_toStartOf="@id/humidLayout"
+                app:layout_constraintTop_toBottomOf="@id/humidLayout">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/left"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/label_sunrise_beforenoon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="오전"
+                        android:textColor="@color/textBlack"
+                        android:textSize="14dp"
+                        app:layout_constraintBottom_toTopOf="@id/txt_sunrise_time"
+                        app:layout_constraintStart_toEndOf="@id/img_sunrise"
+                        app:layout_constraintTop_toTopOf="@id/img_sunrise"
+                        app:layout_constraintVertical_chainStyle="packed" />
+
+                    <TextView
+                        android:id="@+id/label_sunrise"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="15dp"
+                        android:text="일출시간"
+                        android:textColor="@color/textBlack"
+                        android:textSize="12dp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@id/label_sunset"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_chainStyle="packed" />
+
+                    <ImageView
+                        android:id="@+id/img_sunrise"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@id/left"
+                        app:layout_constraintStart_toStartOf="@id/label_sunrise"
+                        app:layout_constraintTop_toBottomOf="@id/label_sunrise"
+                        app:srcCompat="@drawable/icon_sunrise" />
+
+                    <TextView
+                        android:id="@+id/txt_sunrise_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="7시 47분"
+                        android:textColor="@color/textBlack"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@id/img_sunrise"
+                        app:layout_constraintStart_toStartOf="@id/label_sunrise_beforenoon"
+                        app:layout_constraintTop_toBottomOf="@id/label_sunrise_beforenoon" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/right"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/txt_sunset_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5시 28분"
+                        android:textColor="@color/textBlack"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@id/img_sunset"
+                        app:layout_constraintStart_toStartOf="@id/label_sunset_afternoon"
+                        app:layout_constraintTop_toBottomOf="@id/label_sunset_afternoon" />
+
+                    <TextView
+                        android:id="@+id/label_sunset_afternoon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="오전"
+                        android:textColor="@color/textBlack"
+                        android:textSize="14dp"
+                        app:layout_constraintBottom_toTopOf="@id/txt_sunset_time"
+                        app:layout_constraintStart_toEndOf="@id/img_sunset"
+                        app:layout_constraintTop_toTopOf="@id/img_sunset"
+                        app:layout_constraintVertical_chainStyle="packed" />
+
+                    <TextView
+                        android:id="@+id/label_sunset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="15dp"
+                        android:text="일몰시간"
+                        android:textColor="@color/textBlack"
+                        android:textSize="12dp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/img_sunset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@id/right"
+                        app:layout_constraintStart_toStartOf="@id/label_sunset"
+                        app:layout_constraintTop_toBottomOf="@+id/label_sunset"
+                        app:srcCompat="@drawable/icon_sunset" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
