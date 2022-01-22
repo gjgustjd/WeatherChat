@@ -33,7 +33,7 @@
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="오늘 날씨에는"
+            android:text="이모티콘🌧️텍스트 🌧︎기본 🌧"
             android:textColor="@color/white"
             android:textSize="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/img_cloud"
