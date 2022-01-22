@@ -3,17 +3,9 @@ package com.miso.misoweather.getnickname
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
-import android.widget.LinearLayout.VERTICAL
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.miso.misoweather.R
-import com.miso.misoweather.common.VerticalSpaceItemDecoration
 import com.miso.misoweather.databinding.ActivitySelectNicknameBinding
-import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.model.DTO.NicknameResponseDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import retrofit2.Call
@@ -56,11 +48,11 @@ class SelectNickNameActivity :AppCompatActivity(){
                 response: Response<NicknameResponseDto>
             ) {
                 Log.i("결과","성공")
-                Log.i("결과","닉네임 : ${response.body()?.nickname}")
+                Log.i("결과","닉네임 : ${response.body()?.data?.nickname}")
             }
 
             override fun onFailure(call: Call<NicknameResponseDto>, t: Throwable) {
-                Log.i("결과","실패")
+                Log.i("결과","실패 : $t")
             }
         })
     }

@@ -1,6 +1,7 @@
 package com.miso.misoweather.model.DTO
 
-class NicknameResponseDto {
-    var emoji:String=""
-    var nickname:String=""
-}
+data class NicknameResponseDto(
+    val `data`: Data,
+    val message: String,
+    val status: String
+)
