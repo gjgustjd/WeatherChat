@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.miso.misoweather.databinding.ActivitySelectNicknameBinding
+import com.miso.misoweather.model.DTO.Data
 import com.miso.misoweather.model.DTO.NicknameResponseDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import retrofit2.Call
@@ -17,6 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SelectNickNameActivity :AppCompatActivity(){
     lateinit var binding:ActivitySelectNicknameBinding
     lateinit var txt_get_new_nick:TextView
+    var nicknameResponseDto: NicknameResponseDto = NicknameResponseDto(Data("",""),"","")
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState);
         binding = ActivitySelectNicknameBinding.inflate(layoutInflater)
@@ -28,6 +30,9 @@ class SelectNickNameActivity :AppCompatActivity(){
     {
         txt_get_new_nick = binding.txtGetNewNickname
         txt_get_new_nick.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        txt_get_new_nick.setOnClickListener(){
+           getNickname()
+        }
         getNickname()
     }
 
@@ -49,6 +54,9 @@ class SelectNickNameActivity :AppCompatActivity(){
             ) {
                 Log.i("결과","성공")
                 Log.i("결과","닉네임 : ${response.body()?.data?.nickname}")
+                nicknameResponseDto = response.body()!!
+                binding.txtGreetingBold.text = "${nicknameResponseDto.data.nickname}님!"
+                binding.txtEmoji.text = "${nicknameResponseDto.data.emoji}"
             }
 
             override fun onFailure(call: Call<NicknameResponseDto>, t: Throwable) {
