@@ -21,7 +21,7 @@ class RecyclerRegionsAdapter(var context: Context, var regions: Array<String>) :
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val layoutParams = holder.itemView.layoutParams
-        layoutParams.height = 120
+        layoutParams.height = 80
         holder.itemView.requestLayout()
         val data = regions.get(position)
         holder.setText(data)
