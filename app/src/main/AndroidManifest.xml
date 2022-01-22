@@ -13,7 +13,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".selectRegion.WeatherMainActivity">
         </activity>
-        <activity android:name=".selectRegion.SelectNickNameActivity">
+        <activity android:name=".getnickname.SelectNickNameActivity">
         </activity>
         <activity android:name=".selectRegion.SelectRegionActivity">
         </activity>
