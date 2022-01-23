@@ -17,14 +17,14 @@
         <activity android:name=".getnickname.SelectNickNameActivity">
         </activity>
         <activity android:name=".selectRegion.SelectRegionActivity">
+        </activity>
+        <activity android:name="com.miso.misoweather.SplashActivity">
+        </activity>
+        <activity android:name="com.miso.misoweather.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name="com.miso.misoweather.SplashActivity">
-        </activity>
-        <activity android:name="com.miso.misoweather.LoginActivity">
         </activity>
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
