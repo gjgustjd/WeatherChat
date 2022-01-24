@@ -23,48 +23,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
     lateinit var binding: ActivityLoginBinding
-    lateinit var prefs:SharedPreferences
+    lateinit var prefs: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        binding.clBtnKakaoLogin.setOnClickListener {
-          checkKakaoTokenAndLogin()
-        }
         prefs = getSharedPreferences("access_token", Context.MODE_PRIVATE)
-    }
-
-    fun checkKakaoTokenAndLogin(){
-        if (AuthApiClient.instance.hasToken()) {
-            UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-                if (error != null) {
-                    if (error is KakaoSdkError && error.isInvalidTokenError() == true) {
-                        //로그인 필요
-                        kakaoLogin()
-                    }
-                    else {
-                        //기타 에러
-                    }
-                }
-                else {
-                    Log.i("miso", "로그인 성공")
-                        if(error!=null)
-                            Log.i("token","토큰 정보 보기 실패",error)
-                        else if(tokenInfo!=null)
-                        {
-                            Log.i("token","토큰 정보 보기 성공"+
-                                    "\n회원번호:${tokenInfo.id}")
-                            prefs!!.edit().putString("accessToken",tokenInfo.id.toString()).apply()
-                            startActivity(Intent(this,SelectRegionActivity::class.java))
-                        }
-                }
-            }
-        }
-        else {
+        binding.clBtnKakaoLogin.setOnClickListener {
             kakaoLogin()
         }
     }
+
     fun kakaoLogin() {
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@LoginActivity)) {
             UserApiClient.instance.loginWithKakaoTalk(this@LoginActivity) { token, error ->
