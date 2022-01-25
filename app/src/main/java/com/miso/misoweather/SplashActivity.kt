@@ -15,36 +15,36 @@ import com.miso.misoweather.login.LoginActivity
 import com.miso.misoweather.selectRegion.SelectRegionActivity
 import com.miso.misoweather.selectRegion.WeatherMainActivity
 
-class SplashActivity :AppCompatActivity(){
+class SplashActivity : AppCompatActivity() {
     lateinit var binding: ActivitySplashBinding
     lateinit var prefs: SharedPreferences
 
-    override fun onCreate(savedInstanceState: Bundle?){
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        prefs = getSharedPreferences("access_token", Context.MODE_PRIVATE)
+        prefs = getSharedPreferences("misoweather", Context.MODE_PRIVATE)
         moveToLogin()
     }
 
-    fun moveToLogin()
-    {
-       Handler().postDelayed({
-          checkKakaoTokenAndLogin()
-       },5000)
+    fun moveToLogin() {
+        Handler().postDelayed({
+            checkKakaoTokenAndLogin()
+            finish()
+        }, 2000)
     }
 
-    fun checkKakaoTokenAndLogin(){
-        if(prefs.getString("accesToken","").equals(""))
-        {
+    fun checkKakaoTokenAndLogin() {
+        if (prefs.getString("accessToken", "").equals("")) {
             startActivity(Intent(this, LoginActivity::class.java))
-        }
-        else
-        {
-           if(prefs.getString("misoToken","").equals(""))
-               startActivity(Intent(this, SelectRegionActivity::class.java))
+        } else {
+            var intent: Intent
+            if (prefs.getString("misoToken", "").equals(""))
+                intent = Intent(this, SelectRegionActivity::class.java)
             else
-               startActivity(Intent(this, WeatherMainActivity::class.java))
+                intent = Intent(this, WeatherMainActivity::class.java)
+
+            startActivity(intent)
         }
     }
 }

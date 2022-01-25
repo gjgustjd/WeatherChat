@@ -28,7 +28,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        prefs = getSharedPreferences("access_token", Context.MODE_PRIVATE)
+        prefs = getSharedPreferences("misoweather", Context.MODE_PRIVATE)
         binding.clBtnKakaoLogin.setOnClickListener {
             kakaoLogin()
         }

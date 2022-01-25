@@ -25,6 +25,12 @@ class RecyclerRegionsAdapter(var context: Context, var regions: Array<String>) :
         holder.itemView.requestLayout()
         val data = regions.get(position)
         holder.setText(data)
+        if(position==0) {
+            selectedIndex = position
+            holder.itemView.setBackgroundResource(R.drawable.grid_region_background_purple)
+            holder.txt_name.setTextColor(Color.WHITE)
+        }
+
         holder.itemView.setOnClickListener {
             if (selectedIndex != -1) {
                 var viewHolder = viewHolders.get(selectedIndex)
