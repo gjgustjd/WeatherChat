@@ -1,4 +1,4 @@
-package com.miso.misoweather.selectRegion
+package com.miso.misoweather.selectTown
 
 import android.content.Context
 import android.graphics.Color
@@ -32,9 +32,9 @@ class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
         layoutParams.height = 140
         holder.itemView.requestLayout()
         var region = regions.get(position)
-        var name: String = region.bigScale
-        if (!region.midScale.contains("선택 안 함"))
-            name += " " + region.midScale
+        var name: String = region.midScale
+        if (region.midScale.contains("선택 안 함"))
+            name = "전체"
         holder.setText(name)
         applySelection(holder,selectedPosition==position)
         holder.itemView.setOnClickListener {
@@ -43,7 +43,7 @@ class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
         viewHolders.add(holder)
     }
 
-    fun applySelection(holder: Holder,isSelected:Boolean)
+    fun applySelection(holder: Holder, isSelected:Boolean)
     {
         try {
             var txt_name = holder.txt_name

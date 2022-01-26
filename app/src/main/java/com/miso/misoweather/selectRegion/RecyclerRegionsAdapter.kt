@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
 
-class RecyclerRegionsAdapter(var context: Context, var regions: Array<String>) :
+class RecyclerRegionsAdapter(var context: Context, var regions: ArrayList<RegionItem>) :
     RecyclerView.Adapter<RecyclerRegionsAdapter.Holder>() {
 
     var viewHolders: ArrayList<Holder> = ArrayList()
@@ -24,7 +24,7 @@ class RecyclerRegionsAdapter(var context: Context, var regions: Array<String>) :
         layoutParams.height = 80
         holder.itemView.requestLayout()
         val data = regions.get(position)
-        holder.setText(data)
+        holder.setText(data.shortName)
         if(position==0) {
             selectedIndex = position
             holder.itemView.setBackgroundResource(R.drawable.grid_region_background_purple)
@@ -50,11 +50,15 @@ class RecyclerRegionsAdapter(var context: Context, var regions: Array<String>) :
         return Holder(view)
     }
 
-    fun getSelectedItemName():String
+    fun getSelectedItemShortName():String
     {
-        return regions.get(selectedIndex)
+        return regions.get(selectedIndex).shortName
     }
 
+    fun getSelectedItemLongName():String
+    {
+        return regions.get(selectedIndex).longName
+    }
     class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var txt_name = itemView.findViewById<TextView>(R.id.txt_region_name)
         fun setText(listData: String) {

@@ -12,13 +12,13 @@
         android:name=".SocketApplication"
         android:networkSecurityConfig="@xml/network_config"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".selectRegion.WeatherMainActivity">
+        <activity android:name=".WeatherMainActivity">
         </activity>
         <activity android:name=".getnickname.SelectNickNameActivity">
         </activity>
         <activity android:name=".selectRegion.SelectRegionActivity">
         </activity>
-        <activity android:name=".selectRegion.SelectTownActivity">
+        <activity android:name=".selectTown.SelectTownActivity">
         </activity>
         <activity android:name="com.miso.misoweather.SplashActivity">
             <intent-filter>

@@ -1,4 +1,4 @@
-package com.miso.misoweather.selectRegion
+package com.miso.misoweather
 
 import android.os.Bundle
 import android.widget.LinearLayout.VERTICAL
