@@ -11,15 +11,20 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
 import com.miso.misoweather.model.DTO.ApiResponseWithData.Region
+import java.lang.Exception
 
 class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
     RecyclerView.Adapter<RecyclerTownsAdapter.Holder>() {
-    var selectedPosition: Int = -1
+    var selectedPosition: Int = 0
 
     var viewHolders: ArrayList<Holder> = ArrayList()
 
     override fun getItemCount(): Int {
         return regions.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
@@ -31,19 +36,37 @@ class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
         if (!region.midScale.contains("선택 안 함"))
             name += " " + region.midScale
         holder.setText(name)
-
+        applySelection(holder,selectedPosition==position)
         holder.itemView.setOnClickListener {
-            if (selectedPosition != -1) {
-                var txt_name = viewHolders.get(selectedPosition).txt_name
+            selectItem(position)
+        }
+        viewHolders.add(holder)
+    }
+
+    fun applySelection(holder: Holder,isSelected:Boolean)
+    {
+        try {
+            var txt_name = holder.txt_name
+            if (isSelected) {
+                txt_name.setTextColor(context.resources.getColor(R.color.primaryPurple))
+                txt_name.setTypeface(null, BOLD)
+            } else {
                 txt_name.setTextColor(Color.BLACK)
                 txt_name.setTypeface(null, NORMAL)
             }
-            selectedPosition = position
-            var txt_name = viewHolders.get(selectedPosition).txt_name
-            txt_name.setTextColor(context.resources.getColor(R.color.primaryPurple))
-            txt_name.setTypeface(null, BOLD)
+        }catch (e:Exception){
+            e.printStackTrace()
         }
-        viewHolders.add(holder)
+
+    }
+
+     fun selectItem(position:Int)
+    {
+        if (selectedPosition != -1) {
+            applySelection(viewHolders.get(selectedPosition),false)
+        }
+        selectedPosition = position
+        applySelection(viewHolders.get(selectedPosition),true)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -54,7 +77,6 @@ class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
 
     class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var txt_name = itemView.findViewById<TextView>(R.id.txt_region_name)
-        var isSelected = false
         fun setText(listData: String) {
             txt_name.text = "${listData}"
         }
