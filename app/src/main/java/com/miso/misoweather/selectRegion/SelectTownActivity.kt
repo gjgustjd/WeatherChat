@@ -2,6 +2,8 @@ package com.miso.misoweather.selectRegion
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout.VERTICAL
@@ -34,6 +36,9 @@ class SelectTownActivity :AppCompatActivity(){
     {
         grid_region = binding.gridRegions
         list_towns = binding.recyclerTowns
+
+        grid_region.visibility=GONE
+        list_towns.visibility= VISIBLE
         btn_back = binding.imgbtnBack
         btn_next = binding.btnAction
         btn_back.setOnClickListener(){
