@@ -10,8 +10,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
+import com.miso.misoweather.model.DTO.ApiResponseWithData.Region
 
-class RecyclerTownsAdapter(var context: Context, var regions: Array<String>) :
+class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
     RecyclerView.Adapter<RecyclerTownsAdapter.Holder>() {
     var selectedPosition: Int = -1
 
@@ -25,14 +26,17 @@ class RecyclerTownsAdapter(var context: Context, var regions: Array<String>) :
         val layoutParams = holder.itemView.layoutParams
         layoutParams.height = 140
         holder.itemView.requestLayout()
-        val data = regions.get(position)
-        holder.setText(data)
+        var region = regions.get(position)
+        var name: String = region.bigScale
+        if (!region.midScale.contains("선택 안 함"))
+            name += " " + region.midScale
+        holder.setText(name)
 
         holder.itemView.setOnClickListener {
             if (selectedPosition != -1) {
                 var txt_name = viewHolders.get(selectedPosition).txt_name
                 txt_name.setTextColor(Color.BLACK)
-                txt_name.setTypeface(null,NORMAL)
+                txt_name.setTypeface(null, NORMAL)
             }
             selectedPosition = position
             var txt_name = viewHolders.get(selectedPosition).txt_name

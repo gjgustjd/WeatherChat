@@ -17,6 +17,7 @@ import com.miso.misoweather.login.LoginActivity
 
 class SelectRegionActivity : MisoActivity() {
     lateinit var binding:ActivitySelectRegionBinding
+    lateinit var gridAdapter: RecyclerRegionsAdapter
     lateinit var grid_region:RecyclerView
     lateinit var list_towns:RecyclerView
     lateinit var btn_back:ImageButton
@@ -27,8 +28,6 @@ class SelectRegionActivity : MisoActivity() {
         setContentView(binding.root)
         initializeViews()
         setRecyclerRegions()
-        setRecyclerTowns()
-
     }
     fun initializeViews()
     {
@@ -43,7 +42,9 @@ class SelectRegionActivity : MisoActivity() {
         }
        btn_next.setOnClickListener()
        {
-           startActivity(Intent(this,SelectTownActivity::class.java))
+           var intent:Intent = Intent(this,SelectTownActivity::class.java)
+           intent.putExtra("region",gridAdapter.getSelectedItemName())
+           startActivity(intent)
            transferToNext()
            finish()
        }
@@ -51,19 +52,10 @@ class SelectRegionActivity : MisoActivity() {
     fun setRecyclerRegions()
     {
         var regions= resources.getStringArray(R.array.regions)
-        var adapter: RecyclerRegionsAdapter = RecyclerRegionsAdapter(this@SelectRegionActivity,regions)
-        grid_region.adapter=adapter
+        gridAdapter = RecyclerRegionsAdapter(this@SelectRegionActivity,regions)
+        grid_region.adapter=gridAdapter
         grid_region.layoutManager = GridLayoutManager(this,4)
         val spaceDecoration = VerticalSpaceItemDecoration(30)
         grid_region.addItemDecoration(spaceDecoration)
-    }
-    fun setRecyclerTowns()
-    {
-        var towns= resources.getStringArray(R.array.towns)
-        var adapter: RecyclerTownsAdapter = RecyclerTownsAdapter(this@SelectRegionActivity,towns)
-        list_towns.adapter=adapter
-        list_towns.layoutManager = LinearLayoutManager(this)
-        val spaceDecoration = DividerItemDecoration(applicationContext,VERTICAL)
-        list_towns.addItemDecoration(spaceDecoration)
     }
 }

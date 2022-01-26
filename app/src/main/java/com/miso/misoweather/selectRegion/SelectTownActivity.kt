@@ -2,12 +2,11 @@ package com.miso.misoweather.selectRegion
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.util.Log
+import android.view.View.*
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout.VERTICAL
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +15,15 @@ import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.common.VerticalSpaceItemDecoration
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
-import com.miso.misoweather.login.LoginActivity
+import com.miso.misoweather.model.DTO.ApiResponseWithData.ApiResponseWithData
+import com.miso.misoweather.model.DTO.ApiResponseWithData.Region
+import com.miso.misoweather.model.DTO.NicknameResponseDto
+import com.miso.misoweather.model.interfaces.MisoWeatherAPI
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SelectTownActivity :MisoActivity(){
     lateinit var binding:ActivitySelectRegionBinding
@@ -24,13 +31,16 @@ class SelectTownActivity :MisoActivity(){
     lateinit var list_towns:RecyclerView
     lateinit var btn_back:ImageButton
     lateinit var btn_next: Button
+    lateinit var selectedRegion:String
+    lateinit var townRequestResult:ApiResponseWithData
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
         setContentView(binding.root)
+//        selectedRegion = intent.getStringExtra("region")!!
+        selectedRegion = "서울특별시"
         initializeViews()
-        setRecyclerRegions()
-        setRecyclerTowns()
+        getTownList()
 
     }
     fun initializeViews()
@@ -38,7 +48,7 @@ class SelectTownActivity :MisoActivity(){
         grid_region = binding.gridRegions
         list_towns = binding.recyclerTowns
 
-        grid_region.visibility=GONE
+        grid_region.visibility= INVISIBLE
         list_towns.visibility= VISIBLE
         btn_back = binding.imgbtnBack
         btn_next = binding.btnAction
@@ -50,22 +60,38 @@ class SelectTownActivity :MisoActivity(){
        btn_next.setOnClickListener()
        {
 //           startActivity(Intent(this,LoginActivity::class.java))
+//           transferToBack()
 //           finish()
        }
     }
-    fun setRecyclerRegions()
+
+    fun getTownList()
     {
-        var regions= resources.getStringArray(R.array.regions)
-        var adapter: RecyclerRegionsAdapter = RecyclerRegionsAdapter(this@SelectTownActivity,regions)
-        grid_region.adapter=adapter
-        grid_region.layoutManager = GridLayoutManager(this,4)
-        val spaceDecoration = VerticalSpaceItemDecoration(30)
-        grid_region.addItemDecoration(spaceDecoration)
+        val retrofit = Retrofit.Builder()
+            .baseUrl(MISOWEATHER_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(MisoWeatherAPI::class.java)
+        val callGetTownList = api.getCity(selectedRegion)
+
+        callGetTownList.enqueue(object : Callback<ApiResponseWithData> {
+            override fun onResponse(
+                call: Call<ApiResponseWithData>,
+                response: Response<ApiResponseWithData>) {
+                Log.i("getTownList","2단계 지역 받아오기 성공")
+                townRequestResult = response.body()!!
+                setRecyclerTowns()
+            }
+
+            override fun onFailure(call: Call<ApiResponseWithData>, t: Throwable) {
+                Log.i("getTownList","실패 : $t")
+            }
+        })
     }
     fun setRecyclerTowns()
     {
-        var towns= resources.getStringArray(R.array.towns)
-        var adapter: RecyclerTownsAdapter = RecyclerTownsAdapter(this@SelectTownActivity,towns)
+        var townList:List<Region> = townRequestResult.data.regionList
+        var adapter: RecyclerTownsAdapter = RecyclerTownsAdapter(this@SelectTownActivity,townList)
         list_towns.adapter=adapter
         list_towns.layoutManager = LinearLayoutManager(this)
         val spaceDecoration = DividerItemDecoration(applicationContext,VERTICAL)

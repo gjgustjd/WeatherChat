@@ -103,7 +103,7 @@
         app:layout_constraintVertical_chainStyle="spread"
         app:layout_constraintVertical_weight="3"
         tools:listitem="@layout/list_item_town"
-        tools:visibility="invisible" />
+        tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/buttonLayout"

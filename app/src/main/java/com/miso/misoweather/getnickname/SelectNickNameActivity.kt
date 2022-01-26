@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectNicknameBinding
 import com.miso.misoweather.model.DTO.Data
 import com.miso.misoweather.model.DTO.NicknameResponseDto
@@ -15,7 +16,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class SelectNickNameActivity :AppCompatActivity(){
+class SelectNickNameActivity :MisoActivity(){
     lateinit var binding:ActivitySelectNicknameBinding
     lateinit var txt_get_new_nick:TextView
     var nicknameResponseDto: NicknameResponseDto = NicknameResponseDto(Data("",""),"","")
@@ -38,10 +39,8 @@ class SelectNickNameActivity :AppCompatActivity(){
 
     fun getNickname()
     {
-        val BASE_URL_API = "http://3.35.55.100/"
-
         val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL_API)
+            .baseUrl(MISOWEATHER_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(MisoWeatherAPI::class.java)

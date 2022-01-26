@@ -50,6 +50,11 @@ class RecyclerRegionsAdapter(var context: Context, var regions: Array<String>) :
         return Holder(view)
     }
 
+    fun getSelectedItemName():String
+    {
+        return regions.get(selectedIndex)
+    }
+
     class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var txt_name = itemView.findViewById<TextView>(R.id.txt_region_name)
         fun setText(listData: String) {
