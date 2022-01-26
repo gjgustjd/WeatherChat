@@ -9,6 +9,7 @@ import android.util.Log
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.common.model.KakaoSdkError
 import com.kakao.sdk.user.UserApiClient
+import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityLoginBinding
 import com.miso.misoweather.databinding.ActivitySplashBinding
 import com.miso.misoweather.model.DTO.NicknameResponseDto
@@ -21,9 +22,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : MisoActivity() {
     lateinit var binding: ActivityLoginBinding
     lateinit var prefs: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -31,8 +33,11 @@ class LoginActivity : AppCompatActivity() {
         prefs = getSharedPreferences("misoweather", Context.MODE_PRIVATE)
         binding.clBtnKakaoLogin.setOnClickListener {
             kakaoLogin()
+
         }
     }
+
+
 
     fun kakaoLogin() {
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@LoginActivity)) {
@@ -52,6 +57,7 @@ class LoginActivity : AppCompatActivity() {
 
                             prefs!!.edit().putString("accessToken", tokenInfo.id.toString()).apply()
                             startActivity(Intent(this,SelectRegionActivity::class.java))
+                            transferToNext()
                         }
                     }
                 }

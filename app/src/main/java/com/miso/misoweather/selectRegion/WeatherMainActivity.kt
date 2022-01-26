@@ -8,11 +8,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
+import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.common.VerticalSpaceItemDecoration
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.databinding.ActivityWeatherMainBinding
 
-class WeatherMainActivity :AppCompatActivity(){
+class WeatherMainActivity :MisoActivity(){
     lateinit var binding:ActivityWeatherMainBinding
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState);

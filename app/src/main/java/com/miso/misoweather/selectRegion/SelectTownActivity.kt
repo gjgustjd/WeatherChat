@@ -13,11 +13,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
+import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.common.VerticalSpaceItemDecoration
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.login.LoginActivity
 
-class SelectTownActivity :AppCompatActivity(){
+class SelectTownActivity :MisoActivity(){
     lateinit var binding:ActivitySelectRegionBinding
     lateinit var grid_region:RecyclerView
     lateinit var list_towns:RecyclerView
@@ -43,6 +44,7 @@ class SelectTownActivity :AppCompatActivity(){
         btn_next = binding.btnAction
         btn_back.setOnClickListener(){
             startActivity(Intent(this,SelectRegionActivity::class.java))
+            transferToBack()
             finish()
         }
        btn_next.setOnClickListener()
