@@ -18,6 +18,8 @@
         </activity>
         <activity android:name=".selectRegion.SelectRegionActivity">
         </activity>
+        <activity android:name=".selectRegion.SelectTownActivity">
+        </activity>
         <activity android:name="com.miso.misoweather.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -15,7 +15,7 @@ import com.miso.misoweather.common.VerticalSpaceItemDecoration
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.login.LoginActivity
 
-class SelectRegionActivity :AppCompatActivity(){
+class SelectTownActivity :AppCompatActivity(){
     lateinit var binding:ActivitySelectRegionBinding
     lateinit var grid_region:RecyclerView
     lateinit var list_towns:RecyclerView
@@ -37,21 +37,19 @@ class SelectRegionActivity :AppCompatActivity(){
         btn_back = binding.imgbtnBack
         btn_next = binding.btnAction
         btn_back.setOnClickListener(){
-            startActivity(Intent(this,LoginActivity::class.java))
-            overridePendingTransition(R.anim.slide_left_enter,R.anim.slide_left_exit)
+            startActivity(Intent(this,SelectRegionActivity::class.java))
             finish()
         }
        btn_next.setOnClickListener()
        {
-           startActivity(Intent(this,SelectTownActivity::class.java))
-           overridePendingTransition(R.anim.slide_right_enter,R.anim.slide_right_exit)
-           finish()
+//           startActivity(Intent(this,LoginActivity::class.java))
+//           finish()
        }
     }
     fun setRecyclerRegions()
     {
         var regions= resources.getStringArray(R.array.regions)
-        var adapter: RecyclerRegionsAdapter = RecyclerRegionsAdapter(this@SelectRegionActivity,regions)
+        var adapter: RecyclerRegionsAdapter = RecyclerRegionsAdapter(this@SelectTownActivity,regions)
         grid_region.adapter=adapter
         grid_region.layoutManager = GridLayoutManager(this,4)
         val spaceDecoration = VerticalSpaceItemDecoration(30)
@@ -60,7 +58,7 @@ class SelectRegionActivity :AppCompatActivity(){
     fun setRecyclerTowns()
     {
         var towns= resources.getStringArray(R.array.towns)
-        var adapter: RecyclerTownsAdapter = RecyclerTownsAdapter(this@SelectRegionActivity,towns)
+        var adapter: RecyclerTownsAdapter = RecyclerTownsAdapter(this@SelectTownActivity,towns)
         list_towns.adapter=adapter
         list_towns.layoutManager = LinearLayoutManager(this)
         val spaceDecoration = DividerItemDecoration(applicationContext,VERTICAL)
