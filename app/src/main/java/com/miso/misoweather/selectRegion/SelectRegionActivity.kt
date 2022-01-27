@@ -44,9 +44,8 @@ class SelectRegionActivity : MisoActivity() {
            var intent:Intent = Intent(this, SelectTownActivity::class.java)
            intent.putExtra("region",bigScaleRegion)
            startActivity(intent)
-           prefs.edit().putString("BigScaleRegion",bigScaleRegion)
+           prefs.edit().putString("BigScaleRegion",bigScaleRegion).apply()
            transferToNext()
-           finish()
        }
     }
     fun setRecyclerRegions()

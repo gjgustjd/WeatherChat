@@ -36,12 +36,13 @@ class SelectAreaActivity :MisoActivity(){
     lateinit var selectedTown:String
     lateinit var townRequestResult:ApiResponseWithData
     lateinit var recyclerAdapter:RecyclerAreaAdapter
+
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        selectedRegion = intent.getStringExtra("region")?:""
-        selectedTown = intent.getStringExtra("town")?:""
+        selectedRegion = intent.getStringExtra("region")?:prefs.getString("BigScaleRegion","")!!
+        selectedTown = intent.getStringExtra("town")?:prefs.getString("MidScaleRegion","")!!
         initializeViews()
         getAreaList()
 
@@ -62,11 +63,14 @@ class SelectAreaActivity :MisoActivity(){
         }
        btn_next.setOnClickListener()
        {
+           var bigScaleRegion = recyclerAdapter.getSelectedItem().bigScale
+           var midScaleRegion = recyclerAdapter.getSelectedItem().midScale
            var smallScaleRegion = recyclerAdapter.getSelectedItem().smallScale
            startActivity(Intent(this,SelectNickNameActivity::class.java))
            transferToNext()
-           prefs.edit().putString("SmallScaleRegion",smallScaleRegion)
-           finish()
+           prefs.edit().putString("BigScaleRegion",bigScaleRegion).apply()
+           prefs.edit().putString("MidScaleRegion",midScaleRegion).apply()
+           prefs.edit().putString("SmallScaleRegion",smallScaleRegion).apply()
        }
     }
 

@@ -10,6 +10,7 @@ import android.widget.LinearLayout.VERTICAL
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.model.DTO.ApiResponseWithData.ApiResponseWithData
@@ -37,10 +38,17 @@ class SelectTownActivity :MisoActivity(){
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        selectedRegion = intent.getStringExtra("region")!!
+        selectedRegion = intent.getStringExtra("region")?:getShortRegionName()
         initializeViews()
         getTownList()
 
+    }
+    fun getShortRegionName():String
+    {
+        var regionsList = resources.getStringArray(R.array.regions).toList()
+        var regionsFullList = resources.getStringArray(R.array.regions_full).toList()
+        var regionShortName = regionsList.get(regionsFullList.indexOf(prefs.getString("BigScaleRegion","")!!))
+        return regionShortName
     }
     fun initializeViews()
     {
@@ -59,13 +67,14 @@ class SelectTownActivity :MisoActivity(){
        btn_next.setOnClickListener()
        {
            var midScaleRegion = recyclerAdapter.getSelectedItem().midScale
+           var bigScaleRegion = recyclerAdapter.getSelectedItem().bigScale
            var intent:Intent =Intent(this,SelectAreaActivity::class.java)
            intent.putExtra("region",recyclerAdapter.getSelectedItem().bigScale)
            intent.putExtra("town",midScaleRegion)
            startActivity(intent)
-           prefs.edit().putString("MidScaleRegion",midScaleRegion)
+           prefs.edit().putString("BigScaleRegion",bigScaleRegion).apply()
+           prefs.edit().putString("MidScaleRegion",midScaleRegion).apply()
            transferToNext()
-           finish()
        }
     }
 
