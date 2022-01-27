@@ -35,6 +35,7 @@ class SelectAreaActivity :MisoActivity(){
     lateinit var selectedRegion:String
     lateinit var selectedTown:String
     lateinit var townRequestResult:ApiResponseWithData
+    lateinit var recyclerAdapter:RecyclerAreaAdapter
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
@@ -61,8 +62,10 @@ class SelectAreaActivity :MisoActivity(){
         }
        btn_next.setOnClickListener()
        {
+           var smallScaleRegion = recyclerAdapter.getSelectedItem().smallScale
            startActivity(Intent(this,SelectNickNameActivity::class.java))
            transferToNext()
+           prefs.edit().putString("SmallScaleRegion",smallScaleRegion)
            finish()
        }
     }
@@ -93,8 +96,8 @@ class SelectAreaActivity :MisoActivity(){
     fun setRecyclerTowns()
     {
         var townList:List<Region> = townRequestResult.data.regionList
-        var adapter = RecyclerAreaAdapter(this@SelectAreaActivity,townList)
-        list_towns.adapter=adapter
+        recyclerAdapter = RecyclerAreaAdapter(this@SelectAreaActivity,townList)
+        list_towns.adapter=recyclerAdapter
         list_towns.layoutManager = LinearLayoutManager(this)
         val spaceDecoration = DividerItemDecoration(applicationContext,VERTICAL)
         list_towns.addItemDecoration(spaceDecoration)
