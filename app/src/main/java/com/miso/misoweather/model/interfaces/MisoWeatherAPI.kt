@@ -15,4 +15,8 @@ interface MisoWeatherAPI {
 
  @GET("api/region/{bigScaleRegion}")
  fun getCity(@Path("bigScaleRegion") bigScaleRegion:String):Call<ApiResponseWithData>
+
+ @GET("api/region/{bigScaleRegion}/{midScaleRegion}")
+ fun getArea(@Path("bigScaleRegion") bigScaleRegion:String,
+ @Path("midScaleRegion")midScaleRegion:String):Call<ApiResponseWithData>
 }

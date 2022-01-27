@@ -1,4 +1,4 @@
-package com.miso.misoweather.selectTown
+package com.miso.misoweather.selectArea
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,31 +15,32 @@ import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.model.DTO.ApiResponseWithData.ApiResponseWithData
 import com.miso.misoweather.model.DTO.ApiResponseWithData.Region
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
-import com.miso.misoweather.selectArea.RecyclerTownsAdapter
-import com.miso.misoweather.selectArea.SelectAreaActivity
 import com.miso.misoweather.selectRegion.SelectRegionActivity
+import com.miso.misoweather.selectTown.RecyclerAreaAdapter
+import com.miso.misoweather.selectTown.SelectTownActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class SelectTownActivity :MisoActivity(){
+class SelectAreaActivity :MisoActivity(){
     lateinit var binding:ActivitySelectRegionBinding
     lateinit var grid_region:RecyclerView
     lateinit var list_towns:RecyclerView
     lateinit var btn_back:ImageButton
     lateinit var btn_next: Button
     lateinit var selectedRegion:String
+    lateinit var selectedTown:String
     lateinit var townRequestResult:ApiResponseWithData
-    lateinit var recyclerAdapter: RecyclerTownsAdapter
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        selectedRegion = intent.getStringExtra("region")!!
+        selectedRegion = intent.getStringExtra("region")?:""
+        selectedTown = intent.getStringExtra("town")?:""
         initializeViews()
-        getTownList()
+        getAreaList()
 
     }
     fun initializeViews()
@@ -52,35 +53,32 @@ class SelectTownActivity :MisoActivity(){
         btn_back = binding.imgbtnBack
         btn_next = binding.btnAction
         btn_back.setOnClickListener(){
-            startActivity(Intent(this, SelectRegionActivity::class.java))
+            startActivity(Intent(this, SelectTownActivity::class.java))
             transferToBack()
             finish()
         }
        btn_next.setOnClickListener()
        {
-           var intent:Intent =Intent(this,SelectAreaActivity::class.java)
-           intent.putExtra("region",recyclerAdapter.getSelectedItem().bigScale)
-           intent.putExtra("town",recyclerAdapter.getSelectedItem().midScale)
-           startActivity(intent)
-           transferToBack()
-           finish()
+//           startActivity(Intent(this,LoginActivity::class.java))
+//           transferToBack()
+//           finish()
        }
     }
 
-    fun getTownList()
+    fun getAreaList()
     {
         val retrofit = Retrofit.Builder()
             .baseUrl(MISOWEATHER_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callGetTownList = api.getCity(selectedRegion)
+        val callGetTownList = api.getArea(selectedRegion,selectedTown)
 
         callGetTownList.enqueue(object : Callback<ApiResponseWithData> {
             override fun onResponse(
                 call: Call<ApiResponseWithData>,
                 response: Response<ApiResponseWithData>) {
-                Log.i("getTownList","2단계 지역 받아오기 성공")
+                Log.i("getAreaList","3단계 지역 받아오기 성공")
                 townRequestResult = response.body()!!
                 setRecyclerTowns()
             }
@@ -93,8 +91,8 @@ class SelectTownActivity :MisoActivity(){
     fun setRecyclerTowns()
     {
         var townList:List<Region> = townRequestResult.data.regionList
-        recyclerAdapter = RecyclerTownsAdapter(this@SelectTownActivity,townList)
-        list_towns.adapter=recyclerAdapter
+        var adapter = RecyclerAreaAdapter(this@SelectAreaActivity,townList)
+        list_towns.adapter=adapter
         list_towns.layoutManager = LinearLayoutManager(this)
         val spaceDecoration = DividerItemDecoration(applicationContext,VERTICAL)
         list_towns.addItemDecoration(spaceDecoration)

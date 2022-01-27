@@ -2,6 +2,7 @@ package com.miso.misoweather.selectTown
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.RegionIterator
 import android.graphics.Typeface.BOLD
 import android.graphics.Typeface.NORMAL
 import android.view.LayoutInflater
@@ -11,10 +12,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
 import com.miso.misoweather.model.DTO.ApiResponseWithData.Region
+import com.miso.misoweather.selectRegion.RegionItem
 import java.lang.Exception
 
-class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
-    RecyclerView.Adapter<RecyclerTownsAdapter.Holder>() {
+class RecyclerAreaAdapter(var context: Context, var regions: List<Region>) :
+    RecyclerView.Adapter<RecyclerAreaAdapter.Holder>() {
     var selectedPosition: Int = 0
 
     var viewHolders: ArrayList<Holder> = ArrayList()
@@ -32,8 +34,8 @@ class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
         layoutParams.height = 140
         holder.itemView.requestLayout()
         var region = regions.get(position)
-        var name: String = region.midScale
-        if (region.midScale.contains("선택 안 함"))
+        var name: String = region.smallScale
+        if (region.smallScale.contains("선택 안 함"))
             name = "전체"
         holder.setText(name)
         applySelection(holder,selectedPosition==position)
@@ -67,6 +69,10 @@ class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
         }
         selectedPosition = position
         applySelection(viewHolders.get(selectedPosition),true)
+    }
+
+    fun getSelectedItem():Region{
+        return regions.get(selectedPosition)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
