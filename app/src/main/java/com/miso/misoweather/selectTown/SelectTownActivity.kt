@@ -58,11 +58,13 @@ class SelectTownActivity :MisoActivity(){
         }
        btn_next.setOnClickListener()
        {
+           var midScaleRegion = recyclerAdapter.getSelectedItem().midScale
            var intent:Intent =Intent(this,SelectAreaActivity::class.java)
            intent.putExtra("region",recyclerAdapter.getSelectedItem().bigScale)
-           intent.putExtra("town",recyclerAdapter.getSelectedItem().midScale)
+           intent.putExtra("town",midScaleRegion)
            startActivity(intent)
-           transferToBack()
+           prefs.edit().putString("MidScaleRegion",midScaleRegion)
+           transferToNext()
            finish()
        }
     }

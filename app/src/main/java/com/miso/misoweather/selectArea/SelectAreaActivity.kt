@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
+import com.miso.misoweather.getnickname.SelectNickNameActivity
 import com.miso.misoweather.model.DTO.ApiResponseWithData.ApiResponseWithData
 import com.miso.misoweather.model.DTO.ApiResponseWithData.Region
+import com.miso.misoweather.model.DTO.NicknameResponseDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.selectRegion.SelectRegionActivity
 import com.miso.misoweather.selectTown.RecyclerAreaAdapter
@@ -59,9 +61,9 @@ class SelectAreaActivity :MisoActivity(){
         }
        btn_next.setOnClickListener()
        {
-//           startActivity(Intent(this,LoginActivity::class.java))
-//           transferToBack()
-//           finish()
+           startActivity(Intent(this,SelectNickNameActivity::class.java))
+           transferToNext()
+           finish()
        }
     }
 

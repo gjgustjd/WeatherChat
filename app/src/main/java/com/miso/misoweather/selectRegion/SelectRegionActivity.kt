@@ -40,9 +40,11 @@ class SelectRegionActivity : MisoActivity() {
         }
        btn_next.setOnClickListener()
        {
+           var bigScaleRegion = gridAdapter.getSelectedItemShortName()
            var intent:Intent = Intent(this, SelectTownActivity::class.java)
-           intent.putExtra("region",gridAdapter.getSelectedItemLongName())
+           intent.putExtra("region",bigScaleRegion)
            startActivity(intent)
+           prefs.edit().putString("BigScaleRegion",bigScaleRegion)
            transferToNext()
            finish()
        }

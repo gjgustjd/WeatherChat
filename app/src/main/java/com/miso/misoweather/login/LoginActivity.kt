@@ -24,13 +24,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : MisoActivity() {
     lateinit var binding: ActivityLoginBinding
-    lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        prefs = getSharedPreferences("misoweather", Context.MODE_PRIVATE)
         binding.clBtnKakaoLogin.setOnClickListener {
             kakaoLogin()
 
