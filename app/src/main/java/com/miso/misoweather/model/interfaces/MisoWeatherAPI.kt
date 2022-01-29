@@ -2,6 +2,7 @@ package com.miso.misoweather.model.interfaces
 
 import com.miso.misoweather.model.DTO.ApiResponseWithData.ApiResponseWithData
 import com.miso.misoweather.model.DTO.GeneralResponseDto
+import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.DTO.NicknameResponseDto
 import com.miso.misoweather.model.DTO.SignUpRequestDto
 import retrofit2.Call
@@ -20,4 +21,7 @@ interface MisoWeatherAPI {
  @GET("api/region/{bigScaleRegion}/{midScaleRegion}")
  fun getArea(@Path("bigScaleRegion") bigScaleRegion:String,
  @Path("midScaleRegion")midScaleRegion:String):Call<ApiResponseWithData>
+
+ @POST("api/member/token")
+ fun reIssueMisoToken(@Body body: LoginRequestDto, @Query("socialToken")socialToken: String):Call<GeneralResponseDto>
 }

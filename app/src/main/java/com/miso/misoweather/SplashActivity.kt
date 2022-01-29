@@ -35,25 +35,13 @@ class SplashActivity : AppCompatActivity() {
         if (prefs.getString("accessToken", "").equals("")) {
             startActivity(Intent(this, LoginActivity::class.java))
         } else {
-            UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-                if (error != null) {
-                    Log.e("tokenInfo", "토큰 정보 보기 실패", error)
-                } else if (tokenInfo != null) {
-                    Log.i(
-                        "tokenInfo", "토큰 정보 보기 성공" +
-                                "\n회원번호: ${tokenInfo.id}" +
-                                "\n만료시간: ${tokenInfo.expiresIn} 초"
-                    )
-                    prefs.edit().putString("socialId", tokenInfo.id.toString()).apply()
-                    prefs!!.edit().putString("accessToken", tokenInfo.id.toString()).apply()
-                    prefs!!.edit().putString("socialType", "Kakao").apply()
-                }
-            }
             var intent: Intent
-            if (prefs.getString("misoToken", "").equals(""))
+            if (prefs.getString("misoToken", "").equals("")) {
                 intent = Intent(this, SelectRegionActivity::class.java)
-            else
+            }
+            else {
                 intent = Intent(this, WeatherMainActivity::class.java)
+            }
 
             startActivity(intent)
         }
