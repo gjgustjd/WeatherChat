@@ -68,14 +68,17 @@ class SelectTownActivity : MisoActivity() {
         }
         btn_next.setOnClickListener()
         {
-            var midScaleRegion = recyclerAdapter.getSelectedItem().midScale
-            var bigScaleRegion = recyclerAdapter.getSelectedItem().bigScale
+            var selectedRegion = recyclerAdapter.getSelectedItem()
+            var midScaleRegion = selectedRegion.midScale
+            var bigScaleRegion = selectedRegion.bigScale
+            var defaultRegionId = selectedRegion.id.toString()
             var intent = Intent(this, SelectAreaActivity::class.java)
             intent.putExtra("region", recyclerAdapter.getSelectedItem().bigScale)
             intent.putExtra("town", midScaleRegion)
             startActivity(intent)
             prefs.edit().putString("BigScaleRegion", bigScaleRegion).apply()
             prefs.edit().putString("MidScaleRegion", midScaleRegion).apply()
+            prefs.edit().putString("defaultRegionId", defaultRegionId).apply()
             transferToNext()
         }
     }

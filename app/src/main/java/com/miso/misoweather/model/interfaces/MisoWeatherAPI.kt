@@ -1,6 +1,7 @@
 package com.miso.misoweather.model.interfaces
 
 import com.miso.misoweather.model.DTO.ApiResponseWithData.ApiResponseWithData
+import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.NicknameResponseDto
 import com.miso.misoweather.model.DTO.SignUpRequestDto
 import retrofit2.Call
@@ -11,7 +12,7 @@ interface MisoWeatherAPI {
  fun getNickname(): Call<NicknameResponseDto>
 
  @POST("api/member")
- fun registerMember(@Body body:SignUpRequestDto,@Query("socialToken") socialToken:String):Call<NicknameResponseDto>
+ fun registerMember(@Body body:SignUpRequestDto,@Query("socialToken") socialToken:String):Call<GeneralResponseDto>
 
  @GET("api/region/{bigScaleRegion}")
  fun getCity(@Path("bigScaleRegion") bigScaleRegion:String):Call<ApiResponseWithData>

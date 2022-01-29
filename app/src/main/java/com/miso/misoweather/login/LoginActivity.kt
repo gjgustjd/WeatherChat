@@ -31,11 +31,8 @@ class LoginActivity : MisoActivity() {
         setContentView(binding.root)
         binding.clBtnKakaoLogin.setOnClickListener {
             kakaoLogin()
-
         }
     }
-
-
 
     fun kakaoLogin() {
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@LoginActivity)) {
@@ -52,9 +49,10 @@ class LoginActivity : MisoActivity() {
                                 "token", "토큰 정보 보기 성공" +
                                         "\n회원번호:${tokenInfo.id}"
                             )
-
+                            prefs!!.edit().putString("socialId", tokenInfo.id.toString())
                             prefs!!.edit().putString("accessToken", tokenInfo.id.toString()).apply()
-                            startActivity(Intent(this,SelectRegionActivity::class.java))
+                            prefs!!.edit().putString("socialType", "Kakao")
+                            startActivity(Intent(this, SelectRegionActivity::class.java))
                             transferToNext()
                         }
                     }
