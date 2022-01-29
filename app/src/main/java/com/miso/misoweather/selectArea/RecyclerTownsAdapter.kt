@@ -62,11 +62,17 @@ class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
 
      fun selectItem(position:Int)
     {
-        if (selectedPosition != -1) {
-            applySelection(viewHolders.get(selectedPosition),false)
+        try {
+            if (selectedPosition != -1) {
+                applySelection(viewHolders.get(selectedPosition), false)
+            }
+            selectedPosition = position
+            applySelection(viewHolders.get(selectedPosition), true)
+        }catch (e:Exception)
+        {
+            e.printStackTrace()
+            selectedPosition = position
         }
-        selectedPosition = position
-        applySelection(viewHolders.get(selectedPosition),true)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {

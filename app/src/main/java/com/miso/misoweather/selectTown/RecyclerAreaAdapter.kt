@@ -64,11 +64,17 @@ class RecyclerAreaAdapter(var context: Context, var regions: List<Region>) :
 
      fun selectItem(position:Int)
     {
-        if (selectedPosition != -1) {
-            applySelection(viewHolders.get(selectedPosition),false)
+        try {
+            if (selectedPosition != -1) {
+                applySelection(viewHolders.get(selectedPosition), false)
+            }
+            selectedPosition = position
+            applySelection(viewHolders.get(selectedPosition), true)
+        }catch (e:Exception)
+        {
+            selectedPosition = position
+           e.printStackTrace()
         }
-        selectedPosition = position
-        applySelection(viewHolders.get(selectedPosition),true)
     }
 
     fun getSelectedItem():Region{

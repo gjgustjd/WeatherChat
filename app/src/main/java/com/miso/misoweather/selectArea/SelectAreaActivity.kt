@@ -25,6 +25,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Exception
 
 class SelectAreaActivity :MisoActivity(){
     lateinit var binding:ActivitySelectRegionBinding
@@ -99,11 +100,21 @@ class SelectAreaActivity :MisoActivity(){
     }
     fun setRecyclerTowns()
     {
-        var townList:List<Region> = townRequestResult.data.regionList
-        recyclerAdapter = RecyclerAreaAdapter(this@SelectAreaActivity,townList)
-        list_towns.adapter=recyclerAdapter
-        list_towns.layoutManager = LinearLayoutManager(this)
-        val spaceDecoration = DividerItemDecoration(applicationContext,VERTICAL)
-        list_towns.addItemDecoration(spaceDecoration)
+        try {
+            var townList: List<Region> = townRequestResult.data.regionList
+            recyclerAdapter = RecyclerAreaAdapter(this@SelectAreaActivity, townList)
+            list_towns.adapter = recyclerAdapter
+            list_towns.layoutManager = LinearLayoutManager(this)
+            val spaceDecoration = DividerItemDecoration(applicationContext, VERTICAL)
+            list_towns.addItemDecoration(spaceDecoration)
+            var currentArea = prefs.getString("SmallScaleRegion", "")
+            if (!currentArea.equals(""))
+                recyclerAdapter.selectItem(townList.indexOf(townList.first() {
+                    it.smallScale.equals(currentArea)
+                }))
+        }catch (e:Exception)
+        {
+            e.printStackTrace()
+        }
     }
 }
