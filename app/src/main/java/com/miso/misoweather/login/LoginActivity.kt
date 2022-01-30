@@ -41,6 +41,7 @@ class LoginActivity : MisoActivity() {
                     Log.e("miso", "로그인 실패", error)
                 } else if (token != null) {
                     Log.i("miso", "로그인 성공 ${token.accessToken}")
+                    prefs.edit().putString("accessToken",token.accessToken).apply()
                     UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
                         if (error != null)
                             Log.i("token", "토큰 정보 보기 실패", error)
@@ -49,7 +50,7 @@ class LoginActivity : MisoActivity() {
                                 "token", "토큰 정보 보기 성공" +
                                         "\n회원번호:${tokenInfo.id}"
                             )
-                            prefs!!.edit().putString("socialId", tokenInfo.id.toString())
+                            prefs!!.edit().putString("socialId", tokenInfo.id.toString()).apply()
                             prefs!!.edit().putString("accessToken", tokenInfo.id.toString()).apply()
                             prefs!!.edit().putString("socialType", "Kakao")
                             startActivity(Intent(this, SelectRegionActivity::class.java))
