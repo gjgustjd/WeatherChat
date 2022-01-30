@@ -12,7 +12,7 @@
         android:name=".SocketApplication"
         android:networkSecurityConfig="@xml/network_config"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".WeatherMainActivity">
+        <activity android:name=".home.HomeActivity">
         </activity>
         <activity android:name=".getnickname.SelectNickNameActivity">
         </activity>

@@ -51,8 +51,7 @@ class LoginActivity : MisoActivity() {
                                         "\n회원번호:${tokenInfo.id}"
                             )
                             prefs!!.edit().putString("socialId", tokenInfo.id.toString()).apply()
-                            prefs!!.edit().putString("accessToken", tokenInfo.id.toString()).apply()
-                            prefs!!.edit().putString("socialType", "Kakao")
+                            prefs!!.edit().putString("socialType", "kakao").apply()
                             startActivity(Intent(this, SelectRegionActivity::class.java))
                             transferToNext()
                         }

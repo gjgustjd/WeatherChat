@@ -5,10 +5,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.databinding.ActivitySplashBinding
+import com.miso.misoweather.home.HomeActivity
 import com.miso.misoweather.login.LoginActivity
 import com.miso.misoweather.selectRegion.SelectRegionActivity
 
@@ -38,9 +37,8 @@ class SplashActivity : AppCompatActivity() {
             var intent: Intent
             if (prefs.getString("misoToken", "").equals("")) {
                 intent = Intent(this, SelectRegionActivity::class.java)
-            }
-            else {
-                intent = Intent(this, WeatherMainActivity::class.java)
+            } else {
+                intent = Intent(this, HomeActivity::class.java)
             }
 
             startActivity(intent)

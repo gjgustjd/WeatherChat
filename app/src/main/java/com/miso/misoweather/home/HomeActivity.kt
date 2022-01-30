@@ -1,4 +1,4 @@
-package com.miso.misoweather
+package com.miso.misoweather.home
 
 import android.os.Bundle
 import android.widget.LinearLayout.VERTICAL
@@ -13,7 +13,7 @@ import com.miso.misoweather.common.VerticalSpaceItemDecoration
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.databinding.ActivityWeatherMainBinding
 
-class WeatherMainActivity :MisoActivity(){
+class HomeActivity :MisoActivity(){
     lateinit var binding:ActivityWeatherMainBinding
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState);
