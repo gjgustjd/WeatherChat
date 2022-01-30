@@ -28,6 +28,15 @@ open class MisoActivity :AppCompatActivity() {
         pairList.add(pair)
     }
 
+    fun removePreference(pref:String)
+    {
+        val pair = Pair(pref,"")
+        pairList.add(pair)
+    }
+    fun getPreference(pref:String):String?
+    {
+        return prefs!!.getString(pref,"")
+    }
     fun savePreferences()
     {
        var edit = prefs!!.edit()

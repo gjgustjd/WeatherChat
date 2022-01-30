@@ -49,7 +49,7 @@ class SelectTownActivity : MisoActivity() {
         var regionsList = resources.getStringArray(R.array.regions).toList()
         var regionsFullList = resources.getStringArray(R.array.regions_full).toList()
         var regionShortName =
-            regionsList.get(regionsFullList.indexOf(prefs.getString("BigScaleRegion", "")!!))
+            regionsList.get(regionsFullList.indexOf(getPreference("BigScaleRegion")!!))
         return regionShortName
     }
 
@@ -123,7 +123,7 @@ class SelectTownActivity : MisoActivity() {
             list_towns.layoutManager = LinearLayoutManager(this)
             val spaceDecoration = DividerItemDecoration(applicationContext, VERTICAL)
             list_towns.addItemDecoration(spaceDecoration)
-            var currentTown = prefs.getString("MidScaleRegion", "")
+            var currentTown = getPreference("MidScaleRegion")
             if (!currentTown.equals(""))
                 recyclerAdapter.selectItem(townList.indexOf(townList.first() {
                     it.midScale.equals(

@@ -42,8 +42,8 @@ class SelectAreaActivity :MisoActivity(){
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        selectedRegion = intent.getStringExtra("region")?:prefs.getString("BigScaleRegion","")!!
-        selectedTown = intent.getStringExtra("town")?:prefs.getString("MidScaleRegion","")!!
+        selectedRegion = intent.getStringExtra("region")?:getPreference("BigScaleRegion")!!
+        selectedTown = intent.getStringExtra("town")?:getPreference("MidScaleRegion")!!
         initializeViews()
         getAreaList()
 
@@ -117,7 +117,7 @@ class SelectAreaActivity :MisoActivity(){
             list_towns.layoutManager = LinearLayoutManager(this)
             val spaceDecoration = DividerItemDecoration(applicationContext, VERTICAL)
             list_towns.addItemDecoration(spaceDecoration)
-            var currentArea = prefs.getString("SmallScaleRegion", "")
+            var currentArea = getPreference("SmallScaleRegion")
             if (!currentArea.equals(""))
                 recyclerAdapter.selectItem(townList.indexOf(townList.first() {
                     it.smallScale.equals(currentArea)

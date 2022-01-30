@@ -32,11 +32,11 @@ class LoginActivity : MisoActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.clBtnKakaoLogin.setOnClickListener {
-            if (prefs.getString("accessToken", "").equals(""))
+            if (getPreference("accessToken").equals(""))
                 kakaoLogin()
             else {
                 lateinit var intent:Intent
-                if (prefs.getString("misoToken", "").equals(""))
+                if (getPreference("misoToken").equals(""))
                     intent = Intent(this,SelectRegionActivity::class.java)
                 else
                     intent = Intent(this,HomeActivity::class.java)

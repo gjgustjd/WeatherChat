@@ -66,7 +66,7 @@ class SelectNickNameActivity : MisoActivity() {
             .build()
         val api = retrofit.create(MisoWeatherAPI::class.java)
 
-        val callRegisterMember = api.registerMember(getSignUpInfo(),prefs.getString("accessToken","")!!)
+        val callRegisterMember = api.registerMember(getSignUpInfo(),getPreference("accessToken")!!)
         callRegisterMember.enqueue(object : Callback<GeneralResponseDto> {
             override fun onResponse(
                 call: Call<GeneralResponseDto>,
@@ -88,7 +88,7 @@ class SelectNickNameActivity : MisoActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callReIssueMisoToken = api.reIssueMisoToken(makeLoginRequestDto(),prefs.getString("accessToken","")!!)
+        val callReIssueMisoToken = api.reIssueMisoToken(makeLoginRequestDto(),getPreference("accessToken")!!)
 
 
         callReIssueMisoToken.enqueue(object : Callback<GeneralResponseDto> {
@@ -102,9 +102,8 @@ class SelectNickNameActivity : MisoActivity() {
                     var headers = response.headers()
                     var serverToken = headers.get("servertoken")
                     addPreferencePair("misoToken", serverToken!!)
-                    savePreferences()
-                    var misoToken = prefs.getString("misoToken", "")
-                    if (!misoToken.equals("")) {
+                    removeRegionPref()
+                    if (!getPreference("misoToken").equals("")) {
                         var intent = Intent(this@SelectNickNameActivity, HomeActivity::class.java)
                         startActivity(intent)
                     } else
@@ -116,6 +115,8 @@ class SelectNickNameActivity : MisoActivity() {
                 }catch (e:Exception)
                 {
                     e.printStackTrace()
+                }
+                finally {
                     savePreferences()
                 }
             }
@@ -125,11 +126,17 @@ class SelectNickNameActivity : MisoActivity() {
             }
         })
     }
+    fun removeRegionPref()
+    {
+        removePreference("BigScaleRegion")
+        removePreference("MidScaleRegion")
+        removePreference("SmallScaleRegion")
+    }
     fun makeLoginRequestDto():LoginRequestDto
     {
        var loginRequestDto = LoginRequestDto(
-           prefs.getString("socialId","")?.toInt(),
-           prefs.getString("socialType",""))
+           getPreference("socialId")?.toInt(),
+           getPreference("socialType"))
 
         return loginRequestDto
     }
@@ -137,11 +144,11 @@ class SelectNickNameActivity : MisoActivity() {
     fun getSignUpInfo():SignUpRequestDto
     {
         var signUpRequestDto = SignUpRequestDto()
-        signUpRequestDto.defaultRegionId=prefs.getString("defaultRegionId","")!!
+        signUpRequestDto.defaultRegionId=getPreference("defaultRegionId")!!
         signUpRequestDto.emoji=binding.txtEmoji.text.toString()
         signUpRequestDto.nickname=nickName
-        signUpRequestDto.socialId=prefs.getString("socialId","")!!
-        signUpRequestDto.socialType=prefs.getString("socialType","")!!
+        signUpRequestDto.socialId=getPreference("socialId")!!
+        signUpRequestDto.socialType=getPreference("socialType")!!
         return signUpRequestDto
     }
 
