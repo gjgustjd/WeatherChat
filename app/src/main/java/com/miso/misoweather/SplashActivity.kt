@@ -35,11 +35,11 @@ class SplashActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
         } else {
             var intent: Intent
-            if (prefs.getString("misoToken", "").equals("")) {
+            if (prefs.getString("misoToken", "").equals(""))
                 intent = Intent(this, SelectRegionActivity::class.java)
-            } else {
+            else
                 intent = Intent(this, HomeActivity::class.java)
-            }
+
 
             startActivity(intent)
         }
