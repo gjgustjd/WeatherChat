@@ -65,24 +65,27 @@ class SelectAreaActivity :MisoActivity(){
        btn_next.setOnClickListener()
        {
            try {
-               var selectedRegion = recyclerAdapter.getSelectedItem()
-               var midScaleRegion = selectedRegion.midScale
-               var bigScaleRegion = selectedRegion.bigScale
-               var smallScaleRegion = selectedRegion.smallScale
-               var defaultRegionId = selectedRegion.id.toString()
+               addRegionPreferences()
                startActivity(Intent(this, SelectNickNameActivity::class.java))
                transferToNext()
-               addPreferencePair("BigScaleRegion", bigScaleRegion)
-               addPreferencePair("MidScaleRegion", midScaleRegion)
-               addPreferencePair("SmallScaleRegion", smallScaleRegion)
-               addPreferencePair("defaultRegionId", defaultRegionId)
-               savePreferences()
            }catch (e:Exception)
            {
                e.printStackTrace()
-               savePreferences()
            }
        }
+    }
+    fun addRegionPreferences()
+    {
+        var selectedRegion = recyclerAdapter.getSelectedItem()
+        var midScaleRegion = selectedRegion.midScale
+        var bigScaleRegion = selectedRegion.bigScale
+        var smallScaleRegion = selectedRegion.smallScale
+        var defaultRegionId = selectedRegion.id.toString()
+        addPreferencePair("BigScaleRegion", bigScaleRegion)
+        addPreferencePair("MidScaleRegion", midScaleRegion)
+        addPreferencePair("SmallScaleRegion", smallScaleRegion)
+        addPreferencePair("defaultRegionId", defaultRegionId)
+        savePreferences()
     }
 
     fun getAreaList()

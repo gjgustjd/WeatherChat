@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
+import com.miso.misoweather.getnickname.SelectNickNameActivity
 import com.miso.misoweather.model.DTO.ApiResponseWithData.ApiResponseWithData
 import com.miso.misoweather.model.DTO.ApiResponseWithData.Region
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
@@ -73,19 +74,23 @@ class SelectTownActivity : MisoActivity() {
                 var midScaleRegion = selectedRegion.midScale
                 var bigScaleRegion = selectedRegion.bigScale
                 var defaultRegionId = selectedRegion.id.toString()
-                var intent = Intent(this, SelectAreaActivity::class.java)
-                intent.putExtra("region", recyclerAdapter.getSelectedItem().bigScale)
-                intent.putExtra("town", midScaleRegion)
-                startActivity(intent)
                 addPreferencePair("BigScaleRegion", bigScaleRegion)
                 addPreferencePair("MidScaleRegion", midScaleRegion)
                 addPreferencePair("defaultRegionId", defaultRegionId)
+
+                lateinit var intent: Intent
+                if (selectedRegion.midScale.contains("선택 안 함"))
+                    intent = Intent(this, SelectNickNameActivity::class.java)
+                else
+                    intent = Intent(this, SelectAreaActivity::class.java)
+                intent.putExtra("region", recyclerAdapter.getSelectedItem().bigScale)
+                intent.putExtra("town", midScaleRegion)
+                startActivity(intent)
                 transferToNext()
-            }catch (e:Exception)
-            {
+                finish()
+            } catch (e: Exception) {
                 e.printStackTrace()
-            }
-            finally {
+            } finally {
                 savePreferences()
             }
         }
@@ -131,8 +136,7 @@ class SelectTownActivity : MisoActivity() {
                     )
                 }))
 
-        }catch (e:Exception)
-        {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
