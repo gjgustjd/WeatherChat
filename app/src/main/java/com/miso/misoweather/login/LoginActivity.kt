@@ -12,6 +12,7 @@ import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityLoginBinding
 import com.miso.misoweather.databinding.ActivitySplashBinding
+import com.miso.misoweather.home.HomeActivity
 import com.miso.misoweather.model.DTO.NicknameResponseDto
 import com.miso.misoweather.model.DTO.SignUpRequestDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
@@ -21,6 +22,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Exception
 
 class LoginActivity : MisoActivity() {
     lateinit var binding: ActivityLoginBinding
@@ -30,7 +32,17 @@ class LoginActivity : MisoActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.clBtnKakaoLogin.setOnClickListener {
-            kakaoLogin()
+            if (prefs.getString("accessToken", "").equals(""))
+                kakaoLogin()
+            else {
+                lateinit var intent:Intent
+                if (prefs.getString("misoToken", "").equals(""))
+                    intent = Intent(this,SelectRegionActivity::class.java)
+                else
+                    intent = Intent(this,HomeActivity::class.java)
+
+                startActivity(intent)
+            }
         }
     }
 
@@ -41,20 +53,27 @@ class LoginActivity : MisoActivity() {
                     Log.e("miso", "로그인 실패", error)
                 } else if (token != null) {
                     Log.i("miso", "로그인 성공 ${token.accessToken}")
-                    prefs.edit().putString("accessToken",token.accessToken).apply()
-                    UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-                        if (error != null)
-                            Log.i("token", "토큰 정보 보기 실패", error)
-                        else if (tokenInfo != null) {
-                            Log.i(
-                                "token", "토큰 정보 보기 성공" +
-                                        "\n회원번호:${tokenInfo.id}"
-                            )
-                            prefs!!.edit().putString("socialId", tokenInfo.id.toString()).apply()
-                            prefs!!.edit().putString("socialType", "kakao").apply()
-                            startActivity(Intent(this, SelectRegionActivity::class.java))
-                            transferToNext()
+                    try {
+                        addPreferencePair("accessToken", token.accessToken)
+                        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+                            if (error != null)
+                                Log.i("token", "토큰 정보 보기 실패", error)
+                            else if (tokenInfo != null) {
+                                Log.i(
+                                    "token", "토큰 정보 보기 성공" +
+                                            "\n회원번호:${tokenInfo.id}"
+                                )
+                                addPreferencePair("socialId", tokenInfo.id.toString())
+                                addPreferencePair("socialType", "kakao")
+                                savePreferences()
+                                startActivity(Intent(this, SelectRegionActivity::class.java))
+                                transferToNext()
+                            }
                         }
+                    }catch (e:Exception)
+                    {
+                        e.printStackTrace()
+                        savePreferences()
                     }
                 }
             }

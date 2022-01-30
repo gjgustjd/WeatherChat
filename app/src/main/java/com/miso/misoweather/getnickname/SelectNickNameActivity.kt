@@ -20,6 +20,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Header
+import java.lang.Exception
 
 class SelectNickNameActivity : MisoActivity() {
     lateinit var binding: ActivitySelectNicknameBinding
@@ -95,19 +96,28 @@ class SelectNickNameActivity : MisoActivity() {
                 call: Call<GeneralResponseDto>,
                 response: Response<GeneralResponseDto>
             ) {
-                Log.i("결과", "성공")
-                generalResponseDto = response.body()!!
-                var headers = response.headers()
-                var serverToken = headers.get("servertoken")
-                prefs.edit().putString("misoToken",serverToken).apply()
-                var misoToken = prefs.getString("misoToken","")
-                if(!misoToken.equals(""))
+                try {
+                    Log.i("결과", "성공")
+                    generalResponseDto = response.body()!!
+                    var headers = response.headers()
+                    var serverToken = headers.get("servertoken")
+                    addPreferencePair("misoToken", serverToken!!)
+                    savePreferences()
+                    var misoToken = prefs.getString("misoToken", "")
+                    if (!misoToken.equals("")) {
+                        var intent = Intent(this@SelectNickNameActivity, HomeActivity::class.java)
+                        startActivity(intent)
+                    } else
+                        Toast.makeText(
+                            this@SelectNickNameActivity,
+                            "서버 토큰 발행에 실패하였습니다.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                }catch (e:Exception)
                 {
-                    var intent = Intent(this@SelectNickNameActivity,HomeActivity::class.java)
-                    startActivity(intent)
+                    e.printStackTrace()
+                    savePreferences()
                 }
-                else
-                    Toast.makeText(this@SelectNickNameActivity,"서버 토큰 발행에 실패하였습니다.",Toast.LENGTH_SHORT).show()
             }
 
             override fun onFailure(call: Call<GeneralResponseDto>, t: Throwable) {

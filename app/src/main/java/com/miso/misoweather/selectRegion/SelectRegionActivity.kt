@@ -12,6 +12,7 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.login.LoginActivity
 import com.miso.misoweather.selectTown.SelectTownActivity
+import java.lang.Exception
 
 class SelectRegionActivity : MisoActivity() {
     lateinit var binding:ActivitySelectRegionBinding
@@ -40,12 +41,20 @@ class SelectRegionActivity : MisoActivity() {
         }
        btn_next.setOnClickListener()
        {
-           var bigScaleRegion = gridAdapter.getSelectedItemShortName()
-           var intent:Intent = Intent(this, SelectTownActivity::class.java)
-           intent.putExtra("region",bigScaleRegion)
-           startActivity(intent)
-           prefs.edit().putString("BigScaleRegion",bigScaleRegion).apply()
-           transferToNext()
+           try {
+               var bigScaleRegion = gridAdapter.getSelectedItemShortName()
+               var intent: Intent = Intent(this, SelectTownActivity::class.java)
+               intent.putExtra("region", bigScaleRegion)
+               startActivity(intent)
+               addPreferencePair("BigScaleRegion", bigScaleRegion)
+               transferToNext()
+           }catch (e:Exception)
+           {
+               e.printStackTrace()
+           }
+           finally {
+               savePreferences()
+           }
        }
     }
     fun setRecyclerRegions()
