@@ -72,15 +72,51 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/txt_greeting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="안녕하세요!"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="서울의 유쾌한 막내사자님"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/txt_greeting"
+                app:layout_constraintTop_toBottomOf="@+id/txt_greeting" />
+
+            <TextView
+                android:id="@+id/txt_emoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="🪔"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_nickname"
+                app:layout_constraintStart_toEndOf="@+id/txt_nickname"
+                app:layout_constraintTop_toTopOf="@+id/txt_nickname" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/weatherLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/unit_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_bold">
+                app:layout_constraintTop_toBottomOf="@+id/txt_nickname">
 
                 <ImageView
                     android:id="@+id/img_weather"
@@ -150,6 +186,87 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/txt_degree"
                     app:srcCompat="@drawable/arrow_black_next" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/contentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="1000dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/unit_background"
+                app:layout_constraintEnd_toEndOf="@id/weatherLayout"
+                app:layout_constraintStart_toStartOf="@id/weatherLayout"
+                app:layout_constraintTop_toBottomOf="@id/weatherLayout">
+
+                <TextView
+                    android:id="@+id/txt_chart_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="30dp"
+                    android:text="오늘은 뭘 입을까?"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/imgbtn_survey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="15dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:cropToPadding="true"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_chart_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1"
+                    app:layout_constraintStart_toEndOf="@+id/txt_chart_title"
+                    app:layout_constraintTop_toTopOf="@+id/txt_chart_title"
+                    app:srcCompat="@drawable/arrow_black_next" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/chartLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="140dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@drawable/unit_background"
+                    android:backgroundTint="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_chart_title">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/txt_chat_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="40dp"
+                    android:text="오늘 날씨 어때요?"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/chartLayout" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_chats"
+                    android:layout_width="0dp"
+                    android:layout_height="400dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintEnd_toEndOf="@+id/chartLayout"
+                    app:layout_constraintStart_toStartOf="@+id/chartLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_chat_title"
+                    tools:listitem="@layout/list_item_chat" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

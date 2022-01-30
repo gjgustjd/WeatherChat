@@ -13,28 +13,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.common.VerticalSpaceItemDecoration
+import com.miso.misoweather.databinding.ActivityHomeBinding
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.databinding.ActivityWeatherMainBinding
 import com.miso.misoweather.login.LoginActivity
 
-class HomeActivity :MisoActivity(){
-    lateinit var binding:ActivityWeatherMainBinding
-    lateinit var btnBack: ImageButton
-    override fun onCreate(savedInstanceState: Bundle?){
+class HomeActivity : MisoActivity() {
+    lateinit var binding: ActivityHomeBinding
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
-        binding = ActivityWeatherMainBinding.inflate(layoutInflater)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initializeViews()
     }
-    fun initializeViews()
-    {
-        btnBack = binding.btnBack
-        btnBack.setOnClickListener()
-        {
-            startActivity(Intent(this,LoginActivity::class.java))
-            transferToBack()
-            finish()
-        }
+
+    fun initializeViews() {
     }
 
 }

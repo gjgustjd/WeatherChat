@@ -5,19 +5,20 @@
     android:id="@+id/itemView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/unitBackground"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/unit_background"
     android:backgroundTint="@color/white">
 
     <ImageView
         android:id="@+id/img_thumbnail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
         android:layout_marginStart="15dp"
-        android:background="@drawable/unit_background_circle"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="4dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_message"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txt_nickname"
         app:srcCompat="@drawable/icon_rose" />
 
     <TextView
@@ -51,5 +52,17 @@
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/img_thumbnail"
         app:layout_constraintTop_toBottomOf="@+id/txt_nickname" />
+
+    <TextView
+        android:id="@+id/txt_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:gravity="center"
+        android:text="18:00"
+        android:textColor="@color/textBlack"
+        android:textSize="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txt_nickname" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
