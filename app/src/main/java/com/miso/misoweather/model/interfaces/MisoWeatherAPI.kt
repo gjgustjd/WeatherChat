@@ -1,6 +1,7 @@
 package com.miso.misoweather.model.interfaces
 
 import com.miso.misoweather.model.DTO.*
+import com.miso.misoweather.model.DTO.Forecast.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
@@ -26,4 +27,7 @@ interface MisoWeatherAPI {
 
  @GET("api/member")
  fun getUserInfo(@Header("serverToken") serverToken:String):Call<MemberInfoResponseDto>
+
+ @GET("api/forecast/{regionId}")
+ fun getBriefForecast(@Path("regionId")regionId:Int):Call<ForecastBriefResponseDto>
 }
