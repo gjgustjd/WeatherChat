@@ -30,4 +30,6 @@ interface MisoWeatherAPI {
 
  @GET("api/forecast/{regionId}")
  fun getBriefForecast(@Path("regionId")regionId:Int):Call<ForecastBriefResponseDto>
+
+
 }
