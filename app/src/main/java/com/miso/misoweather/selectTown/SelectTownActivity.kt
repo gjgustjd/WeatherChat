@@ -14,10 +14,9 @@ import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.getnickname.SelectNickNameActivity
-import com.miso.misoweather.model.DTO.ApiResponseWithData.ApiResponseWithData
-import com.miso.misoweather.model.DTO.ApiResponseWithData.Region
-import com.miso.misoweather.model.DTO.ApiResponseWithData.RegionListData
-import com.miso.misoweather.model.DTO.MemberInfoResponseDto
+import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
+import com.miso.misoweather.model.DTO.RegionListResponse.Region
+import com.miso.misoweather.model.DTO.RegionListResponse.RegionListData
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.selectArea.RecyclerTownsAdapter
 import com.miso.misoweather.selectArea.SelectAreaActivity
@@ -36,7 +35,7 @@ class SelectTownActivity : MisoActivity() {
     lateinit var btn_back: ImageButton
     lateinit var btn_next: Button
     lateinit var selectedRegion: String
-    lateinit var townRequestResult: ApiResponseWithData<RegionListData>
+    lateinit var townRequestResult: RegionListResponseDto
     lateinit var recyclerAdapter: RecyclerTownsAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -106,17 +105,17 @@ class SelectTownActivity : MisoActivity() {
         val api = retrofit.create(MisoWeatherAPI::class.java)
         val callGetTownList = api.getCity(selectedRegion)
 
-        callGetTownList.enqueue(object : Callback<ApiResponseWithData<RegionListData>> {
+        callGetTownList.enqueue(object : Callback<RegionListResponseDto> {
             override fun onResponse(
-                call: Call<ApiResponseWithData<RegionListData>>,
-                response: Response<ApiResponseWithData<RegionListData>>
+                call: Call<RegionListResponseDto>,
+                response: Response<RegionListResponseDto>
             ) {
                 Log.i("getTownList", "2단계 지역 받아오기 성공")
                 townRequestResult = response.body()!!
                 setRecyclerTowns()
             }
 
-            override fun onFailure(call: Call<ApiResponseWithData<RegionListData>>, t: Throwable) {
+            override fun onFailure(call: Call<RegionListResponseDto>, t: Throwable) {
                 Log.i("getTownList", "실패 : $t")
             }
         })

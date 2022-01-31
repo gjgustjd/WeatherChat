@@ -1,6 +1,6 @@
-package com.miso.misoweather.model.DTO
+package com.miso.misoweather.model.DTO.MemberInfoResponse
 
-class MemberInfoResponseDto {
+class MemberInfoDto {
     var emoji:String=""
     var nickname:String=""
     var regionId:Int=-1

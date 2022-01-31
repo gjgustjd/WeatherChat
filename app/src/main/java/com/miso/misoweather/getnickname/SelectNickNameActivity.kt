@@ -12,6 +12,8 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectNicknameBinding
 import com.miso.misoweather.home.HomeActivity
 import com.miso.misoweather.model.DTO.*
+import com.miso.misoweather.model.DTO.NicknameResponse.NicknameData
+import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.selectArea.SelectAreaActivity
 import retrofit2.Call
@@ -19,7 +21,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Header
 import java.lang.Exception
 
 class SelectNickNameActivity : MisoActivity() {
@@ -27,7 +28,7 @@ class SelectNickNameActivity : MisoActivity() {
     lateinit var txt_get_new_nick: TextView
     lateinit var btn_back: ImageButton
     lateinit var btn_next: Button
-    var nicknameResponseDto = NicknameResponseDto(Data("", ""), "", "")
+    var nicknameResponseDto = NicknameResponseDto(NicknameData("", ""), "", "")
     var generalResponseDto = GeneralResponseDto("","")
     var nickName:String =""
     override fun onCreate(savedInstanceState: Bundle?) {

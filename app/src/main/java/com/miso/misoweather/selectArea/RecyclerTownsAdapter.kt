@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
-import com.miso.misoweather.model.DTO.ApiResponseWithData.Region
+import com.miso.misoweather.model.DTO.RegionListResponse.Region
 import java.lang.Exception
 
 class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :

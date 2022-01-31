@@ -1,29 +1,12 @@
 package com.miso.misoweather.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout.VERTICAL
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
-import com.miso.misoweather.common.VerticalSpaceItemDecoration
 import com.miso.misoweather.databinding.ActivityHomeBinding
-import com.miso.misoweather.databinding.ActivitySelectRegionBinding
-import com.miso.misoweather.databinding.ActivityWeatherMainBinding
-import com.miso.misoweather.login.LoginActivity
-import com.miso.misoweather.model.DTO.ApiResponseWithData.ApiResponseWithData
-import com.miso.misoweather.model.DTO.ApiResponseWithMemberInfoResponseDto
-import com.miso.misoweather.model.DTO.GeneralResponseDto
-import com.miso.misoweather.model.DTO.MemberInfoResponseDto
+import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
+import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,9 +17,10 @@ import java.lang.Exception
 
 class HomeActivity : MisoActivity() {
     lateinit var binding: ActivityHomeBinding
-    lateinit var apiResponseWithData: ApiResponseWithMemberInfoResponseDto
+    lateinit var apiResponseWithData: MemberInfoResponseDto
     lateinit var txtNickName:TextView
     lateinit var txtEmoji:TextView
+    lateinit var txtLocation:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -48,6 +32,7 @@ class HomeActivity : MisoActivity() {
     fun initializeViews() {
         txtNickName = binding.txtNickname
         txtEmoji = binding.txtEmoji
+        txtLocation = binding.txtLocation
     }
 
     fun getUserInfo()
@@ -59,17 +44,18 @@ class HomeActivity : MisoActivity() {
         val api = retrofit.create(MisoWeatherAPI::class.java)
         val callgetUserInfo = api.getUserInfo(getPreference("misoToken")!!)
 
-        callgetUserInfo.enqueue(object : Callback<ApiResponseWithMemberInfoResponseDto> {
+        callgetUserInfo.enqueue(object : Callback<MemberInfoResponseDto> {
             override fun onResponse(
-                call: Call<ApiResponseWithMemberInfoResponseDto>,
-                response: Response<ApiResponseWithMemberInfoResponseDto>
+                call: Call<MemberInfoResponseDto>,
+                response: Response<MemberInfoResponseDto>
             ) {
                 try {
                     Log.i("결과", "성공")
                     apiResponseWithData = response.body()!!
-                    var memberInfoResponseDto = apiResponseWithData.data as MemberInfoResponseDto
+                    var memberInfoResponseDto = apiResponseWithData.data as MemberInfoDto
                     txtNickName.setText(memberInfoResponseDto.nickname+"님!")
                     txtEmoji.setText(memberInfoResponseDto.emoji)
+                    txtLocation.setText(memberInfoResponseDto.regionName)
                     addPreferencePair("defaultRegionId",apiResponseWithData.data.regionId.toString())
                     savePreferences()
                 }catch (e: Exception)
@@ -78,7 +64,7 @@ class HomeActivity : MisoActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<ApiResponseWithMemberInfoResponseDto>, t: Throwable) {
+            override fun onFailure(call: Call<MemberInfoResponseDto>, t: Throwable) {
                 Log.i("결과", "실패 : $t")
             }
         })

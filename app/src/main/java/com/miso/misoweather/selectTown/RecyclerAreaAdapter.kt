@@ -2,7 +2,6 @@ package com.miso.misoweather.selectTown
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.RegionIterator
 import android.graphics.Typeface.BOLD
 import android.graphics.Typeface.NORMAL
 import android.view.LayoutInflater
@@ -11,8 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
-import com.miso.misoweather.model.DTO.ApiResponseWithData.Region
-import com.miso.misoweather.selectRegion.RegionItem
+import com.miso.misoweather.model.DTO.RegionListResponse.Region
 import java.lang.Exception
 
 class RecyclerAreaAdapter(var context: Context, var regions: List<Region>) :

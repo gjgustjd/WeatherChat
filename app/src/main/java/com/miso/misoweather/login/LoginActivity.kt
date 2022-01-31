@@ -1,27 +1,13 @@
 package com.miso.misoweather.login
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.kakao.sdk.auth.AuthApiClient
-import com.kakao.sdk.common.model.KakaoSdkError
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityLoginBinding
-import com.miso.misoweather.databinding.ActivitySplashBinding
 import com.miso.misoweather.home.HomeActivity
-import com.miso.misoweather.model.DTO.NicknameResponseDto
-import com.miso.misoweather.model.DTO.SignUpRequestDto
-import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.selectRegion.SelectRegionActivity
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
 
 class LoginActivity : MisoActivity() {
