@@ -1,6 +1,6 @@
 package com.miso.misoweather.model.DTO.ApiResponseWithData
 
 
-data class Data(
+data class RegionListData(
     val regionList: List<Region>
 )

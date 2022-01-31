@@ -16,6 +16,8 @@ import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.getnickname.SelectNickNameActivity
 import com.miso.misoweather.model.DTO.ApiResponseWithData.ApiResponseWithData
 import com.miso.misoweather.model.DTO.ApiResponseWithData.Region
+import com.miso.misoweather.model.DTO.ApiResponseWithData.RegionListData
+import com.miso.misoweather.model.DTO.MemberInfoResponseDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.selectArea.RecyclerTownsAdapter
 import com.miso.misoweather.selectArea.SelectAreaActivity
@@ -34,7 +36,7 @@ class SelectTownActivity : MisoActivity() {
     lateinit var btn_back: ImageButton
     lateinit var btn_next: Button
     lateinit var selectedRegion: String
-    lateinit var townRequestResult: ApiResponseWithData
+    lateinit var townRequestResult: ApiResponseWithData<RegionListData>
     lateinit var recyclerAdapter: RecyclerTownsAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -104,17 +106,17 @@ class SelectTownActivity : MisoActivity() {
         val api = retrofit.create(MisoWeatherAPI::class.java)
         val callGetTownList = api.getCity(selectedRegion)
 
-        callGetTownList.enqueue(object : Callback<ApiResponseWithData> {
+        callGetTownList.enqueue(object : Callback<ApiResponseWithData<RegionListData>> {
             override fun onResponse(
-                call: Call<ApiResponseWithData>,
-                response: Response<ApiResponseWithData>
+                call: Call<ApiResponseWithData<RegionListData>>,
+                response: Response<ApiResponseWithData<RegionListData>>
             ) {
                 Log.i("getTownList", "2단계 지역 받아오기 성공")
                 townRequestResult = response.body()!!
                 setRecyclerTowns()
             }
 
-            override fun onFailure(call: Call<ApiResponseWithData>, t: Throwable) {
+            override fun onFailure(call: Call<ApiResponseWithData<RegionListData>>, t: Throwable) {
                 Log.i("getTownList", "실패 : $t")
             }
         })
@@ -122,7 +124,9 @@ class SelectTownActivity : MisoActivity() {
 
     fun setRecyclerTowns() {
         try {
-            var townList: List<Region> = townRequestResult.data.regionList
+
+            var regionListData = townRequestResult.data as RegionListData
+            var townList: List<Region> = regionListData.regionList
             recyclerAdapter = RecyclerTownsAdapter(this@SelectTownActivity, townList)
             list_towns.adapter = recyclerAdapter
             list_towns.layoutManager = LinearLayoutManager(this)
