@@ -141,7 +141,7 @@
                     android:textSize="16dp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/txt_weather_imoji"
-                    app:layout_constraintEnd_toStartOf="@+id/imageButton"
+                    app:layout_constraintEnd_toStartOf="@+id/imgbtn_show_weather"
                     app:layout_constraintTop_toTopOf="@+id/txt_weather_imoji" />
 
                 <TextView
@@ -171,7 +171,7 @@
                     app:srcCompat="@drawable/location_on" />
 
                 <ImageButton
-                    android:id="@+id/imageButton"
+                    android:id="@+id/imgbtn_show_weather"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginEnd="15dp"
