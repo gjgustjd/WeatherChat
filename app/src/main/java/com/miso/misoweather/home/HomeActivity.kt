@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.TextView
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityHomeBinding
+import com.miso.misoweather.model.DTO.Forecast.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
@@ -17,24 +18,61 @@ import java.lang.Exception
 
 class HomeActivity : MisoActivity() {
     lateinit var binding: ActivityHomeBinding
-    lateinit var apiResponseWithData: MemberInfoResponseDto
+    lateinit var memberInfoResponseDto: MemberInfoResponseDto
+    lateinit var forecastBriefResponseDto: ForecastBriefResponseDto
     lateinit var txtNickName:TextView
     lateinit var txtEmoji:TextView
     lateinit var txtLocation:TextView
+    lateinit var txtWeatherEmoji:TextView
+    lateinit var txtWeatherDegree:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initializeViews()
         getUserInfo()
+        getBriefForecast()
     }
 
     fun initializeViews() {
         txtNickName = binding.txtNickname
         txtEmoji = binding.txtEmoji
         txtLocation = binding.txtLocation
+        txtWeatherDegree = binding.txtDegree
+        txtWeatherEmoji = binding.txtWeatherImoji
     }
 
+    fun getBriefForecast()
+    {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(MISOWEATHER_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(MisoWeatherAPI::class.java)
+        val callgetBriefForecast = api.getBriefForecast(getPreference("defaultRegionId")!!.toInt())
+
+        callgetBriefForecast.enqueue(object : Callback<ForecastBriefResponseDto> {
+            override fun onResponse(
+                call: Call<ForecastBriefResponseDto>,
+                response: Response<ForecastBriefResponseDto>
+            ) {
+                try {
+                    Log.i("결과", "성공")
+                    forecastBriefResponseDto = response.body()!!
+                    var forecast = forecastBriefResponseDto.data.forecast
+                    txtWeatherEmoji.setText(forecast.sky)
+                    txtWeatherDegree.setText(forecast.temperature)
+                }catch (e: Exception)
+                {
+                    e.printStackTrace()
+                }
+            }
+
+            override fun onFailure(call: Call<ForecastBriefResponseDto>, t: Throwable) {
+                Log.i("결과", "실패 : $t")
+            }
+        })
+    }
     fun getUserInfo()
     {
         val retrofit = Retrofit.Builder()
@@ -51,12 +89,12 @@ class HomeActivity : MisoActivity() {
             ) {
                 try {
                     Log.i("결과", "성공")
-                    apiResponseWithData = response.body()!!
-                    var memberInfoResponseDto = apiResponseWithData.data as MemberInfoDto
+                    memberInfoResponseDto = response.body()!!
+                    var memberInfoResponseDto = memberInfoResponseDto.data as MemberInfoDto
                     txtNickName.setText(memberInfoResponseDto.nickname+"님!")
                     txtEmoji.setText(memberInfoResponseDto.emoji)
                     txtLocation.setText(memberInfoResponseDto.regionName)
-                    addPreferencePair("defaultRegionId",apiResponseWithData.data.regionId.toString())
+                    addPreferencePair("defaultRegionId", this@HomeActivity.memberInfoResponseDto.data.regionId.toString())
                     savePreferences()
                 }catch (e: Exception)
                 {
