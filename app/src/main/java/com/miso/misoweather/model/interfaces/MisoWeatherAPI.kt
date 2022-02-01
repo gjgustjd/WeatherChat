@@ -1,6 +1,7 @@
 package com.miso.misoweather.model.interfaces
 
 import com.miso.misoweather.model.DTO.*
+import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.Forecast.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
@@ -31,5 +32,6 @@ interface MisoWeatherAPI {
  @GET("api/forecast/{regionId}")
  fun getBriefForecast(@Path("regionId")regionId:Int):Call<ForecastBriefResponseDto>
 
-
+@GET("api/comment")
+fun getCommentList(@Query("commentId")commentId:Int?,@Query("size")size:Int):Call<CommentListResponseDto>
 }

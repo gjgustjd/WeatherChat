@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityHomeBinding
+import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.Forecast.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoDto
@@ -23,12 +26,15 @@ class HomeActivity : MisoActivity() {
     lateinit var binding: ActivityHomeBinding
     lateinit var memberInfoResponseDto: MemberInfoResponseDto
     lateinit var forecastBriefResponseDto: ForecastBriefResponseDto
+    lateinit var commentListResponseDto: CommentListResponseDto
     lateinit var txtNickName: TextView
     lateinit var txtEmoji: TextView
     lateinit var txtLocation: TextView
     lateinit var txtWeatherEmoji: TextView
     lateinit var txtWeatherDegree: TextView
     lateinit var btnShowWeatherDetail: ImageButton
+    lateinit var recyclerChat: RecyclerView
+    lateinit var recyclerChatAdapter:RecyclerChatsAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -36,6 +42,7 @@ class HomeActivity : MisoActivity() {
         initializeViews()
         getUserInfo()
         getBriefForecast()
+        getCommentList()
     }
 
     fun initializeViews() {
@@ -51,6 +58,7 @@ class HomeActivity : MisoActivity() {
             transferToNext()
             finish()
         }
+        recyclerChat = binding.recyclerChats
     }
 
     fun getBriefForecast() {
@@ -82,7 +90,40 @@ class HomeActivity : MisoActivity() {
             }
         })
     }
+    fun getCommentList()
+    {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(MISOWEATHER_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(MisoWeatherAPI::class.java)
+        val callgetCommentList = api.getCommentList(null,4)
 
+        callgetCommentList.enqueue(object : Callback<CommentListResponseDto> {
+            override fun onResponse(
+                call: Call<CommentListResponseDto>,
+                response: Response<CommentListResponseDto>
+            ) {
+                try {
+                    Log.i("결과", "성공")
+                    commentListResponseDto = response.body()!!
+                    setRecyclerChats()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+            override fun onFailure(call: Call<CommentListResponseDto>, t: Throwable) {
+                Log.i("결과", "실패 : $t")
+            }
+        })
+    }
+
+    fun setRecyclerChats(){
+        recyclerChatAdapter = RecyclerChatsAdapter(this,commentListResponseDto.data.commentList)
+        recyclerChat.adapter = recyclerChatAdapter
+        recyclerChat.layoutManager = LinearLayoutManager(this)
+    }
     fun getUserInfo() {
         val retrofit = Retrofit.Builder()
             .baseUrl(MISOWEATHER_BASE_URL)
