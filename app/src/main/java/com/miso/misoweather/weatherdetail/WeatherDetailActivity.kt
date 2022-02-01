@@ -120,11 +120,12 @@ class WeatherDetailActivity : MisoActivity() {
         txtMaxDegree.text = forecastdetailInfo.temperatureMax.split(".")[0] + "˚"
         txtEmojiRain.text = forecastdetailInfo.rainSnow
         txtDegreeRain.text = forecastdetailInfo.rainSnowPossibility + "%"
-//        txtDegreeRainOnHour.text = binding.txtRainDegreeOnHour
-//        txtWeatherEmoji.text = binding.txtWeatherImoji
+        txtDegreeRainOnHour.text = forecastdetailInfo.rainSnowValue
         txtDegreeWind.text = forecastdetailInfo.windSpeedValue
         txtEmojiWind.text = forecastdetailInfo.windSpeed
-        txtDegree.text = weatherOnTimeAdapter.getForecastOnHour(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("HH")) .toInt()).temperature+ "˚"
+        val forecastOnCurrentHour = weatherOnTimeAdapter.getForecastOnHour(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("HH")) .toInt())
+        txtDegree.text = forecastOnCurrentHour.temperature+ "˚"
+        txtWeatherEmoji.text = forecastOnCurrentHour.sky
     }
 
     fun setupRecyclers() {
