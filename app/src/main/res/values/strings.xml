@@ -40,4 +40,16 @@
         <item>강원도</item>
         <item>제주도</item>
     </string-array>
+    <string-array name="wind_degree">
+        <item>약해요</item>
+        <item>약간 강해요</item>
+        <item>강해요</item>
+        <item>매우 강해요</item>
+    </string-array>
+    <string-array name="wind_emoji">
+        <item>🍃</item>
+        <item>🌬</item>
+        <item>💨</item>
+        <item>🌪</item>
+    </string-array>
 </resources>

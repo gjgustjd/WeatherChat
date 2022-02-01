@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityWeatherMainBinding
 import com.miso.misoweather.home.HomeActivity
@@ -121,11 +122,18 @@ class WeatherDetailActivity : MisoActivity() {
         txtEmojiRain.text = forecastdetailInfo.rainSnow
         txtDegreeRain.text = forecastdetailInfo.rainSnowPossibility + "%"
         txtDegreeRainOnHour.text = forecastdetailInfo.rainSnowValue
-        txtDegreeWind.text = forecastdetailInfo.windSpeedValue
+        txtDegreeWind.text = getWindDegree(forecastdetailInfo.windSpeed)
         txtEmojiWind.text = forecastdetailInfo.windSpeed
         val forecastOnCurrentHour = weatherOnTimeAdapter.getForecastOnHour(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("HH")) .toInt())
         txtDegree.text = forecastOnCurrentHour.temperature+ "˚"
         txtWeatherEmoji.text = forecastOnCurrentHour.sky
+    }
+    fun getWindDegree(emoji:String):String
+    {
+        val degrees:Array<String> = resources.getStringArray(R.array.wind_degree)
+        val emojies:Array<String> = resources.getStringArray(R.array.wind_emoji)
+
+        return degrees.get(emojies.indexOf(emoji))
     }
 
     fun setupRecyclers() {
