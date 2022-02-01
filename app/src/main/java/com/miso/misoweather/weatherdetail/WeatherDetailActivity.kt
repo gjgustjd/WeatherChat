@@ -1,10 +1,12 @@
 package com.miso.misoweather.weatherdetail
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.common.MisoActivity
@@ -21,7 +23,13 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 class WeatherDetailActivity : MisoActivity() {
     lateinit var binding: ActivityWeatherMainBinding
     lateinit var btnBack: ImageButton
@@ -29,14 +37,14 @@ class WeatherDetailActivity : MisoActivity() {
     lateinit var forecastdetailInfo: ForecastDetailInfo
     lateinit var region: Region
 
-    lateinit var txtLocation:TextView
-    lateinit var txtWeatherEmoji:TextView
-    lateinit var txtDegree:TextView
-    lateinit var txtMinDegree:TextView
-    lateinit var txtMaxDegree:TextView
-    lateinit var btnChat:ImageButton
+    lateinit var txtLocation: TextView
+    lateinit var txtWeatherEmoji: TextView
+    lateinit var txtDegree: TextView
+    lateinit var txtMinDegree: TextView
+    lateinit var txtMaxDegree: TextView
+    lateinit var btnChat: ImageButton
     lateinit var recyclerWeatherOnTIme: RecyclerView
-    lateinit var WeatherOnTimeAdapter: RecyclerForecastOnTimeAdapter
+    lateinit var weatherOnTimeAdapter: RecyclerForecastOnTimeAdapter
     lateinit var txtEmojiRain: TextView
     lateinit var txtDegreeRain: TextView
     lateinit var txtDegreeRainOnHour: TextView
@@ -66,21 +74,22 @@ class WeatherDetailActivity : MisoActivity() {
         btnBack = binding.imgbtnBack
         btnBack.setOnClickListener()
         {
-            startActivity(Intent(this,HomeActivity::class.java))
+            startActivity(Intent(this, HomeActivity::class.java))
             transferToBack()
             finish()
         }
         recyclerWeatherOnTIme = binding.recylcerWeatherOnTIme
         recyclerForecast = binding.recyclerForecast
     }
-    fun getForecastDetail()
-    {
+
+    fun getForecastDetail() {
         val retrofit = Retrofit.Builder()
             .baseUrl(MISOWEATHER_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callForecastDetailList = api.getDetailForecast(getPreference("defaultRegionId")!!.toInt())
+        val callForecastDetailList =
+            api.getDetailForecast(getPreference("defaultRegionId")!!.toInt())
 
         callForecastDetailList.enqueue(object : Callback<ForecastDetailResponseDto> {
             override fun onResponse(
@@ -92,8 +101,8 @@ class WeatherDetailActivity : MisoActivity() {
                     forecastDetailResponseDto = response.body()!!
                     forecastdetailInfo = forecastDetailResponseDto.data.forecastInfo
                     region = forecastDetailResponseDto.data.region
-                    setForecastInfo()
                     setupRecyclers()
+                    setForecastInfo()
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -105,28 +114,29 @@ class WeatherDetailActivity : MisoActivity() {
         })
     }
 
-    fun setForecastInfo()
-    {
-        txtLocation.text = region.bigScale+" "+region.midScale+" "+region.smallScale
-//        txtWeatherEmoji.text = binding.txtWeatherImoji
-//        txtDegree.text = binding.txtDegree
-        txtMinDegree.text = forecastdetailInfo.temperatureMin.split(".")[0]+"˚"
-        txtMaxDegree.text = forecastdetailInfo.temperatureMax.split(".")[0]+"˚"
+    fun setForecastInfo() {
+        txtLocation.text = region.bigScale + " " + region.midScale + " " + region.smallScale
+        txtMinDegree.text = forecastdetailInfo.temperatureMin.split(".")[0] + "˚"
+        txtMaxDegree.text = forecastdetailInfo.temperatureMax.split(".")[0] + "˚"
         txtEmojiRain.text = forecastdetailInfo.rainSnow
-        txtDegreeRain.text = forecastdetailInfo.rainSnowPossibility+"%"
+        txtDegreeRain.text = forecastdetailInfo.rainSnowPossibility + "%"
 //        txtDegreeRainOnHour.text = binding.txtRainDegreeOnHour
+//        txtWeatherEmoji.text = binding.txtWeatherImoji
         txtDegreeWind.text = forecastdetailInfo.windSpeedValue
         txtEmojiWind.text = forecastdetailInfo.windSpeed
+        txtDegree.text = weatherOnTimeAdapter.getForecastOnHour(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("HH")) .toInt()).temperature+ "˚"
     }
 
-    fun setupRecyclers()
-    {
-       setupWeatherOnTimeRecycler()
+    fun setupRecyclers() {
+        setupWeatherOnTimeRecycler()
     }
-    fun setupWeatherOnTimeRecycler()
-    {
-        recyclerWeatherOnTIme.adapter = RecyclerForecastOnTimeAdapter(this,forecastDetailResponseDto.data.forecastByTime)
-        recyclerWeatherOnTIme.layoutManager = LinearLayoutManager(this,RecyclerView.HORIZONTAL,false)
+
+    fun setupWeatherOnTimeRecycler() {
+        weatherOnTimeAdapter =
+            RecyclerForecastOnTimeAdapter(this, forecastDetailResponseDto.data.forecastByTime)
+        recyclerWeatherOnTIme.adapter = weatherOnTimeAdapter
+        recyclerWeatherOnTIme.layoutManager =
+            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
     }
 
 

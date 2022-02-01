@@ -31,6 +31,11 @@ class RecyclerForecastOnTimeAdapter(var context: Context, var forecasts: List<Fo
         return Holder(view)
     }
 
+    fun getForecastOnHour(hour:Int):Forecast
+    {
+        return forecasts.first(){it.hour.toInt()==hour}
+    }
+
     class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var emoji = itemView.findViewById<TextView>(R.id.txt_weather_emoji)
         var degree = itemView.findViewById<TextView>(R.id.txt_weather_degree)
