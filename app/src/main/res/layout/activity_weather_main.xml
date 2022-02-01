@@ -450,6 +450,7 @@
                 android:layout_height="400dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/unit_background"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dustLayout">
@@ -624,6 +625,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="40dp"
                 android:background="@drawable/unit_background"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/humidLayout"
                 app:layout_constraintStart_toStartOf="@id/humidLayout"
