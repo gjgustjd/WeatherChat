@@ -114,7 +114,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/title_bold">
 
                 <ImageView
-                    android:id="@+id/txt_weather_imoji"
+                    android:id="@+id/txt_weather_emoji"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -133,10 +133,10 @@
                     android:textColor="@color/textBlack"
                     android:textSize="40dp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/txt_weather_imoji"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_weather_emoji"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/txt_weather_imoji"
-                    app:layout_constraintTop_toTopOf="@+id/txt_weather_imoji" />
+                    app:layout_constraintStart_toEndOf="@+id/txt_weather_emoji"
+                    app:layout_constraintTop_toTopOf="@+id/txt_weather_emoji" />
 
                 <TextView
                     android:id="@+id/txt_unit"
@@ -190,7 +190,7 @@
                     app:layout_constraintEnd_toStartOf="@id/txt_min_degree"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_weather_imoji" />
+                    app:layout_constraintTop_toBottomOf="@+id/txt_weather_emoji" />
 
                 <TextView
                     android:id="@+id/txt_min_degree"
@@ -204,7 +204,7 @@
                     app:layout_constraintEnd_toStartOf="@id/label_max"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toEndOf="@+id/label_min"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_weather_imoji" />
+                    app:layout_constraintTop_toBottomOf="@+id/txt_weather_emoji" />
 
                 <TextView
                     android:id="@+id/label_max"
@@ -215,7 +215,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/txt_max_degree"
                     app:layout_constraintStart_toEndOf="@+id/txt_min_degree"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_weather_imoji" />
+                    app:layout_constraintTop_toBottomOf="@+id/txt_weather_emoji" />
 
                 <TextView
                     android:id="@+id/txt_max_degree"
@@ -228,7 +228,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/label_max"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_weather_imoji" />
+                    app:layout_constraintTop_toBottomOf="@+id/txt_weather_emoji" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout

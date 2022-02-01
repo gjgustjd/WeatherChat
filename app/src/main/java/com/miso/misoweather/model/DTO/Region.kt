@@ -1,4 +1,4 @@
-package com.miso.misoweather.model.DTO.RegionListResponse
+package com.miso.misoweather.model.DTO
 
 class Region {
     var bigScale:String=""

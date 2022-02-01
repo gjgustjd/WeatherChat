@@ -1,4 +1,4 @@
-package com.miso.misoweather.model.DTO.Forecast
+package com.miso.misoweather.model.DTO.Forecast.Brief
 
 data class ForecastBriefResponseDto(
     val data: ForecastBriefData,

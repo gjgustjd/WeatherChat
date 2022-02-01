@@ -14,7 +14,7 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.getnickname.SelectNickNameActivity
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
-import com.miso.misoweather.model.DTO.RegionListResponse.Region
+import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.selectTown.RecyclerAreaAdapter
 import com.miso.misoweather.selectTown.SelectTownActivity

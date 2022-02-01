@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <ImageButton
-        android:id="@+id/img_icon"
+        android:id="@+id/imgbtn_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
@@ -28,7 +28,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_icon">
+        app:layout_constraintTop_toBottomOf="@+id/imgbtn_back">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -44,30 +44,32 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_bold">
 
-                <ImageView
-                    android:id="@+id/txt_weather_imoji"
+                <TextView
+                    android:id="@+id/txt_weather_emoji"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="☀"
+                    android:textSize="50dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/txt_degree"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/icon_sun" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/txt_degree"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginStart="5dp"
+                    android:gravity="center"
                     android:text="-10"
                     android:textColor="@color/textBlack"
                     android:textSize="40dp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/txt_weather_imoji"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_weather_emoji"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/txt_weather_imoji"
-                    app:layout_constraintTop_toTopOf="@+id/txt_weather_imoji" />
+                    app:layout_constraintStart_toEndOf="@+id/txt_weather_emoji"
+                    app:layout_constraintTop_toTopOf="@+id/txt_weather_emoji" />
 
                 <TextView
                     android:id="@+id/txt_unit"
@@ -87,7 +89,7 @@
                     android:layout_marginStart="5dp"
                     android:text="서울시 강남구 신사동"
                     android:textColor="@color/textBlack"
-                    app:layout_constraintBottom_toTopOf="@+id/txt_weather_imoji"
+                    app:layout_constraintBottom_toTopOf="@+id/txt_weather_emoji"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/img_location"
                     app:layout_constraintTop_toTopOf="parent"
@@ -114,7 +116,7 @@
                     app:layout_constraintEnd_toStartOf="@id/txt_min_degree"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_weather_imoji"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_weather_emoji"
                     app:layout_constraintVertical_bias="0.2" />
 
                 <TextView
@@ -192,7 +194,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
                 <ImageButton
-                    android:id="@+id/imageButton2"
+                    android:id="@+id/imgbtn_chat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
@@ -230,6 +232,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recylcer_weatherOnTIme"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginStart="15dp"
@@ -389,15 +392,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/img_imoge_rain"
+                <TextView
+                    android:id="@+id/txt_imoge_rain"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="center"
+                    android:text="☔"
+                    android:textSize="30dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/label_rain"
                     app:layout_constraintTop_toBottomOf="@+id/label_rain"
-                    app:layout_constraintVertical_bias="0.333"
-                    app:srcCompat="@drawable/icon_umbrella" />
+                    app:layout_constraintVertical_bias="0.333" />
 
                 <TextView
                     android:id="@+id/txt_degree_rain"
@@ -409,8 +416,8 @@
                     android:textSize="24dp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@id/label_rain_emotion"
-                    app:layout_constraintStart_toEndOf="@+id/img_imoge_rain"
-                    app:layout_constraintTop_toTopOf="@+id/img_imoge_rain"
+                    app:layout_constraintStart_toEndOf="@+id/txt_imoge_rain"
+                    app:layout_constraintTop_toTopOf="@+id/txt_imoge_rain"
                     app:layout_constraintVertical_chainStyle="packed" />
 
                 <TextView
@@ -420,12 +427,12 @@
                     android:layout_marginTop="5dp"
                     android:text="시간당 "
                     android:textColor="@color/textBlack"
-                    app:layout_constraintBottom_toBottomOf="@+id/img_imoge_rain"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_imoge_rain"
                     app:layout_constraintStart_toStartOf="@+id/txt_degree_rain"
                     app:layout_constraintTop_toBottomOf="@+id/txt_degree_rain" />
 
                 <TextView
-                    android:id="@+id/txt_rain_emotion"
+                    android:id="@+id/txt_rain_degree_on_hour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10mm"
@@ -473,6 +480,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_forecast"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginTop="30dp"
@@ -507,8 +515,8 @@
                     android:textColor="@color/textBlack"
                     android:textSize="16dp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@id/img_leaf"
-                    app:layout_constraintStart_toEndOf="@+id/img_leaf"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_emoji_windSpeed"
+                    app:layout_constraintStart_toEndOf="@+id/txt_emoji_windSpeed"
                     app:layout_constraintTop_toBottomOf="@id/label_wind_degree"
                     app:layout_constraintVertical_chainStyle="packed" />
 
@@ -520,8 +528,8 @@
                     android:text="바람이"
                     android:textColor="@color/textBlack"
                     app:layout_constraintBottom_toTopOf="@id/txt_degree_wind"
-                    app:layout_constraintStart_toEndOf="@+id/img_leaf"
-                    app:layout_constraintTop_toTopOf="@+id/img_leaf"
+                    app:layout_constraintStart_toEndOf="@+id/txt_emoji_windSpeed"
+                    app:layout_constraintTop_toTopOf="@+id/txt_emoji_windSpeed"
                     app:layout_constraintVertical_chainStyle="packed" />
 
                 <TextView
@@ -541,16 +549,18 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_chainStyle="packed" />
 
-                <ImageView
-                    android:id="@+id/img_leaf"
+                <TextView
+                    android:id="@+id/txt_emoji_windSpeed"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
+                    android:text="🍃"
+                    android:textSize="30dp"
+                    app:autoSizeTextType="uniform"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/label_wind"
-                    app:layout_constraintTop_toBottomOf="@+id/label_wind"
-                    app:srcCompat="@drawable/icon_leaf" />
+                    app:layout_constraintTop_toBottomOf="@+id/label_wind" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -588,21 +598,23 @@
                     android:textColor="@color/textBlack"
                     android:textSize="24dp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/img_humid"
-                    app:layout_constraintStart_toEndOf="@+id/img_humid"
-                    app:layout_constraintTop_toTopOf="@+id/img_humid"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_humid"
+                    app:layout_constraintStart_toEndOf="@+id/txt_humid"
+                    app:layout_constraintTop_toTopOf="@+id/txt_humid"
                     app:layout_constraintVertical_chainStyle="packed" />
 
-                <ImageView
-                    android:id="@+id/img_humid"
+                <TextView
+                    android:id="@+id/txt_humid"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
+                    android:text="💦"
+                    android:textSize="30dp"
+                    app:autoSizeTextType="uniform"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/label_humid"
-                    app:layout_constraintTop_toBottomOf="@+id/label_humid"
-                    app:srcCompat="@drawable/icon_drop" />
+                    app:layout_constraintTop_toBottomOf="@+id/label_humid" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityHomeBinding
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
-import com.miso.misoweather.model.DTO.Forecast.ForecastBriefResponseDto
+import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
@@ -50,7 +50,7 @@ class HomeActivity : MisoActivity() {
         txtEmoji = binding.txtEmoji
         txtLocation = binding.txtLocation
         txtWeatherDegree = binding.txtDegree
-        txtWeatherEmoji = binding.txtWeatherImoji
+        txtWeatherEmoji = binding.txtWeatherEmoji
         btnShowWeatherDetail = binding.imgbtnShowWeather
         btnShowWeatherDetail.setOnClickListener()
         {

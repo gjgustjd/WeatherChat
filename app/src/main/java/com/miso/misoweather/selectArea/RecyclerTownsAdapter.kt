@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
-import com.miso.misoweather.model.DTO.RegionListResponse.Region
+import com.miso.misoweather.model.DTO.Region
 import java.lang.Exception
 
 class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
@@ -81,7 +81,7 @@ class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
         return Holder(view)
     }
 
-    fun getSelectedItem():Region{
+    fun getSelectedItem(): Region {
         return regions.get(selectedPosition)
     }
     class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
