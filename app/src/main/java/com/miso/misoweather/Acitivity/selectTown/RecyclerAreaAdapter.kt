@@ -1,4 +1,4 @@
-package com.miso.misoweather.selectArea
+package com.miso.misoweather.Acitivity.selectTown
 
 import android.content.Context
 import android.graphics.Color
@@ -13,8 +13,8 @@ import com.miso.misoweather.R
 import com.miso.misoweather.model.DTO.Region
 import java.lang.Exception
 
-class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
-    RecyclerView.Adapter<RecyclerTownsAdapter.Holder>() {
+class RecyclerAreaAdapter(var context: Context, var regions: List<Region>) :
+    RecyclerView.Adapter<RecyclerAreaAdapter.Holder>() {
     var selectedPosition: Int = 0
 
     var viewHolders: ArrayList<Holder> = ArrayList()
@@ -32,8 +32,8 @@ class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
         layoutParams.height = 140
         holder.itemView.requestLayout()
         var region = regions.get(position)
-        var name: String = region.midScale
-        if (region.midScale.contains("선택 안 함"))
+        var name: String = region.smallScale
+        if (region.smallScale.contains("선택 안 함"))
             name = "전체"
         holder.setText(name)
         applySelection(holder,selectedPosition==position)
@@ -70,9 +70,13 @@ class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
             applySelection(viewHolders.get(selectedPosition), true)
         }catch (e:Exception)
         {
-            e.printStackTrace()
             selectedPosition = position
+           e.printStackTrace()
         }
+    }
+
+    fun getSelectedItem(): Region {
+        return regions.get(selectedPosition)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -81,9 +85,6 @@ class RecyclerTownsAdapter(var context: Context, var regions: List<Region>) :
         return Holder(view)
     }
 
-    fun getSelectedItem(): Region {
-        return regions.get(selectedPosition)
-    }
     class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var txt_name = itemView.findViewById<TextView>(R.id.txt_region_name)
         fun setText(listData: String) {

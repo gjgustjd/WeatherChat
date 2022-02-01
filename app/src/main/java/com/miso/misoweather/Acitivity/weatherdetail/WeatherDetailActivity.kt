@@ -1,4 +1,4 @@
-package com.miso.misoweather.weatherdetail
+package com.miso.misoweather.Acitivity.weatherdetail
 
 import android.content.Intent
 import android.os.Build
@@ -12,8 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityWeatherMainBinding
-import com.miso.misoweather.home.HomeActivity
-import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
+import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.model.DTO.Forecast.Detail.ForecastDetailResponseDto
 import com.miso.misoweather.model.DTO.Forecast.ForecastDetailInfo
 import com.miso.misoweather.model.DTO.Region
@@ -24,7 +23,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter

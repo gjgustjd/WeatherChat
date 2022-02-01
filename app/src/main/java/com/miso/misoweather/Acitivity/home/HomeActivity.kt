@@ -1,4 +1,4 @@
-package com.miso.misoweather.home
+package com.miso.misoweather.Acitivity.home
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,7 +14,7 @@ import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
-import com.miso.misoweather.weatherdetail.WeatherDetailActivity
+import com.miso.misoweather.Acitivity.weatherdetail.WeatherDetailActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

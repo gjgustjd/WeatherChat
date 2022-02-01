@@ -1,16 +1,13 @@
-package com.miso.misoweather
+package com.miso.misoweather.Acitivity
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
-import androidx.appcompat.app.AppCompatActivity
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySplashBinding
-import com.miso.misoweather.home.HomeActivity
-import com.miso.misoweather.login.LoginActivity
-import com.miso.misoweather.selectRegion.SelectRegionActivity
+import com.miso.misoweather.Acitivity.home.HomeActivity
+import com.miso.misoweather.Acitivity.login.LoginActivity
+import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
 
 class SplashActivity : MisoActivity() {
     lateinit var binding: ActivitySplashBinding

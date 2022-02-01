@@ -1,4 +1,4 @@
-package com.miso.misoweather.getnickname
+package com.miso.misoweather.Acitivity.getnickname
 
 import android.content.Intent
 import android.graphics.Paint
@@ -10,12 +10,12 @@ import android.widget.TextView
 import android.widget.Toast
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectNicknameBinding
-import com.miso.misoweather.home.HomeActivity
+import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.model.DTO.*
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameData
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
-import com.miso.misoweather.selectArea.SelectAreaActivity
+import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

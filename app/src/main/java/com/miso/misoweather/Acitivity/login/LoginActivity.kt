@@ -1,4 +1,4 @@
-package com.miso.misoweather.login
+package com.miso.misoweather.Acitivity.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,8 +6,8 @@ import android.util.Log
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityLoginBinding
-import com.miso.misoweather.home.HomeActivity
-import com.miso.misoweather.selectRegion.SelectRegionActivity
+import com.miso.misoweather.Acitivity.home.HomeActivity
+import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
 import java.lang.Exception
 
 class LoginActivity : MisoActivity() {
@@ -23,9 +23,9 @@ class LoginActivity : MisoActivity() {
             else {
                 lateinit var intent:Intent
                 if (getPreference("misoToken").equals(""))
-                    intent = Intent(this,SelectRegionActivity::class.java)
+                    intent = Intent(this, SelectRegionActivity::class.java)
                 else
-                    intent = Intent(this,HomeActivity::class.java)
+                    intent = Intent(this, HomeActivity::class.java)
 
                 startActivity(intent)
             }

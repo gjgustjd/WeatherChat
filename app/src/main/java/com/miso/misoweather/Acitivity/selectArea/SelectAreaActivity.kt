@@ -1,4 +1,4 @@
-package com.miso.misoweather.selectArea
+package com.miso.misoweather.Acitivity.selectArea
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,12 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
-import com.miso.misoweather.getnickname.SelectNickNameActivity
+import com.miso.misoweather.Acitivity.getnickname.SelectNickNameActivity
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
-import com.miso.misoweather.selectTown.RecyclerAreaAdapter
-import com.miso.misoweather.selectTown.SelectTownActivity
+import com.miso.misoweather.Acitivity.selectTown.RecyclerAreaAdapter
+import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,7 +34,7 @@ class SelectAreaActivity :MisoActivity(){
     lateinit var selectedRegion:String
     lateinit var selectedTown:String
     lateinit var townRequestResult:RegionListResponseDto
-    lateinit var recyclerAdapter:RecyclerAreaAdapter
+    lateinit var recyclerAdapter: RecyclerAreaAdapter
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState);

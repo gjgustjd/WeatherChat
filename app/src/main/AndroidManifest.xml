@@ -12,25 +12,25 @@
         android:name=".SocketApplication"
         android:networkSecurityConfig="@xml/network_config"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".home.HomeActivity">
+        <activity android:name=".Acitivity.home.HomeActivity">
         </activity>
-        <activity android:name=".getnickname.SelectNickNameActivity">
+        <activity android:name=".Acitivity.getnickname.SelectNickNameActivity">
         </activity>
-        <activity android:name=".selectRegion.SelectRegionActivity">
+        <activity android:name=".Acitivity.selectRegion.SelectRegionActivity">
         </activity>
-        <activity android:name=".selectTown.SelectTownActivity">
+        <activity android:name=".Acitivity.selectTown.SelectTownActivity">
         </activity>
-        <activity android:name=".selectArea.SelectAreaActivity">
+        <activity android:name=".Acitivity.selectArea.SelectAreaActivity">
         </activity>
-        <activity android:name="com.miso.misoweather.SplashActivity">
+        <activity android:name="com.miso.misoweather.Acitivity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.miso.misoweather.login.LoginActivity">
+        <activity android:name="com.miso.misoweather.Acitivity.login.LoginActivity">
         </activity>
-        <activity android:name="com.miso.misoweather.weatherdetail.WeatherDetailActivity">
+        <activity android:name="com.miso.misoweather.Acitivity.weatherdetail.WeatherDetailActivity">
         </activity>
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>

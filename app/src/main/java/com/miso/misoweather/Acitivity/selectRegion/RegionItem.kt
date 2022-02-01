@@ -1,4 +1,4 @@
-package com.miso.misoweather.selectRegion
+package com.miso.misoweather.Acitivity.selectRegion
 
 class RegionItem {
     var shortName:String=""

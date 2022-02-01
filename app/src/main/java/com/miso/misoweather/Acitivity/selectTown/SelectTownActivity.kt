@@ -1,4 +1,4 @@
-package com.miso.misoweather.selectTown
+package com.miso.misoweather.Acitivity.selectTown
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,14 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
-import com.miso.misoweather.getnickname.SelectNickNameActivity
+import com.miso.misoweather.Acitivity.getnickname.SelectNickNameActivity
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListData
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
-import com.miso.misoweather.selectArea.RecyclerTownsAdapter
-import com.miso.misoweather.selectArea.SelectAreaActivity
-import com.miso.misoweather.selectRegion.SelectRegionActivity
+import com.miso.misoweather.Acitivity.selectArea.RecyclerTownsAdapter
+import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
+import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

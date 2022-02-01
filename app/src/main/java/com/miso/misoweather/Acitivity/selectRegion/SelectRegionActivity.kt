@@ -1,4 +1,4 @@
-package com.miso.misoweather.selectRegion
+package com.miso.misoweather.Acitivity.selectRegion
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,8 +10,8 @@ import com.miso.misoweather.R
 import com.miso.misoweather.common.VerticalSpaceItemDecoration
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
-import com.miso.misoweather.login.LoginActivity
-import com.miso.misoweather.selectTown.SelectTownActivity
+import com.miso.misoweather.Acitivity.login.LoginActivity
+import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
 import java.lang.Exception
 
 class SelectRegionActivity : MisoActivity() {
@@ -35,7 +35,7 @@ class SelectRegionActivity : MisoActivity() {
         btn_back = binding.imgbtnBack
         btn_next = binding.btnAction
         btn_back.setOnClickListener(){
-            startActivity(Intent(this,LoginActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             transferToBack()
             finish()
         }
@@ -72,7 +72,7 @@ class SelectRegionActivity : MisoActivity() {
         var regionItems:ArrayList<RegionItem> = ArrayList<RegionItem>()
         for(i:Int in 0..regions.size-1)
         {
-            var item:RegionItem = RegionItem()
+            var item: RegionItem = RegionItem()
             item.shortName=regions.get(i)
             item.longName=regions_full.get(i)
             regionItems.add(item)

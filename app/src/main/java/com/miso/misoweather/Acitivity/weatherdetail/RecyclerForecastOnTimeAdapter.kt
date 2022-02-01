@@ -1,4 +1,4 @@
-package com.miso.misoweather.weatherdetail
+package com.miso.misoweather.Acitivity.weatherdetail
 
 import android.content.Context
 import android.view.LayoutInflater
