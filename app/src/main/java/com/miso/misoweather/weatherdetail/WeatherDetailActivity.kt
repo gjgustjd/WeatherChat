@@ -110,8 +110,8 @@ class WeatherDetailActivity : MisoActivity() {
         txtLocation.text = region.bigScale+" "+region.midScale+" "+region.smallScale
 //        txtWeatherEmoji.text = binding.txtWeatherImoji
 //        txtDegree.text = binding.txtDegree
-        txtMinDegree.text = forecastdetailInfo.temperatureMin
-        txtMaxDegree.text = forecastdetailInfo.temperatureMax
+        txtMinDegree.text = forecastdetailInfo.temperatureMin.split(".")[0]+"˚"
+        txtMaxDegree.text = forecastdetailInfo.temperatureMax.split(".")[0]+"˚"
         txtEmojiRain.text = forecastdetailInfo.rainSnow
         txtDegreeRain.text = forecastdetailInfo.rainSnowPossibility+"%"
 //        txtDegreeRainOnHour.text = binding.txtRainDegreeOnHour

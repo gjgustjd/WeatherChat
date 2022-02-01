@@ -82,7 +82,7 @@ class HomeActivity : MisoActivity() {
                     txtLocation.text =
                         region.bigScale + " " + region.midScale + " " + region.smallScale
                     txtWeatherEmoji.setText(forecast.sky)
-                    txtWeatherDegree.setText(forecast.temperature)
+                    txtWeatherDegree.setText(forecast.temperature+"˚")
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -147,7 +147,6 @@ class HomeActivity : MisoActivity() {
                     var memberInfoResponseDto = memberInfoResponseDto.data as MemberInfoDto
                     txtNickName.setText(memberInfoResponseDto.nickname + "님!")
                     txtEmoji.setText(memberInfoResponseDto.emoji)
-                    txtLocation.setText(memberInfoResponseDto.regionName)
                     addPreferencePair(
                         "defaultRegionId",
                         this@HomeActivity.memberInfoResponseDto.data.regionId.toString()
