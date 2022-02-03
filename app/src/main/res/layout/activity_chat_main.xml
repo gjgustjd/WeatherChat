@@ -47,7 +47,7 @@
             android:id="@+id/btn_survey"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="1dp"
+            android:layout_margin="5dp"
             android:background="@drawable/toggle_track_background"
             android:backgroundTint="@color/primaryPurple"
             android:text="오늘의 사람들"
