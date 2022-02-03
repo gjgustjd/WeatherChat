@@ -96,18 +96,18 @@
             app:layout_constraintEnd_toEndOf="@id/txt_current_date"
             app:layout_constraintTop_toTopOf="@id/txt_current_date"
             app:srcCompat="@drawable/icon_arrow_down" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/fragmentLayout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_surveys"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/regionButtonLayout">
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@+id/regionButtonLayout"
+        tools:listitem="@layout/list_survey_weather" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
