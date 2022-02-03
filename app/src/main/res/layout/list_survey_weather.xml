@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/txt_title"
+        style="@style/boldBlack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="오늘 날씨 어때요?"
+        android:textSize="14dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_title_imoji"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="☀"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_title"
+        app:layout_constraintStart_toEndOf="@+id/txt_title"
+        app:layout_constraintTop_toTopOf="@+id/txt_title" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/myAnswerLayout"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/unit_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/otherAnswerLayout"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_title">
+
+        <TextView
+            android:id="@+id/txt_myanswer_title"
+            style="@style/boldBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="내 답변"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <ImageView
+            android:id="@+id/img_isanswered"
+            style="@style/imgViewAdjusted"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/txt_my_score"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_myanswer_title"
+            app:layout_constraintWidth_percent="0.3"
+            app:srcCompat="@drawable/check_purple" />
+
+        <TextView
+            android:id="@+id/txt_my_score"
+            style="@style/boldBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:text="내 답변"
+            android:textColor="@color/primaryPurple"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/otherAnswerLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/unit_background"
+        app:layout_constraintBottom_toBottomOf="@+id/myAnswerLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="7"
+        app:layout_constraintStart_toEndOf="@id/myAnswerLayout"
+        app:layout_constraintTop_toTopOf="@+id/myAnswerLayout">
+
+        <TextView
+            android:id="@+id/txt_others_title"
+            style="@style/boldBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="다른 사람들은"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/progressLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_others_title">
+
+            <TextView
+                android:id="@+id/txt_first_ratio"
+                style="@style/boldBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="52%"
+                android:textColor="@color/primaryPurple"
+                android:textSize="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_first_score"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_first_score"
+                style="@style/boldBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:text="4점"
+                android:textColor="@color/primaryPurple"
+                android:textSize="10dp"
+                app:layout_constraintEnd_toStartOf="@+id/txt_first_ratio"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_third_score"
+                style="@style/boldBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:text="4점"
+                android:textSize="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/txt_third_ratio" />
+
+            <TextView
+                android:id="@+id/txt_second_score"
+                style="@style/boldBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:text="4점"
+                android:textSize="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/txt_third_score"
+                app:layout_constraintEnd_toStartOf="@+id/txt_third_ratio"
+                app:layout_constraintTop_toBottomOf="@+id/txt_first_score" />
+
+            <TextView
+                android:id="@+id/txt_second_ratio"
+                style="@style/boldBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="52%"
+                android:textSize="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_second_score"
+                app:layout_constraintEnd_toEndOf="@id/txt_first_ratio"
+                app:layout_constraintStart_toStartOf="@+id/txt_first_ratio" />
+
+            <TextView
+                android:id="@+id/txt_third_ratio"
+                style="@style/boldBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="52%"
+                android:textSize="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_third_score"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/txt_second_ratio" />
+
+            <ProgressBar
+                android:id="@+id/progress_first"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="20dp"
+                android:background="@android:color/transparent"
+                android:progressDrawable="@drawable/progress_first_background"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_first_score"
+                app:layout_constraintEnd_toStartOf="@+id/txt_first_score"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/progress_second"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="20dp"
+                android:background="@android:color/transparent"
+                android:progressDrawable="@drawable/progress_default_background"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_second_score"
+                app:layout_constraintEnd_toStartOf="@+id/txt_second_score"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/txt_second_score" />
+
+            <ProgressBar
+                android:id="@+id/progress_third"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="20dp"
+                android:background="@android:color/transparent"
+                android:progressDrawable="@drawable/progress_default_background"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_third_score"
+                app:layout_constraintEnd_toStartOf="@+id/txt_third_score"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/txt_third_score" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
