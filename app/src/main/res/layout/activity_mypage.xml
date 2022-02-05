@@ -6,6 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/img_copyright_misobuild2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/profileLayout"
+        app:layout_constraintStart_toStartOf="@+id/profileLayout"
+        app:srcCompat="@drawable/copyright_misobuild" />
+
     <ImageButton
         android:id="@+id/imgbtn_back"
         android:layout_width="wrap_content"
@@ -24,10 +34,86 @@
         style="@style/boldBlack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="10dp"
         android:text="마이페이지"
         android:textSize="@dimen/subactivity_title_text_size"
         app:layout_constraintBottom_toBottomOf="@+id/imgbtn_back"
         app:layout_constraintStart_toEndOf="@+id/imgbtn_back"
         app:layout_constraintTop_toTopOf="@+id/imgbtn_back" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/profileLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/root_side_margin"
+        android:layout_marginEnd="@dimen/root_side_margin"
+        android:background="@drawable/unit_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.25"
+        app:layout_constraintStart_toStartOf="@+id/imgbtn_back"
+        app:layout_constraintTop_toBottomOf="@+id/imgbtn_back">
+
+        <TextView
+            android:id="@+id/txt_nickname"
+            style="@style/boldBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="유쾌한 막내사자"
+            android:textSize="@dimen/subactivity_title_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_emoji"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:maxLength="1"
+            android:text="☀"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toTopOf="@+id/txt_nickname"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_transparent_underline"
+        android:gravity="start|center_vertical"
+        android:text="🔑 로그아웃"
+        app:layout_constraintEnd_toEndOf="@+id/profileLayout"
+        app:layout_constraintStart_toStartOf="@+id/profileLayout"
+        app:layout_constraintTop_toBottomOf="@+id/profileLayout" />
+
+    <Button
+        android:id="@+id/btn_version"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_transparent_underline"
+        android:gravity="start|center_vertical"
+        android:text="📱 앱 버전"
+        app:layout_constraintEnd_toEndOf="@+id/profileLayout"
+        app:layout_constraintStart_toStartOf="@+id/profileLayout"
+        app:layout_constraintTop_toBottomOf="@+id/btn_logout" />
+
+    <Button
+        android:id="@+id/btn_unregister"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_transparent_underline"
+        android:gravity="start|center_vertical"
+        android:text="💔 계정 삭제"
+        app:layout_constraintEnd_toEndOf="@+id/profileLayout"
+        app:layout_constraintStart_toStartOf="@+id/profileLayout"
+        app:layout_constraintTop_toBottomOf="@+id/btn_version" />
 </androidx.constraintlayout.widget.ConstraintLayout>
