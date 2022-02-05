@@ -18,6 +18,8 @@
         </activity>
         <activity android:name=".Acitivity.selectRegion.SelectRegionActivity">
         </activity>
+        <activity android:name=".Acitivity.mypage.MyPageActivity">
+        </activity>
         <activity android:name=".Acitivity.selectTown.SelectTownActivity">
         </activity>
         <activity android:name=".Acitivity.selectArea.SelectAreaActivity">

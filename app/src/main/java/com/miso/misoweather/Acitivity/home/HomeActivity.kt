@@ -15,6 +15,7 @@ import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.weatherdetail.WeatherDetailActivity
+import com.miso.misoweather.Acitivity.mypage.MyPageActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,6 +34,7 @@ class HomeActivity : MisoActivity() {
     lateinit var txtWeatherEmoji: TextView
     lateinit var txtWeatherDegree: TextView
     lateinit var btnShowWeatherDetail: ImageButton
+    lateinit var btnProfile: ImageButton
     lateinit var recyclerChat: RecyclerView
     lateinit var recyclerChatAdapter: RecyclerChatsAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +54,14 @@ class HomeActivity : MisoActivity() {
         txtWeatherDegree = binding.txtDegree
         txtWeatherEmoji = binding.txtWeatherEmoji
         btnShowWeatherDetail = binding.imgbtnShowWeather
+        btnProfile = binding.imgbtnProfile
         btnShowWeatherDetail.setOnClickListener()
+        {
+            startActivity(Intent(this, MyPageActivity::class.java))
+            transferToNext()
+            finish()
+        }
+        btnProfile.setOnClickListener()
         {
             startActivity(Intent(this, WeatherDetailActivity::class.java))
             transferToNext()
