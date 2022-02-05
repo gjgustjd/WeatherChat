@@ -20,7 +20,7 @@
         android:backgroundTint="@color/primaryPurple"
         android:text="취소"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_action"
+        app:layout_constraintEnd_toStartOf="@id/btn_logout"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button

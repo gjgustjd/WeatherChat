@@ -57,13 +57,13 @@ class HomeActivity : MisoActivity() {
         btnProfile = binding.imgbtnProfile
         btnShowWeatherDetail.setOnClickListener()
         {
-            startActivity(Intent(this, MyPageActivity::class.java))
+            startActivity(Intent(this, WeatherDetailActivity::class.java))
             transferToNext()
             finish()
         }
         btnProfile.setOnClickListener()
         {
-            startActivity(Intent(this, WeatherDetailActivity::class.java))
+            startActivity(Intent(this, MyPageActivity::class.java))
             transferToNext()
             finish()
         }
@@ -153,13 +153,15 @@ class HomeActivity : MisoActivity() {
                 try {
                     Log.i("결과", "성공")
                     memberInfoResponseDto = response.body()!!
-                    var memberInfoResponseDto = memberInfoResponseDto.data as MemberInfoDto
-                    txtNickName.setText(memberInfoResponseDto.nickname + "님!")
-                    txtEmoji.setText(memberInfoResponseDto.emoji)
+                    var memberInfo = memberInfoResponseDto.data
+                    txtNickName.setText(memberInfo.nickname + "님!")
+                    txtEmoji.setText(memberInfo.emoji)
                     addPreferencePair(
                         "defaultRegionId",
                         this@HomeActivity.memberInfoResponseDto.data.regionId.toString()
                     )
+                    addPreferencePair("emoji",memberInfo.emoji)
+                    addPreferencePair("nickname",memberInfo.nickname)
                     savePreferences()
                 } catch (e: Exception) {
                     e.printStackTrace()
