@@ -14,6 +14,7 @@ open class MisoActivity :AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         prefs = getSharedPreferences("misoweather", Context.MODE_PRIVATE)
+        pairList = ArrayList()
 
     }
     protected fun transferToBack(){

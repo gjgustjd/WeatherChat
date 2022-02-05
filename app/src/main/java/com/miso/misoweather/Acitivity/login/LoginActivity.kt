@@ -3,6 +3,7 @@ package com.miso.misoweather.Acitivity.login
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityLoginBinding
@@ -18,7 +19,7 @@ class LoginActivity : MisoActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.clBtnKakaoLogin.setOnClickListener {
-            if (getPreference("accessToken").equals(""))
+            if (!AuthApiClient.instance.hasToken())
                 kakaoLogin()
             else {
                 lateinit var intent:Intent

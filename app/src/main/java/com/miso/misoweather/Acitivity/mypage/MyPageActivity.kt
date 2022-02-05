@@ -62,7 +62,7 @@ class MyPageActivity : MisoActivity() {
             val dialog = GeneralConfirmDialog(
                 this,
                 View.OnClickListener {
-                                     logout()
+                    logout()
                 },
                 "로그아웃 하시겠습니까? \uD83D\uDD13",
                 "로그아웃"
@@ -70,17 +70,26 @@ class MyPageActivity : MisoActivity() {
             dialog.show(supportFragmentManager, "generalConfirmDialog")
         }
     }
-    fun logout()
-    {
+
+    fun logout() {
         UserApiClient.instance.logout { error ->
             if (error != null) {
                 Log.e("kakaoLogout", "로그아웃 실패. SDK에서 토큰 삭제됨", error)
-            }
-            else {
+                UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+                    if (error != null) {
+                        Log.e("", "토큰 정보 보기 실패", error)
+                    }
+                    else if (tokenInfo != null) {
+                        Log.i("", "토큰 정보 보기 성공" +
+                                "\n회원번호: ${tokenInfo.id}" +
+                                "\n만료시간: ${tokenInfo.expiresIn} 초")
+                    }
+                }
+            } else {
                 Log.i("kakaoLogout", "로그아웃 성공. SDK에서 토큰 삭제됨")
-                removePreference("accessToken","socialId","socialType")
+                removePreference("accessToken", "socialId", "socialType")
                 savePreferences()
-                startActivity(Intent(this,LoginActivity::class.java))
+                startActivity(Intent(this, LoginActivity::class.java))
                 transferToBack()
                 finish()
             }

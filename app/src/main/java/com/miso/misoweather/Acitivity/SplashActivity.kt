@@ -3,6 +3,7 @@ package com.miso.misoweather.Acitivity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import com.kakao.sdk.auth.AuthApiClient
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySplashBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
@@ -26,7 +27,7 @@ class SplashActivity : MisoActivity() {
     }
 
     fun checkKakaoTokenAndLogin() {
-        if (getPreference("accessToken").equals("")) {
+        if (!AuthApiClient.instance.hasToken()) {
             startActivity(Intent(this, LoginActivity::class.java))
         } else {
             var intent: Intent
