@@ -33,6 +33,14 @@ open class MisoActivity :AppCompatActivity() {
         val pair = Pair(pref,"")
         pairList.add(pair)
     }
+    fun removePreference(vararg pref:String)
+    {
+       for(i in 0..pref.size-1)
+       {
+           val pair = Pair(pref[i],"")
+           pairList.add(pair)
+       }
+    }
     fun getPreference(pref:String):String?
     {
         return prefs!!.getString(pref,"")
