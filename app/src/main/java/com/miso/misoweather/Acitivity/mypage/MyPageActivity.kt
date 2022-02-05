@@ -40,14 +40,19 @@ class MyPageActivity : MisoActivity() {
         txt_nickname.text = getPreference("nickname")
         btn_back.setOnClickListener()
         {
-            startActivity(Intent(this,HomeActivity::class.java))
+            startActivity(Intent(this, HomeActivity::class.java))
             transferToBack()
             finish()
         }
         btn_logout.setOnClickListener()
         {
-            val dialog = GeneralConfirmDialog(this,View.OnClickListener {})
-            dialog.show(supportFragmentManager,"generalConfirmDialog")
+            val dialog = GeneralConfirmDialog(
+                this,
+                View.OnClickListener {},
+                "로그아웃 하시겠습니까? \uD83D\uDD13",
+                "로그아웃"
+            )
+            dialog.show(supportFragmentManager, "generalConfirmDialog")
         }
     }
 
