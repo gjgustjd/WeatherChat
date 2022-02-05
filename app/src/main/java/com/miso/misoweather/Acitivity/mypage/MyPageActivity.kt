@@ -120,7 +120,7 @@ class MyPageActivity : MisoActivity() {
 
     fun makeLoginRequestDto(): LoginRequestDto {
         var loginRequestDto = LoginRequestDto(
-            getPreference("socialId")?.toInt(),
+            getPreference("socialId"),
             getPreference("socialType")
         )
         return loginRequestDto

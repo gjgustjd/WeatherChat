@@ -104,6 +104,7 @@ class SelectNickNameActivity : MisoActivity() {
                     var serverToken = headers.get("servertoken")
                     addPreferencePair("misoToken", serverToken!!)
                     removeRegionPref()
+                    savePreferences()
                     if (!getPreference("misoToken").equals("")) {
                         var intent = Intent(this@SelectNickNameActivity, HomeActivity::class.java)
                         startActivity(intent)
@@ -118,7 +119,6 @@ class SelectNickNameActivity : MisoActivity() {
                     e.printStackTrace()
                 }
                 finally {
-                    savePreferences()
                 }
             }
 
@@ -136,7 +136,7 @@ class SelectNickNameActivity : MisoActivity() {
     fun makeLoginRequestDto():LoginRequestDto
     {
        var loginRequestDto = LoginRequestDto(
-           getPreference("socialId")?.toInt(),
+           getPreference("socialId"),
            getPreference("socialType"))
 
         return loginRequestDto

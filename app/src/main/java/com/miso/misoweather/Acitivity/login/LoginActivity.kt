@@ -28,7 +28,9 @@ class LoginActivity : MisoActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.clBtnKakaoLogin.setOnClickListener {
-            if (!AuthApiClient.instance.hasToken())
+            if (!AuthApiClient.instance.hasToken()||
+                getPreference("socialId").equals("")||
+                    getPreference("socialType").equals(""))
                 kakaoLogin()
             else {
                 issueMisoToken()
@@ -127,7 +129,7 @@ class LoginActivity : MisoActivity() {
 
     fun makeLoginRequestDto(): LoginRequestDto {
         var loginRequestDto = LoginRequestDto(
-            getPreference("socialId")?.toInt(),
+            getPreference("socialId"),
             getPreference("socialType")
         )
         return loginRequestDto
