@@ -2,12 +2,15 @@ package com.miso.misoweather.Acitivity.mypage
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import com.miso.misoweather.Acitivity.home.HomeActivity
+import com.miso.misoweather.Dialog.GeneralConfirmDialog
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityMypageBinding
+import com.miso.misoweather.databinding.DialogConfirmGeneralBinding
 
 class MyPageActivity : MisoActivity() {
     lateinit var binding: ActivityMypageBinding
@@ -40,6 +43,11 @@ class MyPageActivity : MisoActivity() {
             startActivity(Intent(this,HomeActivity::class.java))
             transferToBack()
             finish()
+        }
+        btn_logout.setOnClickListener()
+        {
+            val dialog = GeneralConfirmDialog(this,View.OnClickListener {})
+            dialog.show(supportFragmentManager,"generalConfirmDialog")
         }
     }
 

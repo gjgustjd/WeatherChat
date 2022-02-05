@@ -4,23 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/unit_background"
-    android:backgroundTint="@color/white"
-    app:layout_constraintHeight_percent="0.25">
+    android:backgroundTint="@color/white">
 
     <Button
         android:id="@+id/btn_cancel"
         style="@style/boldWhite"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="@dimen/root_side_margin"
         android:layout_marginBottom="20dp"
         android:background="@drawable/unit_background"
         android:backgroundTint="@color/primaryPurple"
+        android:minHeight="0dp"
         android:text="취소"
+        android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_logout"
+        app:layout_constraintEnd_toStartOf="@id/btn_action"
+        app:layout_constraintHeight_percent="0.15"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -32,8 +34,10 @@
         android:layout_marginEnd="@dimen/root_side_margin"
         android:background="@drawable/unit_background"
         android:backgroundTint="@color/lightPurple"
+        android:minHeight="0dp"
         android:text="로그아웃"
         android:textColor="@color/purple_500"
+        android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="@+id/btn_cancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_cancel"
