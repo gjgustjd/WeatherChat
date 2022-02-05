@@ -87,7 +87,7 @@ class MyPageActivity : MisoActivity() {
                 }
             } else {
                 Log.i("kakaoLogout", "로그아웃 성공. SDK에서 토큰 삭제됨")
-                removePreference("accessToken", "socialId", "socialType")
+                removePreference("accessToken", "socialId", "socialType","misoToken")
                 savePreferences()
                 startActivity(Intent(this, LoginActivity::class.java))
                 transferToBack()

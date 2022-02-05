@@ -36,7 +36,6 @@ class SplashActivity : MisoActivity() {
             else
                 intent = Intent(this, HomeActivity::class.java)
 
-
             startActivity(intent)
         }
     }

@@ -3,12 +3,21 @@ package com.miso.misoweather.Acitivity.login
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityLoginBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
+import com.miso.misoweather.model.DTO.GeneralResponseDto
+import com.miso.misoweather.model.DTO.LoginRequestDto
+import com.miso.misoweather.model.interfaces.MisoWeatherAPI
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
 
 class LoginActivity : MisoActivity() {
@@ -22,13 +31,14 @@ class LoginActivity : MisoActivity() {
             if (!AuthApiClient.instance.hasToken())
                 kakaoLogin()
             else {
-                lateinit var intent:Intent
-                if (getPreference("misoToken").equals(""))
-                    intent = Intent(this, SelectRegionActivity::class.java)
-                else
-                    intent = Intent(this, HomeActivity::class.java)
+                issueMisoToken()
 
-                startActivity(intent)
+                if (getPreference("misoToken").equals("")) {
+                    startActivity(Intent(this, SelectRegionActivity::class.java))
+                    transferToNext()
+                } else
+                    startActivity(Intent(this, HomeActivity::class.java))
+                finish()
             }
         }
     }
@@ -53,17 +63,73 @@ class LoginActivity : MisoActivity() {
                                 addPreferencePair("socialId", tokenInfo.id.toString())
                                 addPreferencePair("socialType", "kakao")
                                 savePreferences()
-                                startActivity(Intent(this, SelectRegionActivity::class.java))
-                                transferToNext()
+                                issueMisoToken()
+
                             }
                         }
-                    }catch (e:Exception)
-                    {
+                    } catch (e: Exception) {
                         e.printStackTrace()
                         savePreferences()
                     }
                 }
             }
         }
+    }
+
+    fun startRegionActivity()
+    {
+        startActivity(Intent(this, SelectRegionActivity::class.java))
+        transferToNext()
+        finish()
+    }
+    fun startHomeActivity(){
+        startActivity(Intent(this, HomeActivity::class.java))
+        finish()
+    }
+
+    fun issueMisoToken() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(MISOWEATHER_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(MisoWeatherAPI::class.java)
+        val callReIssueMisoToken =
+            api.reIssueMisoToken(makeLoginRequestDto(), getPreference("accessToken")!!)
+
+
+        callReIssueMisoToken.enqueue(object : Callback<GeneralResponseDto> {
+            override fun onResponse(
+                call: Call<GeneralResponseDto>,
+                response: Response<GeneralResponseDto>
+            ) {
+                try {
+                    Log.i("결과", "성공")
+                    var generalResponseDto = response.body()!!
+                    var headers = response.headers()
+                    var serverToken = headers.get("servertoken")
+                    addPreferencePair("misoToken", serverToken!!)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    savePreferences()
+                    startHomeActivity()
+                }
+            }
+
+            override fun onFailure(call: Call<GeneralResponseDto>, t: Throwable) {
+                Log.i("결과", "실패 : $t")
+                addPreferencePair("misoToken", "")
+                startRegionActivity()
+            }
+        })
+    }
+
+    fun makeLoginRequestDto(): LoginRequestDto {
+        var loginRequestDto = LoginRequestDto(
+            getPreference("socialId")?.toInt(),
+            getPreference("socialType")
+        )
+
+        return loginRequestDto
     }
 }
