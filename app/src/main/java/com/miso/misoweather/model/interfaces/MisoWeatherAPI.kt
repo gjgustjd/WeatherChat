@@ -27,6 +27,9 @@ interface MisoWeatherAPI {
  @POST("api/member/token")
  fun reIssueMisoToken(@Body body: LoginRequestDto, @Query("socialToken")socialToken: String):Call<GeneralResponseDto>
 
+ @HTTP(method = "DELETE", path="api/member/",hasBody = true)
+ fun unregisterMember(@Header("serverToken") serverToken:String,@Body body: LoginRequestDto):Call<GeneralResponseDto>
+
  @GET("api/member")
  fun getUserInfo(@Header("serverToken") serverToken:String):Call<MemberInfoResponseDto>
 

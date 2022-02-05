@@ -76,13 +76,13 @@ class LoginActivity : MisoActivity() {
         }
     }
 
-    fun startRegionActivity()
-    {
+    fun startRegionActivity() {
         startActivity(Intent(this, SelectRegionActivity::class.java))
         transferToNext()
         finish()
     }
-    fun startHomeActivity(){
+
+    fun startHomeActivity() {
         startActivity(Intent(this, HomeActivity::class.java))
         finish()
     }
@@ -104,15 +104,16 @@ class LoginActivity : MisoActivity() {
             ) {
                 try {
                     Log.i("결과", "성공")
-                    var generalResponseDto = response.body()!!
                     var headers = response.headers()
-                    var serverToken = headers.get("servertoken")
+                    var serverToken: String? = headers.get("servertoken")!!
                     addPreferencePair("misoToken", serverToken!!)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                } finally {
                     savePreferences()
                     startHomeActivity()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    addPreferencePair("misoToken", "")
+                    savePreferences()
+                    startRegionActivity()
                 }
             }
 
@@ -129,7 +130,6 @@ class LoginActivity : MisoActivity() {
             getPreference("socialId")?.toInt(),
             getPreference("socialType")
         )
-
         return loginRequestDto
     }
 }

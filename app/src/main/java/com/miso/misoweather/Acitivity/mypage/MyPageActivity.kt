@@ -13,7 +13,14 @@ import com.miso.misoweather.Acitivity.login.LoginActivity
 import com.miso.misoweather.Dialog.GeneralConfirmDialog
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityMypageBinding
-import com.miso.misoweather.databinding.DialogConfirmGeneralBinding
+import com.miso.misoweather.model.DTO.GeneralResponseDto
+import com.miso.misoweather.model.DTO.LoginRequestDto
+import com.miso.misoweather.model.interfaces.MisoWeatherAPI
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MyPageActivity : MisoActivity() {
     lateinit var binding: ActivityMypageBinding
@@ -51,7 +58,9 @@ class MyPageActivity : MisoActivity() {
         {
             val dialog = GeneralConfirmDialog(
                 this,
-                View.OnClickListener {},
+                View.OnClickListener {
+                    unregister()
+                },
                 "정말로 계정을 삭제할까요? \uD83D\uDE22",
                 "삭제"
             )
@@ -71,6 +80,52 @@ class MyPageActivity : MisoActivity() {
         }
     }
 
+    fun goToLoginActivity()
+    {
+        startActivity(Intent(this, LoginActivity::class.java))
+        transferToBack()
+        finish()
+    }
+
+    fun unregister() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(MISOWEATHER_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(MisoWeatherAPI::class.java)
+        val callUnregisterMember =
+            api.unregisterMember(getPreference("misoToken")!!, makeLoginRequestDto())
+
+        callUnregisterMember.enqueue(object : Callback<GeneralResponseDto> {
+            override fun onResponse(
+                call: Call<GeneralResponseDto>,
+                response: Response<GeneralResponseDto>
+            ) {
+                try {
+                    Log.i("결과", "성공")
+                    removePreference("misoToken")
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                } finally {
+                    savePreferences()
+                    goToLoginActivity()
+                }
+            }
+
+            override fun onFailure(call: Call<GeneralResponseDto>, t: Throwable) {
+                Log.i("결과", "실패 : $t")
+            }
+        })
+    }
+
+    fun makeLoginRequestDto(): LoginRequestDto {
+        var loginRequestDto = LoginRequestDto(
+            getPreference("socialId")?.toInt(),
+            getPreference("socialType")
+        )
+        return loginRequestDto
+    }
+
     fun logout() {
         UserApiClient.instance.logout { error ->
             if (error != null) {
@@ -78,20 +133,19 @@ class MyPageActivity : MisoActivity() {
                 UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
                     if (error != null) {
                         Log.e("", "토큰 정보 보기 실패", error)
-                    }
-                    else if (tokenInfo != null) {
-                        Log.i("", "토큰 정보 보기 성공" +
-                                "\n회원번호: ${tokenInfo.id}" +
-                                "\n만료시간: ${tokenInfo.expiresIn} 초")
+                    } else if (tokenInfo != null) {
+                        Log.i(
+                            "", "토큰 정보 보기 성공" +
+                                    "\n회원번호: ${tokenInfo.id}" +
+                                    "\n만료시간: ${tokenInfo.expiresIn} 초"
+                        )
                     }
                 }
             } else {
                 Log.i("kakaoLogout", "로그아웃 성공. SDK에서 토큰 삭제됨")
-                removePreference("accessToken", "socialId", "socialType","misoToken")
+                removePreference("accessToken", "socialId", "socialType", "misoToken")
                 savePreferences()
-                startActivity(Intent(this, LoginActivity::class.java))
-                transferToBack()
-                finish()
+                goToLoginActivity()
             }
         }
     }
