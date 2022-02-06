@@ -45,4 +45,7 @@ fun getCommentList(@Query("commentId")commentId:Int?,@Query("size")size:Int):Cal
  @POST("api/comment")
  fun addComment(@Header("serverToken") serverToken: String,@Body body: CommentRegisterRequestDto):Call<GeneralResponseDto>
 
+ @GET("api/survey/answers/{surveyId}")
+ fun getSurveyAnswers(@Path("surveyId")surveyId:String)
+
 }
