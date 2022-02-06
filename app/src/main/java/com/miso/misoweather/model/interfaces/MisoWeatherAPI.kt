@@ -41,4 +41,8 @@ interface MisoWeatherAPI {
 
 @GET("api/comment")
 fun getCommentList(@Query("commentId")commentId:Int?,@Query("size")size:Int):Call<CommentListResponseDto>
+
+ @POST("api/comment")
+ fun addComment(@Header("serverToken") serverToken: String,@Body body: CommentRegisterRequestDto):Call<GeneralResponseDto>
+
 }
