@@ -3,6 +3,7 @@ package com.miso.misoweather.Acitivity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import com.kakao.sdk.auth.AuthApiClient
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySplashBinding
@@ -31,6 +32,7 @@ class SplashActivity : MisoActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
         } else {
             var intent: Intent
+            Log.i("misoToken",getPreference("misoToken")!!)
             if (getPreference("misoToken").equals(""))
                 intent = Intent(this, SelectRegionActivity::class.java)
             else

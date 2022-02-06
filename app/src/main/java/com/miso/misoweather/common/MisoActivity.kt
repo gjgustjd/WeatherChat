@@ -8,7 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.miso.misoweather.R
 
 open class MisoActivity :AppCompatActivity() {
-    val MISOWEATHER_BASE_URL:String = "http://3.35.55.100/"
+    companion object
+    {
+        val MISOWEATHER_BASE_URL:String = "http://3.35.55.100/"
+    }
     lateinit var prefs: SharedPreferences
     lateinit var pairList: ArrayList<Pair<String,String>>
     override fun onCreate(savedInstanceState: Bundle?){
