@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
@@ -36,7 +37,7 @@ class WeatherDetailActivity : MisoActivity() {
     lateinit var forecastDetailResponseDto: ForecastDetailResponseDto
     lateinit var forecastdetailInfo: ForecastDetailInfo
     lateinit var region: Region
-
+    lateinit var chatLayout: ConstraintLayout
     lateinit var txtLocation: TextView
     lateinit var txtWeatherEmoji: TextView
     lateinit var txtDegree: TextView
@@ -60,6 +61,7 @@ class WeatherDetailActivity : MisoActivity() {
     }
 
     fun initializeViews() {
+        chatLayout = binding.chatLayout
         txtLocation = binding.txtLocation
         txtWeatherEmoji = binding.txtWeatherEmoji
         txtDegree = binding.txtDegree
@@ -78,7 +80,7 @@ class WeatherDetailActivity : MisoActivity() {
             transferToBack()
             finish()
         }
-        btnChat.setOnClickListener()
+        chatLayout.setOnClickListener()
         {
             var intent= Intent(this, ChatMainActivity::class.java)
             intent.putExtra("previousActivity","Weather")
