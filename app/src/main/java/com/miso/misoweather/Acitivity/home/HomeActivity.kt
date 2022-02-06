@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityHomeBinding
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
@@ -35,6 +36,7 @@ class HomeActivity : MisoActivity() {
     lateinit var txtWeatherDegree: TextView
     lateinit var btnShowWeatherDetail: ImageButton
     lateinit var btnProfile: ImageButton
+    lateinit var btngoToSurvey: ImageButton
     lateinit var recyclerChat: RecyclerView
     lateinit var recyclerChatAdapter: RecyclerChatsAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +57,15 @@ class HomeActivity : MisoActivity() {
         txtWeatherEmoji = binding.txtWeatherEmoji
         btnShowWeatherDetail = binding.imgbtnShowWeather
         btnProfile = binding.imgbtnProfile
+        btngoToSurvey = binding.imgbtnSurvey
+        btngoToSurvey.setOnClickListener()
+        {
+            var intent= Intent(this, ChatMainActivity::class.java)
+            intent.putExtra("previousActivity","Home")
+            startActivity(intent)
+            transferToNext()
+            finish()
+        }
         btnShowWeatherDetail.setOnClickListener()
         {
             startActivity(Intent(this, WeatherDetailActivity::class.java))
@@ -91,7 +102,7 @@ class HomeActivity : MisoActivity() {
                     txtLocation.text =
                         region.bigScale + " " + region.midScale + " " + region.smallScale
                     txtWeatherEmoji.setText(forecast.sky)
-                    txtWeatherDegree.setText(forecast.temperature+"˚")
+                    txtWeatherDegree.setText(forecast.temperature + "˚")
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -160,8 +171,8 @@ class HomeActivity : MisoActivity() {
                         "defaultRegionId",
                         this@HomeActivity.memberInfoResponseDto.data.regionId.toString()
                     )
-                    addPreferencePair("emoji",memberInfo.emoji)
-                    addPreferencePair("nickname",memberInfo.nickname)
+                    addPreferencePair("emoji", memberInfo.emoji)
+                    addPreferencePair("nickname", memberInfo.nickname)
                     savePreferences()
                 } catch (e: Exception) {
                     e.printStackTrace()

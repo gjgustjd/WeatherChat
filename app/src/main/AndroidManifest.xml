@@ -24,6 +24,8 @@
         </activity>
         <activity android:name=".Acitivity.selectArea.SelectAreaActivity">
         </activity>
+        <activity android:name=".Acitivity.chatmain.ChatMainActivity">
+        </activity>
         <activity android:name="com.miso.misoweather.Acitivity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

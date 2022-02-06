@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityWeatherMainBinding
@@ -75,6 +76,14 @@ class WeatherDetailActivity : MisoActivity() {
         {
             startActivity(Intent(this, HomeActivity::class.java))
             transferToBack()
+            finish()
+        }
+        btnChat.setOnClickListener()
+        {
+            var intent= Intent(this, ChatMainActivity::class.java)
+            intent.putExtra("previousActivity","Weather")
+            startActivity(intent)
+            transferToNext()
             finish()
         }
         recyclerWeatherOnTIme = binding.recylcerWeatherOnTIme
