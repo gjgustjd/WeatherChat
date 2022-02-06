@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
@@ -29,6 +30,7 @@ class HomeActivity : MisoActivity() {
     lateinit var memberInfoResponseDto: MemberInfoResponseDto
     lateinit var forecastBriefResponseDto: ForecastBriefResponseDto
     lateinit var commentListResponseDto: CommentListResponseDto
+    lateinit var weatherLayout: ConstraintLayout
     lateinit var txtNickName: TextView
     lateinit var txtEmoji: TextView
     lateinit var txtLocation: TextView
@@ -50,6 +52,7 @@ class HomeActivity : MisoActivity() {
     }
 
     fun initializeViews() {
+        weatherLayout = binding.weatherLayout
         txtNickName = binding.txtNickname
         txtEmoji = binding.txtEmoji
         txtLocation = binding.txtLocation
@@ -66,7 +69,7 @@ class HomeActivity : MisoActivity() {
             transferToNext()
             finish()
         }
-        btnShowWeatherDetail.setOnClickListener()
+        weatherLayout.setOnClickListener()
         {
             startActivity(Intent(this, WeatherDetailActivity::class.java))
             transferToNext()
