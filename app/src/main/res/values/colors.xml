@@ -11,4 +11,5 @@
     <color name="lightPurple">#E4E7F3</color>
     <color name="unitBackground">#F5F6FA</color>
     <color name="textBlack">#2A2E40</color>
+    <color name="dividerDefault">#E5E5E5</color>
 </resources>

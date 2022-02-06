@@ -34,7 +34,7 @@
             android:id="@+id/divider"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:background="@color/textBlack"
+            android:background="@color/dividerDefault"
             app:layout_constraintBottom_toBottomOf="@+id/txt_comment"
             app:layout_constraintEnd_toEndOf="@+id/txt_comment"
             app:layout_constraintStart_toStartOf="@+id/txt_comment"
