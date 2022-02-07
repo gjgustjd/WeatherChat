@@ -51,6 +51,7 @@ class ChatMainActivity : MisoActivity() {
         previousActivity = intent.getStringExtra("previousActivity")!!
         btnSurvey = binding.btnSurvey
         btnChat = binding.btnChats
+        Log.i("misoToken",getPreference("misoToken")!!);
 
         when (previousActivity) {
             "Weather" -> goToPreviousActivity =
@@ -91,26 +92,4 @@ class ChatMainActivity : MisoActivity() {
             .commit()
     }
 
-    fun registerMember() {
-//        val retrofit = Retrofit.Builder()
-//            .baseUrl(MISOWEATHER_BASE_URL)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-//        val api = retrofit.create(MisoWeatherAPI::class.java)
-//
-//        val callRegisterMember = api.registerMember(getSignUpInfo(),getPreference("accessToken")!!)
-//        callRegisterMember.enqueue(object : Callback<GeneralResponseDto> {
-//            override fun onResponse(
-//                call: Call<GeneralResponseDto>,
-//                response: Response<GeneralResponseDto>
-//            ) {
-//                Log.i("결과", "성공")
-//                issueMisoToken()
-//            }
-//
-//            override fun onFailure(call: Call<GeneralResponseDto>, t: Throwable) {
-//                Log.i("결과", "실패 : $t")
-//            }
-//        })
-    }
 }

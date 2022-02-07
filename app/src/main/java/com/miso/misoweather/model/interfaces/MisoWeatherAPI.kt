@@ -7,6 +7,7 @@ import com.miso.misoweather.model.DTO.Forecast.Detail.ForecastDetailResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
+import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -46,6 +47,6 @@ fun getCommentList(@Query("commentId")commentId:Int?,@Query("size")size:Int):Cal
  fun addComment(@Header("serverToken") serverToken: String,@Body body: CommentRegisterRequestDto):Call<GeneralResponseDto>
 
  @GET("api/survey/answers/{surveyId}")
- fun getSurveyAnswers(@Path("surveyId")surveyId:String)
+ fun getSurveyAnswers(@Path("surveyId")surveyId:Int):Call<SurveyAnswerResponseDto>
 
 }
