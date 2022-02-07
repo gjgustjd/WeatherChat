@@ -7,7 +7,9 @@ import com.miso.misoweather.model.DTO.Forecast.Detail.ForecastDetailResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
+import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
+import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -48,5 +50,12 @@ fun getCommentList(@Query("commentId")commentId:Int?,@Query("size")size:Int):Cal
 
  @GET("api/survey/answers/{surveyId}")
  fun getSurveyAnswers(@Path("surveyId")surveyId:Int):Call<SurveyAnswerResponseDto>
+
+ @GET("api/survey")
+ fun getSurveyResults(@Query("shortBigScale") shortBigScale:String):Call<SurveyResultResponseDto>
+
+ @GET("api/survey/member")
+ fun getSurveyMyAnswers(@Header("serverToken")serverToken: String):Call<SurveyMyAnswerResponseDto>
+
 
 }
