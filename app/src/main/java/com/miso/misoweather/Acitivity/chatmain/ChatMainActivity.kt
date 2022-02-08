@@ -19,7 +19,9 @@ import com.miso.misoweather.Fragment.SurveyFragment
 import com.miso.misoweather.R
 import com.miso.misoweather.databinding.ActivityChatMainBinding
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
+import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
+import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import com.miso.misoweather.model.TransportManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -81,10 +83,51 @@ class ChatMainActivity : MisoActivity() {
         }
         setupFragment(SurveyFragment())
     }
+
     fun setupFragment(fragment: Fragment)
     {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentLayout,fragment)
             .commit()
+    }
+
+    fun getSurveyAnswer(surveyId:Int)
+    {
+        val callGetSurveyAnswer =
+            TransportManager.getRetrofitApiObject<SurveyAnswerResponseDto>()
+                .getSurveyAnswers(surveyId)
+
+        TransportManager.requestApi(callGetSurveyAnswer,{call,reponse->
+
+        },{call, throwable ->
+
+        })
+    }
+
+    fun getSurveyResult(bigShortScale:String)
+    {
+        val callGetSurveyResult =
+            TransportManager.getRetrofitApiObject<SurveyResultResponseDto>()
+                .getSurveyResults(bigShortScale)
+
+        TransportManager.requestApi(callGetSurveyResult,{call,reponse->
+
+        },{call, throwable ->
+
+        })
+    }
+
+
+    fun getSurveyMyAnswer(serverToken:String)
+    {
+        val callGetSurveyMyAnswer =
+            TransportManager.getRetrofitApiObject<SurveyMyAnswerResponseDto>()
+                .getSurveyMyAnswers(getPreference("misoToken")!!)
+
+        TransportManager.requestApi(callGetSurveyMyAnswer,{call,reponse->
+
+        },{call, throwable ->
+
+        })
     }
 }
