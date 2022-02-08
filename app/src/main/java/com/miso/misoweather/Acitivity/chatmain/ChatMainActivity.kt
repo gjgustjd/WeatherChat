@@ -2,29 +2,25 @@ package com.miso.misoweather.Acitivity.chatmain
 
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.miso.misoweather.common.MisoActivity
-import com.miso.misoweather.databinding.ActivitySelectNicknameBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.model.DTO.*
-import com.miso.misoweather.model.DTO.NicknameResponse.NicknameData
-import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
-import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
 import com.miso.misoweather.Acitivity.weatherdetail.WeatherDetailActivity
 import com.miso.misoweather.Fragment.CommentsFragment
 import com.miso.misoweather.Fragment.SurveyFragment
 import com.miso.misoweather.R
 import com.miso.misoweather.databinding.ActivityChatMainBinding
+import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
+import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
+import com.miso.misoweather.model.TransportManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -92,4 +88,12 @@ class ChatMainActivity : MisoActivity() {
             .commit()
     }
 
+
+    fun getSurveyAnswers(surveyId:Int) {
+        val callgetSurveyAnswers =
+            TransportManager.getRetrofitApiObject<SurveyAnswerResponseDto>().
+            getSurveyAnswers(surveyId)
+
+        TransportManager.requestApi(callgetSurveyAnswers,{call,response-> },{call,t-> })
+    }
 }
