@@ -10,8 +10,10 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityLoginBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
+import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.LoginRequestDto
+import com.miso.misoweather.model.TransportManager
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,9 +30,10 @@ class LoginActivity : MisoActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.clBtnKakaoLogin.setOnClickListener {
-            if (!AuthApiClient.instance.hasToken()||
-                getPreference("socialId").equals("")||
-                    getPreference("socialType").equals(""))
+            if (!AuthApiClient.instance.hasToken() ||
+                getPreference("socialId").equals("") ||
+                getPreference("socialType").equals("")
+            )
                 kakaoLogin()
             else {
                 issueMisoToken()
@@ -90,40 +93,27 @@ class LoginActivity : MisoActivity() {
     }
 
     fun issueMisoToken() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(MISOWEATHER_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callReIssueMisoToken =
-            api.reIssueMisoToken(makeLoginRequestDto(), getPreference("accessToken")!!)
+        val callReIssueMisoToken = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
+            .reIssueMisoToken(makeLoginRequestDto(), getPreference("accessToken")!!)
 
-
-        callReIssueMisoToken.enqueue(object : Callback<GeneralResponseDto> {
-            override fun onResponse(
-                call: Call<GeneralResponseDto>,
-                response: Response<GeneralResponseDto>
-            ) {
-                try {
-                    Log.i("결과", "성공")
-                    var headers = response.headers()
-                    var serverToken: String? = headers.get("servertoken")!!
-                    addPreferencePair("misoToken", serverToken!!)
-                    savePreferences()
-                    startHomeActivity()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    addPreferencePair("misoToken", "")
-                    savePreferences()
-                    startRegionActivity()
-                }
-            }
-
-            override fun onFailure(call: Call<GeneralResponseDto>, t: Throwable) {
-                Log.i("결과", "실패 : $t")
+        TransportManager.requestApi(callReIssueMisoToken, { call, response ->
+            try {
+                Log.i("결과", "성공")
+                var headers = response.headers()
+                var serverToken: String? = headers.get("servertoken")!!
+                addPreferencePair("misoToken", serverToken!!)
+                savePreferences()
+                startHomeActivity()
+            } catch (e: Exception) {
+                e.printStackTrace()
                 addPreferencePair("misoToken", "")
+                savePreferences()
                 startRegionActivity()
             }
+        }, { call, t ->
+            Log.i("결과", "실패 : $t")
+            addPreferencePair("misoToken", "")
+            startRegionActivity()
         })
     }
 

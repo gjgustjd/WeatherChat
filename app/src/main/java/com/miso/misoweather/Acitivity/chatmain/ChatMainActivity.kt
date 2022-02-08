@@ -87,13 +87,4 @@ class ChatMainActivity : MisoActivity() {
             .replace(R.id.fragmentLayout,fragment)
             .commit()
     }
-
-
-    fun getSurveyAnswers(surveyId:Int) {
-        val callgetSurveyAnswers =
-            TransportManager.getRetrofitApiObject<SurveyAnswerResponseDto>().
-            getSurveyAnswers(surveyId)
-
-        TransportManager.requestApi(callgetSurveyAnswers,{call,response-> },{call,t-> })
-    }
 }

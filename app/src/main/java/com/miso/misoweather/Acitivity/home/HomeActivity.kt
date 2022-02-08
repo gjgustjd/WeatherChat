@@ -18,6 +18,7 @@ import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.weatherdetail.WeatherDetailActivity
 import com.miso.misoweather.Acitivity.mypage.MyPageActivity
+import com.miso.misoweather.model.TransportManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -85,18 +86,12 @@ class HomeActivity : MisoActivity() {
     }
 
     fun getBriefForecast() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(MISOWEATHER_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callgetBriefForecast = api.getBriefForecast(getPreference("defaultRegionId")!!.toInt())
+        try {
+            val callBriefForecast =
+                TransportManager.getRetrofitApiObject<ForecastBriefResponseDto>()
+                    .getBriefForecast(getPreference("defaultRegionId")!!.toInt())
 
-        callgetBriefForecast.enqueue(object : Callback<ForecastBriefResponseDto> {
-            override fun onResponse(
-                call: Call<ForecastBriefResponseDto>,
-                response: Response<ForecastBriefResponseDto>
-            ) {
+            TransportManager.requestApi(callBriefForecast, { call, response ->
                 try {
                     Log.i("결과", "성공")
                     forecastBriefResponseDto = response.body()!!
@@ -109,39 +104,29 @@ class HomeActivity : MisoActivity() {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-            }
-
-            override fun onFailure(call: Call<ForecastBriefResponseDto>, t: Throwable) {
+            }, { call, t ->
                 Log.i("결과", "실패 : $t")
-            }
-        })
+            })
+        }catch (e:Exception)
+        {
+            e.printStackTrace()
+        }
     }
 
     fun getCommentList() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(MISOWEATHER_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callgetCommentList = api.getCommentList(null, 4)
-
-        callgetCommentList.enqueue(object : Callback<CommentListResponseDto> {
-            override fun onResponse(
-                call: Call<CommentListResponseDto>,
-                response: Response<CommentListResponseDto>
-            ) {
-                try {
-                    Log.i("결과", "성공")
-                    commentListResponseDto = response.body()!!
-                    setRecyclerChats()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+        val callBriefForecast = TransportManager.
+        getRetrofitApiObject<ForecastBriefResponseDto>().
+        getCommentList(null, 4)
+        TransportManager.requestApi(callBriefForecast,{call, response ->
+            try {
+                Log.i("결과", "성공")
+                commentListResponseDto = response.body()!!
+                setRecyclerChats()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-
-            override fun onFailure(call: Call<CommentListResponseDto>, t: Throwable) {
-                Log.i("결과", "실패 : $t")
-            }
+        },{call,t->
+            Log.i("결과", "실패 : $t")
         })
     }
 
@@ -152,39 +137,28 @@ class HomeActivity : MisoActivity() {
     }
 
     fun getUserInfo() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(MISOWEATHER_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callgetUserInfo = api.getUserInfo(getPreference("misoToken")!!)
-
-        callgetUserInfo.enqueue(object : Callback<MemberInfoResponseDto> {
-            override fun onResponse(
-                call: Call<MemberInfoResponseDto>,
-                response: Response<MemberInfoResponseDto>
-            ) {
-                try {
-                    Log.i("결과", "성공")
-                    memberInfoResponseDto = response.body()!!
-                    var memberInfo = memberInfoResponseDto.data
-                    txtNickName.setText(memberInfo.nickname + "님!")
-                    txtEmoji.setText(memberInfo.emoji)
-                    addPreferencePair(
-                        "defaultRegionId",
-                        this@HomeActivity.memberInfoResponseDto.data.regionId.toString()
-                    )
-                    addPreferencePair("emoji", memberInfo.emoji)
-                    addPreferencePair("nickname", memberInfo.nickname)
-                    savePreferences()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+        val callgetUserInfo  = TransportManager.
+        getRetrofitApiObject<MemberInfoResponseDto>()
+            .getUserInfo(getPreference("misoToken")!!)
+        TransportManager.requestApi(callgetUserInfo,{call, response ->
+            try {
+                Log.i("결과", "성공")
+                memberInfoResponseDto = response.body()!!
+                var memberInfo = memberInfoResponseDto.data
+                txtNickName.setText(memberInfo.nickname + "님!")
+                txtEmoji.setText(memberInfo.emoji)
+                addPreferencePair(
+                    "defaultRegionId",
+                    this@HomeActivity.memberInfoResponseDto.data.regionId.toString()
+                )
+                addPreferencePair("emoji", memberInfo.emoji)
+                addPreferencePair("nickname", memberInfo.nickname)
+                savePreferences()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-
-            override fun onFailure(call: Call<MemberInfoResponseDto>, t: Throwable) {
-                Log.i("결과", "실패 : $t")
-            }
+        },{call,t->
+            Log.i("결과", "실패 : $t")
         })
     }
 }

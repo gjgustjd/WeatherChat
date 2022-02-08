@@ -18,6 +18,7 @@ import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.model.DTO.Forecast.Detail.ForecastDetailResponseDto
 import com.miso.misoweather.model.DTO.Forecast.ForecastDetailInfo
 import com.miso.misoweather.model.DTO.Region
+import com.miso.misoweather.model.TransportManager
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import retrofit2.Call
 import retrofit2.Callback
@@ -93,34 +94,23 @@ class WeatherDetailActivity : MisoActivity() {
     }
 
     fun getForecastDetail() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(MISOWEATHER_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callForecastDetailList =
-            api.getDetailForecast(getPreference("defaultRegionId")!!.toInt())
+        val callForecastDetailList  = TransportManager.
+        getRetrofitApiObject<ForecastDetailResponseDto>().
+        getDetailForecast(getPreference("defaultRegionId")!!.toInt())
 
-        callForecastDetailList.enqueue(object : Callback<ForecastDetailResponseDto> {
-            override fun onResponse(
-                call: Call<ForecastDetailResponseDto>,
-                response: Response<ForecastDetailResponseDto>
-            ) {
-                try {
-                    Log.i("결과", "성공")
-                    forecastDetailResponseDto = response.body()!!
-                    forecastdetailInfo = forecastDetailResponseDto.data.forecastInfo
-                    region = forecastDetailResponseDto.data.region
-                    setupRecyclers()
-                    setForecastInfo()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+        TransportManager.requestApi(callForecastDetailList,{ call, response ->
+            try {
+                Log.i("결과", "성공")
+                forecastDetailResponseDto = response.body()!!
+                forecastdetailInfo = forecastDetailResponseDto.data.forecastInfo
+                region = forecastDetailResponseDto.data.region
+                setupRecyclers()
+                setForecastInfo()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-
-            override fun onFailure(call: Call<ForecastDetailResponseDto>, t: Throwable) {
-                Log.i("결과", "실패 : $t")
-            }
+        },{call,t->
+            Log.i("결과", "실패 : $t")
         })
     }
 

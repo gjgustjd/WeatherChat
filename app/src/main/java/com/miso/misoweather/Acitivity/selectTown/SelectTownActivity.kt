@@ -21,6 +21,7 @@ import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.selectArea.RecyclerTownsAdapter
 import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
+import com.miso.misoweather.model.TransportManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -98,27 +99,22 @@ class SelectTownActivity : MisoActivity() {
     }
 
     fun getTownList() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(MISOWEATHER_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callGetTownList = api.getCity(selectedRegion)
+        val callGetTownList  = TransportManager.
+        getRetrofitApiObject<RegionListResponseDto>().
+        getCity(selectedRegion)
 
-        callGetTownList.enqueue(object : Callback<RegionListResponseDto> {
-            override fun onResponse(
-                call: Call<RegionListResponseDto>,
-                response: Response<RegionListResponseDto>
-            ) {
+        TransportManager.requestApi(callGetTownList,{ call, response ->
+            try {
                 Log.i("getTownList", "2단계 지역 받아오기 성공")
                 townRequestResult = response.body()!!
                 setRecyclerTowns()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-
-            override fun onFailure(call: Call<RegionListResponseDto>, t: Throwable) {
-                Log.i("getTownList", "실패 : $t")
-            }
+        },{call,t->
+            Log.i("getTownList", "실패 : $t")
         })
+
     }
 
     fun setRecyclerTowns() {

@@ -15,12 +15,14 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityMypageBinding
 import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.LoginRequestDto
+import com.miso.misoweather.model.TransportManager
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Exception
 
 class MyPageActivity : MisoActivity() {
     lateinit var binding: ActivityMypageBinding
@@ -88,33 +90,22 @@ class MyPageActivity : MisoActivity() {
     }
 
     fun unregister() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(MISOWEATHER_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callUnregisterMember =
-            api.unregisterMember(getPreference("misoToken")!!, makeLoginRequestDto())
+        val callUnregisterMember  = TransportManager.
+        getRetrofitApiObject<GeneralResponseDto>().
+        unregisterMember(getPreference("misoToken")!!, makeLoginRequestDto())
 
-        callUnregisterMember.enqueue(object : Callback<GeneralResponseDto> {
-            override fun onResponse(
-                call: Call<GeneralResponseDto>,
-                response: Response<GeneralResponseDto>
-            ) {
-                try {
-                    Log.i("결과", "성공")
-                    removePreference("misoToken")
-                } catch (e: java.lang.Exception) {
-                    e.printStackTrace()
-                } finally {
-                    savePreferences()
-                    goToLoginActivity()
-                }
+        TransportManager.requestApi(callUnregisterMember,{ call, response ->
+            try {
+                Log.i("결과", "성공")
+                removePreference("misoToken")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                savePreferences()
+                goToLoginActivity()
             }
-
-            override fun onFailure(call: Call<GeneralResponseDto>, t: Throwable) {
-                Log.i("결과", "실패 : $t")
-            }
+        },{call,t->
+            Log.i("결과", "실패 : $t")
         })
     }
 
