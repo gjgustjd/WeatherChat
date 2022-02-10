@@ -23,7 +23,7 @@ open class MisoActivity :AppCompatActivity() {
     fun getBigShortScale(bigScale:String):String
     {
         val regionList = resources.getStringArray(R.array.regions_full)
-        val index = regionList.indexOf(regionList.forEach { it == bigScale })
+        val index = regionList.indexOf(bigScale)
         val regionSmallList = resources.getStringArray(R.array.regions)
 
         return regionSmallList.get(index)
