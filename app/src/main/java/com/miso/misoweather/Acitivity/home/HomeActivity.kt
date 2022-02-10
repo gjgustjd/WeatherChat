@@ -97,6 +97,10 @@ class HomeActivity : MisoActivity() {
                     forecastBriefResponseDto = response.body()!!
                     var forecast = forecastBriefResponseDto.data.forecast
                     var region = forecastBriefResponseDto.data.region
+                    addPreferencePair("bigScale",region.bigScale)
+                    addPreferencePair("midScale",region.midScale)
+                    addPreferencePair("smallScale",region.smallScale)
+                    savePreferences()
                     txtLocation.text =
                         region.bigScale + " " + region.midScale + " " + region.smallScale
                     txtWeatherEmoji.setText(forecast.sky)

@@ -38,6 +38,7 @@ class ChatMainActivity : MisoActivity() {
     lateinit var btnChat: Button
     lateinit var previousActivity: String
     lateinit var goToPreviousActivity: () -> Unit
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityChatMainBinding.inflate(layoutInflater)
@@ -89,45 +90,5 @@ class ChatMainActivity : MisoActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentLayout,fragment)
             .commit()
-    }
-
-    fun getSurveyAnswer(surveyId:Int)
-    {
-        val callGetSurveyAnswer =
-            TransportManager.getRetrofitApiObject<SurveyAnswerResponseDto>()
-                .getSurveyAnswers(surveyId)
-
-        TransportManager.requestApi(callGetSurveyAnswer,{call,reponse->
-
-        },{call, throwable ->
-
-        })
-    }
-
-    fun getSurveyResult(bigShortScale:String)
-    {
-        val callGetSurveyResult =
-            TransportManager.getRetrofitApiObject<SurveyResultResponseDto>()
-                .getSurveyResults(bigShortScale)
-
-        TransportManager.requestApi(callGetSurveyResult,{call,reponse->
-
-        },{call, throwable ->
-
-        })
-    }
-
-
-    fun getSurveyMyAnswer(serverToken:String)
-    {
-        val callGetSurveyMyAnswer =
-            TransportManager.getRetrofitApiObject<SurveyMyAnswerResponseDto>()
-                .getSurveyMyAnswers(getPreference("misoToken")!!)
-
-        TransportManager.requestApi(callGetSurveyMyAnswer,{call,reponse->
-
-        },{call, throwable ->
-
-        })
     }
 }

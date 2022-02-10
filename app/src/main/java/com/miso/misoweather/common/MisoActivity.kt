@@ -20,6 +20,14 @@ open class MisoActivity :AppCompatActivity() {
         pairList = ArrayList()
 
     }
+    fun getBigShortScale(bigScale:String):String
+    {
+        val regionList = resources.getStringArray(R.array.regions_full)
+        val index = regionList.indexOf(regionList.forEach { it == bigScale })
+        val regionSmallList = resources.getStringArray(R.array.regions)
+
+        return regionSmallList.get(index)
+    }
     protected fun transferToBack(){
         overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit)
     }
