@@ -35,6 +35,7 @@ class SurveyFragment : Fragment() {
         binding = FragmentSurveyBinding.inflate(layoutInflater)
         activity = getActivity() as MisoActivity
         recyclerSurvey = binding.recyclerSurveys
+        surveyAnswerList = ArrayList()
         setupSurveyAnswerList()
         setupSurveyResult(activity.getBigShortScale(activity.getPreference("bigScale")!!))
         setupSurveyMyAnswer()
@@ -82,7 +83,7 @@ class SurveyFragment : Fragment() {
 
         TransportManager.requestApi(callGetSurveyAnswer, { call, reponse ->
             initializeDataAndSetupRecycler {
-                surveyAnswerList.add((reponse as SurveyAnswerResponseDto).data.responseList)
+                surveyAnswerList.add((reponse.body()!!).data.responseList)
             }
         }, { call, throwable ->
 
@@ -97,7 +98,7 @@ class SurveyFragment : Fragment() {
         TransportManager.requestApi(callGetSurveyResult, { call, reponse ->
 
             initializeDataAndSetupRecycler {
-                surveyResultResponseDto = reponse as SurveyResultResponseDto
+                surveyResultResponseDto = reponse.body()!!
             }
         }, { call, throwable ->
 
@@ -111,7 +112,7 @@ class SurveyFragment : Fragment() {
 
         TransportManager.requestApi(callGetSurveyMyAnswer, { call, reponse ->
             initializeDataAndSetupRecycler {
-                surveyMyAnswerResponseDto = reponse as SurveyMyAnswerResponseDto
+                surveyMyAnswerResponseDto = reponse.body()!!
             }
         }, { call, throwable ->
 
@@ -142,7 +143,7 @@ class SurveyFragment : Fragment() {
     fun initializeDataAndSetupRecycler(func: () -> Unit) {
         func()
         if (isAllSurveyResponseInitialized())
-            setupRecyclerSurveys()
+            drawSurveyRecycler()
     }
 
     fun isAllSurveyResponseInitialized(): Boolean {

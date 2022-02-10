@@ -57,6 +57,7 @@ class LoginActivity : MisoActivity() {
                     Log.i("miso", "로그인 성공 ${token.accessToken}")
                     try {
                         addPreferencePair("accessToken", token.accessToken)
+                        savePreferences()
                         UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
                             if (error != null)
                                 Log.i("token", "토큰 정보 보기 실패", error)
