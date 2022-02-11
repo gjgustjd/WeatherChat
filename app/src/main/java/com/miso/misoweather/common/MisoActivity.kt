@@ -28,10 +28,10 @@ open class MisoActivity :AppCompatActivity() {
 
         return regionSmallList.get(index)
     }
-    protected fun transferToBack(){
+    public fun transferToBack(){
         overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit)
     }
-    protected fun transferToNext(){
+    public fun transferToNext(){
         overridePendingTransition(R.anim.slide_right_exit,R.anim.slide_right_enter)
     }
     fun addPreferencePair(first:String,second:String)
