@@ -3,6 +3,7 @@ package com.miso.misoweather.Acitivity.home
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +19,10 @@ import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.weatherdetail.WeatherDetailActivity
 import com.miso.misoweather.Acitivity.mypage.MyPageActivity
+import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
+import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import com.miso.misoweather.model.TransportManager
+import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,6 +46,17 @@ class HomeActivity : MisoActivity() {
     lateinit var btngoToSurvey: ImageButton
     lateinit var recyclerChat: RecyclerView
     lateinit var recyclerChatAdapter: RecyclerChatsAdapter
+    lateinit var todaySurveyResultDto: SurveyResult
+    lateinit var txtFirstAnswer: TextView
+    lateinit var txtSecondAnswer: TextView
+    lateinit var txtThirdAnswer: TextView
+    lateinit var txtFirstRatio: TextView
+    lateinit var txtSecondRatio: TextView
+    lateinit var txtThirdRatio: TextView
+    lateinit var firstProgressLayout:ConstraintLayout
+    lateinit var secondProgressLayout:ConstraintLayout
+    lateinit var thirdProgressLayout:ConstraintLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -49,6 +64,7 @@ class HomeActivity : MisoActivity() {
         initializeViews()
         getUserInfo()
         getBriefForecast()
+        setupSurveyResult()
         getCommentList()
     }
 
@@ -62,10 +78,20 @@ class HomeActivity : MisoActivity() {
         btnShowWeatherDetail = binding.imgbtnShowWeather
         btnProfile = binding.imgbtnProfile
         btngoToSurvey = binding.imgbtnSurvey
+        txtFirstAnswer = binding.txtAnswerFirst
+        txtSecondAnswer = binding.txtAnswerSecond
+        txtThirdAnswer = binding.txtAnswerThird
+        txtFirstRatio = binding.txtRatioFirst
+        txtSecondRatio = binding.txtRatioSecond
+        txtThirdRatio = binding.txtRatioThird
+        firstProgressLayout = binding.itemFirstLayout
+        secondProgressLayout = binding.itemSecondLayout
+        thirdProgressLayout = binding.itemThirdLayout
+
         btngoToSurvey.setOnClickListener()
         {
-            var intent= Intent(this, ChatMainActivity::class.java)
-            intent.putExtra("previousActivity","Home")
+            var intent = Intent(this, ChatMainActivity::class.java)
+            intent.putExtra("previousActivity", "Home")
             startActivity(intent)
             transferToNext()
             finish()
@@ -97,9 +123,9 @@ class HomeActivity : MisoActivity() {
                     forecastBriefResponseDto = response.body()!!
                     var forecast = forecastBriefResponseDto.data.forecast
                     var region = forecastBriefResponseDto.data.region
-                    addPreferencePair("bigScale",region.bigScale)
-                    addPreferencePair("midScale",region.midScale)
-                    addPreferencePair("smallScale",region.smallScale)
+                    addPreferencePair("bigScale", region.bigScale)
+                    addPreferencePair("midScale", region.midScale)
+                    addPreferencePair("smallScale", region.smallScale)
                     savePreferences()
                     txtLocation.text =
                         region.bigScale + " " + region.midScale + " " + region.smallScale
@@ -111,17 +137,15 @@ class HomeActivity : MisoActivity() {
             }, { call, t ->
                 Log.i("결과", "실패 : $t")
             })
-        }catch (e:Exception)
-        {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     fun getCommentList() {
-        val callBriefForecast = TransportManager.
-        getRetrofitApiObject<ForecastBriefResponseDto>().
-        getCommentList(null, 4)
-        TransportManager.requestApi(callBriefForecast,{call, response ->
+        val callBriefForecast = TransportManager.getRetrofitApiObject<ForecastBriefResponseDto>()
+            .getCommentList(null, 4)
+        TransportManager.requestApi(callBriefForecast, { call, response ->
             try {
                 Log.i("결과", "성공")
                 commentListResponseDto = response.body()!!
@@ -129,7 +153,7 @@ class HomeActivity : MisoActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        },{call,t->
+        }, { call, t ->
             Log.i("결과", "실패 : $t")
         })
     }
@@ -141,10 +165,9 @@ class HomeActivity : MisoActivity() {
     }
 
     fun getUserInfo() {
-        val callgetUserInfo  = TransportManager.
-        getRetrofitApiObject<MemberInfoResponseDto>()
+        val callgetUserInfo = TransportManager.getRetrofitApiObject<MemberInfoResponseDto>()
             .getUserInfo(getPreference("misoToken")!!)
-        TransportManager.requestApi(callgetUserInfo,{call, response ->
+        TransportManager.requestApi(callgetUserInfo, { call, response ->
             try {
                 Log.i("결과", "성공")
                 memberInfoResponseDto = response.body()!!
@@ -161,8 +184,36 @@ class HomeActivity : MisoActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        },{call,t->
+        }, { call, t ->
             Log.i("결과", "실패 : $t")
+        })
+    }
+
+    fun setupSurveyResult() {
+        val callGetSurveyResult =
+            TransportManager.getRetrofitApiObject<SurveyResultResponseDto>()
+                .getSurveyResults(getBigShortScale(getPreference("bigScale")!!))
+
+        TransportManager.requestApi(callGetSurveyResult, { call, reponse ->
+            try {
+                todaySurveyResultDto = reponse.body()!!.data.responseList.first { it.surveyId == 2 }
+                txtFirstAnswer.text = todaySurveyResultDto.keyList.get(0).toString()
+                txtFirstRatio.text = todaySurveyResultDto.valueList.get(0).toString() + "%"
+                firstProgressLayout.visibility= View.VISIBLE
+
+                txtSecondAnswer.text = todaySurveyResultDto.keyList.get(1).toString()
+                txtSecondRatio.text = todaySurveyResultDto.valueList.get(1).toString() + "%"
+                secondProgressLayout.visibility= View.VISIBLE
+
+                txtThirdAnswer.text = todaySurveyResultDto.keyList.get(2).toString()
+                txtThirdRatio.text = todaySurveyResultDto.valueList.get(2).toString() + "%"
+                thirdProgressLayout.visibility= View.VISIBLE
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }, { call, throwable ->
+
         })
     }
 }
