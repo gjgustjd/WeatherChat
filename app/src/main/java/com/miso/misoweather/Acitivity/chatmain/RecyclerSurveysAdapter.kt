@@ -15,6 +15,7 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
 
     var viewHolders: ArrayList<Holder> = ArrayList()
 
+
     override fun getItemCount(): Int {
         return surveyItems.size
     }
