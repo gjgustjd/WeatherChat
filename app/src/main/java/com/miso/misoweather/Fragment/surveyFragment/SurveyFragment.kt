@@ -1,4 +1,4 @@
-package com.miso.misoweather.Fragment
+package com.miso.misoweather.Fragment.surveyFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,16 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.miso.misoweather.Acitivity.chatmain.RecyclerSurveysAdapter
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.FragmentSurveyBinding
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
-import com.miso.misoweather.model.DTO.SurveyQuestion
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
-import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import com.miso.misoweather.model.TransportManager
 

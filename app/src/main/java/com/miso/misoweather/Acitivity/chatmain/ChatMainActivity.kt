@@ -11,24 +11,11 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.Acitivity.home.HomeActivity
-import com.miso.misoweather.model.DTO.*
-import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.weatherdetail.WeatherDetailActivity
-import com.miso.misoweather.Fragment.CommentsFragment
-import com.miso.misoweather.Fragment.SurveyFragment
+import com.miso.misoweather.Fragment.commentFragment.CommentsFragment
+import com.miso.misoweather.Fragment.surveyFragment.SurveyFragment
 import com.miso.misoweather.R
 import com.miso.misoweather.databinding.ActivityChatMainBinding
-import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
-import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
-import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
-import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
-import com.miso.misoweather.model.TransportManager
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.Exception
 
 @RequiresApi(Build.VERSION_CODES.M)
 class ChatMainActivity : MisoActivity() {

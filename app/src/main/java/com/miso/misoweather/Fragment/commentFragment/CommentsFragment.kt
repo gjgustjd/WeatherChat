@@ -1,4 +1,4 @@
-package com.miso.misoweather.Fragment
+package com.miso.misoweather.Fragment.commentFragment
 
 import android.os.Bundle
 import android.util.Log

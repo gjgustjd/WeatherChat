@@ -1,17 +1,16 @@
-package com.miso.misoweather.Acitivity.chatmain
+package com.miso.misoweather.Fragment.surveyFragment
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.miso.misoweather.Acitivity.chatmain.SurveyItem
 import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ListItemSurveyBinding
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
-import java.io.Serializable
 import java.lang.Exception
 
 class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyItem>) :
@@ -92,9 +91,6 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
         var progress_third = itemView.progressThird
         var imgIsAnswered = itemView.imgIsanswered
         var myAnswerLayout = itemView.myAnswerLayout
-
-
-
     }
 
 }
