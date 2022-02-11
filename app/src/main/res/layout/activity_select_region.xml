@@ -24,7 +24,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/recycler_answers"
+        app:layout_constraintBottom_toTopOf="@+id/grid_regions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgbtn_back"
@@ -82,8 +82,10 @@
         android:paddingTop="60dp"
         app:layout_constraintBottom_toTopOf="@id/buttonLayout"
         app:layout_constraintEnd_toEndOf="@+id/titleLayout"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/titleLayout"
         app:layout_constraintTop_toBottomOf="@+id/titleLayout"
+        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintVertical_chainStyle="spread"
         app:layout_constraintVertical_weight="3"
         tools:listitem="@layout/grid_region">
@@ -110,9 +112,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/recycler_answers"
-        app:layout_constraintStart_toStartOf="@+id/recycler_answers"
-        app:layout_constraintTop_toBottomOf="@+id/recycler_answers"
+        app:layout_constraintEnd_toEndOf="@+id/grid_regions"
+        app:layout_constraintStart_toStartOf="@+id/grid_regions"
+        app:layout_constraintTop_toBottomOf="@+id/grid_regions"
         app:layout_constraintVertical_weight="2">
 
         <Button
