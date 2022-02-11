@@ -65,14 +65,14 @@
         android:id="@+id/recycler_answers"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingTop="60dp"
+        android:paddingTop="30dp"
         app:layout_constraintBottom_toTopOf="@id/buttonLayout"
         app:layout_constraintEnd_toEndOf="@+id/titleLayout"
         app:layout_constraintStart_toStartOf="@+id/titleLayout"
         app:layout_constraintTop_toBottomOf="@+id/titleLayout"
         app:layout_constraintVertical_chainStyle="spread"
-        app:layout_constraintVertical_weight="3"
-        tools:listitem="@layout/grid_region">
+        app:layout_constraintVertical_weight="4"
+        tools:listitem="@layout/list_survey_answer">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -99,7 +99,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.2" />
+            app:layout_constraintVertical_bias="0.1" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
