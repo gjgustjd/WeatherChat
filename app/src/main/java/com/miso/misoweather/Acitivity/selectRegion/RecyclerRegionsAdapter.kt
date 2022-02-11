@@ -19,6 +19,10 @@ class RecyclerRegionsAdapter(var context: Context, var regions: ArrayList<Region
         return regions.size
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val layoutParams = holder.itemView.layoutParams
         layoutParams.height = 80

@@ -19,6 +19,10 @@ class RecyclerChatsAdapter(var context: Context, var comments: List<Comment>) :
         return comments.size
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.nickname.text = comments.get(position).nickname
         holder.comment.text = comments.get(position).content
