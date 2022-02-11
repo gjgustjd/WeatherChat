@@ -1,13 +1,17 @@
 package com.miso.misoweather.Acitivity.chatmain
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.R
+import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ListItemSurveyBinding
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
+import java.io.Serializable
 import java.lang.Exception
 
 class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyItem>) :
@@ -50,6 +54,15 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
                 holder.txtMyAnswer.text = "답변하기"
             }
 
+            holder.myAnswerLayout.setOnClickListener{
+               var misoActivity = context as MisoActivity
+                var intent = Intent(context,SelectSurveyAnswerActivity::class.java)
+                intent.putExtra("SurveyItem",surveyItem)
+                misoActivity.startActivity(intent)
+                misoActivity.transferToNext()
+                misoActivity.finish()
+            }
+
             viewHolders.add(holder)
         }catch (e:Exception)
         {
@@ -78,6 +91,7 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
         var progress_second = itemView.progressSecond
         var progress_third = itemView.progressThird
         var imgIsAnswered = itemView.imgIsanswered
+        var myAnswerLayout = itemView.myAnswerLayout
 
 
 

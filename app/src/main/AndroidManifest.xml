@@ -12,6 +12,8 @@
         android:name=".SocketApplication"
         android:networkSecurityConfig="@xml/network_config"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".Acitivity.selectAnswer.SelectSurveyAnswerActivity">
+        </activity>
         <activity android:name=".Acitivity.home.HomeActivity">
         </activity>
         <activity android:name=".Acitivity.getnickname.SelectNickNameActivity">
