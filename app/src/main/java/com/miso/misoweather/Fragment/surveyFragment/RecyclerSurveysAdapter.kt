@@ -42,32 +42,30 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
             var firstRatio = surveyResult.valueList.get(0).toString()
             var secondRatio = surveyResult.valueList.get(1).toString()
             var thirdRatio = surveyResult.valueList.get(2).toString()
-            holder.txtFirstRatio.text = firstRatio+"%"
-            holder.txtSecondRatio.text = secondRatio+"%"
-            holder.txtThirdRatio.text = thirdRatio+"%"
+            holder.txtFirstRatio.text = firstRatio + "%"
+            holder.txtSecondRatio.text = secondRatio + "%"
+            holder.txtThirdRatio.text = thirdRatio + "%"
             holder.progress_first.progress = firstRatio.toInt()
             holder.progress_second.progress = secondRatio.toInt()
             holder.progress_third.progress = thirdRatio.toInt()
 
-            if(!myAnswer.answered || myAnswer.memberAnswer==null)
-            {
+            if (!myAnswer.answered || myAnswer.memberAnswer == null) {
                 holder.imgIsAnswered.setImageDrawable(context.resources.getDrawable(R.drawable.icon_unanswered))
                 holder.txtMyAnswer.setTextColor(context.resources.getColor(R.color.textBlack))
                 holder.txtMyAnswer.text = "답변하기"
             }
 
-            holder.myAnswerLayout.setOnClickListener{
-               var misoActivity = context as MisoActivity
-                var intent = Intent(context,SelectSurveyAnswerActivity::class.java)
-                intent.putExtra("SurveyItem",surveyItem)
+            holder.myAnswerLayout.setOnClickListener {
+                var misoActivity = context as MisoActivity
+                var intent = Intent(context, SelectSurveyAnswerActivity::class.java)
+                intent.putExtra("SurveyItem", surveyItem)
                 misoActivity.startActivity(intent)
                 misoActivity.transferToNext()
                 misoActivity.finish()
             }
 
             viewHolders.add(holder)
-        }catch (e:Exception)
-        {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }

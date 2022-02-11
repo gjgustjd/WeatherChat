@@ -11,6 +11,7 @@ import com.miso.misoweather.Acitivity.chatmain.SurveyItem
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.FragmentSurveyBinding
+import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
@@ -112,13 +113,15 @@ class SurveyFragment : Fragment() {
 
     fun makeSurveyItems() {
         surveyItems = ArrayList()
+        val comparator : Comparator<SurveyMyAnswerDto> = compareBy { it.surveyId }
+        var sortedMyanswerList = surveyMyAnswerResponseDto.data.responseList.sortedWith(comparator)
 
         surveyQuestions.forEachIndexed { index, s ->
             surveyItems.add(
                 SurveyItem(
                     index + 1,
                     s,
-                    surveyMyAnswerResponseDto.data.responseList[index],
+                    sortedMyanswerList[index],
                     surveyAnswerList[index],
                     surveyResultResponseDto.data.responseList[index]
                 )
