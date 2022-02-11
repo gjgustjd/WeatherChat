@@ -48,8 +48,8 @@
             style="@style/imgViewAdjusted"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             app:layout_constraintBottom_toTopOf="@id/txt_my_score"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -183,13 +183,16 @@
                 android:layout_height="0dp"
                 android:layout_marginEnd="20dp"
                 android:background="@android:color/transparent"
+                android:indeterminate="false"
                 android:max="100"
+                android:progress="30"
                 android:progressDrawable="@drawable/progress_default_background"
                 android:progressTint="@color/primaryPurple"
                 app:layout_constraintBottom_toBottomOf="@+id/txt_first_score"
                 app:layout_constraintEnd_toStartOf="@+id/txt_first_score"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:trackCornerRadius="100dp" />
 
             <ProgressBar
                 android:id="@+id/progress_second"
@@ -199,6 +202,7 @@
                 android:layout_marginEnd="20dp"
                 android:background="@android:color/transparent"
                 android:max="100"
+                android:progress="100"
                 android:progressDrawable="@drawable/progress_default_background"
                 app:layout_constraintBottom_toBottomOf="@+id/txt_second_score"
                 app:layout_constraintEnd_toStartOf="@+id/txt_second_score"
