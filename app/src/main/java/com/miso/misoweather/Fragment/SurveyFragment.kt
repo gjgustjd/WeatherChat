@@ -55,18 +55,6 @@ class SurveyFragment : Fragment() {
         }
     }
 
-    fun getSurveyList(): ArrayList<SurveyQuestion> {
-        var questions = requireActivity().resources.getStringArray(R.array.survey_questions)
-        var surveyQuestions = ArrayList<SurveyQuestion>()
-
-        for (i in 0..questions.size - 1) {
-            val surveyQuestion = SurveyQuestion(questions[i], i + 1)
-            surveyQuestions.add(surveyQuestion)
-        }
-
-        return surveyQuestions
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
