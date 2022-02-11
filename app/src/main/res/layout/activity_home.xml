@@ -235,6 +235,176 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txt_chart_title">
 
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/itemThirdLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@drawable/gradient_vertical_background_lightpurple"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHeight_percent="0.2"
+                        app:layout_constraintStart_toEndOf="@+id/itemFirstLayout"
+                        app:layout_constraintWidth_percent="0.2">
+
+                        <TextView
+                            android:id="@+id/textView10"
+                            style="@style/boldWhite"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="3"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/itemSecondLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@drawable/gradient_vertical_background_lightpurple"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/itemFirstLayout"
+                        app:layout_constraintHeight_percent="0.35"
+                        app:layout_constraintHorizontal_chainStyle="spread"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintWidth_percent="0.2">
+
+                        <TextView
+                            android:id="@+id/textView9"
+                            style="@style/boldWhite"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/itemFirstLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/gradient_vertical_background_purple"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/itemThirdLayout"
+                        app:layout_constraintHeight_percent="0.5"
+                        app:layout_constraintStart_toEndOf="@id/itemSecondLayout"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_ratio_first"
+                        app:layout_constraintWidth_percent="0.2">
+
+                        <TextView
+                            android:id="@+id/textView8"
+                            style="@style/boldWhite"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="1"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:id="@+id/txt_answer_first"
+                        style="@style/boldBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="롱패딩"
+                        android:textColor="@color/primaryPurple"
+                        android:textSize="18dp"
+                        app:layout_constraintBottom_toTopOf="@id/txt_ratio_first"
+                        app:layout_constraintEnd_toEndOf="@+id/itemFirstLayout"
+                        app:layout_constraintStart_toStartOf="@+id/itemFirstLayout"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_chainStyle="packed" />
+
+                    <TextView
+                        android:id="@+id/txt_answer_second"
+                        style="@style/boldBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="숏패딩"
+                        android:textColor="@color/black"
+                        android:textSize="14dp"
+                        app:layout_constraintBottom_toTopOf="@+id/txt_ratio_second"
+                        app:layout_constraintEnd_toEndOf="@+id/itemSecondLayout"
+                        app:layout_constraintStart_toStartOf="@+id/itemSecondLayout"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="1"
+                        app:layout_constraintVertical_chainStyle="packed" />
+
+                    <TextView
+                        android:id="@+id/txt_answer_third"
+                        style="@style/boldBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="코트"
+                        android:textColor="@color/black"
+                        android:textSize="14dp"
+                        app:layout_constraintBottom_toTopOf="@+id/txt_ratio_third"
+                        app:layout_constraintEnd_toEndOf="@+id/itemThirdLayout"
+                        app:layout_constraintStart_toStartOf="@+id/itemThirdLayout"
+                        app:layout_constraintVertical_chainStyle="packed" />
+
+                    <TextView
+                        android:id="@+id/txt_ratio_first"
+                        style="@style/boldBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="52%"
+                        android:textColor="@color/primaryPurple"
+                        android:textSize="10dp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@+id/txt_answer_first"
+                        app:layout_constraintStart_toEndOf="@id/img_icon_first"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_answer_first" />
+
+                    <TextView
+                        android:id="@+id/txt_ratio_second"
+                        style="@style/boldBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="52%"
+                        android:textColor="@color/black"
+                        android:textSize="10dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/itemSecondLayout"
+                        app:layout_constraintEnd_toEndOf="@+id/itemSecondLayout"
+                        app:layout_constraintStart_toStartOf="@+id/itemSecondLayout" />
+
+                    <TextView
+                        android:id="@+id/txt_ratio_third"
+                        style="@style/boldBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="52%"
+                        android:textColor="@color/black"
+                        android:textSize="10dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/itemThirdLayout"
+                        app:layout_constraintEnd_toEndOf="@+id/itemThirdLayout"
+                        app:layout_constraintStart_toStartOf="@+id/itemThirdLayout" />
+
+                    <ImageView
+                        android:id="@+id/img_icon_first"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:adjustViewBounds="true"
+                        android:cropToPadding="true"
+                        android:padding="1dp"
+                        android:scaleType="fitCenter"
+                        app:layout_constraintBottom_toBottomOf="@+id/txt_ratio_first"
+                        app:layout_constraintEnd_toStartOf="@+id/txt_ratio_first"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="@+id/txt_answer_first"
+                        app:layout_constraintTop_toTopOf="@+id/txt_ratio_first"
+                        app:srcCompat="@drawable/check_purple" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
