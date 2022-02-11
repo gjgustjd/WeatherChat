@@ -7,6 +7,7 @@ import com.miso.misoweather.model.DTO.Forecast.Detail.ForecastDetailResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
+import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerRequestDto
 import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
@@ -60,6 +61,6 @@ fun getCommentList(@Query("commentId")commentId:Int?,@Query("size")size:Int):Cal
  fun getSurveyMyAnswers(@Header("serverToken")serverToken: String):Call<SurveyMyAnswerResponseDto>
 
  @POST("api/survey")
- fun putSurveyMyAnser(@Header("serverToken")serverToken: String,@Body answerSurveyDto:SurveyMyAnswerDto):Call<SurveyAddMyAnswerResponseDto>
+ fun putSurveyMyAnser(@Header("serverToken")serverToken: String,@Body answerSurveyDto:SurveyAddMyAnswerRequestDto):Call<SurveyAddMyAnswerResponseDto>
 
 }
