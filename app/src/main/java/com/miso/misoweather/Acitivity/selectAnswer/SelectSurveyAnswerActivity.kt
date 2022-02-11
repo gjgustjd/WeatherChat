@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
@@ -14,18 +16,23 @@ class SelectSurveyAnswerActivity : MisoActivity() {
     lateinit var binding: ActivitySurveyAnswerBinding
     lateinit var btn_back: ImageButton
     lateinit var btn_action: Button
+    lateinit var txtQuestion:TextView
     lateinit var surveyItem:SurveyItem
     lateinit var recycler_answers:RecyclerView
+    lateinit var recyclerAdapter:RecyclerSurveyAnswersAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySurveyAnswerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initializeViews()
+        setupRecycler()
     }
 
     fun initializeViews() {
         surveyItem = intent.getSerializableExtra("SurveyItem") as SurveyItem
+        txtQuestion = binding.txtItemText
+        txtQuestion.text = surveyItem.surveyQuestion
         btn_back = binding.imgbtnBack
         btn_back.setOnClickListener()
         {
@@ -41,5 +48,12 @@ class SelectSurveyAnswerActivity : MisoActivity() {
 
         }
         recycler_answers = binding.recyclerAnswers
+    }
+    fun setupRecycler()
+    {
+        recyclerAdapter = RecyclerSurveyAnswersAdapter(this,surveyItem.surveyAnswers)
+        recycler_answers.adapter = recyclerAdapter
+        recycler_answers.layoutManager = LinearLayoutManager(baseContext)
+
     }
 }
