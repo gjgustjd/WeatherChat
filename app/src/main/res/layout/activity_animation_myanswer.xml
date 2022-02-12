@@ -26,7 +26,7 @@
         android:text="오늘 같은 날씨엔"
         android:textColor="@color/black"
         android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@id/txt_titleText6"
+        app:layout_constraintBottom_toTopOf="@id/txt_answer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -40,14 +40,14 @@
         android:text="역시 "
         android:textColor="@color/black"
         android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/txt_titleText6"
-        app:layout_constraintEnd_toStartOf="@+id/txt_titleText6"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_answer"
+        app:layout_constraintEnd_toStartOf="@+id/txt_answer"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/txt_titleText6" />
+        app:layout_constraintTop_toTopOf="@+id/txt_answer" />
 
     <TextView
-        android:id="@+id/txt_titleText6"
+        android:id="@+id/txt_answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -70,6 +70,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_titleText6"
+        app:layout_constraintTop_toBottomOf="@+id/txt_answer"
         app:srcCompat="@drawable/animation_check_myanswer" />
 </androidx.constraintlayout.widget.ConstraintLayout>
