@@ -215,10 +215,10 @@ class HomeActivity : MisoActivity() {
                 todaySurveyResultDto = reponse.body()!!.data.responseList.first { it.surveyId == 2 }
                 txtFirstAnswer.text = todaySurveyResultDto.keyList.get(0).toString()
                 txtFirstRatio.text = todaySurveyResultDto.valueList.get(0).toString() + "%"
-                if(txtFirstRatio.text.isNullOrBlank())
-                    imgIconCheckFirst.visibility == View.GONE
+                if(txtFirstRatio.text.equals(""))
+                    imgIconCheckFirst.visibility = View.GONE
                 else
-                    imgIconCheckFirst.visibility == View.VISIBLE
+                    imgIconCheckFirst.visibility = View.VISIBLE
 
                 txtFirstRatio.text = todaySurveyResultDto.valueList.get(0).toString() + "%"
                 firstProgressLayout.visibility= View.VISIBLE

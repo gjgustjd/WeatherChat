@@ -36,13 +36,7 @@ class LoginActivity : MisoActivity() {
             )
                 kakaoLogin()
             else {
-                issueMisoToken()
-
-                if (getPreference("misoToken").equals("")) {
-                    startRegionActivity()
-                } else
-                    startActivity(Intent(this, HomeActivity::class.java))
-                finish()
+                checkRegistered()
             }
         }
     }
@@ -124,5 +118,25 @@ class LoginActivity : MisoActivity() {
             getPreference("socialType")
         )
         return loginRequestDto
+    }
+
+    fun checkRegistered() {
+        val callCheckRegistered = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
+            .checkRegistered(getPreference("socialId")!!, getPreference("socialType")!!)
+
+        TransportManager.requestApi(callCheckRegistered,
+            { call, response ->
+                if (response.body()?.status.equals("OK")) {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                } else {
+                    issueMisoToken()
+                    startRegionActivity()
+                }
+                finish()
+            },
+            { call, throwable ->
+                startActivity(Intent(this, HomeActivity::class.java))
+                finish()
+            })
     }
 }

@@ -396,6 +396,7 @@
                         android:cropToPadding="true"
                         android:padding="1dp"
                         android:scaleType="fitCenter"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@+id/txt_ratio_first"
                         app:layout_constraintEnd_toStartOf="@+id/txt_ratio_first"
                         app:layout_constraintHorizontal_chainStyle="packed"
