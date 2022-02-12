@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WeatherChat</string>
+    <string name="app_name">MisoWeather</string>
     <string name="kakao_app_key">43a4e22b7b63572e7025afaf34a56966</string>
     <string name="kakao_native_key">43a4e22b7b63572e7025afaf34a56966</string>
     <string-array name="regions">
