@@ -56,6 +56,8 @@ class HomeActivity : MisoActivity() {
     lateinit var firstProgressLayout:ConstraintLayout
     lateinit var secondProgressLayout:ConstraintLayout
     lateinit var thirdProgressLayout:ConstraintLayout
+    lateinit var chartLayout:ConstraintLayout
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -87,14 +89,16 @@ class HomeActivity : MisoActivity() {
         firstProgressLayout = binding.itemFirstLayout
         secondProgressLayout = binding.itemSecondLayout
         thirdProgressLayout = binding.itemThirdLayout
+        chartLayout = binding.chartLayout
+
+        chartLayout.setOnClickListener()
+        {
+            goToChatMainActivity()
+        }
 
         btngoToSurvey.setOnClickListener()
         {
-            var intent = Intent(this, ChatMainActivity::class.java)
-            intent.putExtra("previousActivity", "Home")
-            startActivity(intent)
-            transferToNext()
-            finish()
+            goToChatMainActivity()
         }
         weatherLayout.setOnClickListener()
         {
@@ -109,6 +113,15 @@ class HomeActivity : MisoActivity() {
             finish()
         }
         recyclerChat = binding.recyclerChats
+    }
+    fun goToChatMainActivity()
+    {
+        var intent = Intent(this, ChatMainActivity::class.java)
+        intent.putExtra("previousActivity", "Home")
+        startActivity(intent)
+        transferToNext()
+        finish()
+
     }
 
     fun getBriefForecast() {
