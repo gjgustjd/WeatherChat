@@ -20,6 +20,7 @@ import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.TransportManager
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
+import com.rd.PageIndicatorView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,7 +31,7 @@ import java.lang.Exception
 class LoginActivity : MisoActivity() {
     lateinit var binding: ActivityLoginBinding
     lateinit var viewpager_onboarding: ViewPager2
-
+    lateinit var pageIndicatorView: PageIndicatorView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -39,6 +40,8 @@ class LoginActivity : MisoActivity() {
     }
 
     fun initializeView() {
+        pageIndicatorView = binding.pageIndicatorView
+        pageIndicatorView.setCount(5); // specify total count of indicators pageIndicatorView.setSelection(2);
         viewpager_onboarding = binding.viewPagerOnBoarding
         viewpager_onboarding.adapter =
             ViewPagerFragmentAdapter(
@@ -51,7 +54,15 @@ class LoginActivity : MisoActivity() {
                     OnBoardChatFragment()
                 )
             )
+        viewpager_onboarding.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback()
+        {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                pageIndicatorView.setSelected(position)
+            }
+        })
         viewpager_onboarding.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+
         binding.clBtnKakaoLogin.setOnClickListener {
             if (!AuthApiClient.instance.hasToken() ||
                 getPreference("socialId").equals("") ||
