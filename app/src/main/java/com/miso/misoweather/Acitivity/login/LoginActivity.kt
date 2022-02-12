@@ -39,8 +39,7 @@ class LoginActivity : MisoActivity() {
                 issueMisoToken()
 
                 if (getPreference("misoToken").equals("")) {
-                    startActivity(Intent(this, SelectRegionActivity::class.java))
-                    transferToNext()
+                    startRegionActivity()
                 } else
                     startActivity(Intent(this, HomeActivity::class.java))
                 finish()
@@ -114,6 +113,7 @@ class LoginActivity : MisoActivity() {
         }, { call, t ->
             Log.i("결과", "실패 : $t")
             addPreferencePair("misoToken", "")
+            savePreferences()
             startRegionActivity()
         })
     }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -53,6 +54,7 @@ class HomeActivity : MisoActivity() {
     lateinit var txtFirstRatio: TextView
     lateinit var txtSecondRatio: TextView
     lateinit var txtThirdRatio: TextView
+    lateinit var imgIconCheckFirst: ImageView
     lateinit var firstProgressLayout:ConstraintLayout
     lateinit var secondProgressLayout:ConstraintLayout
     lateinit var thirdProgressLayout:ConstraintLayout
@@ -65,9 +67,6 @@ class HomeActivity : MisoActivity() {
         setContentView(binding.root)
         initializeViews()
         getUserInfo()
-        getBriefForecast()
-        setupSurveyResult()
-        getCommentList()
     }
 
     fun initializeViews() {
@@ -86,6 +85,7 @@ class HomeActivity : MisoActivity() {
         txtFirstRatio = binding.txtRatioFirst
         txtSecondRatio = binding.txtRatioSecond
         txtThirdRatio = binding.txtRatioThird
+        imgIconCheckFirst = binding.imgIconFirst
         firstProgressLayout = binding.itemFirstLayout
         secondProgressLayout = binding.itemSecondLayout
         thirdProgressLayout = binding.itemThirdLayout
@@ -194,6 +194,9 @@ class HomeActivity : MisoActivity() {
                 addPreferencePair("emoji", memberInfo.emoji)
                 addPreferencePair("nickname", memberInfo.nickname)
                 savePreferences()
+                getBriefForecast()
+                setupSurveyResult()
+                getCommentList()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -211,6 +214,12 @@ class HomeActivity : MisoActivity() {
             try {
                 todaySurveyResultDto = reponse.body()!!.data.responseList.first { it.surveyId == 2 }
                 txtFirstAnswer.text = todaySurveyResultDto.keyList.get(0).toString()
+                txtFirstRatio.text = todaySurveyResultDto.valueList.get(0).toString() + "%"
+                if(txtFirstRatio.text.isNullOrBlank())
+                    imgIconCheckFirst.visibility == View.GONE
+                else
+                    imgIconCheckFirst.visibility == View.VISIBLE
+
                 txtFirstRatio.text = todaySurveyResultDto.valueList.get(0).toString() + "%"
                 firstProgressLayout.visibility= View.VISIBLE
 
