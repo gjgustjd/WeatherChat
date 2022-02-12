@@ -64,17 +64,6 @@ class LoginActivity : MisoActivity() {
         }
     }
 
-    fun getViewPages(): ArrayList<View> {
-        return arrayListOf(
-            layoutInflater.inflate(R.layout.fragment_onboarding_initial, null, false),
-            layoutInflater.inflate(R.layout.fragment_onboarding_apparell, null, false),
-            layoutInflater.inflate(R.layout.fragment_onboarding_food, null, false),
-            layoutInflater.inflate(R.layout.fragment_onboarding_location, null, false),
-            layoutInflater.inflate(R.layout.fragment_onboarding_chat, null, false)
-        )
-
-    }
-
     fun kakaoLogin() {
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@LoginActivity)) {
             UserApiClient.instance.loginWithKakaoTalk(this@LoginActivity) { token, error ->

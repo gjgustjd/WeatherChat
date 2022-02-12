@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="@+id/btn_layout"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="spread"
-        app:layout_constraintVertical_weight="3">
+        app:layout_constraintVertical_weight="5">
 
         <ImageView
             android:id="@+id/img_logo"
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="50dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -95,6 +95,7 @@
             android:text="그냥 둘러볼래요"
             android:textColor="@color/white"
             android:textSize="12dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/clBtn_kakao_login" />
