@@ -1,11 +1,13 @@
 package com.miso.misoweather.Fragment.surveyFragment
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +23,10 @@ import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import com.miso.misoweather.model.TransportManager
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 class SurveyFragment : Fragment() {
     lateinit var binding: FragmentSurveyBinding
     lateinit var recyclerSurvey: RecyclerView
@@ -32,6 +37,7 @@ class SurveyFragment : Fragment() {
     lateinit var surveyMyAnswerResponseDto: SurveyMyAnswerResponseDto
     lateinit var surveyItems: ArrayList<SurveyItem>
     lateinit var txtLocation: TextView
+    lateinit var txtDate: TextView
     lateinit var currentLocation: String
     lateinit var bigShortScale: String
     lateinit var activity: ChatMainActivity
@@ -51,15 +57,25 @@ class SurveyFragment : Fragment() {
         recyclerSurvey = binding.recyclerSurveys
         txtLocation = binding.txtLocation
         txtLocation.text = currentLocation
+        txtDate = binding.txtCurrentDate
+        txtDate.text = getCurrentDateString()
+
         surveyAnswerList = ArrayList()
         txtLocation.setOnClickListener()
         {
             var intent = Intent(activity, UpdateRegionActivity::class.java)
-            intent.putExtra("region",bigShortScale)
+            intent.putExtra("region", bigShortScale)
             startActivity(intent)
             activity.transferToNext()
             activity.finish()
         }
+    }
+
+    fun getCurrentDateString(): String {
+        var currentDate = LocalDateTime.now()
+        var dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+
+        return currentDate.format(dateTimeFormatter)
     }
 
     fun setupRecyclerSurveys() {
