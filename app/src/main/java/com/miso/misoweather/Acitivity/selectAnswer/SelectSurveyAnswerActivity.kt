@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.miso.misoweather.Acitivity.answerAnimationActivity.AnswerAnimationActivity
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
 import com.miso.misoweather.common.MisoActivity
@@ -73,10 +74,9 @@ class SelectSurveyAnswerActivity : MisoActivity() {
         TransportManager.requestApi(
             callPutMyAnser,
             { call, response ->
-                var intent = Intent(this, ChatMainActivity::class.java)
-                intent.putExtra("previousActivity", "Home")
+                var intent = Intent(this, AnswerAnimationActivity::class.java)
                 startActivity(intent)
-                transferToBack()
+                overFromUnder()
                 finish()
             },
             { call, throwable ->

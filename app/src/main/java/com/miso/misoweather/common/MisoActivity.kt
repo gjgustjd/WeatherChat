@@ -28,12 +28,18 @@ open class MisoActivity :AppCompatActivity() {
 
         return regionSmallList.get(index)
     }
-    public fun transferToBack(){
+    fun transferToBack(){
         overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit)
     }
-    public fun transferToNext(){
+    fun transferToNext(){
         overridePendingTransition(R.anim.slide_right_exit,R.anim.slide_right_enter)
     }
+
+    fun overFromUnder()
+    {
+        overridePendingTransition(R.anim.slide_bottom_exit,R.anim.stay)
+    }
+
     fun addPreferencePair(first:String,second:String)
     {
         val pair = Pair(first,second)

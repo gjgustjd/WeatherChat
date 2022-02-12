@@ -12,6 +12,8 @@
         android:name=".SocketApplication"
         android:networkSecurityConfig="@xml/network_config"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".Acitivity.answerAnimationActivity.AnswerAnimationActivity">
+        </activity>
         <activity android:name=".Acitivity.updateRegion.UpdateRegionActivity">
         </activity>
         <activity android:name=".Acitivity.selectAnswer.SelectSurveyAnswerActivity">
