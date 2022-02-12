@@ -1,13 +1,17 @@
 package com.miso.misoweather.Fragment.surveyFragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
+import com.miso.misoweather.Acitivity.updateRegion.UpdateRegionActivity
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.FragmentSurveyBinding
@@ -27,20 +31,39 @@ class SurveyFragment : Fragment() {
     lateinit var surveyResultResponseDto: SurveyResultResponseDto
     lateinit var surveyMyAnswerResponseDto: SurveyMyAnswerResponseDto
     lateinit var surveyItems: ArrayList<SurveyItem>
-    lateinit var activity: MisoActivity
+    lateinit var txtLocation: TextView
+    lateinit var currentLocation: String
+    lateinit var bigShortScale: String
+    lateinit var activity: ChatMainActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentSurveyBinding.inflate(layoutInflater)
-        activity = getActivity() as MisoActivity
-        recyclerSurvey = binding.recyclerSurveys
-        surveyAnswerList = ArrayList()
+        activity = getActivity() as ChatMainActivity
+        bigShortScale = activity.selectedRegion
+        initializeView()
         setupSurveyAnswerList()
-        setupSurveyResult(activity.getBigShortScale(activity.getPreference("bigScale")!!))
+        setupSurveyResult(bigShortScale)
         setupSurveyMyAnswer()
     }
 
+    fun initializeView() {
+        currentLocation = activity.selectedRegion
+        recyclerSurvey = binding.recyclerSurveys
+        txtLocation = binding.txtLocation
+        txtLocation.text = currentLocation
+        surveyAnswerList = ArrayList()
+        txtLocation.setOnClickListener()
+        {
+            var intent = Intent(activity, UpdateRegionActivity::class.java)
+            intent.putExtra("region",bigShortScale)
+            startActivity(intent)
+            activity.transferToNext()
+            activity.finish()
+        }
+    }
+
     fun setupRecyclerSurveys() {
-        recyclerSurveysAdapter = RecyclerSurveysAdapter(requireActivity(),surveyItems)
+        recyclerSurveysAdapter = RecyclerSurveysAdapter(requireActivity(), surveyItems)
         recyclerSurvey.adapter = recyclerSurveysAdapter
         recyclerSurvey.layoutManager = LinearLayoutManager(requireActivity().baseContext)
     }
@@ -113,7 +136,7 @@ class SurveyFragment : Fragment() {
 
     fun makeSurveyItems() {
         surveyItems = ArrayList()
-        val comparator : Comparator<SurveyMyAnswerDto> = compareBy { it.surveyId }
+        val comparator: Comparator<SurveyMyAnswerDto> = compareBy { it.surveyId }
         var sortedMyanswerList = surveyMyAnswerResponseDto.data.responseList.sortedWith(comparator)
 
         surveyQuestions.forEachIndexed { index, s ->

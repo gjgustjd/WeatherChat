@@ -23,6 +23,7 @@ class ChatMainActivity : MisoActivity() {
     lateinit var btn_back: ImageButton
     lateinit var btnSurvey: Button
     lateinit var btnChat: Button
+     lateinit var selectedRegion:String
     lateinit var previousActivity: String
     lateinit var goToPreviousActivity: () -> Unit
 
@@ -34,7 +35,8 @@ class ChatMainActivity : MisoActivity() {
     }
 
     fun initializeViews() {
-        previousActivity = intent.getStringExtra("previousActivity")!!
+        selectedRegion = intent.getStringExtra("region")?:getBigShortScale(getPreference("bigScale")!!)
+        previousActivity = intent.getStringExtra("previousActivity")?:""
         btnSurvey = binding.btnSurvey
         btnChat = binding.btnChats
         Log.i("misoToken",getPreference("misoToken")!!);
