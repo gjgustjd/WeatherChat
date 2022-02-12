@@ -3,13 +3,18 @@ package com.miso.misoweather.Acitivity.login
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.Toast
+import androidx.viewpager2.widget.ViewPager2
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityLoginBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
+import com.miso.misoweather.Acitivity.login.viewPagerFragments.*
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
+import com.miso.misoweather.R
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.LoginRequestDto
@@ -24,11 +29,29 @@ import java.lang.Exception
 
 class LoginActivity : MisoActivity() {
     lateinit var binding: ActivityLoginBinding
+    lateinit var viewpager_onboarding: ViewPager2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        initializeView()
+    }
+
+    fun initializeView() {
+        viewpager_onboarding = binding.viewPagerOnBoarding
+        viewpager_onboarding.adapter =
+            ViewPagerFragmentAdapter(
+                this,
+                listOf(
+                    OnBoardInitFragment(),
+                    OnBoardApparellFragment(),
+                    OnBoardFoodFragment(),
+                    OnBoardLocationFragment(),
+                    OnBoardChatFragment()
+                )
+            )
+        viewpager_onboarding.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.clBtnKakaoLogin.setOnClickListener {
             if (!AuthApiClient.instance.hasToken() ||
                 getPreference("socialId").equals("") ||
@@ -39,6 +62,17 @@ class LoginActivity : MisoActivity() {
                 checkRegistered()
             }
         }
+    }
+
+    fun getViewPages(): ArrayList<View> {
+        return arrayListOf(
+            layoutInflater.inflate(R.layout.fragment_onboarding_initial, null, false),
+            layoutInflater.inflate(R.layout.fragment_onboarding_apparell, null, false),
+            layoutInflater.inflate(R.layout.fragment_onboarding_food, null, false),
+            layoutInflater.inflate(R.layout.fragment_onboarding_location, null, false),
+            layoutInflater.inflate(R.layout.fragment_onboarding_chat, null, false)
+        )
+
     }
 
     fun kakaoLogin() {
