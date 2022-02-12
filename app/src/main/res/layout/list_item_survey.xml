@@ -69,6 +69,20 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/img_icon_next"
+            style="@style/imgViewAdjusted"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_my_score"
+            app:layout_constraintStart_toEndOf="@+id/txt_my_score"
+            app:layout_constraintTop_toTopOf="@+id/txt_my_score"
+            app:srcCompat="@drawable/icon_arrow_next_half_transparent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

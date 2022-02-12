@@ -3,6 +3,7 @@ package com.miso.misoweather.Fragment.surveyFragment
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
@@ -53,6 +54,7 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
                 holder.imgIsAnswered.setImageDrawable(context.resources.getDrawable(R.drawable.icon_unanswered))
                 holder.txtMyAnswer.setTextColor(context.resources.getColor(R.color.textBlack))
                 holder.txtMyAnswer.text = "답변하기"
+                holder.imgIconNext.visibility = View.VISIBLE
             }
 
             holder.myAnswerLayout.setOnClickListener {
@@ -77,7 +79,6 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
     }
 
     class Holder(itemView: ListItemSurveyBinding) : RecyclerView.ViewHolder(itemView.root) {
-        var surveyAnswers = ArrayList<SurveyAnswerDto>()
         var surveyId: Int = -1
         var txtTitle = itemView.txtTitle
         var txtMyAnswer = itemView.txtMyScore
@@ -92,6 +93,7 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
         var progress_third = itemView.progressThird
         var imgIsAnswered = itemView.imgIsanswered
         var myAnswerLayout = itemView.myAnswerLayout
+        var imgIconNext = itemView.imgIconNext
     }
 
 }
