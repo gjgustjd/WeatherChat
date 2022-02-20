@@ -60,12 +60,16 @@
         app:layout_constraintStart_toEndOf="@id/txt_titleText5"
         app:layout_constraintTop_toBottomOf="@+id/txt_titleText" />
 
-    <ImageView
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/img_check_animation"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        app:lottie_rawRes="@raw/animation_check"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="false"
+        app:lottie_repeatCount="1"
         app:layout_constraintBottom_toTopOf="@+id/txt_greeting"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.2"
