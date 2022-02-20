@@ -121,6 +121,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginEnd="5dp"
+                    android:singleLine="true"
                     app:layout_constraintBottom_toBottomOf="@+id/txt_location"
                     app:layout_constraintEnd_toStartOf="@id/txt_degree"
                     app:layout_constraintHorizontal_bias="0.95"
@@ -134,6 +135,7 @@
                     android:layout_height="0dp"
                     android:layout_marginEnd="5dp"
                     android:gravity="center"
+                    android:singleLine="true"
                     android:textColor="@color/textBlack"
                     android:textSize="16dp"
                     android:textStyle="bold"
@@ -143,7 +145,7 @@
 
                 <TextView
                     android:id="@+id/txt_location"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="10dp"
@@ -152,8 +154,11 @@
                     android:textSize="16dp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/txt_weather_emoji"
+                    app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toEndOf="@id/img_location"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:singleLine="true" />
 
                 <ImageView
                     android:id="@+id/img_location"
