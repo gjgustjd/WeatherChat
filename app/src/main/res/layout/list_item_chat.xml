@@ -9,17 +9,18 @@
     android:background="@drawable/unit_background"
     android:backgroundTint="@color/white">
 
-    <ImageView
-        android:id="@+id/img_thumbnail"
+    <TextView
+        android:id="@+id/txt_emoji"
         android:layout_width="50dp"
         android:layout_height="0dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="4dp"
         android:background="@android:color/transparent"
+        android:gravity="center"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toBottomOf="@+id/txt_message"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/txt_nickname"
-        app:srcCompat="@drawable/icon_rose" />
+        app:layout_constraintTop_toTopOf="@+id/txt_nickname" />
 
     <TextView
         android:id="@+id/txt_nickname"
@@ -33,7 +34,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toEndOf="@+id/img_thumbnail"
+        app:layout_constraintStart_toEndOf="@+id/txt_emoji"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -50,7 +51,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toEndOf="@+id/img_thumbnail"
+        app:layout_constraintStart_toEndOf="@+id/txt_emoji"
         app:layout_constraintTop_toBottomOf="@+id/txt_nickname" />
 
     <TextView

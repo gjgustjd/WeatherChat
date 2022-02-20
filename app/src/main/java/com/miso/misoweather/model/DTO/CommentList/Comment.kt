@@ -6,5 +6,6 @@ data class Comment(
     val createdAt: String,
     val deleted: Boolean,
     val id: Int,
+    val emoji:String,
     val nickname: String
 )

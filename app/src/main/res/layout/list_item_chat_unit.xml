@@ -9,7 +9,7 @@
     android:background="@drawable/unit_background">
 
     <ImageView
-        android:id="@+id/img_thumbnail"
+        android:id="@+id/txt_emoji"
         android:layout_width="50dp"
         android:layout_height="0dp"
         android:layout_marginStart="15dp"
@@ -32,7 +32,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toEndOf="@+id/img_thumbnail"
+        app:layout_constraintStart_toEndOf="@+id/txt_emoji"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -49,7 +49,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toEndOf="@+id/img_thumbnail"
+        app:layout_constraintStart_toEndOf="@+id/txt_emoji"
         app:layout_constraintTop_toBottomOf="@+id/txt_nickname" />
 
     <TextView
