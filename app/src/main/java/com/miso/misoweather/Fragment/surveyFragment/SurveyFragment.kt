@@ -36,8 +36,6 @@ class SurveyFragment : Fragment() {
     lateinit var surveyResultResponseDto: SurveyResultResponseDto
     lateinit var surveyMyAnswerResponseDto: SurveyMyAnswerResponseDto
     lateinit var surveyItems: ArrayList<SurveyItem>
-    lateinit var txtLocation: TextView
-    lateinit var txtDate: TextView
     lateinit var currentLocation: String
     lateinit var bigShortScale: String
     lateinit var activity: ChatMainActivity
@@ -55,27 +53,7 @@ class SurveyFragment : Fragment() {
     fun initializeView() {
         currentLocation = activity.selectedRegion
         recyclerSurvey = binding.recyclerSurveys
-        txtLocation = binding.txtLocation
-        txtLocation.text = currentLocation
-        txtDate = binding.txtCurrentDate
-        txtDate.text = getCurrentDateString()
-
         surveyAnswerList = ArrayList()
-        txtLocation.setOnClickListener()
-        {
-            var intent = Intent(activity, UpdateRegionActivity::class.java)
-            intent.putExtra("region", bigShortScale)
-            startActivity(intent)
-            activity.transferToNext()
-            activity.finish()
-        }
-    }
-
-    fun getCurrentDateString(): String {
-        var currentDate = LocalDateTime.now()
-        var dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-
-        return currentDate.format(dateTimeFormatter)
     }
 
     fun setupRecyclerSurveys() {
