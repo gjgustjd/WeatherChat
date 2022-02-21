@@ -7,12 +7,18 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.miso.misoweather.Acitivity.login.viewPagerFragments.OnBoardChatFragment
+import com.miso.misoweather.Fragment.commentFragment.CommentsFragment
 import com.miso.misoweather.R
 import com.miso.misoweather.databinding.ListItemChatBinding
 import com.miso.misoweather.model.DTO.CommentList.Comment
 import org.w3c.dom.Text
 
-class RecyclerChatsAdapter(var context: Context, var comments: List<Comment>) :
+class RecyclerChatsAdapter(
+    var context: Context,
+    var comments: List<Comment>,
+    var isCommentsFragment: Boolean
+) :
     RecyclerView.Adapter<RecyclerChatsAdapter.Holder>() {
 
     var viewHolders: ArrayList<Holder> = ArrayList()
@@ -31,6 +37,8 @@ class RecyclerChatsAdapter(var context: Context, var comments: List<Comment>) :
         holder.time.text =
             comments.get(position).createdAt.split("T")[1].split(".")[0].substring(0, 5)
         holder.emoji.text = comments.get(position).emoji
+        if (isCommentsFragment)
+            holder.background.setBackgroundResource(R.drawable.unit_background)
         viewHolders.add(holder)
     }
 
@@ -41,6 +49,7 @@ class RecyclerChatsAdapter(var context: Context, var comments: List<Comment>) :
     }
 
     class Holder(itemView: ListItemChatBinding) : RecyclerView.ViewHolder(itemView.root) {
+        var background = itemView.background
         var nickname = itemView.txtNickname
         var comment = itemView.txtMessage
         var time = itemView.txtTime

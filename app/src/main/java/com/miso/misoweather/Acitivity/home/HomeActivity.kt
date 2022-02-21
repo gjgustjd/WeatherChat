@@ -172,7 +172,7 @@ class HomeActivity : MisoActivity() {
     }
 
     fun setRecyclerChats() {
-        recyclerChatAdapter = RecyclerChatsAdapter(this, commentListResponseDto.data.commentList)
+        recyclerChatAdapter = RecyclerChatsAdapter(this, commentListResponseDto.data.commentList,false)
         recyclerChat.adapter = recyclerChatAdapter
         recyclerChat.layoutManager = LinearLayoutManager(this)
     }

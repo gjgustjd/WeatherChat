@@ -125,7 +125,7 @@ class CommentsFragment : Fragment() {
     }
 
     fun setRecyclerChats() {
-        recyclerChatAdapter = RecyclerChatsAdapter(requireActivity().baseContext, commentListResponseDto.data.commentList)
+        recyclerChatAdapter = RecyclerChatsAdapter(requireActivity().baseContext, commentListResponseDto.data.commentList,true)
         recyclerChat.adapter = recyclerChatAdapter
         recyclerChat.layoutManager = LinearLayoutManager(requireActivity().baseContext)
     }
