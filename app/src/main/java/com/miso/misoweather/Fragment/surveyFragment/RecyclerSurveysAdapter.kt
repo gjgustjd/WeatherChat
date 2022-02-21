@@ -66,6 +66,12 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
                 misoActivity.finish()
             }
 
+            if (surveyResult.valueList.filter { !it.equals(0) }.size == 0) {
+                holder.txtEmptySurvey.visibility = View.VISIBLE
+                holder.txtOtherTitle.visibility = View.GONE
+                holder.progressLayout.visibility = View.GONE
+            }
+
             viewHolders.add(holder)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -88,12 +94,15 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
         var txtFirstRatio = itemView.txtFirstRatio
         var txtSecondRatio = itemView.txtSecondRatio
         var txtThirdRatio = itemView.txtThirdRatio
+        var progressLayout = itemView.progressLayout
         var progress_first = itemView.progressFirst
         var progress_second = itemView.progressSecond
         var progress_third = itemView.progressThird
         var imgIsAnswered = itemView.imgIsanswered
         var myAnswerLayout = itemView.myAnswerLayout
         var imgIconNext = itemView.imgIconNext
+        var txtEmptySurvey = itemView.txtEmptySurvey
+        var txtOtherTitle = itemView.txtOthersTitle
     }
 
 }

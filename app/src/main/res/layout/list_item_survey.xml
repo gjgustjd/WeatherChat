@@ -97,6 +97,17 @@
         app:layout_constraintTop_toTopOf="@+id/myAnswerLayout">
 
         <TextView
+            android:id="@+id/txt_empty_survey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="진행된 투표가 없어요.\n투표를 진행해주세요."
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/txt_others_title"
             style="@style/boldBlack"
             android:layout_width="wrap_content"
