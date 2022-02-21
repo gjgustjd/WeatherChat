@@ -123,16 +123,6 @@
             app:layout_constraintTop_toBottomOf="@+id/txt_others_title">
 
             <TextView
-                android:id="@+id/txt_first_ratio"
-                style="@style/boldBlack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/primaryPurple"
-                android:textSize="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/txt_first_score"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <TextView
                 android:id="@+id/txt_first_score"
                 style="@style/boldBlack"
                 android:layout_width="wrap_content"
@@ -142,16 +132,6 @@
                 android:textSize="10dp"
                 app:layout_constraintEnd_toStartOf="@+id/txt_first_ratio"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/txt_third_score"
-                style="@style/boldBlack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:textSize="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/txt_third_ratio" />
 
             <TextView
                 android:id="@+id/txt_second_score"
@@ -165,6 +145,27 @@
                 app:layout_constraintTop_toBottomOf="@+id/txt_first_score" />
 
             <TextView
+                android:id="@+id/txt_third_score"
+                style="@style/boldBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:textSize="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/txt_third_ratio" />
+
+            <TextView
+                android:id="@+id/txt_first_ratio"
+                style="@style/boldBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primaryPurple"
+                android:textSize="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_first_score"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/txt_first_score" />
+
+            <TextView
                 android:id="@+id/txt_second_ratio"
                 style="@style/boldBlack"
                 android:layout_width="wrap_content"
@@ -172,7 +173,7 @@
                 android:textSize="8dp"
                 app:layout_constraintBottom_toBottomOf="@+id/txt_second_score"
                 app:layout_constraintEnd_toEndOf="@id/txt_first_ratio"
-                app:layout_constraintStart_toStartOf="@+id/txt_first_ratio" />
+                app:layout_constraintTop_toTopOf="@+id/txt_second_score" />
 
             <TextView
                 android:id="@+id/txt_third_ratio"
@@ -182,7 +183,7 @@
                 android:textSize="8dp"
                 app:layout_constraintBottom_toBottomOf="@+id/txt_third_score"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/txt_second_ratio" />
+                app:layout_constraintTop_toTopOf="@+id/txt_third_score" />
 
             <ProgressBar
                 android:id="@+id/progress_first"
