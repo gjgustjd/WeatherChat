@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
 import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.R
@@ -13,6 +14,8 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ListItemSurveyBinding
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import java.lang.Exception
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyItem>) :
     RecyclerView.Adapter<RecyclerSurveysAdapter.Holder>() {

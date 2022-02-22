@@ -15,6 +15,7 @@ import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityWeatherMainBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
+import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.model.DTO.Forecast.Detail.ForecastDetailResponseDto
 import com.miso.misoweather.model.DTO.Forecast.ForecastDetailInfo
 import com.miso.misoweather.model.DTO.Region
@@ -26,6 +27,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -83,14 +85,33 @@ class WeatherDetailActivity : MisoActivity() {
         }
         chatLayout.setOnClickListener()
         {
-            var intent= Intent(this, ChatMainActivity::class.java)
-            intent.putExtra("previousActivity","Weather")
+            goToChatMainActivity()
+        }
+        recyclerWeatherOnTIme = binding.recylcerWeatherOnTIme
+        recyclerForecast = binding.recyclerForecast
+    }
+
+    fun goToChatMainActivity()
+    {
+        var isSurveyed = getPreference("isSurveyed")
+        var lastSurveyedDate = getPreference("LastSurveyedDate")?:""
+        var currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+        if(!isSurveyed.equals("true")|| !lastSurveyedDate.equals(currentDate))
+        {
+            var intent = Intent(this, SelectSurveyAnswerActivity::class.java)
+            intent.putExtra("isFirstSurvey", true)
+            intent.putExtra("previousActivity", "Home")
             startActivity(intent)
             transferToNext()
             finish()
         }
-        recyclerWeatherOnTIme = binding.recylcerWeatherOnTIme
-        recyclerForecast = binding.recyclerForecast
+        else {
+            var intent = Intent(this, ChatMainActivity::class.java)
+            intent.putExtra("previousActivity", "Weather")
+            startActivity(intent)
+            transferToNext()
+            finish()
+        }
     }
 
     fun getForecastDetail() {

@@ -1,10 +1,12 @@
 package com.miso.misoweather.Acitivity.selectAnswer
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.answerAnimationActivity.AnswerAnimationActivity
@@ -20,8 +22,11 @@ import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.TransportManager
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
+@RequiresApi(Build.VERSION_CODES.O)
 class SelectSurveyAnswerActivity : MisoActivity() {
     lateinit var binding: ActivitySurveyAnswerBinding
     lateinit var btn_back: ImageButton
@@ -111,6 +116,10 @@ class SelectSurveyAnswerActivity : MisoActivity() {
         TransportManager.requestApi(
             callPutMyAnser,
             { call, response ->
+                addPreferencePair("isSurveyed","true")
+                addPreferencePair("LastSurveyedDate",
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString())
+                savePreferences()
                 var intent = Intent(this, AnswerAnimationActivity::class.java)
                 intent.putExtra("answer",selectedAnswer.answer)
                 startActivity(intent)
