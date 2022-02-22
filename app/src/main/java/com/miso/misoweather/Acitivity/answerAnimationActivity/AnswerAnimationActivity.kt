@@ -41,6 +41,7 @@ class AnswerAnimationActivity : MisoActivity() {
 
     fun initializeViews() {
         txt_answer = binding.txtAnswer
+        txt_answer.text = intent.getStringExtra("answer")!!
         img_animation = binding.imgCheckAnimation
     }
 

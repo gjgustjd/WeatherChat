@@ -10,11 +10,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.answerAnimationActivity.AnswerAnimationActivity
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
+import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySurveyAnswerBinding
 import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerRequestDto
 import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerResponseDto
+import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
+import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
+import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
+import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.TransportManager
+import kotlin.random.Random
 
 class SelectSurveyAnswerActivity : MisoActivity() {
     lateinit var binding: ActivitySurveyAnswerBinding
@@ -29,14 +35,24 @@ class SelectSurveyAnswerActivity : MisoActivity() {
         super.onCreate(savedInstanceState);
         binding = ActivitySurveyAnswerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initializeViews()
-        setupRecycler()
+        checkAndInitializeViews()
+    }
+
+    fun checkAndInitializeViews() {
+        if (intent.getSerializableExtra("SurveyItem") == null) {
+            var questions = resources.getStringArray(R.array.survey_questions)
+            var randomIndex = Random.nextInt(questions.size)
+            getSurveyAnswer(randomIndex + 1)
+        } else {
+            surveyItem = intent.getSerializableExtra("SurveyItem") as SurveyItem
+            initializeViews()
+            setupRecycler()
+        }
     }
 
     fun initializeViews() {
-        surveyItem = intent.getSerializableExtra("SurveyItem") as SurveyItem
         txtQuestion = binding.txtItemText
-        txtQuestion.text = surveyItem.surveyQuestion
+        txtQuestion.text = surveyItem.surveyQuestion.substring(3)
         btn_back = binding.imgbtnBack
         btn_back.setOnClickListener()
         {
@@ -52,6 +68,27 @@ class SelectSurveyAnswerActivity : MisoActivity() {
             putSurveyAnswer()
         }
         recycler_answers = binding.recyclerAnswers
+    }
+
+    fun getSurveyAnswer(surveyId: Int) {
+        val callGetSurveyAnswer =
+            TransportManager.getRetrofitApiObject<SurveyAnswerResponseDto>()
+                .getSurveyAnswers(surveyId)
+
+        TransportManager.requestApi(callGetSurveyAnswer, { call, reponse ->
+            var questions = resources.getStringArray(R.array.survey_questions)
+            surveyItem = SurveyItem(
+                surveyId,
+                questions[surveyId - 1],
+                SurveyMyAnswerDto(false, "", -1),
+                (reponse.body()!!).data.responseList,
+                SurveyResult(listOf(), -1, listOf())
+            )
+            initializeViews()
+            setupRecycler()
+        }, { call, throwable ->
+
+        })
     }
 
     fun setupRecycler() {
@@ -75,6 +112,7 @@ class SelectSurveyAnswerActivity : MisoActivity() {
             callPutMyAnser,
             { call, response ->
                 var intent = Intent(this, AnswerAnimationActivity::class.java)
+                intent.putExtra("answer",selectedAnswer.answer)
                 startActivity(intent)
                 overFromUnder()
                 finish()

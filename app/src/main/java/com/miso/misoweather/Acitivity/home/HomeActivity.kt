@@ -1,12 +1,14 @@
 package com.miso.misoweather.Acitivity.home
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +22,7 @@ import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.weatherdetail.WeatherDetailActivity
 import com.miso.misoweather.Acitivity.mypage.MyPageActivity
+import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import com.miso.misoweather.model.TransportManager
@@ -30,7 +33,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 class HomeActivity : MisoActivity() {
     lateinit var binding: ActivityHomeBinding
     lateinit var memberInfoResponseDto: MemberInfoResponseDto
@@ -116,12 +122,25 @@ class HomeActivity : MisoActivity() {
     }
     fun goToChatMainActivity()
     {
-        var intent = Intent(this, ChatMainActivity::class.java)
-        intent.putExtra("previousActivity", "Home")
-        startActivity(intent)
-        transferToNext()
-        finish()
-
+        var isSurveyed = getPreference("isSurveyed")
+        var lastSurveyedDate = getPreference("LastSurveyedDate")?:""
+        var currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+        if(!isSurveyed.equals("true")|| !lastSurveyedDate.equals(currentDate))
+        {
+            var intent = Intent(this, SelectSurveyAnswerActivity::class.java)
+            intent.putExtra("isFirstSurvey", true)
+            intent.putExtra("previousActivity", "Home")
+            startActivity(intent)
+            transferToNext()
+            finish()
+        }
+        else {
+            var intent = Intent(this, ChatMainActivity::class.java)
+            intent.putExtra("previousActivity", "Home")
+            startActivity(intent)
+            transferToNext()
+            finish()
+        }
     }
 
     fun getBriefForecast() {
