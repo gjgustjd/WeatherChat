@@ -176,7 +176,7 @@ class HomeActivity : MisoActivity() {
 
     fun getCommentList() {
         val callBriefForecast = TransportManager.getRetrofitApiObject<ForecastBriefResponseDto>()
-            .getCommentList(null, 4)
+            .getCommentList(null, 5)
         TransportManager.requestApi(callBriefForecast, { call, response ->
             try {
                 Log.i("결과", "성공")

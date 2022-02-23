@@ -1,12 +1,15 @@
 package com.miso.misoweather.Fragment.commentFragment
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import android.widget.Button
 import android.widget.EditText
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +27,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
 
+@RequiresApi(Build.VERSION_CODES.M)
 class CommentsFragment : Fragment() {
     lateinit var binding: FragmentCommentBinding
     lateinit var commentListResponseDto: CommentListResponseDto
@@ -43,7 +47,7 @@ class CommentsFragment : Fragment() {
 
         val view = binding.root
         initializeViews()
-        getCommentList()
+        getCommentList(null)
 
         return view
     }
@@ -58,14 +62,23 @@ class CommentsFragment : Fragment() {
         {
             addComent()
         }
+        recyclerChat.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                var lastVisibleItemPosition = ((recyclerChat.layoutManager) as LinearLayoutManager).findLastVisibleItemPosition()
+                var itemTotalCount = recyclerChat.adapter!!.itemCount-1
+                if(lastVisibleItemPosition==itemTotalCount)
+                {
+                    Log.i("Paging","페이징")
+                }
+            }
+        })
     }
 
     fun updateChats()
     {
-        getCommentList()
+        getCommentList(null)
         setRecyclerChats()
     }
-
 
     fun addComent() {
         val retrofit = Retrofit.Builder()
@@ -96,13 +109,14 @@ class CommentsFragment : Fragment() {
             }
         })
     }
-    fun getCommentList() {
+
+    fun getCommentList(commentId:Int?) {
         val retrofit = Retrofit.Builder()
             .baseUrl(MisoActivity.MISOWEATHER_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callgetCommentList = api.getCommentList(null, 4)
+        val callgetCommentList = api.getCommentList(commentId, 5)
 
         callgetCommentList.enqueue(object : Callback<CommentListResponseDto> {
             override fun onResponse(

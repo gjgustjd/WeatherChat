@@ -31,6 +31,7 @@ class ChatMainActivity : MisoActivity() {
      lateinit var selectedRegion:String
     lateinit var locationLayout:ConstraintLayout
     lateinit var previousActivity: String
+    lateinit var currentFragment: Fragment
     lateinit var goToPreviousActivity: () -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,6 +98,7 @@ class ChatMainActivity : MisoActivity() {
 
     fun setupFragment(fragment: Fragment)
     {
+        currentFragment = fragment
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentLayout,fragment)
             .commit()
