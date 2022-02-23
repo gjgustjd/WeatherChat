@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.miso.misoweather.Acitivity.home.RecyclerChatsAdapter
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.FragmentCommentBinding
@@ -32,8 +33,9 @@ class CommentsFragment : Fragment() {
     lateinit var binding: FragmentCommentBinding
     lateinit var commentListResponseDto: CommentListResponseDto
     lateinit var recyclerChatAdapter: RecyclerChatsAdapter
+    lateinit var refreshLayout: SwipeRefreshLayout
     lateinit var recyclerChat: RecyclerView
-    lateinit var edtComment:EditText
+    lateinit var edtComment: EditText
     lateinit var btnSubmit: Button
     lateinit var activity: MisoActivity
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +45,8 @@ class CommentsFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+        savedInstanceState: Bundle?
+    ): View? {
 
         val view = binding.root
         initializeViews()
@@ -55,6 +58,11 @@ class CommentsFragment : Fragment() {
     fun initializeViews() {
         activity = getActivity() as MisoActivity
         recyclerChat = binding.recyclerChat
+        refreshLayout = binding.refreshLayout
+        refreshLayout.setOnRefreshListener {
+            updateChats()
+            refreshLayout.isRefreshing = false
+        }
         edtComment = binding.edtComment
         edtComment.hint = "오늘 날씨에 대한 ${activity.getPreference("nickname")!!}님의 느낌은 어떠신가요?"
         btnSubmit = binding.btnSubmit
@@ -64,18 +72,17 @@ class CommentsFragment : Fragment() {
         }
         recyclerChat.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                var lastVisibleItemPosition = ((recyclerChat.layoutManager) as LinearLayoutManager).findLastVisibleItemPosition()
-                var itemTotalCount = recyclerChat.adapter!!.itemCount-1
-                if(lastVisibleItemPosition==itemTotalCount)
-                {
-                    Log.i("Paging","페이징")
+                var lastVisibleItemPosition =
+                    ((recyclerChat.layoutManager) as LinearLayoutManager).findLastVisibleItemPosition()
+                var itemTotalCount = recyclerChat.adapter!!.itemCount - 1
+                if (lastVisibleItemPosition == itemTotalCount) {
+                    Log.i("Paging", "페이징")
                 }
             }
         })
     }
 
-    fun updateChats()
-    {
+    fun updateChats() {
         getCommentList(null)
         setRecyclerChats()
     }
@@ -88,7 +95,8 @@ class CommentsFragment : Fragment() {
         val api = retrofit.create(MisoWeatherAPI::class.java)
         val callAddComment = api.addComment(
             activity.getPreference("misoToken")!!,
-            CommentRegisterRequestDto(edtComment.text.toString()))
+            CommentRegisterRequestDto(edtComment.text.toString())
+        )
 
         callAddComment.enqueue(object : Callback<GeneralResponseDto> {
             override fun onResponse(
@@ -110,7 +118,7 @@ class CommentsFragment : Fragment() {
         })
     }
 
-    fun getCommentList(commentId:Int?) {
+    fun getCommentList(commentId: Int?) {
         val retrofit = Retrofit.Builder()
             .baseUrl(MisoActivity.MISOWEATHER_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -139,7 +147,11 @@ class CommentsFragment : Fragment() {
     }
 
     fun setRecyclerChats() {
-        recyclerChatAdapter = RecyclerChatsAdapter(requireActivity().baseContext, commentListResponseDto.data.commentList,true)
+        recyclerChatAdapter = RecyclerChatsAdapter(
+            requireActivity().baseContext,
+            commentListResponseDto.data.commentList,
+            true
+        )
         recyclerChat.adapter = recyclerChatAdapter
         recyclerChat.layoutManager = LinearLayoutManager(requireActivity().baseContext)
     }
