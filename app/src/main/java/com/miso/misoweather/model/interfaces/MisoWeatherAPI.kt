@@ -63,6 +63,9 @@ fun getCommentList(@Query("commentId")commentId:Int?,@Query("size")size:Int):Cal
  @POST("api/survey")
  fun putSurveyMyAnser(@Header("serverToken")serverToken: String,@Body answerSurveyDto:SurveyAddMyAnswerRequestDto):Call<SurveyAddMyAnswerResponseDto>
 
+ @PUT("api/member-region-mapping/default")
+ fun updateRegion(@Header("serverToken")serverToken: String,@Query("regionId")regionId: Int):Call<GeneralResponseDto>
+
  @GET("api/member/existence")
  fun checkRegistered(@Query("socialId") socialId:String,@Query("socialType")socialType:String):Call<GeneralResponseDto>
 }
