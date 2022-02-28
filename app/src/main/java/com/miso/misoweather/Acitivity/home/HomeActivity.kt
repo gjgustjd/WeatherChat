@@ -75,6 +75,9 @@ class HomeActivity : MisoActivity() {
         setContentView(binding.root)
         initializeViews()
         getUserInfo()
+        getBriefForecast()
+        setupSurveyResult()
+        getCommentList()
     }
 
     fun initializeViews() {
@@ -225,9 +228,6 @@ class HomeActivity : MisoActivity() {
                 addPreferencePair("emoji", memberInfo.emoji)
                 addPreferencePair("nickname", memberInfo.nickname)
                 savePreferences()
-                getBriefForecast()
-                setupSurveyResult()
-                getCommentList()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
