@@ -38,6 +38,7 @@ class SelectTownActivity : MisoActivity() {
     lateinit var selectedRegion: String
     lateinit var townRequestResult: RegionListResponseDto
     lateinit var recyclerAdapter: RecyclerTownsAdapter
+    lateinit var aPurpose: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
@@ -57,6 +58,7 @@ class SelectTownActivity : MisoActivity() {
     }
 
     fun initializeViews() {
+        aPurpose = intent.getStringExtra("for") ?: ""
         grid_region = binding.gridRegions
         list_towns = binding.recyclerTowns
 
@@ -65,7 +67,9 @@ class SelectTownActivity : MisoActivity() {
         btn_back = binding.imgbtnBack
         btn_next = binding.btnAction
         btn_back.setOnClickListener() {
-            startActivity(Intent(this, SelectRegionActivity::class.java))
+            var intent = Intent(this, SelectRegionActivity::class.java)
+            intent.putExtra("for", aPurpose)
+            startActivity(intent)
             transferToBack()
             finish()
         }
@@ -85,6 +89,8 @@ class SelectTownActivity : MisoActivity() {
                     intent = Intent(this, SelectNickNameActivity::class.java)
                 else
                     intent = Intent(this, SelectAreaActivity::class.java)
+
+                intent.putExtra("for", aPurpose)
                 intent.putExtra("region", recyclerAdapter.getSelectedItem().bigScale)
                 intent.putExtra("town", midScaleRegion)
                 startActivity(intent)
@@ -99,11 +105,10 @@ class SelectTownActivity : MisoActivity() {
     }
 
     fun getTownList() {
-        val callGetTownList  = TransportManager.
-        getRetrofitApiObject<RegionListResponseDto>().
-        getCity(selectedRegion)
+        val callGetTownList =
+            TransportManager.getRetrofitApiObject<RegionListResponseDto>().getCity(selectedRegion)
 
-        TransportManager.requestApi(callGetTownList,{ call, response ->
+        TransportManager.requestApi(callGetTownList, { call, response ->
             try {
                 Log.i("getTownList", "2단계 지역 받아오기 성공")
                 townRequestResult = response.body()!!
@@ -111,7 +116,7 @@ class SelectTownActivity : MisoActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        },{call,t->
+        }, { call, t ->
             Log.i("getTownList", "실패 : $t")
         })
 

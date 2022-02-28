@@ -23,6 +23,7 @@ import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.weatherdetail.WeatherDetailActivity
 import com.miso.misoweather.Acitivity.mypage.MyPageActivity
 import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
+import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import com.miso.misoweather.model.TransportManager
@@ -61,6 +62,7 @@ class HomeActivity : MisoActivity() {
     lateinit var txtSecondRatio: TextView
     lateinit var txtThirdRatio: TextView
     lateinit var imgIconCheckFirst: ImageView
+    lateinit var imgbtnChangeLocaion:ImageButton
     lateinit var firstProgressLayout:ConstraintLayout
     lateinit var secondProgressLayout:ConstraintLayout
     lateinit var thirdProgressLayout:ConstraintLayout
@@ -92,6 +94,7 @@ class HomeActivity : MisoActivity() {
         txtSecondRatio = binding.txtRatioSecond
         txtThirdRatio = binding.txtRatioThird
         imgIconCheckFirst = binding.imgIconFirst
+        imgbtnChangeLocaion = binding.imgbtnChangeLocation
         firstProgressLayout = binding.itemFirstLayout
         secondProgressLayout = binding.itemSecondLayout
         thirdProgressLayout = binding.itemThirdLayout
@@ -108,6 +111,7 @@ class HomeActivity : MisoActivity() {
         }
         weatherLayout.setOnClickListener()
         {
+
             startActivity(Intent(this, WeatherDetailActivity::class.java))
             transferToNext()
             finish()
@@ -119,6 +123,14 @@ class HomeActivity : MisoActivity() {
             finish()
         }
         recyclerChat = binding.recyclerChats
+        imgbtnChangeLocaion.setOnClickListener()
+        {
+            var intent = Intent(this, SelectRegionActivity::class.java)
+            intent.putExtra("for","change")
+            startActivity(intent)
+            transferToNext()
+            finish()
+        }
     }
     fun goToChatMainActivity()
     {

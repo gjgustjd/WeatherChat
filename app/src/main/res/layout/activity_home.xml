@@ -44,7 +44,7 @@
         app:srcCompat="@drawable/icon_person" />
 
     <ImageButton
-        android:id="@+id/imgbtn_add_location"
+        android:id="@+id/imgbtn_change_location"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginEnd="5dp"
@@ -55,7 +55,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/imgbtn_profile"
         app:layout_constraintEnd_toStartOf="@+id/imgbtn_profile"
         app:layout_constraintTop_toTopOf="@+id/imgbtn_profile"
-        app:srcCompat="@drawable/icon_add_location" />
+        app:srcCompat="@drawable/location_on" />
 
     <ScrollView
         android:id="@+id/scrollView2"

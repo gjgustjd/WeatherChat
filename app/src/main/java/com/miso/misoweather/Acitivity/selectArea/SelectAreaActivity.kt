@@ -13,11 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.Acitivity.getnickname.SelectNickNameActivity
+import com.miso.misoweather.Acitivity.home.HomeActivity
+import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.selectTown.RecyclerAreaAdapter
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
+import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.TransportManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,55 +29,56 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
 
-class SelectAreaActivity :MisoActivity(){
-    lateinit var binding:ActivitySelectRegionBinding
-    lateinit var grid_region:RecyclerView
-    lateinit var list_towns:RecyclerView
-    lateinit var btn_back:ImageButton
+class SelectAreaActivity : MisoActivity() {
+    lateinit var binding: ActivitySelectRegionBinding
+    lateinit var grid_region: RecyclerView
+    lateinit var list_towns: RecyclerView
+    lateinit var btn_back: ImageButton
     lateinit var btn_next: Button
-    lateinit var selectedRegion:String
-    lateinit var selectedTown:String
-    lateinit var townRequestResult:RegionListResponseDto
+    lateinit var selectedRegion: String
+    lateinit var selectedTown: String
+    lateinit var aPurpose: String
+    lateinit var townRequestResult: RegionListResponseDto
     lateinit var recyclerAdapter: RecyclerAreaAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?){
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        selectedRegion = intent.getStringExtra("region")?:getPreference("BigScaleRegion")!!
-        selectedTown = intent.getStringExtra("town")?:getPreference("MidScaleRegion")!!
+        selectedRegion = intent.getStringExtra("region") ?: getPreference("BigScaleRegion")!!
+        selectedTown = intent.getStringExtra("town") ?: getPreference("MidScaleRegion")!!
         initializeViews()
         getAreaList()
 
     }
-    fun initializeViews()
-    {
+
+    fun initializeViews() {
+        aPurpose = intent.getStringExtra("for") ?: ""
         grid_region = binding.gridRegions
         list_towns = binding.recyclerTowns
 
-        grid_region.visibility= INVISIBLE
-        list_towns.visibility= VISIBLE
+        grid_region.visibility = INVISIBLE
+        list_towns.visibility = VISIBLE
         btn_back = binding.imgbtnBack
         btn_next = binding.btnAction
-        btn_back.setOnClickListener(){
-            startActivity(Intent(this, SelectTownActivity::class.java))
+        btn_back.setOnClickListener() {
+            var intent = Intent(this, SelectTownActivity::class.java)
+            intent.putExtra("for", aPurpose)
+            startActivity(intent)
             transferToBack()
             finish()
         }
-       btn_next.setOnClickListener()
-       {
-           try {
-               addRegionPreferences()
-               startActivity(Intent(this, SelectNickNameActivity::class.java))
-               transferToNext()
-           }catch (e:Exception)
-           {
-               e.printStackTrace()
-           }
-       }
+        btn_next.setOnClickListener()
+        {
+            try {
+                changeRegion()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
-    fun addRegionPreferences()
-    {
+
+    fun addRegionPreferences() {
         var selectedRegion = recyclerAdapter.getSelectedItem()
         var midScaleRegion = selectedRegion.midScale
         var bigScaleRegion = selectedRegion.bigScale
@@ -87,27 +91,46 @@ class SelectAreaActivity :MisoActivity(){
         savePreferences()
     }
 
-    fun getAreaList()
-    {
-        val callGetTownList  = TransportManager.
-        getRetrofitApiObject<RegionListResponseDto>().
-        getArea(selectedRegion,selectedTown)
+    fun changeRegion() {
+        val callChangeRegion = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
+            .updateRegion(getPreference("misoToken")!!, recyclerAdapter.getSelectedItem().id)
 
-        TransportManager.requestApi(callGetTownList,{ call, response ->
+        TransportManager.requestApi(callChangeRegion, { call, response ->
             try {
-                Log.i("getAreaList","3단계 지역 받아오기 성공")
+                Log.i("changeRegion","성공")
+                addRegionPreferences()
+                if (aPurpose.equals("change"))
+                    startActivity(Intent(this, HomeActivity::class.java))
+                else
+                    startActivity(Intent(this, SelectNickNameActivity::class.java))
+                transferToNext()
+                finish()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        },{call,t ->
+            Log.i("changeRegion","실패")
+        })
+    }
+
+    fun getAreaList() {
+        val callGetTownList = TransportManager.getRetrofitApiObject<RegionListResponseDto>()
+            .getArea(selectedRegion, selectedTown)
+
+        TransportManager.requestApi(callGetTownList, { call, response ->
+            try {
+                Log.i("getAreaList", "3단계 지역 받아오기 성공")
                 townRequestResult = response.body()!!
                 setRecyclerTowns()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        },{call,t->
+        }, { call, t ->
             Log.i("결과", "실패 : $t")
         })
     }
 
-    fun setRecyclerTowns()
-    {
+    fun setRecyclerTowns() {
         try {
             var regionListData = townRequestResult.data
             var townList: List<Region> = regionListData.regionList
@@ -121,8 +144,7 @@ class SelectAreaActivity :MisoActivity(){
                 recyclerAdapter.selectItem(townList.indexOf(townList.first() {
                     it.smallScale.equals(currentArea)
                 }))
-        }catch (e:Exception)
-        {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
