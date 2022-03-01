@@ -196,6 +196,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/txt_third_score" />
 
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrierProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="start"
+                app:constraint_referenced_ids="txt_first_score,txt_second_score,txt_third_score"
+                tools:layout_editor_absoluteX="205dp"
+                tools:layout_editor_absoluteY="22dp" />
+
             <ProgressBar
                 android:id="@+id/progress_first"
                 style="?android:attr/progressBarStyleHorizontal"
@@ -209,7 +218,7 @@
                 android:progressDrawable="@drawable/progress_default_background"
                 android:progressTint="@color/primaryPurple"
                 app:layout_constraintBottom_toBottomOf="@+id/txt_first_score"
-                app:layout_constraintEnd_toStartOf="@+id/txt_first_score"
+                app:layout_constraintEnd_toStartOf="@id/barrierProgress"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:trackCornerRadius="100dp" />
@@ -225,7 +234,7 @@
                 android:progress="0"
                 android:progressDrawable="@drawable/progress_default_background"
                 app:layout_constraintBottom_toBottomOf="@+id/txt_second_score"
-                app:layout_constraintEnd_toStartOf="@+id/txt_second_score"
+                app:layout_constraintEnd_toStartOf="@id/barrierProgress"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/txt_second_score" />
 
@@ -240,9 +249,10 @@
                 android:progress="0"
                 android:progressDrawable="@drawable/progress_default_background"
                 app:layout_constraintBottom_toBottomOf="@+id/txt_third_score"
-                app:layout_constraintEnd_toStartOf="@+id/txt_third_score"
+                app:layout_constraintEnd_toStartOf="@id/barrierProgress"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/txt_third_score" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
