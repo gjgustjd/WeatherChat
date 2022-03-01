@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -70,7 +71,10 @@ class SelectSurveyAnswerActivity : MisoActivity() {
         btn_action = binding.btnAction
         btn_action.setOnClickListener()
         {
-            putSurveyAnswer()
+            if (recyclerAdapter.selectedIndex == -1)
+                Toast.makeText(this, "답변을 선택해주세요.", Toast.LENGTH_SHORT).show()
+            else
+                putSurveyAnswer()
         }
         recycler_answers = binding.recyclerAnswers
     }
@@ -116,12 +120,14 @@ class SelectSurveyAnswerActivity : MisoActivity() {
         TransportManager.requestApi(
             callPutMyAnser,
             { call, response ->
-                addPreferencePair("isSurveyed","true")
-                addPreferencePair("LastSurveyedDate",
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString())
+                addPreferencePair("isSurveyed", "true")
+                addPreferencePair(
+                    "LastSurveyedDate",
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+                )
                 savePreferences()
                 var intent = Intent(this, AnswerAnimationActivity::class.java)
-                intent.putExtra("answer",selectedAnswer.answer)
+                intent.putExtra("answer", selectedAnswer.answer)
                 startActivity(intent)
                 overFromUnder()
                 finish()
