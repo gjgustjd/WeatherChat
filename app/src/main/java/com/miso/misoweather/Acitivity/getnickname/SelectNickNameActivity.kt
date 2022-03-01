@@ -16,6 +16,7 @@ import com.miso.misoweather.model.DTO.NicknameResponse.NicknameData
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
+import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,8 +30,8 @@ class SelectNickNameActivity : MisoActivity() {
     lateinit var btn_back: ImageButton
     lateinit var btn_next: Button
     var nicknameResponseDto = NicknameResponseDto(NicknameData("", ""), "", "")
-    var generalResponseDto = GeneralResponseDto("","")
-    var nickName:String =""
+    var generalResponseDto = GeneralResponseDto("", "")
+    var nickName: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySelectNicknameBinding.inflate(layoutInflater)
@@ -49,7 +50,13 @@ class SelectNickNameActivity : MisoActivity() {
         }
         btn_back.setOnClickListener()
         {
-            startActivity(Intent(this, SelectAreaActivity::class.java))
+            var intent: Intent?
+            if (getPreference("SmallScaleRegion").isNullOrBlank())
+                intent = Intent(this, SelectTownActivity::class.java)
+            else
+                intent = Intent(this, SelectAreaActivity::class.java)
+
+            startActivity(intent)
             transferToBack()
             finish()
         }
@@ -60,14 +67,14 @@ class SelectNickNameActivity : MisoActivity() {
         getNickname()
     }
 
-    fun registerMember(){
+    fun registerMember() {
         val retrofit = Retrofit.Builder()
             .baseUrl(MISOWEATHER_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(MisoWeatherAPI::class.java)
 
-        val callRegisterMember = api.registerMember(getSignUpInfo(),getPreference("accessToken")!!)
+        val callRegisterMember = api.registerMember(getSignUpInfo(), getPreference("accessToken")!!)
         callRegisterMember.enqueue(object : Callback<GeneralResponseDto> {
             override fun onResponse(
                 call: Call<GeneralResponseDto>,
@@ -82,14 +89,15 @@ class SelectNickNameActivity : MisoActivity() {
             }
         })
     }
-    fun issueMisoToken()
-    {
+
+    fun issueMisoToken() {
         val retrofit = Retrofit.Builder()
             .baseUrl(MISOWEATHER_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callReIssueMisoToken = api.reIssueMisoToken(makeLoginRequestDto(),getPreference("accessToken")!!)
+        val callReIssueMisoToken =
+            api.reIssueMisoToken(makeLoginRequestDto(), getPreference("accessToken")!!)
 
 
         callReIssueMisoToken.enqueue(object : Callback<GeneralResponseDto> {
@@ -114,11 +122,9 @@ class SelectNickNameActivity : MisoActivity() {
                             "서버 토큰 발행에 실패하였습니다.",
                             Toast.LENGTH_SHORT
                         ).show()
-                }catch (e:Exception)
-                {
+                } catch (e: Exception) {
                     e.printStackTrace()
-                }
-                finally {
+                } finally {
                 }
             }
 
@@ -127,29 +133,29 @@ class SelectNickNameActivity : MisoActivity() {
             }
         })
     }
-    fun removeRegionPref()
-    {
+
+    fun removeRegionPref() {
         removePreference("BigScaleRegion")
         removePreference("MidScaleRegion")
         removePreference("SmallScaleRegion")
     }
-    fun makeLoginRequestDto():LoginRequestDto
-    {
-       var loginRequestDto = LoginRequestDto(
-           getPreference("socialId"),
-           getPreference("socialType"))
+
+    fun makeLoginRequestDto(): LoginRequestDto {
+        var loginRequestDto = LoginRequestDto(
+            getPreference("socialId"),
+            getPreference("socialType")
+        )
 
         return loginRequestDto
     }
 
-    fun getSignUpInfo():SignUpRequestDto
-    {
+    fun getSignUpInfo(): SignUpRequestDto {
         var signUpRequestDto = SignUpRequestDto()
-        signUpRequestDto.defaultRegionId=getPreference("defaultRegionId")!!
-        signUpRequestDto.emoji=binding.txtEmoji.text.toString()
-        signUpRequestDto.nickname=nickName
-        signUpRequestDto.socialId=getPreference("socialId")!!
-        signUpRequestDto.socialType=getPreference("socialType")!!
+        signUpRequestDto.defaultRegionId = getPreference("defaultRegionId")!!
+        signUpRequestDto.emoji = binding.txtEmoji.text.toString()
+        signUpRequestDto.nickname = nickName
+        signUpRequestDto.socialId = getPreference("socialId")!!
+        signUpRequestDto.socialType = getPreference("socialType")!!
         return signUpRequestDto
     }
 

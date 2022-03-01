@@ -79,13 +79,14 @@ class SelectTownActivity : MisoActivity() {
                 var selectedRegion = recyclerAdapter.getSelectedItem()
                 var midScaleRegion = selectedRegion.midScale
                 var bigScaleRegion = selectedRegion.bigScale
-                var defaultRegionId = selectedRegion.id.toString()
                 addPreferencePair("BigScaleRegion", bigScaleRegion)
                 addPreferencePair("MidScaleRegion", midScaleRegion)
 
                 lateinit var intent: Intent
-                if (selectedRegion.midScale.contains("선택 안 함"))
+                if (selectedRegion.midScale.contains("선택 안 함")) {
+                    removePreference("SmallScaleRegion")
                     intent = Intent(this, SelectNickNameActivity::class.java)
+                }
                 else
                     intent = Intent(this, SelectAreaActivity::class.java)
 
