@@ -61,12 +61,14 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
             }
 
             holder.myAnswerLayout.setOnClickListener {
-                var misoActivity = context as MisoActivity
-                var intent = Intent(context, SelectSurveyAnswerActivity::class.java)
-                intent.putExtra("SurveyItem", surveyItem)
-                misoActivity.startActivity(intent)
-                misoActivity.transferToNext()
-                misoActivity.finish()
+                if (!surveyItems[position].surveyMyAnswer.answered) {
+                    var misoActivity = context as MisoActivity
+                    var intent = Intent(context, SelectSurveyAnswerActivity::class.java)
+                    intent.putExtra("SurveyItem", surveyItem)
+                    misoActivity.startActivity(intent)
+                    misoActivity.transferToNext()
+                    misoActivity.finish()
+                }
             }
 
             if (surveyResult.valueList.filter { !it.equals(0) }.size == 0) {
