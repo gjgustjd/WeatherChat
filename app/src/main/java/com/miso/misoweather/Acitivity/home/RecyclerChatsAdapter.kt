@@ -26,8 +26,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-@RequiresApi(Build.VERSION_CODES.M)
+@RequiresApi(Build.VERSION_CODES.O)
 class RecyclerChatsAdapter(
     var context: Context,
     var comments: List<Comment>,
@@ -49,8 +51,17 @@ class RecyclerChatsAdapter(
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.nickname.text = comments.get(position).nickname
         holder.comment.text = comments.get(position).content
-        holder.time.text =
-            comments.get(position).createdAt.split("T")[1].split(".")[0].substring(0, 5)
+
+        val currentTimeString =
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString()
+        val commentDayString = comments.get(position).createdAt.split("T")[0]
+        if (commentDayString.equals(currentTimeString))
+            holder.time.text =
+                comments.get(position).createdAt.split("T")[1].split(".")[0].substring(0, 5)
+        else
+            holder.time.text = commentDayString + " " +
+                    comments.get(position).createdAt.split("T")[1].split(".")[0].substring(0, 5)
+
         holder.emoji.text = comments.get(position).emoji
         if (isCommentsFragment) {
             holder.background.setBackgroundResource(R.drawable.unit_background)
