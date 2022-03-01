@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.home.HomeActivity
@@ -53,14 +54,18 @@ class SelectRegionActivity : MisoActivity() {
         btn_next.setOnClickListener()
         {
             try {
-                var intent = Intent(this, SelectTownActivity::class.java)
-                var bigScaleRegion = gridAdapter.getSelectedItemShortName()
-                intent.putExtra("for", aPurpose)
-                intent.putExtra("region", bigScaleRegion)
-                startActivity(intent)
-                addPreferencePair("BigScaleRegion", bigScaleRegion)
-                transferToNext()
-                finish()
+                if (gridAdapter.selectedIndex == -1)
+                    Toast.makeText(this, "지역을 선택해 주세요", Toast.LENGTH_SHORT).show()
+                else {
+                    var intent = Intent(this, SelectTownActivity::class.java)
+                    var bigScaleRegion = gridAdapter.getSelectedItemShortName()
+                    intent.putExtra("for", aPurpose)
+                    intent.putExtra("region", bigScaleRegion)
+                    startActivity(intent)
+                    addPreferencePair("BigScaleRegion", bigScaleRegion)
+                    transferToNext()
+                    finish()
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
