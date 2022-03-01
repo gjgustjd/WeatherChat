@@ -22,11 +22,16 @@ open class MisoActivity :AppCompatActivity() {
     }
     fun getBigShortScale(bigScale:String):String
     {
-        val regionList = resources.getStringArray(R.array.regions_full)
-        val index = regionList.indexOf(bigScale)
-        val regionSmallList = resources.getStringArray(R.array.regions)
+        try {
+            val regionList = resources.getStringArray(R.array.regions_full)
+            val index = regionList.indexOf(bigScale)
+            val regionSmallList = resources.getStringArray(R.array.regions)
 
-        return regionSmallList.get(index)
+            return regionSmallList.get(index)
+        }catch (e:Exception)
+        {
+            return ""
+        }
     }
     fun transferToBack(){
         overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit)

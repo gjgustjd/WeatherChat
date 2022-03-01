@@ -82,29 +82,37 @@ class MyPageActivity : MisoActivity() {
         }
     }
 
-    fun goToLoginActivity()
-    {
+    fun goToLoginActivity() {
         startActivity(Intent(this, LoginActivity::class.java))
         transferToBack()
         finish()
     }
 
     fun unregister() {
-        val callUnregisterMember  = TransportManager.
-        getRetrofitApiObject<GeneralResponseDto>().
-        unregisterMember(getPreference("misoToken")!!, makeLoginRequestDto())
+        val callUnregisterMember = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
+            .unregisterMember(getPreference("misoToken")!!, makeLoginRequestDto())
 
-        TransportManager.requestApi(callUnregisterMember,{ call, response ->
+        TransportManager.requestApi(callUnregisterMember, { call, response ->
             try {
                 Log.i("결과", "성공")
-                removePreference("misoToken")
+                removePreference(
+                    "misoToken",
+                    "defaultRegionId",
+                    "isSurveyed",
+                    "LastSurveyedDate",
+                    "bigScale",
+                    "BigScaleRegion",
+                    "MidScaleRegion",
+                    "SmallScaleRegion",
+                    "nickname",
+                )
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
                 savePreferences()
                 goToLoginActivity()
             }
-        },{call,t->
+        }, { call, t ->
             Log.i("결과", "실패 : $t")
         })
     }

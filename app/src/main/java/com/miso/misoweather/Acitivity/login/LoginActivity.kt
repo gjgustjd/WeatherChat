@@ -54,8 +54,8 @@ class LoginActivity : MisoActivity() {
                     OnBoardChatFragment()
                 )
             )
-        viewpager_onboarding.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback()
-        {
+        viewpager_onboarding.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 pageIndicatorView.setSelected(position)
@@ -160,16 +160,10 @@ class LoginActivity : MisoActivity() {
 
         TransportManager.requestApi(callCheckRegistered,
             { call, response ->
-                if (response.body()?.status.equals("OK")) {
-                    startActivity(Intent(this, HomeActivity::class.java))
-                } else {
-                    issueMisoToken()
-                    startRegionActivity()
-                }
-                finish()
+                issueMisoToken()
             },
             { call, throwable ->
-                startActivity(Intent(this, HomeActivity::class.java))
+                startActivity(Intent(this, SelectRegionActivity::class.java))
                 finish()
             })
     }
