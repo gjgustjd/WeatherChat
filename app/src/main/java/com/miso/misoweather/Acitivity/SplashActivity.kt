@@ -34,7 +34,7 @@ class SplashActivity : MisoActivity() {
             var intent: Intent
             Log.i("misoToken",getPreference("misoToken")!!)
             if (getPreference("misoToken").equals(""))
-                intent = Intent(this, SelectRegionActivity::class.java)
+                intent = Intent(this, LoginActivity::class.java)
             else
                 intent = Intent(this, HomeActivity::class.java)
 
