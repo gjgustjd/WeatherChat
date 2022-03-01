@@ -83,13 +83,15 @@ class SelectNickNameActivity : MisoActivity() {
             ) {
                 if (response.body() == null) {
                     Log.i("결과", "실패")
-                    Toast.makeText(this@SelectNickNameActivity, "회원가입에 실패하였습니다.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@SelectNickNameActivity, "회원가입에 실패하였습니다.", Toast.LENGTH_LONG)
+                        .show()
                     goToLoginActivity()
                 } else {
                     Log.i("결과", "성공")
                     issueMisoToken()
                 }
             }
+
             override fun onFailure(call: Call<GeneralResponseDto>, t: Throwable) {
                 Log.i("결과", "실패 : $t")
                 Toast.makeText(this@SelectNickNameActivity, "회원가입에 실패하였습니다.", Toast.LENGTH_LONG)
@@ -187,16 +189,29 @@ class SelectNickNameActivity : MisoActivity() {
                 call: Call<NicknameResponseDto>,
                 response: Response<NicknameResponseDto>
             ) {
-                Log.i("결과", "성공")
-                Log.i("결과", "닉네임 : ${response.body()?.data?.nickname}")
-                nicknameResponseDto = response.body()!!
-                nickName = nicknameResponseDto.data.nickname
-                binding.txtGreetingBold.text = "${nickName}님!"
-                binding.txtEmoji.text = "${nicknameResponseDto.data.emoji}"
+                if (response == null)
+                    Toast.makeText(
+                        this@SelectNickNameActivity,
+                        "닉네임 받기에 실패하였습니다.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                else {
+                    Log.i("결과", "성공")
+                    Log.i("결과", "닉네임 : ${response.body()?.data?.nickname}")
+                    nicknameResponseDto = response.body()!!
+                    nickName = nicknameResponseDto.data.nickname
+                    binding.txtGreetingBold.text = "${nickName}님!"
+                    binding.txtEmoji.text = "${nicknameResponseDto.data.emoji}"
+                }
             }
 
             override fun onFailure(call: Call<NicknameResponseDto>, t: Throwable) {
                 Log.i("결과", "실패 : $t")
+                Toast.makeText(
+                    this@SelectNickNameActivity,
+                    "닉네임 받기에 실패하였습니다.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         })
     }
