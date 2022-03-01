@@ -82,7 +82,6 @@ class SelectTownActivity : MisoActivity() {
                 var defaultRegionId = selectedRegion.id.toString()
                 addPreferencePair("BigScaleRegion", bigScaleRegion)
                 addPreferencePair("MidScaleRegion", midScaleRegion)
-                addPreferencePair("defaultRegionId", defaultRegionId)
 
                 lateinit var intent: Intent
                 if (selectedRegion.midScale.contains("선택 안 함"))

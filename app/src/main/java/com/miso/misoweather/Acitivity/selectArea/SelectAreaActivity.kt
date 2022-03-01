@@ -87,7 +87,6 @@ class SelectAreaActivity : MisoActivity() {
         addPreferencePair("BigScaleRegion", bigScaleRegion)
         addPreferencePair("MidScaleRegion", midScaleRegion)
         addPreferencePair("SmallScaleRegion", smallScaleRegion)
-        addPreferencePair("defaultRegionId", defaultRegionId)
         savePreferences()
     }
 
