@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectNicknameBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
+import com.miso.misoweather.Acitivity.login.LoginActivity
 import com.miso.misoweather.model.DTO.*
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameData
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
@@ -80,14 +81,28 @@ class SelectNickNameActivity : MisoActivity() {
                 call: Call<GeneralResponseDto>,
                 response: Response<GeneralResponseDto>
             ) {
-                Log.i("결과", "성공")
-                issueMisoToken()
+                if (response.body() == null) {
+                    Log.i("결과", "실패")
+                    Toast.makeText(this@SelectNickNameActivity, "회원가입에 실패하였습니다.", Toast.LENGTH_LONG).show()
+                    goToLoginActivity()
+                } else {
+                    Log.i("결과", "성공")
+                    issueMisoToken()
+                }
             }
-
             override fun onFailure(call: Call<GeneralResponseDto>, t: Throwable) {
                 Log.i("결과", "실패 : $t")
+                Toast.makeText(this@SelectNickNameActivity, "회원가입에 실패하였습니다.", Toast.LENGTH_LONG)
+                    .show()
+                goToLoginActivity()
             }
         })
+    }
+
+    fun goToLoginActivity() {
+        startActivity(Intent(this@SelectNickNameActivity, LoginActivity::class.java))
+        transferToBack()
+        finish()
     }
 
     fun issueMisoToken() {
