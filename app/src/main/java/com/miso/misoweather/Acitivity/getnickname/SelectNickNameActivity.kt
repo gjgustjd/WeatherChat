@@ -38,7 +38,6 @@ class SelectNickNameActivity : MisoActivity() {
         binding = ActivitySelectNicknameBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initializeViews()
-
     }
 
     fun initializeViews() {
@@ -168,7 +167,7 @@ class SelectNickNameActivity : MisoActivity() {
 
     fun getSignUpInfo(): SignUpRequestDto {
         var signUpRequestDto = SignUpRequestDto()
-        signUpRequestDto.defaultRegionId = getPreference("defaultRegionId")!!
+        signUpRequestDto.defaultRegionId = intent.getStringExtra("RegionId")!!.toString()
         signUpRequestDto.emoji = binding.txtEmoji.text.toString()
         signUpRequestDto.nickname = nickName
         signUpRequestDto.socialId = getPreference("socialId")!!

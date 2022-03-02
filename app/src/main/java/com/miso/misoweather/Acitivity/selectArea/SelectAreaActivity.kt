@@ -71,7 +71,16 @@ class SelectAreaActivity : MisoActivity() {
         btn_next.setOnClickListener()
         {
             try {
-                changeRegion()
+                if (aPurpose.equals("change")) {
+                    changeRegion()
+                } else {
+                    var intent: Intent?
+                    intent = Intent(this, SelectNickNameActivity::class.java)
+                    intent.putExtra("RegionId", recyclerAdapter.getSelectedItem().id.toString())
+                    startActivity(intent)
+                    transferToNext()
+                    finish()
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -83,7 +92,6 @@ class SelectAreaActivity : MisoActivity() {
         var midScaleRegion = selectedRegion.midScale
         var bigScaleRegion = selectedRegion.bigScale
         var smallScaleRegion = selectedRegion.smallScale
-        var defaultRegionId = selectedRegion.id.toString()
         addPreferencePair("BigScaleRegion", bigScaleRegion)
         addPreferencePair("MidScaleRegion", midScaleRegion)
         addPreferencePair("SmallScaleRegion", smallScaleRegion)
@@ -96,19 +104,21 @@ class SelectAreaActivity : MisoActivity() {
 
         TransportManager.requestApi(callChangeRegion, { call, response ->
             try {
-                Log.i("changeRegion","성공")
+                Log.i("changeRegion", "성공")
                 addRegionPreferences()
-                if (aPurpose.equals("change"))
-                    startActivity(Intent(this, HomeActivity::class.java))
-                else
-                    startActivity(Intent(this, SelectNickNameActivity::class.java))
+                addPreferencePair(
+                    "defaultRegionId",
+                    recyclerAdapter.getSelectedItem().id.toString()
+                )
+                savePreferences()
+                startActivity(Intent(this, HomeActivity::class.java))
                 transferToNext()
                 finish()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        },{call,t ->
-            Log.i("changeRegion","실패")
+        }, { call, t ->
+            Log.i("changeRegion", "실패")
         })
     }
 

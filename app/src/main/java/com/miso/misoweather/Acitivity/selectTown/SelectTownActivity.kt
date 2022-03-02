@@ -14,6 +14,7 @@ import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.Acitivity.getnickname.SelectNickNameActivity
+import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListData
@@ -21,6 +22,7 @@ import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.selectArea.RecyclerTownsAdapter
 import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
+import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.TransportManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -84,10 +86,14 @@ class SelectTownActivity : MisoActivity() {
 
                 lateinit var intent: Intent
                 if (selectedRegion.midScale.contains("선택 안 함")) {
-                    removePreference("SmallScaleRegion")
-                    intent = Intent(this, SelectNickNameActivity::class.java)
-                }
-                else
+                    if (aPurpose.equals("change")) {
+                        changeRegion()
+                    } else {
+                        removePreference("SmallScaleRegion")
+                        intent = Intent(this, SelectNickNameActivity::class.java)
+                        intent.putExtra("RegionId", selectedRegion.id.toString())
+                    }
+                } else
                     intent = Intent(this, SelectAreaActivity::class.java)
 
                 intent.putExtra("for", aPurpose)
@@ -102,6 +108,29 @@ class SelectTownActivity : MisoActivity() {
                 savePreferences()
             }
         }
+    }
+
+    fun changeRegion() {
+        val callChangeRegion = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
+            .updateRegion(getPreference("misoToken")!!, recyclerAdapter.getSelectedItem().id)
+
+        TransportManager.requestApi(callChangeRegion, { call, response ->
+            try {
+                Log.i("changeRegion", "성공")
+                addPreferencePair(
+                    "defaultRegionId",
+                    recyclerAdapter.getSelectedItem().id.toString()
+                )
+                savePreferences()
+                startActivity(Intent(this, HomeActivity::class.java))
+                transferToNext()
+                finish()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }, { call, t ->
+            Log.i("changeRegion", "실패")
+        })
     }
 
     fun getTownList() {
