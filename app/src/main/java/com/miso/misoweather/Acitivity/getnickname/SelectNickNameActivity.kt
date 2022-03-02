@@ -127,6 +127,7 @@ class SelectNickNameActivity : MisoActivity() {
                     var headers = response.headers()
                     var serverToken = headers.get("servertoken")
                     addPreferencePair("misoToken", serverToken!!)
+                    addPreferencePair("defaultRegionId", intent.getStringExtra("RegionId")!!)
                     removeRegionPref()
                     savePreferences()
                     if (!getPreference("misoToken").equals("")) {

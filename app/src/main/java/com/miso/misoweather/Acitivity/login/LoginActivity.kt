@@ -27,6 +27,7 @@ class LoginActivity : MisoActivity() {
     lateinit var binding: ActivityLoginBinding
     lateinit var viewpager_onboarding: ViewPager2
     lateinit var pageIndicatorView: PageIndicatorView
+    var isCheckValid=false
     var currentPosition = 0
     val handler = Handler(Looper.getMainLooper()) {
         setPage()
@@ -41,6 +42,7 @@ class LoginActivity : MisoActivity() {
     }
 
     fun initializeView() {
+        checkTokenValid()
         pageIndicatorView = binding.pageIndicatorView
         pageIndicatorView.setCount(5)
         viewpager_onboarding = binding.viewPagerOnBoarding
@@ -65,7 +67,7 @@ class LoginActivity : MisoActivity() {
         viewpager_onboarding.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
         binding.clBtnKakaoLogin.setOnClickListener {
-            if (!AuthApiClient.instance.hasToken() ||
+            if (!isCheckValid ||
                 getPreference("socialId").equals("") ||
                 getPreference("socialType").equals("")
             )
@@ -74,8 +76,24 @@ class LoginActivity : MisoActivity() {
                 checkRegistered()
             }
         }
-
         Thread(PagerRunnable()).start()
+    }
+
+    fun checkTokenValid()
+    {
+        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+            if (error != null) {
+             isCheckValid = false
+                Log.i("token", "토큰 정보 보기 실패", error)
+            }
+            else if (tokenInfo != null) {
+                Log.i(
+                    "token", "토큰 정보 보기 성공" +
+                            "\n회원번호:${tokenInfo.id}"
+                )
+                isCheckValid =true
+            }
+        }
     }
 
     fun kakaoLogin() {
