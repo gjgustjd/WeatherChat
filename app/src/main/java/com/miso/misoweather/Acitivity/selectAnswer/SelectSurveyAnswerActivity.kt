@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.answerAnimationActivity.AnswerAnimationActivity
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
+import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySurveyAnswerBinding
@@ -62,9 +63,14 @@ class SelectSurveyAnswerActivity : MisoActivity() {
         btn_back = binding.imgbtnBack
         btn_back.setOnClickListener()
         {
-            var intent = Intent(this, ChatMainActivity::class.java)
-            intent.putExtra("previousActivity", "Home")
-            startActivity(intent)
+            var aIntent: Intent
+            if (intent.getStringExtra("previousActivity").equals("Home"))
+                aIntent = Intent(this, HomeActivity::class.java)
+            else
+                aIntent = Intent(this, ChatMainActivity::class.java)
+
+            aIntent.putExtra("previousActivity", "Home")
+            startActivity(aIntent)
             transferToBack()
             finish()
         }
