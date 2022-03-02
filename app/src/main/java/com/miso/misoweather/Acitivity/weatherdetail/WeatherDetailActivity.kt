@@ -91,21 +91,19 @@ class WeatherDetailActivity : MisoActivity() {
         recyclerForecast = binding.recyclerForecast
     }
 
-    fun goToChatMainActivity()
-    {
+    fun goToChatMainActivity() {
         var isSurveyed = getPreference("isSurveyed")
-        var lastSurveyedDate = getPreference("LastSurveyedDate")?:""
-        var currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
-        if(!isSurveyed.equals("true")|| !lastSurveyedDate.equals(currentDate))
-        {
+        var lastSurveyedDate = getPreference("LastSurveyedDate") ?: ""
+        var currentDate =
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+        if (!isSurveyed.equals("true") || !lastSurveyedDate.equals(currentDate)) {
             var intent = Intent(this, SelectSurveyAnswerActivity::class.java)
             intent.putExtra("isFirstSurvey", true)
             intent.putExtra("previousActivity", "Home")
             startActivity(intent)
             transferToNext()
             finish()
-        }
-        else {
+        } else {
             var intent = Intent(this, ChatMainActivity::class.java)
             intent.putExtra("previousActivity", "Weather")
             startActivity(intent)
@@ -115,11 +113,11 @@ class WeatherDetailActivity : MisoActivity() {
     }
 
     fun getForecastDetail() {
-        val callForecastDetailList  = TransportManager.
-        getRetrofitApiObject<ForecastDetailResponseDto>().
-        getDetailForecast(getPreference("defaultRegionId")!!.toInt())
+        val callForecastDetailList =
+            TransportManager.getRetrofitApiObject<ForecastDetailResponseDto>()
+                .getDetailForecast(getPreference("defaultRegionId")!!.toInt())
 
-        TransportManager.requestApi(callForecastDetailList,{ call, response ->
+        TransportManager.requestApi(callForecastDetailList, { call, response ->
             try {
                 Log.i("결과", "성공")
                 forecastDetailResponseDto = response.body()!!
@@ -130,13 +128,22 @@ class WeatherDetailActivity : MisoActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        },{call,t->
+        }, { call, t ->
             Log.i("결과", "실패 : $t")
         })
     }
 
     fun setForecastInfo() {
-        txtLocation.text = region.bigScale + " " + region.midScale + " " + region.smallScale
+        val midScaleString = if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
+        val smallScaleString =
+            if (midScaleString.equals("전체"))
+                ""
+            else
+                if (region.smallScale.equals("선택 안 함"))
+                    "전체"
+                else
+                    region.midScale
+        txtLocation.text = region.bigScale + " " + midScaleString + " " + smallScaleString
         txtMinDegree.text = forecastdetailInfo.temperatureMin.split(".")[0] + "˚"
         txtMaxDegree.text = forecastdetailInfo.temperatureMax.split(".")[0] + "˚"
         txtEmojiRain.text = forecastdetailInfo.rainSnow
@@ -144,14 +151,17 @@ class WeatherDetailActivity : MisoActivity() {
         txtDegreeRainOnHour.text = forecastdetailInfo.rainSnowValue
         txtDegreeWind.text = getWindDegree(forecastdetailInfo.windSpeed)
         txtEmojiWind.text = forecastdetailInfo.windSpeed
-        val forecastOnCurrentHour = weatherOnTimeAdapter.getForecastOnHour(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("HH")) .toInt())
-        txtDegree.text = forecastOnCurrentHour.temperature+ "˚"
+        val forecastOnCurrentHour = weatherOnTimeAdapter.getForecastOnHour(
+            ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("HH"))
+                .toInt()
+        )
+        txtDegree.text = forecastOnCurrentHour.temperature + "˚"
         txtWeatherEmoji.text = forecastOnCurrentHour.sky
     }
-    fun getWindDegree(emoji:String):String
-    {
-        val degrees:Array<String> = resources.getStringArray(R.array.wind_degree)
-        val emojies:Array<String> = resources.getStringArray(R.array.wind_emoji)
+
+    fun getWindDegree(emoji: String): String {
+        val degrees: Array<String> = resources.getStringArray(R.array.wind_degree)
+        val emojies: Array<String> = resources.getStringArray(R.array.wind_emoji)
 
         return degrees.get(emojies.indexOf(emoji))
     }

@@ -171,11 +171,12 @@ class HomeActivity : MisoActivity() {
                     var forecast = forecastBriefResponseDto.data.forecast
                     var region = forecastBriefResponseDto.data.region
                     addPreferencePair("bigScale", region.bigScale)
-                    addPreferencePair("midScale", region.midScale)
-                    addPreferencePair("smallScale", region.smallScale)
+                    addPreferencePair("midScale", if(region.midScale.equals("선택 안 함"))"전체" else region.midScale)
+                    addPreferencePair("smallScale",if(region.smallScale.equals("선택 안 함")) "전체" else region.smallScale)
                     savePreferences()
                     txtLocation.text =
-                        region.bigScale + " " + region.midScale + " " + region.smallScale
+                        region.bigScale + " " + getPreference("midScale") + " " +
+                                if(getPreference("midScale").equals("전체")) "" else getPreference("smallScale")
                     txtWeatherEmoji.setText(forecast.sky)
                     txtWeatherDegree.setText(forecast.temperature + "˚")
                 } catch (e: Exception) {
