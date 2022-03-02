@@ -1,19 +1,17 @@
 package com.miso.misoweather.Fragment.surveyFragment
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
-import com.miso.misoweather.Acitivity.updateRegion.UpdateRegionActivity
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.FragmentSurveyBinding
@@ -23,8 +21,6 @@ import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import com.miso.misoweather.model.TransportManager
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 class SurveyFragment : Fragment() {
@@ -32,7 +28,7 @@ class SurveyFragment : Fragment() {
     lateinit var recyclerSurvey: RecyclerView
     lateinit var recyclerSurveysAdapter: RecyclerSurveysAdapter
     lateinit var surveyQuestions: Array<String>
-    lateinit var surveyAnswerList: ArrayList<List<SurveyAnswerDto>>
+    lateinit var surveyAnswerMap: HashMap<Int, List<SurveyAnswerDto>>
     lateinit var surveyResultResponseDto: SurveyResultResponseDto
     lateinit var surveyMyAnswerResponseDto: SurveyMyAnswerResponseDto
     lateinit var surveyItems: ArrayList<SurveyItem>
@@ -53,8 +49,9 @@ class SurveyFragment : Fragment() {
     fun initializeView() {
         currentLocation = activity.selectedRegion
         recyclerSurvey = binding.recyclerSurveys
-        surveyAnswerList = ArrayList()
+        surveyAnswerMap = HashMap()
     }
+
 
     fun setupRecyclerSurveys() {
         recyclerSurveysAdapter = RecyclerSurveysAdapter(requireActivity(), surveyItems)
@@ -65,7 +62,8 @@ class SurveyFragment : Fragment() {
     fun setupSurveyAnswerList() {
         surveyQuestions = activity.resources.getStringArray(R.array.survey_questions)
 
-        surveyQuestions.forEachIndexed() { i, item ->
+        surveyQuestions.forEachIndexed { i, item ->
+            Log.i("surveyAnswer", "surveyId:" + (i + 1).toString())
             getSurveyAnswer(i + 1)
         }
     }
@@ -87,7 +85,7 @@ class SurveyFragment : Fragment() {
 
         TransportManager.requestApi(callGetSurveyAnswer, { call, reponse ->
             initializeDataAndSetupRecycler {
-                surveyAnswerList.add((reponse.body()!!).data.responseList)
+                surveyAnswerMap.put(surveyId,(reponse.body()!!).data.responseList)
             }
         }, { call, throwable ->
 
@@ -134,14 +132,18 @@ class SurveyFragment : Fragment() {
         var sortedMyanswerList = surveyMyAnswerResponseDto.data.responseList.sortedWith(comparator)
 
         surveyQuestions.forEachIndexed { index, s ->
+            val surveyItem = SurveyItem(
+                index + 1,
+                s,
+                sortedMyanswerList[index],
+                surveyAnswerMap.get(index+1)!!,
+                surveyResultResponseDto.data.responseList[index]
+            )
+            Log.i("surveyItem", surveyItem.surveyId.toString())
+            Log.i("surveyItem", surveyItem.surveyQuestion)
+            Log.i("surveyItem", surveyItem.surveyAnswers.get(0).answer)
             surveyItems.add(
-                SurveyItem(
-                    index + 1,
-                    s,
-                    sortedMyanswerList[index],
-                    surveyAnswerList[index],
-                    surveyResultResponseDto.data.responseList[index]
-                )
+                surveyItem
             )
         }
     }
@@ -153,7 +155,7 @@ class SurveyFragment : Fragment() {
     }
 
     fun isAllSurveyResponseInitialized(): Boolean {
-        return ((surveyAnswerList.size >= surveyQuestions.size) &&
+        return ((surveyAnswerMap.size >= surveyQuestions.size) &&
                 this::surveyMyAnswerResponseDto.isInitialized &&
                 this::surveyResultResponseDto.isInitialized)
     }
