@@ -142,7 +142,7 @@ class WeatherDetailActivity : MisoActivity() {
                 if (region.smallScale.equals("선택 안 함"))
                     "전체"
                 else
-                    region.midScale
+                    region.smallScale
         txtLocation.text = region.bigScale + " " + midScaleString + " " + smallScaleString
         txtMinDegree.text = forecastdetailInfo.temperatureMin.split(".")[0] + "˚"
         txtMaxDegree.text = forecastdetailInfo.temperatureMax.split(".")[0] + "˚"
