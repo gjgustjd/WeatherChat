@@ -54,9 +54,14 @@ class SurveyFragment : Fragment() {
 
 
     fun setupRecyclerSurveys() {
-        recyclerSurveysAdapter = RecyclerSurveysAdapter(requireActivity(), surveyItems)
-        recyclerSurvey.adapter = recyclerSurveysAdapter
-        recyclerSurvey.layoutManager = LinearLayoutManager(requireActivity().baseContext)
+        try {
+            recyclerSurveysAdapter = RecyclerSurveysAdapter(activity, surveyItems)
+            recyclerSurvey.adapter = recyclerSurveysAdapter
+            recyclerSurvey.layoutManager = LinearLayoutManager(activity.baseContext)
+        }catch (e:Exception)
+        {
+            e.printStackTrace()
+        }
     }
 
     fun setupSurveyAnswerList() {

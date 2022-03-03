@@ -33,6 +33,8 @@ class ChatMainActivity : MisoActivity() {
     lateinit var previousActivity: String
     lateinit var currentFragment: Fragment
     lateinit var goToPreviousActivity: () -> Unit
+    lateinit var surveyFragment: SurveyFragment
+    lateinit var commentsFragment: CommentsFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,8 @@ class ChatMainActivity : MisoActivity() {
     }
 
     fun initializeViews() {
+        surveyFragment = SurveyFragment()
+        commentsFragment = CommentsFragment()
         selectedRegion = intent.getStringExtra("region")?:getBigShortScale(getPreference("bigScale")!!)
         previousActivity = intent.getStringExtra("previousActivity")?:""
         btnSurvey = binding.btnSurvey
@@ -67,7 +71,7 @@ class ChatMainActivity : MisoActivity() {
             btnSurvey.background = resources.getDrawable(R.drawable.toggle_track_background)
             btnSurvey.setTextColor(Color.WHITE)
             locationLayout.visibility = View.VISIBLE
-           setupFragment(SurveyFragment())
+           setupFragment(surveyFragment)
         }
         btnChat.setOnClickListener()
         {
@@ -76,7 +80,7 @@ class ChatMainActivity : MisoActivity() {
             btnChat.background = resources.getDrawable(R.drawable.toggle_track_background)
             btnChat.setTextColor(Color.WHITE)
             locationLayout.visibility = View.GONE
-            setupFragment(CommentsFragment())
+            setupFragment(commentsFragment)
         }
         btn_back = binding.imgbtnBack
         btn_back.setOnClickListener()
@@ -93,7 +97,7 @@ class ChatMainActivity : MisoActivity() {
             transferToNext()
             finish()
         }
-        setupFragment(SurveyFragment())
+        setupFragment(surveyFragment)
     }
 
     fun setupFragment(fragment: Fragment)

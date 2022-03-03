@@ -28,7 +28,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
 
-@RequiresApi(Build.VERSION_CODES.M)
+@RequiresApi(Build.VERSION_CODES.O)
 class CommentsFragment : Fragment() {
     lateinit var binding: FragmentCommentBinding
     lateinit var commentListResponseDto: CommentListResponseDto
@@ -147,12 +147,17 @@ class CommentsFragment : Fragment() {
     }
 
     fun setRecyclerChats() {
-        recyclerChatAdapter = RecyclerChatsAdapter(
-            requireActivity().baseContext,
-            commentListResponseDto.data.commentList,
-            true
-        )
-        recyclerChat.adapter = recyclerChatAdapter
-        recyclerChat.layoutManager = LinearLayoutManager(requireActivity().baseContext)
+        try {
+            recyclerChatAdapter = RecyclerChatsAdapter(
+                activity.baseContext,
+                commentListResponseDto.data.commentList,
+                true
+            )
+            recyclerChat.adapter = recyclerChatAdapter
+            recyclerChat.layoutManager = LinearLayoutManager(activity.baseContext)
+        }catch (e:Exception)
+        {
+            e.printStackTrace()
+        }
     }
 }
