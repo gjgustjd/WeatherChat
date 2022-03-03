@@ -62,11 +62,11 @@ class HomeActivity : MisoActivity() {
     lateinit var txtSecondRatio: TextView
     lateinit var txtThirdRatio: TextView
     lateinit var imgIconCheckFirst: ImageView
-    lateinit var imgbtnChangeLocaion:ImageButton
-    lateinit var firstProgressLayout:ConstraintLayout
-    lateinit var secondProgressLayout:ConstraintLayout
-    lateinit var thirdProgressLayout:ConstraintLayout
-    lateinit var chartLayout:ConstraintLayout
+    lateinit var imgbtnChangeLocaion: ImageButton
+    lateinit var firstProgressLayout: ConstraintLayout
+    lateinit var secondProgressLayout: ConstraintLayout
+    lateinit var thirdProgressLayout: ConstraintLayout
+    lateinit var chartLayout: ConstraintLayout
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,27 +129,26 @@ class HomeActivity : MisoActivity() {
         imgbtnChangeLocaion.setOnClickListener()
         {
             var intent = Intent(this, SelectRegionActivity::class.java)
-            intent.putExtra("for","change")
+            intent.putExtra("for", "change")
             startActivity(intent)
             transferToNext()
             finish()
         }
     }
-    fun goToChatMainActivity()
-    {
+
+    fun goToChatMainActivity() {
         var isSurveyed = getPreference("isSurveyed")
-        var lastSurveyedDate = getPreference("LastSurveyedDate")?:""
-        var currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
-        if(!isSurveyed.equals("true")|| !lastSurveyedDate.equals(currentDate))
-        {
+        var lastSurveyedDate = getPreference("LastSurveyedDate") ?: ""
+        var currentDate =
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+        if (!isSurveyed.equals("true") || !lastSurveyedDate.equals(currentDate)) {
             var intent = Intent(this, SelectSurveyAnswerActivity::class.java)
             intent.putExtra("isFirstSurvey", true)
             intent.putExtra("previousActivity", "Home")
             startActivity(intent)
             transferToNext()
             finish()
-        }
-        else {
+        } else {
             var intent = Intent(this, ChatMainActivity::class.java)
             intent.putExtra("previousActivity", "Home")
             startActivity(intent)
@@ -159,7 +158,9 @@ class HomeActivity : MisoActivity() {
     }
 
     fun getBriefForecast() {
-        try {
+        var repeatCount = 0
+        fun forecastRequest()
+        {
             val callBriefForecast =
                 TransportManager.getRetrofitApiObject<ForecastBriefResponseDto>()
                     .getBriefForecast(getPreference("defaultRegionId")!!.toInt())
@@ -171,20 +172,40 @@ class HomeActivity : MisoActivity() {
                     var forecast = forecastBriefResponseDto.data.forecast
                     var region = forecastBriefResponseDto.data.region
                     addPreferencePair("bigScale", region.bigScale)
-                    addPreferencePair("midScale", if(region.midScale.equals("선택 안 함"))"전체" else region.midScale)
-                    addPreferencePair("smallScale",if(region.smallScale.equals("선택 안 함")) "전체" else region.smallScale)
+                    addPreferencePair(
+                        "midScale",
+                        if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
+                    )
+                    addPreferencePair(
+                        "smallScale",
+                        if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
+                    )
                     savePreferences()
                     txtLocation.text =
                         region.bigScale + " " + getPreference("midScale") + " " +
-                                if(getPreference("midScale").equals("전체")) "" else getPreference("smallScale")
+                                if (getPreference("midScale").equals("전체")) "" else getPreference("smallScale")
                     txtWeatherEmoji.setText(forecast.sky)
                     txtWeatherDegree.setText(forecast.temperature + "˚")
                 } catch (e: Exception) {
+                    if (repeatCount < 3) {
+                        repeatCount++
+                        forecastRequest()
+                        Log.i("getBriefForecast","repeated")
+                    }
                     e.printStackTrace()
+                    Log.i("getBriefForecast","excepted")
                 }
             }, { call, t ->
-                Log.i("결과", "실패 : $t")
+                Log.i("getBriefForecast", "실패 : $t")
+                if (repeatCount < 3) {
+                    repeatCount++
+                    forecastRequest()
+                    Log.i("getBriefForecast","repeated")
+                }
             })
+        }
+        try {
+            forecastRequest()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -207,7 +228,8 @@ class HomeActivity : MisoActivity() {
     }
 
     fun setRecyclerChats() {
-        recyclerChatAdapter = RecyclerChatsAdapter(this, commentListResponseDto.data.commentList,false)
+        recyclerChatAdapter =
+            RecyclerChatsAdapter(this, commentListResponseDto.data.commentList, false)
         recyclerChat.adapter = recyclerChatAdapter
         recyclerChat.layoutManager = LinearLayoutManager(this)
     }
@@ -247,21 +269,21 @@ class HomeActivity : MisoActivity() {
                 todaySurveyResultDto = reponse.body()!!.data.responseList.first { it.surveyId == 2 }
                 txtFirstAnswer.text = todaySurveyResultDto.keyList.get(0).toString()
                 txtFirstRatio.text = todaySurveyResultDto.valueList.get(0).toString() + "%"
-                if(txtFirstRatio.text.equals(""))
+                if (txtFirstRatio.text.equals(""))
                     imgIconCheckFirst.visibility = View.GONE
                 else
                     imgIconCheckFirst.visibility = View.VISIBLE
 
                 txtFirstRatio.text = todaySurveyResultDto.valueList.get(0).toString() + "%"
-                firstProgressLayout.visibility= View.VISIBLE
+                firstProgressLayout.visibility = View.VISIBLE
 
                 txtSecondAnswer.text = todaySurveyResultDto.keyList.get(1).toString()
                 txtSecondRatio.text = todaySurveyResultDto.valueList.get(1).toString() + "%"
-                secondProgressLayout.visibility= View.VISIBLE
+                secondProgressLayout.visibility = View.VISIBLE
 
                 txtThirdAnswer.text = todaySurveyResultDto.keyList.get(2).toString()
                 txtThirdRatio.text = todaySurveyResultDto.valueList.get(2).toString() + "%"
-                thirdProgressLayout.visibility= View.VISIBLE
+                thirdProgressLayout.visibility = View.VISIBLE
 
             } catch (e: Exception) {
                 e.printStackTrace()
