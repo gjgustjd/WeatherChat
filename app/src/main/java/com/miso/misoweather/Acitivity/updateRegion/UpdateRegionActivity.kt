@@ -45,9 +45,9 @@ class UpdateRegionActivity : MisoActivity() {
         {
             try {
                 var bigScaleRegion = gridAdapter.getSelectedItemShortName()
-                var intent =  Intent(this, ChatMainActivity::class.java)
-                intent.putExtra("region", bigScaleRegion)
-                startActivity(intent)
+                addPreferencePair("surveyRegion",bigScaleRegion)
+                savePreferences()
+                startActivity(Intent(this, ChatMainActivity::class.java))
                 transferToBack()
                 finish()
             } catch (e: Exception) {

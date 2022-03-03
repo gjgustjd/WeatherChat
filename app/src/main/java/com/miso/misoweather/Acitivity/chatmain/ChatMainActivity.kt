@@ -28,8 +28,8 @@ class ChatMainActivity : MisoActivity() {
     lateinit var btnSurvey: Button
     lateinit var btnChat: Button
     lateinit var txtLocation: TextView
-     lateinit var selectedRegion:String
-    lateinit var locationLayout:ConstraintLayout
+    lateinit var selectedRegion: String
+    lateinit var locationLayout: ConstraintLayout
     lateinit var previousActivity: String
     lateinit var currentFragment: Fragment
     lateinit var goToPreviousActivity: () -> Unit
@@ -46,8 +46,11 @@ class ChatMainActivity : MisoActivity() {
     fun initializeViews() {
         surveyFragment = SurveyFragment()
         commentsFragment = CommentsFragment()
-        selectedRegion = intent.getStringExtra("region")?:getBigShortScale(getPreference("bigScale")!!)
-        previousActivity = intent.getStringExtra("previousActivity")?:""
+        selectedRegion =
+            if(getPreference("surveyRegion").isNullOrBlank())
+                getBigShortScale(getPreference("bigScale")!!)
+            else getPreference("surveyRegion")!!
+        previousActivity = intent.getStringExtra("previousActivity") ?: ""
         btnSurvey = binding.btnSurvey
         btnChat = binding.btnChats
         locationLayout = binding.locationButtonLayout
@@ -55,7 +58,7 @@ class ChatMainActivity : MisoActivity() {
         txtLocation = binding.txtLocation
         txtLocation.text = selectedRegion
 
-        Log.i("misoToken",getPreference("misoToken")!!);
+        Log.i("misoToken", getPreference("misoToken")!!);
 
         when (previousActivity) {
             "Weather" -> goToPreviousActivity =
@@ -71,7 +74,7 @@ class ChatMainActivity : MisoActivity() {
             btnSurvey.background = resources.getDrawable(R.drawable.toggle_track_background)
             btnSurvey.setTextColor(Color.WHITE)
             locationLayout.visibility = View.VISIBLE
-           setupFragment(surveyFragment)
+            setupFragment(surveyFragment)
         }
         btnChat.setOnClickListener()
         {
@@ -85,6 +88,8 @@ class ChatMainActivity : MisoActivity() {
         btn_back = binding.imgbtnBack
         btn_back.setOnClickListener()
         {
+            removePreference("surveyRegion")
+            savePreferences()
             goToPreviousActivity()
             transferToBack()
             finish()
@@ -100,11 +105,10 @@ class ChatMainActivity : MisoActivity() {
         setupFragment(surveyFragment)
     }
 
-    fun setupFragment(fragment: Fragment)
-    {
+    fun setupFragment(fragment: Fragment) {
         currentFragment = fragment
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentLayout,fragment)
+            .replace(R.id.fragmentLayout, fragment)
             .commit()
     }
 }
