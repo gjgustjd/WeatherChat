@@ -66,14 +66,13 @@
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        app:lottie_rawRes="@raw/animation_check"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="false"
-        app:lottie_repeatCount="1"
         app:layout_constraintBottom_toTopOf="@+id/txt_greeting"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_answer"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="false"
+        app:lottie_rawRes="@raw/animation_check"
         app:srcCompat="@drawable/animation_check_myanswer" />
 </androidx.constraintlayout.widget.ConstraintLayout>

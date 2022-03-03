@@ -36,7 +36,7 @@ class AnswerAnimationActivity : MisoActivity() {
         initializeViews()
         Handler().postDelayed({
            goToChatMainActivity()
-        },2000)
+        },1200)
     }
 
     fun initializeViews() {
