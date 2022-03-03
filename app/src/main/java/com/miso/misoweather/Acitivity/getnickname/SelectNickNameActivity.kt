@@ -8,6 +8,8 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import com.kakao.sdk.auth.model.Prompt
+import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectNicknameBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
@@ -67,7 +69,7 @@ class SelectNickNameActivity : MisoActivity() {
         getNickname()
     }
 
-    fun registerMember() {
+    fun registerMember(isResetedToken: Boolean = false) {
         val retrofit = Retrofit.Builder()
             .baseUrl(MISOWEATHER_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -82,9 +84,13 @@ class SelectNickNameActivity : MisoActivity() {
             ) {
                 if (response.body() == null) {
                     Log.i("결과", "실패")
-                    Toast.makeText(this@SelectNickNameActivity, "회원가입에 실패하였습니다.", Toast.LENGTH_LONG)
-                        .show()
-                    goToLoginActivity()
+                    if (response.errorBody()!!.source().toString().contains("UNAUTHORIZED") &&
+                        isResetedToken == false
+                    ) {
+                        resetAccessToken()
+                    } else {
+                        inCaseFailedRegister()
+                    }
                 } else {
                     Log.i("결과", "성공")
                     issueMisoToken()
@@ -93,11 +99,28 @@ class SelectNickNameActivity : MisoActivity() {
 
             override fun onFailure(call: Call<GeneralResponseDto>, t: Throwable) {
                 Log.i("결과", "실패 : $t")
+                inCaseFailedRegister()
+            }
+
+            fun inCaseFailedRegister() {
                 Toast.makeText(this@SelectNickNameActivity, "회원가입에 실패하였습니다.", Toast.LENGTH_LONG)
                     .show()
                 goToLoginActivity()
             }
         })
+    }
+
+    fun resetAccessToken() {
+        UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
+            if (error != null) {
+                Log.e("resetAccessToken", "로그인 실패", error)
+            } else if (token != null) {
+                Log.i("resetAccessToken", "로그인 성공 ${token.accessToken}")
+                addPreferencePair("accessToken", token.accessToken)
+                savePreferences()
+                registerMember()
+            }
+        }
     }
 
     fun goToLoginActivity() {
