@@ -37,9 +37,7 @@ class UpdateRegionActivity : MisoActivity() {
         btn_back = binding.imgbtnBack
         btn_next = binding.btnAction
         btn_back.setOnClickListener() {
-            startActivity(Intent(this, ChatMainActivity::class.java))
-            transferToBack()
-            finish()
+            doBack()
         }
         btn_next.setOnClickListener()
         {
@@ -54,6 +52,12 @@ class UpdateRegionActivity : MisoActivity() {
                 e.printStackTrace()
             }
         }
+    }
+
+    override fun doBack() {
+        startActivity(Intent(this, ChatMainActivity::class.java))
+        transferToBack()
+        finish()
     }
 
     fun setRecyclerRegions() {

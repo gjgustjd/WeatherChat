@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
+import com.miso.misoweather.Acitivity.login.LoginActivity
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityHomeBinding
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
@@ -134,6 +135,12 @@ class HomeActivity : MisoActivity() {
             transferToNext()
             finish()
         }
+    }
+
+    override fun doBack() {
+        startActivity(Intent(this, LoginActivity::class.java))
+        transferToBack()
+        finish()
     }
 
     fun goToChatMainActivity() {

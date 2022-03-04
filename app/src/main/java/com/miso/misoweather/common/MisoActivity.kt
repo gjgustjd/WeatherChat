@@ -20,6 +20,15 @@ open class MisoActivity :AppCompatActivity() {
         pairList = ArrayList()
 
     }
+    open fun doBack()
+    {
+
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        doBack()
+    }
     fun getBigShortScale(bigScale:String):String
     {
         try {

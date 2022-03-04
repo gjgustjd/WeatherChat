@@ -62,11 +62,7 @@ class SelectAreaActivity : MisoActivity() {
         btn_back = binding.imgbtnBack
         btn_next = binding.btnAction
         btn_back.setOnClickListener() {
-            var intent = Intent(this, SelectTownActivity::class.java)
-            intent.putExtra("for", aPurpose)
-            startActivity(intent)
-            transferToBack()
-            finish()
+            doBack()
         }
         btn_next.setOnClickListener()
         {
@@ -85,6 +81,14 @@ class SelectAreaActivity : MisoActivity() {
                 e.printStackTrace()
             }
         }
+    }
+
+    override fun doBack() {
+        var intent = Intent(this, SelectTownActivity::class.java)
+        intent.putExtra("for", aPurpose)
+        startActivity(intent)
+        transferToBack()
+        finish()
     }
 
     fun addRegionPreferences() {

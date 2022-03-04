@@ -52,9 +52,7 @@ class MyPageActivity : MisoActivity() {
         txt_nickname.text = getPreference("nickname")
         btn_back.setOnClickListener()
         {
-            startActivity(Intent(this, HomeActivity::class.java))
-            transferToBack()
-            finish()
+            doBack()
         }
         btn_unregister.setOnClickListener()
         {
@@ -80,6 +78,12 @@ class MyPageActivity : MisoActivity() {
             )
             dialog.show(supportFragmentManager, "generalConfirmDialog")
         }
+    }
+
+    override fun doBack() {
+        startActivity(Intent(this, HomeActivity::class.java))
+        transferToBack()
+        finish()
     }
 
     fun goToLoginActivity() {

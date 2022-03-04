@@ -52,15 +52,7 @@ class SelectNickNameActivity : MisoActivity() {
         }
         btn_back.setOnClickListener()
         {
-            var intent: Intent?
-            if (getPreference("SmallScaleRegion").isNullOrBlank())
-                intent = Intent(this, SelectTownActivity::class.java)
-            else
-                intent = Intent(this, SelectAreaActivity::class.java)
-
-            startActivity(intent)
-            transferToBack()
-            finish()
+            doBack()
         }
         btn_next.setOnClickListener()
         {
@@ -69,6 +61,17 @@ class SelectNickNameActivity : MisoActivity() {
         getNickname()
     }
 
+    override fun doBack() {
+        var intent: Intent?
+        if (getPreference("SmallScaleRegion").isNullOrBlank())
+            intent = Intent(this, SelectTownActivity::class.java)
+        else
+            intent = Intent(this, SelectAreaActivity::class.java)
+
+        startActivity(intent)
+        transferToBack()
+        finish()
+    }
     fun registerMember(isResetedToken: Boolean = false) {
         val retrofit = Retrofit.Builder()
             .baseUrl(MISOWEATHER_BASE_URL)

@@ -79,9 +79,7 @@ class WeatherDetailActivity : MisoActivity() {
         btnBack = binding.imgbtnBack
         btnBack.setOnClickListener()
         {
-            startActivity(Intent(this, HomeActivity::class.java))
-            transferToBack()
-            finish()
+            doBack()
         }
         chatLayout.setOnClickListener()
         {
@@ -89,6 +87,12 @@ class WeatherDetailActivity : MisoActivity() {
         }
         recyclerWeatherOnTIme = binding.recylcerWeatherOnTIme
         recyclerForecast = binding.recyclerForecast
+    }
+
+    override fun doBack() {
+        startActivity(Intent(this, HomeActivity::class.java))
+        transferToBack()
+        finish()
     }
 
     fun goToChatMainActivity() {

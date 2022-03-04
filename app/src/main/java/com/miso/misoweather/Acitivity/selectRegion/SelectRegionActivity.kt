@@ -39,17 +39,7 @@ class SelectRegionActivity : MisoActivity() {
         btn_back = binding.imgbtnBack
         btn_next = binding.btnAction
         btn_back.setOnClickListener() {
-            if (aPurpose.equals("change")) {
-
-                var intent = Intent(this, HomeActivity::class.java)
-                startActivity(intent)
-                transferToBack()
-                finish()
-            } else {
-                startActivity(Intent(this, LoginActivity::class.java))
-                transferToBack()
-                finish()
-            }
+            doBack()
         }
         btn_next.setOnClickListener()
         {
@@ -71,6 +61,20 @@ class SelectRegionActivity : MisoActivity() {
             } finally {
                 savePreferences()
             }
+        }
+    }
+
+    override fun doBack()
+    {
+        if (aPurpose.equals("change")) {
+            var intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            transferToBack()
+            finish()
+        } else {
+            startActivity(Intent(this, LoginActivity::class.java))
+            transferToBack()
+            finish()
         }
     }
 

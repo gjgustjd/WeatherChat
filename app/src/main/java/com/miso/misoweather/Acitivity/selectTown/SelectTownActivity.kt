@@ -77,36 +77,7 @@ class SelectTownActivity : MisoActivity() {
         }
         btn_next.setOnClickListener()
         {
-            try {
-                var selectedRegion = recyclerAdapter.getSelectedItem()
-                var midScaleRegion = selectedRegion.midScale
-                var bigScaleRegion = selectedRegion.bigScale
-                addPreferencePair("BigScaleRegion", bigScaleRegion)
-                addPreferencePair("MidScaleRegion", midScaleRegion)
-
-                lateinit var intent: Intent
-                if (selectedRegion.midScale.contains("선택 안 함")) {
-                    if (aPurpose.equals("change")) {
-                        changeRegion()
-                    } else {
-                        removePreference("SmallScaleRegion")
-                        intent = Intent(this, SelectNickNameActivity::class.java)
-                        intent.putExtra("RegionId", selectedRegion.id.toString())
-                    }
-                } else
-                    intent = Intent(this, SelectAreaActivity::class.java)
-
-                intent.putExtra("for", aPurpose)
-                intent.putExtra("region", recyclerAdapter.getSelectedItem().bigScale)
-                intent.putExtra("town", midScaleRegion)
-                startActivity(intent)
-                transferToNext()
-                finish()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                savePreferences()
-            }
+            doBack()
         }
     }
 
@@ -131,6 +102,40 @@ class SelectTownActivity : MisoActivity() {
         }, { call, t ->
             Log.i("changeRegion", "실패")
         })
+    }
+
+    override fun doBack()
+    {
+        try {
+            var selectedRegion = recyclerAdapter.getSelectedItem()
+            var midScaleRegion = selectedRegion.midScale
+            var bigScaleRegion = selectedRegion.bigScale
+            addPreferencePair("BigScaleRegion", bigScaleRegion)
+            addPreferencePair("MidScaleRegion", midScaleRegion)
+
+            lateinit var intent: Intent
+            if (selectedRegion.midScale.contains("선택 안 함")) {
+                if (aPurpose.equals("change")) {
+                    changeRegion()
+                } else {
+                    removePreference("SmallScaleRegion")
+                    intent = Intent(this, SelectNickNameActivity::class.java)
+                    intent.putExtra("RegionId", selectedRegion.id.toString())
+                }
+            } else
+                intent = Intent(this, SelectAreaActivity::class.java)
+
+            intent.putExtra("for", aPurpose)
+            intent.putExtra("region", recyclerAdapter.getSelectedItem().bigScale)
+            intent.putExtra("town", midScaleRegion)
+            startActivity(intent)
+            transferToNext()
+            finish()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            savePreferences()
+        }
     }
 
     fun getTownList() {

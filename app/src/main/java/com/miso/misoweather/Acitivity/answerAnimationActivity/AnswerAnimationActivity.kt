@@ -45,6 +45,9 @@ class AnswerAnimationActivity : MisoActivity() {
         img_animation = binding.imgCheckAnimation
     }
 
+    override fun doBack() {
+    }
+
     fun goToChatMainActivity()
     {
         startActivity(Intent(this,ChatMainActivity::class.java))

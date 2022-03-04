@@ -63,16 +63,7 @@ class SelectSurveyAnswerActivity : MisoActivity() {
         btn_back = binding.imgbtnBack
         btn_back.setOnClickListener()
         {
-            var aIntent: Intent
-            if (intent.getStringExtra("previousActivity").equals("Home"))
-                aIntent = Intent(this, HomeActivity::class.java)
-            else
-                aIntent = Intent(this, ChatMainActivity::class.java)
-
-            aIntent.putExtra("previousActivity", "Home")
-            startActivity(aIntent)
-            transferToBack()
-            finish()
+            doBack()
         }
         btn_action = binding.btnAction
         btn_action.setOnClickListener()
@@ -83,6 +74,19 @@ class SelectSurveyAnswerActivity : MisoActivity() {
                 putSurveyAnswer()
         }
         recycler_answers = binding.recyclerAnswers
+    }
+
+    override fun doBack() {
+        var aIntent: Intent
+        if (intent.getStringExtra("previousActivity").equals("Home"))
+            aIntent = Intent(this, HomeActivity::class.java)
+        else
+            aIntent = Intent(this, ChatMainActivity::class.java)
+
+        aIntent.putExtra("previousActivity", "Home")
+        startActivity(aIntent)
+        transferToBack()
+        finish()
     }
 
     fun getSurveyAnswer(surveyId: Int) {

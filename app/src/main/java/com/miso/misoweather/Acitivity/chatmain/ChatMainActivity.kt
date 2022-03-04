@@ -88,11 +88,7 @@ class ChatMainActivity : MisoActivity() {
         btn_back = binding.imgbtnBack
         btn_back.setOnClickListener()
         {
-            removePreference("surveyRegion")
-            savePreferences()
-            goToPreviousActivity()
-            transferToBack()
-            finish()
+            doBack()
         }
         txtLocation.setOnClickListener()
         {
@@ -103,6 +99,15 @@ class ChatMainActivity : MisoActivity() {
             finish()
         }
         setupFragment(surveyFragment)
+    }
+
+    override fun doBack()
+    {
+        removePreference("surveyRegion")
+        savePreferences()
+        goToPreviousActivity()
+        transferToBack()
+        finish()
     }
 
     fun setupFragment(fragment: Fragment) {
