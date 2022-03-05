@@ -23,4 +23,8 @@
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/spoqa_han_sans_neo_regular</item>
     </style>
+
+    <style name="editTextColoredHandle">
+        <item name="colorControlActivated">@color/primaryPurple</item>
+    </style>
 </resources>
