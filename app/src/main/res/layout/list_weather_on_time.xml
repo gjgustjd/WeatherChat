@@ -10,6 +10,7 @@
 
     <TextView
         android:id="@+id/txt_weather_emoji"
+        style="@style/basicText"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:text="☁"
@@ -22,6 +23,7 @@
 
     <TextView
         android:id="@+id/txt_weather_degree"
+        style="@style/basicText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -39,6 +41,7 @@
 
     <TextView
         android:id="@+id/txt_time"
+        style="@style/basicText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="16시"

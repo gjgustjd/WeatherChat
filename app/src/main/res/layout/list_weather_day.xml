@@ -8,6 +8,7 @@
 
     <TextView
         android:id="@+id/txt_day"
+        style="@style/basicText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -22,6 +23,7 @@
 
     <TextView
         android:id="@+id/xt_date"
+        style="@style/basicText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -36,6 +38,7 @@
 
     <TextView
         android:id="@+id/label_beforenoon"
+        style="@style/basicText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -51,6 +54,7 @@
 
     <TextView
         android:id="@+id/label_afternoon"
+        style="@style/basicText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -66,6 +70,7 @@
 
     <TextView
         android:id="@+id/txt_degree_min"
+        style="@style/basicText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
@@ -78,6 +83,7 @@
 
     <TextView
         android:id="@+id/txt_degree_max"
+        style="@style/basicText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"

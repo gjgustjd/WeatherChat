@@ -20,6 +20,7 @@
 
     <TextView
         android:id="@+id/txt_itemText3"
+        style="@style/basicText"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
@@ -47,6 +48,7 @@
 
         <TextView
             android:id="@+id/txt_itemText"
+            style="@style/basicText"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:gravity="center_vertical"
@@ -58,6 +60,7 @@
 
         <TextView
             android:id="@+id/txt_titleText2"
+            style="@style/basicText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -71,6 +74,7 @@
 
         <TextView
             android:id="@+id/txt_titleText3"
+            style="@style/basicText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -113,6 +117,7 @@
 
         <Button
             android:id="@+id/btn_action"
+            style="@style/basicText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/button_purple_background"

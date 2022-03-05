@@ -98,6 +98,7 @@
 
         <TextView
             android:id="@+id/txt_empty_survey"
+            style="@style/basicText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="진행된 투표가 없어요.\n투표를 진행해주세요."

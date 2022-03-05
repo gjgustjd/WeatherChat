@@ -47,6 +47,7 @@
 
                 <TextView
                     android:id="@+id/txt_weather_emoji"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="50dp"
@@ -58,6 +59,7 @@
 
                 <TextView
                     android:id="@+id/txt_degree"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginStart="5dp"
@@ -72,6 +74,7 @@
 
                 <TextView
                     android:id="@+id/txt_unit"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/textBlack"
@@ -83,6 +86,7 @@
 
                 <TextView
                     android:id="@+id/txt_location"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -106,6 +110,7 @@
 
                 <TextView
                     android:id="@+id/label_min"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="최저"
@@ -119,6 +124,7 @@
 
                 <TextView
                     android:id="@+id/txt_min_degree"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="3dp"
@@ -139,10 +145,12 @@
                     app:layout_constraintBottom_toBottomOf="@+id/txt_min_degree"
                     app:layout_constraintEnd_toStartOf="@id/txt_max_degree"
                     app:layout_constraintStart_toEndOf="@+id/txt_min_degree"
-                    app:layout_constraintTop_toTopOf="@+id/txt_min_degree" />
+                    app:layout_constraintTop_toTopOf="@+id/txt_min_degree"
+                    style="@style/basicText" />
 
                 <TextView
                     android:id="@+id/txt_max_degree"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="3dp"
@@ -165,6 +173,7 @@
 
                 <TextView
                     android:id="@+id/textView4"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
@@ -178,6 +187,7 @@
 
                 <TextView
                     android:id="@+id/textView6"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -214,6 +224,7 @@
 
                 <TextView
                     android:id="@+id/txt_weather_days_title"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
@@ -258,6 +269,7 @@
 
                 <TextView
                     android:id="@+id/label_dust"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
@@ -275,6 +287,7 @@
 
                 <TextView
                     android:id="@+id/label_superdust"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
@@ -312,6 +325,7 @@
 
                 <TextView
                     android:id="@+id/txt_degree_dust"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -324,6 +338,7 @@
 
                 <TextView
                     android:id="@+id/txt_degree_superdust"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="21"
@@ -336,6 +351,7 @@
 
                 <TextView
                     android:id="@+id/txt_dust_emotion"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -350,6 +366,7 @@
 
                 <TextView
                     android:id="@+id/txt_superdust_emotion"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -377,6 +394,7 @@
 
                 <TextView
                     android:id="@+id/label_rain"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
@@ -390,6 +408,7 @@
 
                 <TextView
                     android:id="@+id/txt_imoge_rain"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginTop="15dp"
@@ -403,6 +422,7 @@
 
                 <TextView
                     android:id="@+id/txt_degree_rain"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -416,6 +436,7 @@
 
                 <TextView
                     android:id="@+id/label_rain_emotion"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -427,6 +448,7 @@
 
                 <TextView
                     android:id="@+id/txt_rain_degree_on_hour"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/textBlack"
@@ -450,6 +472,7 @@
 
                 <TextView
                     android:id="@+id/txt_title_projection_day"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
@@ -463,6 +486,7 @@
 
                 <TextView
                     android:id="@+id/label_title_projection"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
@@ -501,6 +525,7 @@
 
                 <TextView
                     android:id="@+id/txt_degree_wind"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -515,6 +540,7 @@
 
                 <TextView
                     android:id="@+id/label_wind_degree"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -527,12 +553,11 @@
 
                 <TextView
                     android:id="@+id/label_wind"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="15dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="5dp"
                     android:text="풍속"
                     android:textColor="@color/textBlack"
                     android:textSize="12dp"
@@ -544,6 +569,7 @@
 
                 <TextView
                     android:id="@+id/txt_emoji_windSpeed"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginTop="20dp"
@@ -568,6 +594,7 @@
 
                 <TextView
                     android:id="@+id/label_humid"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
@@ -583,6 +610,7 @@
 
                 <TextView
                     android:id="@+id/txt_degree_humid"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -596,6 +624,7 @@
 
                 <TextView
                     android:id="@+id/txt_humid"
+                    style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginTop="20dp"
@@ -628,6 +657,7 @@
 
                     <TextView
                         android:id="@+id/label_sunrise_beforenoon"
+                        style="@style/basicText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -641,6 +671,7 @@
 
                     <TextView
                         android:id="@+id/label_sunrise"
+                        style="@style/basicText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
@@ -659,6 +690,7 @@
 
                     <ImageView
                         android:id="@+id/img_sunrise"
+                        style="@style/basicText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintBottom_toBottomOf="@id/left"
@@ -668,6 +700,7 @@
 
                     <TextView
                         android:id="@+id/txt_sunrise_time"
+                        style="@style/basicText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="7시 47분"
@@ -687,6 +720,7 @@
 
                     <TextView
                         android:id="@+id/txt_sunset_time"
+                        style="@style/basicText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="5시 28분"
@@ -699,6 +733,7 @@
 
                     <TextView
                         android:id="@+id/label_sunset_afternoon"
+                        style="@style/basicText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -712,6 +747,7 @@
 
                     <TextView
                         android:id="@+id/label_sunset"
+                        style="@style/basicText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"

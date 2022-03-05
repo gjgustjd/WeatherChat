@@ -34,6 +34,7 @@
 
         <TextView
             android:id="@+id/txt_greeting"
+            style="@style/basicText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -49,6 +50,7 @@
 
         <TextView
             android:id="@+id/txt_greeting_bold"
+            style="@style/basicText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -75,6 +77,7 @@
 
         <TextView
             android:id="@+id/txt_emoji"
+            style="@style/basicText"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="30dp"
@@ -102,6 +105,7 @@
 
             <TextView
                 android:id="@+id/txt_get_new_nickname"
+                style="@style/basicText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
@@ -118,6 +122,7 @@
 
             <TextView
                 android:id="@+id/textView5"
+                style="@style/basicText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="닉네임이 마음에 들지 않으면 새로 받아보세요!\n한 번 결정된 닉네임은 바꿀 수 없어요."
@@ -143,6 +148,7 @@
 
         <Button
             android:id="@+id/btn_action"
+            style="@style/basicText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/button_purple_background"

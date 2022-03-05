@@ -20,5 +20,6 @@
     <style name="boldWhite">
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/spoqa_han_sans_neo_regular</item>
     </style>
 </resources>
