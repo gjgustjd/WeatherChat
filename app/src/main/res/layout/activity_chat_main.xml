@@ -86,18 +86,18 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="60dp"
-        android:background="@drawable/toggle_track_background"
+        android:background="@drawable/unit_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/txt_itemText"
         app:layout_constraintTop_toBottomOf="@+id/txt_itemText">
 
         <Button
             android:id="@+id/btn_survey"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@drawable/toggle_track_background"
-            android:backgroundTint="@color/primaryPurple"
+            android:background="@drawable/toggle_track_background_purple"
             android:minHeight="35dp"
             android:text="오늘의 사람들"
             android:textColor="@color/white"
@@ -110,10 +110,10 @@
 
         <Button
             android:id="@+id/btn_chats"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:backgroundTint="@color/primaryPurple"
+            android:background="@drawable/unit_background"
             android:minHeight="35dp"
             android:text="날씨 한 줄 평"
             android:textColor="@color/textBlack"

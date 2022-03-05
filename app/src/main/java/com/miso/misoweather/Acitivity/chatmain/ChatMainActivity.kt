@@ -69,18 +69,18 @@ class ChatMainActivity : MisoActivity() {
 
         btnSurvey.setOnClickListener()
         {
-            btnChat.setBackgroundColor(Color.TRANSPARENT)
+            btnChat.background = resources.getDrawable(R.drawable.unit_background)
             btnChat.setTextColor(getColor(R.color.textBlack))
-            btnSurvey.background = resources.getDrawable(R.drawable.toggle_track_background)
+            btnSurvey.background = resources.getDrawable(R.drawable.toggle_track_background_purple)
             btnSurvey.setTextColor(Color.WHITE)
             locationLayout.visibility = View.VISIBLE
             setupFragment(surveyFragment)
         }
         btnChat.setOnClickListener()
         {
-            btnSurvey.setBackgroundColor(Color.TRANSPARENT)
+            btnSurvey.background = resources.getDrawable(R.drawable.unit_background)
             btnSurvey.setTextColor(getColor(R.color.textBlack))
-            btnChat.background = resources.getDrawable(R.drawable.toggle_track_background)
+            btnChat.background = resources.getDrawable(R.drawable.toggle_track_background_purple)
             btnChat.setTextColor(Color.WHITE)
             locationLayout.visibility = View.GONE
             setupFragment(commentsFragment)
