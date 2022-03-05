@@ -29,7 +29,7 @@ class RecyclerRegionsAdapter(var context: Context, var regions: ArrayList<Region
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val layoutParams = holder.itemView.layoutParams
-        layoutParams.height = 80
+        layoutParams.height = 100
         holder.itemView.requestLayout()
         val data = regions.get(position)
         holder.setText(data.shortName)
@@ -55,7 +55,7 @@ class RecyclerRegionsAdapter(var context: Context, var regions: ArrayList<Region
     fun applyUnselection(position: Int) {
         var viewHolder = viewHolders.get(position)
         viewHolder.itemView.setBackgroundResource(R.drawable.grid_region_background)
-        viewHolder.txt_name.setTextColor(context.resources.getColor(R.color.primaryPurple))
+        viewHolder.txt_name.setTextColor(context.resources.getColor(R.color.black))
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
