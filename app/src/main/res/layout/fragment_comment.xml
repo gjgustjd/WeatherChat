@@ -27,7 +27,6 @@
             android:gravity="start|top"
             android:hint="오늘 날씨에 대한 \n유쾌한 막내사자님의 느낌은 어떠신가요?"
             android:maxLength="40"
-            android:textColor="@color/black"
             android:textSize="14dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.55"

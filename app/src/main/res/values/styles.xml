@@ -2,13 +2,14 @@
 <resources>
 
     <style name="boldBlack">
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/textBlack</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/spoqa_han_sans_neo_regular</item>
     </style>
 
     <style name="basicText">
         <item name="android:fontFamily">@font/spoqa_han_sans_neo_regular</item>
+        <item name="android:textColor">@color/textBlack</item>
     </style>
 
     <style name="imgViewAdjusted">

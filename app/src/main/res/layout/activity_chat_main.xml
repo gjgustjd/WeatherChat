@@ -69,13 +69,13 @@
 
     <TextView
         android:id="@+id/txt_itemText"
+        style="@style/boldBlack"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/spoqa_han_sans_regular"
         android:gravity="center_vertical"
         android:text="날씨 이야기"
-        android:textColor="@color/black"
         android:textSize="@dimen/subactivity_title_text_size"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/imgbtn_back"
@@ -99,7 +99,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@drawable/toggle_track_background_purple"
+            android:background="@drawable/unit_background_purple"
             android:fontFamily="@font/spoqa_han_sans_regular"
             android:minHeight="35dp"
             android:text="오늘의 사람들"
