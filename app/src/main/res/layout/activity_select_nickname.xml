@@ -112,7 +112,7 @@
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical"
                 android:text="닉네임 새로받기"
-                android:textColor="@color/textBlack"
+                android:textColor="@drawable/text_selector_black"
                 android:textSize="16dp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/textView5"
