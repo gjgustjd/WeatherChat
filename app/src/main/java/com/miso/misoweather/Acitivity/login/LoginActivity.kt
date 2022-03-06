@@ -4,17 +4,19 @@ import android.animation.Animator
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.viewpager2.widget.ViewPager2
-import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.login.viewPagerFragments.*
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
+import com.miso.misoweather.Dialog.GeneralConfirmDialog
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityLoginBinding
 import com.miso.misoweather.model.DTO.GeneralResponseDto
@@ -27,7 +29,7 @@ class LoginActivity : MisoActivity() {
     lateinit var binding: ActivityLoginBinding
     lateinit var viewpager_onboarding: ViewPager2
     lateinit var pageIndicatorView: PageIndicatorView
-    var isCheckValid=false
+    var isCheckValid = false
     var currentPosition = 0
     val handler = Handler(Looper.getMainLooper()) {
         setPage()
@@ -79,19 +81,17 @@ class LoginActivity : MisoActivity() {
         Thread(PagerRunnable()).start()
     }
 
-    fun checkTokenValid()
-    {
+    fun checkTokenValid() {
         UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
             if (error != null) {
-             isCheckValid = false
+                isCheckValid = false
                 Log.i("token", "토큰 정보 보기 실패", error)
-            }
-            else if (tokenInfo != null) {
+            } else if (tokenInfo != null) {
                 Log.i(
                     "token", "토큰 정보 보기 성공" +
                             "\n회원번호:${tokenInfo.id}"
                 )
-                isCheckValid =true
+                isCheckValid = true
             }
         }
     }
@@ -127,6 +127,17 @@ class LoginActivity : MisoActivity() {
                     }
                 }
             }
+        } else {
+            GeneralConfirmDialog(
+                this,
+                View.OnClickListener {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.addCategory(Intent.CATEGORY_DEFAULT)
+                    intent.data = Uri.parse("market://details?id=com.kakao.talk")
+                    startActivity(intent)
+                }, "로그인하려면 카카오톡 설치가 필요합니다.\n설치하시겠습니까?"
+            )
+                .show(supportFragmentManager, "generalConfirmDialog")
         }
     }
 
@@ -194,7 +205,7 @@ class LoginActivity : MisoActivity() {
         duration: Long,
         interpolator: TimeInterpolator = AccelerateDecelerateInterpolator(),
         pagePxWidth: Int = width, // Default value taken from getWidth() from ViewPager2 view
-        pagePxHeight:Int = height
+        pagePxHeight: Int = height
     ) {
         val pxToDrag: Int = if (orientation == ViewPager2.ORIENTATION_HORIZONTAL)
             pagePxWidth * (item - currentItem)
@@ -210,10 +221,19 @@ class LoginActivity : MisoActivity() {
             previousValue = currentValue
         }
         animator.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator?) { beginFakeDrag() }
-            override fun onAnimationEnd(animation: Animator?) { endFakeDrag() }
-            override fun onAnimationCancel(animation: Animator?) { /* Ignored */ }
-            override fun onAnimationRepeat(animation: Animator?) { /* Ignored */ }
+            override fun onAnimationStart(animation: Animator?) {
+                beginFakeDrag()
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                endFakeDrag()
+            }
+
+            override fun onAnimationCancel(animation: Animator?) { /* Ignored */
+            }
+
+            override fun onAnimationRepeat(animation: Animator?) { /* Ignored */
+            }
         })
         animator.interpolator = interpolator
         animator.duration = duration
@@ -223,7 +243,7 @@ class LoginActivity : MisoActivity() {
 
     fun setPage() {
         if (currentPosition == 5) currentPosition = 0
-        viewpager_onboarding.setCurrentItem(currentPosition,500)
+        viewpager_onboarding.setCurrentItem(currentPosition, 500)
         currentPosition += 1
     }
 
