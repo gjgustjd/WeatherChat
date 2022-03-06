@@ -33,7 +33,7 @@ class SelectNickNameActivity : MisoActivity() {
     lateinit var btn_back: ImageButton
     lateinit var btn_next: Button
     var nicknameResponseDto = NicknameResponseDto(NicknameData("", ""), "", "")
-    var generalResponseDto = GeneralResponseDto("", "")
+    var generalResponseDto = GeneralResponseDto("", "",null)
     var nickName: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);

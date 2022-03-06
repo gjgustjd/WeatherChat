@@ -2,6 +2,7 @@ package com.miso.misoweather.model
 
 import android.icu.text.UnicodeSetIterator
 import android.util.Log
+import com.google.gson.GsonBuilder
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
@@ -16,9 +17,10 @@ import java.lang.Exception
 class TransportManager {
     companion object {
         fun <T> getRetrofitApiObject(): MisoWeatherAPI {
+            var gson = GsonBuilder().setLenient().create()
             val retrofit = Retrofit.Builder()
                 .baseUrl(MisoActivity.MISOWEATHER_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
             val api = retrofit.create(MisoWeatherAPI::class.java)
             return api
