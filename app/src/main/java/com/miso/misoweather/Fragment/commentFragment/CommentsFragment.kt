@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -88,34 +89,40 @@ class CommentsFragment : Fragment() {
     }
 
     fun addComent() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(MisoActivity.MISOWEATHER_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callAddComment = api.addComment(
-            activity.getPreference("misoToken")!!,
-            CommentRegisterRequestDto(edtComment.text.toString())
-        )
+        if(edtComment.text.toString().length<2)
+        {
+            Toast.makeText(context,"텍스트를 2자 이상 입력해주세요.",Toast.LENGTH_SHORT).show()
+        }
+        else {
+            val retrofit = Retrofit.Builder()
+                .baseUrl(MisoActivity.MISOWEATHER_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+            val api = retrofit.create(MisoWeatherAPI::class.java)
+            val callAddComment = api.addComment(
+                activity.getPreference("misoToken")!!,
+                CommentRegisterRequestDto(edtComment.text.toString())
+            )
 
-        callAddComment.enqueue(object : Callback<GeneralResponseDto> {
-            override fun onResponse(
-                call: Call<GeneralResponseDto>,
-                response: Response<GeneralResponseDto>
-            ) {
-                try {
-                    Log.i("결과", "성공")
-                    updateChats()
-                    edtComment.text.clear()
-                } catch (e: Exception) {
-                    e.printStackTrace()
+            callAddComment.enqueue(object : Callback<GeneralResponseDto> {
+                override fun onResponse(
+                    call: Call<GeneralResponseDto>,
+                    response: Response<GeneralResponseDto>
+                ) {
+                    try {
+                        Log.i("결과", "성공")
+                        updateChats()
+                        edtComment.text.clear()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<GeneralResponseDto>, t: Throwable) {
-                Log.i("결과", "실패 : $t")
-            }
-        })
+                override fun onFailure(call: Call<GeneralResponseDto>, t: Throwable) {
+                    Log.i("결과", "실패 : $t")
+                }
+            })
+        }
     }
 
     fun getCommentList(commentId: Int?) {
