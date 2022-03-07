@@ -26,7 +26,6 @@ open class MisoActivity :AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         doBack()
     }
     fun getBigShortScale(bigScale:String):String

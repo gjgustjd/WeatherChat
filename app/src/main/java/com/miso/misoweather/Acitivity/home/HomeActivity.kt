@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
 import com.miso.misoweather.Acitivity.login.LoginActivity
 import com.miso.misoweather.common.MisoActivity
@@ -25,6 +26,7 @@ import com.miso.misoweather.Acitivity.weatherdetail.WeatherDetailActivity
 import com.miso.misoweather.Acitivity.mypage.MyPageActivity
 import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
+import com.miso.misoweather.Dialog.GeneralConfirmDialog
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import com.miso.misoweather.model.TransportManager
@@ -140,9 +142,29 @@ class HomeActivity : MisoActivity() {
     }
 
     override fun doBack() {
-        startActivity(Intent(this, LoginActivity::class.java))
-        transferToBack()
-        finish()
+        GeneralConfirmDialog(
+            this,
+            View.OnClickListener {
+                logout()
+            },
+            "로그아웃 하시겠습니까? \uD83D\uDD13",
+            "로그아웃"
+        ).show(supportFragmentManager, "generalConfirmDialog")
+    }
+
+    fun logout() {
+        UserApiClient.instance.logout { error ->
+            if (error != null) {
+                Log.e("kakaoLogout", "로그아웃 실패. SDK에서 토큰 삭제됨", error)
+            } else {
+                Log.i("kakaoLogout", "로그아웃 성공. SDK에서 토큰 삭제됨")
+                removePreference("accessToken", "socialId", "socialType", "misoToken")
+                savePreferences()
+                startActivity(Intent(this, LoginActivity::class.java))
+                transferToBack()
+                finish()
+            }
+        }
     }
 
     fun goToChatMainActivity() {
@@ -291,13 +313,13 @@ class HomeActivity : MisoActivity() {
                     txtFirstRatio.text = todaySurveyResultDto.valueList[0].toString() + "%"
                     firstProgressLayout.visibility = View.VISIBLE
 
-                    if(todaySurveyResultDto.keyList[1] == null)
+                    if (todaySurveyResultDto.keyList[1] == null)
                         return@requestApi
                     txtSecondAnswer.text = todaySurveyResultDto.keyList[1].toString()
                     txtSecondRatio.text = todaySurveyResultDto.valueList[1].toString() + "%"
                     secondProgressLayout.visibility = View.VISIBLE
 
-                    if(todaySurveyResultDto.keyList[2] == null)
+                    if (todaySurveyResultDto.keyList[2] == null)
                         return@requestApi
                     txtThirdAnswer.text = todaySurveyResultDto.keyList[2].toString()
                     txtThirdRatio.text = todaySurveyResultDto.valueList[2].toString() + "%"
