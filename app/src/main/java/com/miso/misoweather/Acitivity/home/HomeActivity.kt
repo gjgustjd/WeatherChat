@@ -78,7 +78,6 @@ class HomeActivity : MisoActivity() {
         initializeViews()
         getUserInfo()
         getBriefForecast()
-        setupSurveyResult()
         getCommentList()
     }
 
@@ -203,6 +202,7 @@ class HomeActivity : MisoActivity() {
                                 if (getPreference("midScale").equals("전체")) "" else getPreference("smallScale")
                     txtWeatherEmoji.setText(forecast.sky)
                     txtWeatherDegree.setText(forecast.temperature + "˚")
+                    setupSurveyResult()
                 } catch (e: Exception) {
                     repeatRequest()
                     e.printStackTrace()
