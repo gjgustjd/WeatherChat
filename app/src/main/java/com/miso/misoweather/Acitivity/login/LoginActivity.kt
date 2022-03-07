@@ -181,6 +181,11 @@ class LoginActivity : MisoActivity() {
                     Log.i("issueMisoToken", "실패")
                     if (response.errorBody()!!.source().toString().contains("UNAUTHORIZED"))
                         kakaoLogin()
+                    else if (response.errorBody()!!.source().toString().contains("NOT_FOUND")) {
+                        startActivity(Intent(this, SelectRegionActivity::class.java))
+                        transferToNext()
+                        finish()
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -214,6 +219,7 @@ class LoginActivity : MisoActivity() {
             },
             { call, throwable ->
                 startActivity(Intent(this, SelectRegionActivity::class.java))
+                transferToNext()
                 finish()
             })
     }
