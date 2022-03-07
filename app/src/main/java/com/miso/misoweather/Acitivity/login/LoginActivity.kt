@@ -101,6 +101,18 @@ class LoginActivity : MisoActivity() {
             UserApiClient.instance.loginWithKakaoTalk(this@LoginActivity) { token, error ->
                 if (error != null) {
                     Log.e("miso", "로그인 실패", error)
+
+                    GeneralConfirmDialog(
+                        this,
+                        View.OnClickListener {
+                            val intent =
+                                packageManager.getLaunchIntentForPackage("com.kakao.talk")
+                            intent!!.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        },
+                        "카카오톡에 로그인되지 않았습니다.\n실행하시겠습니까?"
+                    )
+                        .show(supportFragmentManager, "generalConfirmDialog")
                 } else if (token != null) {
                     Log.i("miso", "로그인 성공 ${token.accessToken}")
                     try {
@@ -158,12 +170,18 @@ class LoginActivity : MisoActivity() {
 
         TransportManager.requestApi(callReIssueMisoToken, { call, response ->
             try {
-                Log.i("결과", "성공")
-                var headers = response.headers()
-                var serverToken: String? = headers.get("servertoken")!!
-                addPreferencePair("misoToken", serverToken!!)
-                savePreferences()
-                startHomeActivity()
+                if (response.isSuccessful) {
+                    Log.i("issueMisoToken", "성공")
+                    var headers = response.headers()
+                    var serverToken: String? = headers.get("servertoken")!!
+                    addPreferencePair("misoToken", serverToken!!)
+                    savePreferences()
+                    startHomeActivity()
+                } else {
+                    Log.i("issueMisoToken", "실패")
+                    if (response.errorBody()!!.source().toString().contains("UNAUTHORIZED"))
+                        kakaoLogin()
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
                 addPreferencePair("misoToken", "")
