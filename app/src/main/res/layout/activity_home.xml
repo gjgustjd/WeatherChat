@@ -243,6 +243,18 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txt_chart_title">
 
+                    <TextView
+                        android:id="@+id/txt_empty_chart"
+                        style="@style/basicText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="진행된 투표가 없어요.\n투표를 진행해주세요."
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/itemThirdLayout"
                         android:layout_width="0dp"

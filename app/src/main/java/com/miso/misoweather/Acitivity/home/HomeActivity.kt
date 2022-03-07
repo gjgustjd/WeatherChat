@@ -68,6 +68,7 @@ class HomeActivity : MisoActivity() {
     lateinit var secondProgressLayout: ConstraintLayout
     lateinit var thirdProgressLayout: ConstraintLayout
     lateinit var chartLayout: ConstraintLayout
+    lateinit var txtEmptyChart: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,6 +104,8 @@ class HomeActivity : MisoActivity() {
         secondProgressLayout = binding.itemSecondLayout
         thirdProgressLayout = binding.itemThirdLayout
         chartLayout = binding.chartLayout
+        txtEmptyChart = binding.txtEmptyChart
+
 
         chartLayout.setOnClickListener()
         {
@@ -166,8 +169,15 @@ class HomeActivity : MisoActivity() {
 
     fun getBriefForecast() {
         var repeatCount = 0
-        fun forecastRequest()
-        {
+        fun forecastRequest() {
+            fun repeatRequest() {
+                if (repeatCount < 3) {
+                    repeatCount++
+                    forecastRequest()
+                    Log.i("getBriefForecast", "repeated")
+                }
+            }
+
             val callBriefForecast =
                 TransportManager.getRetrofitApiObject<ForecastBriefResponseDto>()
                     .getBriefForecast(getPreference("defaultRegionId")!!.toInt())
@@ -194,21 +204,13 @@ class HomeActivity : MisoActivity() {
                     txtWeatherEmoji.setText(forecast.sky)
                     txtWeatherDegree.setText(forecast.temperature + "˚")
                 } catch (e: Exception) {
-                    if (repeatCount < 3) {
-                        repeatCount++
-                        forecastRequest()
-                        Log.i("getBriefForecast","repeated")
-                    }
+                    repeatRequest()
                     e.printStackTrace()
-                    Log.i("getBriefForecast","excepted")
+                    Log.i("getBriefForecast", "excepted")
                 }
             }, { call, t ->
                 Log.i("getBriefForecast", "실패 : $t")
-                if (repeatCount < 3) {
-                    repeatCount++
-                    forecastRequest()
-                    Log.i("getBriefForecast","repeated")
-                }
+                repeatRequest()
             })
         }
         try {
@@ -274,25 +276,35 @@ class HomeActivity : MisoActivity() {
         TransportManager.requestApi(callGetSurveyResult, { call, reponse ->
             try {
                 todaySurveyResultDto = reponse.body()!!.data.responseList.first { it.surveyId == 2 }
-                txtFirstAnswer.text = todaySurveyResultDto.keyList.get(0).toString()
-                txtFirstRatio.text = todaySurveyResultDto.valueList.get(0).toString() + "%"
-                if (txtFirstRatio.text.equals(""))
+                if (todaySurveyResultDto.keyList[0] == null) {
                     imgIconCheckFirst.visibility = View.GONE
-                else
-                    imgIconCheckFirst.visibility = View.VISIBLE
+                    txtEmptyChart.visibility = View.VISIBLE
+                } else {
+                    txtFirstAnswer.text = todaySurveyResultDto.keyList[0].toString()
+                    txtFirstRatio.text = todaySurveyResultDto.valueList[0].toString() + "%"
+                    if (txtFirstRatio.text.equals("")) {
+                        imgIconCheckFirst.visibility = View.GONE
+                        txtEmptyChart.visibility = View.VISIBLE
+                    } else
+                        imgIconCheckFirst.visibility = View.VISIBLE
 
-                txtFirstRatio.text = todaySurveyResultDto.valueList.get(0).toString() + "%"
-                firstProgressLayout.visibility = View.VISIBLE
+                    txtFirstRatio.text = todaySurveyResultDto.valueList[0].toString() + "%"
+                    firstProgressLayout.visibility = View.VISIBLE
 
-                txtSecondAnswer.text = todaySurveyResultDto.keyList.get(1).toString()
-                txtSecondRatio.text = todaySurveyResultDto.valueList.get(1).toString() + "%"
-                secondProgressLayout.visibility = View.VISIBLE
+                    if(todaySurveyResultDto.keyList[1] == null)
+                        return@requestApi
+                    txtSecondAnswer.text = todaySurveyResultDto.keyList[1].toString()
+                    txtSecondRatio.text = todaySurveyResultDto.valueList[1].toString() + "%"
+                    secondProgressLayout.visibility = View.VISIBLE
 
-                txtThirdAnswer.text = todaySurveyResultDto.keyList.get(2).toString()
-                txtThirdRatio.text = todaySurveyResultDto.valueList.get(2).toString() + "%"
-                thirdProgressLayout.visibility = View.VISIBLE
-
+                    if(todaySurveyResultDto.keyList[2] == null)
+                        return@requestApi
+                    txtThirdAnswer.text = todaySurveyResultDto.keyList[2].toString()
+                    txtThirdRatio.text = todaySurveyResultDto.valueList[2].toString() + "%"
+                    thirdProgressLayout.visibility = View.VISIBLE
+                }
             } catch (e: Exception) {
+                txtEmptyChart.visibility = View.VISIBLE
                 e.printStackTrace()
             }
         }, { call, throwable ->
