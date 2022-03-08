@@ -105,10 +105,9 @@ class LoginActivity : MisoActivity() {
         setupViewPagerAndIndicator()
         binding.clBtnKakaoLogin.setOnClickListener {
             if (hasValidToken())
-                kakaoLogin()
-            else {
                 checkRegistered()
-            }
+            else
+                kakaoLogin()
         }
     }
 
@@ -119,18 +118,21 @@ class LoginActivity : MisoActivity() {
     }
 
     fun checkTokenValid() {
-        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-            if (error != null) {
-                isCheckValid = false
-                Log.i("token", "토큰 정보 보기 실패", error)
-            } else if (tokenInfo != null) {
-                Log.i(
-                    "token", "토큰 정보 보기 성공" +
-                            "\n회원번호:${tokenInfo.id}"
-                )
-                isCheckValid = true
+        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@LoginActivity)) {
+            UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+                if (error != null) {
+                    Log.i("token", "토큰 정보 보기 실패", error)
+                    isCheckValid = false
+                } else if (tokenInfo != null) {
+                    Log.i(
+                        "token", "토큰 정보 보기 성공" +
+                                "\n회원번호:${tokenInfo.id}"
+                    )
+                    isCheckValid = true
+                }
             }
-        }
+        } else
+            isCheckValid = false
     }
 
     fun showDialogForInstallingKakaoTalk() {
@@ -240,6 +242,9 @@ class LoginActivity : MisoActivity() {
                         startActivity(Intent(this, SelectRegionActivity::class.java))
                         transferToNext()
                         finish()
+                    } else {
+                        Log.i("issueMisoToken", response.errorBody()!!.source().toString())
+                        Toast.makeText(this, "로그인 토큰 발급 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
