@@ -1,21 +1,20 @@
 package com.miso.misoweather.Fragment.surveyFragment
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
+import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
-import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
 import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ListItemSurveyBinding
-import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import java.lang.Exception
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyItem>) :
     RecyclerView.Adapter<RecyclerSurveysAdapter.Holder>() {
@@ -49,9 +48,9 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
             holder.txtFirstRatio.text = firstRatio + "%"
             holder.txtSecondRatio.text = secondRatio + "%"
             holder.txtThirdRatio.text = thirdRatio + "%"
-            holder.progress_first.progress = firstRatio.toInt()
-            holder.progress_second.progress = secondRatio.toInt()
-            holder.progress_third.progress = thirdRatio.toInt()
+            holder.progress_first.startProgressAnimation(firstRatio.toInt())
+            holder.progress_second.startProgressAnimation(secondRatio.toInt())
+            holder.progress_third.startProgressAnimation(thirdRatio.toInt())
 
             if (!myAnswer.answered || myAnswer.memberAnswer == null) {
                 holder.imgIsAnswered.setImageDrawable(context.resources.getDrawable(R.drawable.icon_unanswered))
@@ -89,6 +88,13 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
         return Holder(ListItemSurveyBinding.bind(view))
     }
 
+    fun ProgressBar.startProgressAnimation(toValue: Int) {
+        var animator = ObjectAnimator.ofInt(this, "progress", 0, toValue)
+        animator.duration = 1000
+        animator.interpolator = DecelerateInterpolator()
+        animator.start()
+    }
+
     class Holder(itemView: ListItemSurveyBinding) : RecyclerView.ViewHolder(itemView.root) {
         var surveyId: Int = -1
         var txtTitle = itemView.txtTitle
@@ -108,6 +114,7 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
         var imgIconNext = itemView.imgIconNext
         var txtEmptySurvey = itemView.txtEmptySurvey
         var txtOtherTitle = itemView.txtOthersTitle
+
     }
 
 }
