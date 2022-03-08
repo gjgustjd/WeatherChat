@@ -12,8 +12,11 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
+import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
+import com.kakao.sdk.user.model.AccessTokenInfo
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.login.viewPagerFragments.*
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
@@ -80,8 +83,7 @@ class LoginActivity : MisoActivity() {
         }
 
         fun setupViewPagerAndIndicator() {
-            fun initializeViewPager()
-            {
+            fun initializeViewPager() {
                 viewpager_onboarding = binding.viewPagerOnBoarding
                 viewpager_onboarding.adapter =
                     ViewPagerFragmentAdapter(
@@ -94,8 +96,7 @@ class LoginActivity : MisoActivity() {
                 initializeViewPager()
                 Thread(PagerRunnable()).start()
                 matchPagerIndicator()
-            }catch (e:Exception)
-            {
+            } catch (e: Exception) {
                 Log.i("initializeViewPager", e.stackTraceToString())
             }
         }
@@ -132,61 +133,79 @@ class LoginActivity : MisoActivity() {
         }
     }
 
+    fun showDialogForInstallingKakaoTalk() {
+        fun goToStoreForInstallingKakaoTalk() {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.addCategory(Intent.CATEGORY_DEFAULT)
+            intent.data = Uri.parse("market://details?id=com.kakao.talk")
+            startActivity(intent)
+        }
+        GeneralConfirmDialog(
+            this,
+            {
+                goToStoreForInstallingKakaoTalk()
+            }, "로그인하려면 카카오톡 설치가 필요합니다.\n설치하시겠습니까?"
+        )
+            .show(supportFragmentManager, "generalConfirmDialog")
+    }
+
+    fun showDialogForLoginKakaoTalk() {
+        fun launchKakaoTalk() {
+            val intent =
+                packageManager.getLaunchIntentForPackage("com.kakao.talk")
+            intent!!.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+        GeneralConfirmDialog(
+            this,
+            {
+                launchKakaoTalk()
+            },
+            "카카오톡에 로그인되지 않았습니다.\n실행하시겠습니까?"
+        ).show(supportFragmentManager, "generalConfirmDialog")
+    }
+
     fun kakaoLogin() {
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@LoginActivity)) {
-            UserApiClient.instance.loginWithKakaoTalk(this@LoginActivity) { token, error ->
-                if (error != null) {
-                    Log.e("miso", "로그인 실패", error)
+            loginWithKakaoTalk()
+        } else {
+            showDialogForInstallingKakaoTalk()
+        }
+    }
 
-                    GeneralConfirmDialog(
-                        this,
-                        View.OnClickListener {
-                            val intent =
-                                packageManager.getLaunchIntentForPackage("com.kakao.talk")
-                            intent!!.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            startActivity(intent)
-                        },
-                        "카카오톡에 로그인되지 않았습니다.\n실행하시겠습니까?"
-                    )
-                        .show(supportFragmentManager, "generalConfirmDialog")
-                } else if (token != null) {
-                    Log.i("miso", "로그인 성공 ${token.accessToken}")
-                    try {
-                        addPreferencePair("accessToken", token.accessToken)
-                        savePreferences()
-                        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-                            if (error != null)
-                                Log.i("token", "토큰 정보 보기 실패", error)
-                            else if (tokenInfo != null) {
-                                Log.i(
-                                    "token", "토큰 정보 보기 성공" +
-                                            "\n회원번호:${tokenInfo.id}"
-                                )
-                                addPreferencePair("socialId", tokenInfo.id.toString())
-                                addPreferencePair("socialType", "kakao")
-                                savePreferences()
-                                issueMisoToken()
-
-                            }
+    fun loginWithKakaoTalk() {
+        UserApiClient.instance.loginWithKakaoTalk(this@LoginActivity) { token, error ->
+            if (error != null) {
+                Log.e("miso", "로그인 실패", error)
+                showDialogForLoginKakaoTalk()
+            } else if (token != null) {
+                Log.i("miso", "로그인 성공 ${token.accessToken}")
+                try {
+                    UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+                        if (error != null) {
+                            Log.i("token", "토큰 정보 보기 실패", error)
+                            Toast.makeText(this, "로그인 진행 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
+                        } else if (tokenInfo != null) {
+                            Log.i(
+                                "token", "토큰 정보 보기 성공" + "\n회원번호:${tokenInfo.id}"
+                            )
+                            saveTokenInfo(token, tokenInfo)
+                            issueMisoToken()
                         }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        savePreferences()
                     }
+                } catch (e: Exception) {
+                    Log.i("kakaoLogin", e.stackTraceToString())
+                    Toast.makeText(this, "로그인 진행 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
-        } else {
-            GeneralConfirmDialog(
-                this,
-                View.OnClickListener {
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    intent.addCategory(Intent.CATEGORY_DEFAULT)
-                    intent.data = Uri.parse("market://details?id=com.kakao.talk")
-                    startActivity(intent)
-                }, "로그인하려면 카카오톡 설치가 필요합니다.\n설치하시겠습니까?"
-            )
-                .show(supportFragmentManager, "generalConfirmDialog")
         }
+    }
+
+    fun saveTokenInfo(token: OAuthToken, tokenInfo: AccessTokenInfo) {
+        addPreferencePair("accessToken", token.accessToken)
+        addPreferencePair("socialId", tokenInfo.id.toString())
+        addPreferencePair("socialType", "kakao")
+        savePreferences()
     }
 
     fun startRegionActivity() {
