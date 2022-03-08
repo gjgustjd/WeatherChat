@@ -102,7 +102,6 @@
             android:background="@drawable/unit_background_purple"
             android:fontFamily="@font/spoqa_han_sans_regular"
             android:minHeight="35dp"
-            android:text="오늘의 사람들"
             android:textColor="@color/white"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -111,21 +110,51 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/txt_surveyBtn"
+            style="@style/basicText"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="오늘의 사람들"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/btn_survey"
+            app:layout_constraintStart_toStartOf="@+id/btn_survey"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <Button
             android:id="@+id/btn_chats"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/unit_background"
+            android:alpha="0"
+            android:background="@drawable/unit_background_purple"
             android:fontFamily="@font/spoqa_han_sans_regular"
             android:minHeight="35dp"
-            android:text="날씨 한 줄 평"
             android:textColor="@color/textBlack"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/btn_survey"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_chatBtn"
+            style="@style/basicText"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="날씨 한 줄 평"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_chats"
+            app:layout_constraintEnd_toEndOf="@+id/btn_chats"
+            app:layout_constraintStart_toStartOf="@+id/btn_chats"
+            app:layout_constraintTop_toTopOf="@+id/btn_chats" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout

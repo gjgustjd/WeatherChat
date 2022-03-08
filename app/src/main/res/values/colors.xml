@@ -8,6 +8,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparentPrimaryPurple">#007165E3</color>
+    <color name="fullPrimaryPurple">#FF7165E3</color>
     <color name="primaryPurple">#7165E3</color>
     <color name="lightPurple">#E4E7F3</color>
     <color name="unitBackground">#F5F6FA</color>
