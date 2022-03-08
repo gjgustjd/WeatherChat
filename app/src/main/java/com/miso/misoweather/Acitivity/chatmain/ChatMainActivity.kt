@@ -1,8 +1,6 @@
 package com.miso.misoweather.Acitivity.chatmain
 
-import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
@@ -14,7 +12,6 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.updateRegion.UpdateRegionActivity
@@ -79,22 +76,22 @@ class ChatMainActivity : MisoActivity() {
         btnSurvey.setOnClickListener()
         {
 
-            btnSurvey.startBackgroundAnimation(0f, 1f)
+            btnSurvey.startBackgroundAlphaAnimation(0f, 1f)
             txtChatBtn.setTextColor(getColor(R.color.textBlack))
-            btnChat.startBackgroundAnimation(1f, 0f)
+            btnChat.startBackgroundAlphaAnimation(1f, 0f)
             txtSurveyBtn.setTextColor(Color.WHITE)
             locationLayout.visibility = View.VISIBLE
-            locationLayout.startBackgroundAnimation(0f, 1f)
+            locationLayout.startBackgroundAlphaAnimation(0f, 1f)
             setupFragment(surveyFragment)
         }
         btnChat.setOnClickListener()
         {
-            btnChat.startBackgroundAnimation(0f, 1f)
+            btnChat.startBackgroundAlphaAnimation(0f, 1f)
             txtSurveyBtn.setTextColor(getColor(R.color.textBlack))
-            btnSurvey.startBackgroundAnimation(1f,0f)
+            btnSurvey.startBackgroundAlphaAnimation(1f,0f)
             txtChatBtn.setTextColor(Color.WHITE)
             locationLayout.visibility = View.GONE
-            locationLayout.startBackgroundAnimation(1f, 0f)
+            locationLayout.startBackgroundAlphaAnimation(1f, 0f)
             setupFragment(commentsFragment)
         }
         btn_back = binding.imgbtnBack
@@ -113,7 +110,7 @@ class ChatMainActivity : MisoActivity() {
         setupFragment(surveyFragment)
     }
 
-    fun View.startBackgroundAnimation(fromValue:Float, toValue: Float) {
+    fun View.startBackgroundAlphaAnimation(fromValue:Float, toValue: Float) {
         ObjectAnimator.ofFloat(this,"alpha",fromValue,toValue).start()
     }
 
