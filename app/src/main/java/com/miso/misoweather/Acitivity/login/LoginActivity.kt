@@ -222,6 +222,12 @@ class LoginActivity : MisoActivity() {
     }
 
     fun issueMisoToken() {
+        fun removeTokenAndStartRegionActivity() {
+            removePreference("misoToken")
+            savePreferences()
+            startRegionActivity()
+        }
+
         val callReIssueMisoToken = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
             .reIssueMisoToken(makeLoginRequestDto(), getPreference("accessToken")!!)
 
@@ -230,7 +236,7 @@ class LoginActivity : MisoActivity() {
                 if (response.isSuccessful) {
                     Log.i("issueMisoToken", "성공")
                     var headers = response.headers()
-                    var serverToken: String? = headers.get("servertoken")!!
+                    var serverToken = headers.get("servertoken")!!
                     addPreferencePair("misoToken", serverToken!!)
                     savePreferences()
                     startHomeActivity()
@@ -239,9 +245,7 @@ class LoginActivity : MisoActivity() {
                     if (response.errorBody()!!.source().toString().contains("UNAUTHORIZED"))
                         kakaoLogin()
                     else if (response.errorBody()!!.source().toString().contains("NOT_FOUND")) {
-                        startActivity(Intent(this, SelectRegionActivity::class.java))
-                        transferToNext()
-                        finish()
+                        startRegionActivity()
                     } else {
                         Log.i("issueMisoToken", response.errorBody()!!.source().toString())
                         Toast.makeText(this, "로그인 토큰 발급 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
@@ -249,15 +253,11 @@ class LoginActivity : MisoActivity() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                addPreferencePair("misoToken", "")
-                savePreferences()
-                startRegionActivity()
+                removeTokenAndStartRegionActivity()
             }
         }, { call, t ->
             Log.i("결과", "실패 : $t")
-            addPreferencePair("misoToken", "")
-            savePreferences()
-            startRegionActivity()
+            removeTokenAndStartRegionActivity()
         })
     }
 
@@ -278,9 +278,7 @@ class LoginActivity : MisoActivity() {
                 issueMisoToken()
             },
             { call, throwable ->
-                startActivity(Intent(this, SelectRegionActivity::class.java))
-                transferToNext()
-                finish()
+                startRegionActivity()
             })
     }
 
