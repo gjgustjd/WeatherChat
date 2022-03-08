@@ -3,6 +3,7 @@ package com.miso.misoweather.Acitivity.login
 import android.animation.Animator
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -29,12 +30,16 @@ class LoginActivity : MisoActivity() {
     lateinit var binding: ActivityLoginBinding
     lateinit var viewpager_onboarding: ViewPager2
     lateinit var pageIndicatorView: PageIndicatorView
+    val onBoardFragmentList =
+        listOf(
+            OnBoardInitFragment(),
+            OnBoardApparellFragment(),
+            OnBoardFoodFragment(),
+            OnBoardLocationFragment(),
+            OnBoardChatFragment()
+        )
     var isCheckValid = false
     var currentPosition = 0
-    val handler = Handler(Looper.getMainLooper()) {
-        setPage()
-        true
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,42 +48,73 @@ class LoginActivity : MisoActivity() {
         initializeView()
     }
 
+    @SuppressLint("LongLogTag")
     fun initializeView() {
-        checkTokenValid()
-        pageIndicatorView = binding.pageIndicatorView
-        pageIndicatorView.setCount(5)
-        viewpager_onboarding = binding.viewPagerOnBoarding
-        viewpager_onboarding.adapter =
-            ViewPagerFragmentAdapter(
-                this,
-                listOf(
-                    OnBoardInitFragment(),
-                    OnBoardApparellFragment(),
-                    OnBoardFoodFragment(),
-                    OnBoardLocationFragment(),
-                    OnBoardChatFragment()
-                )
-            )
-        viewpager_onboarding.registerOnPageChangeCallback(object :
-            ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                pageIndicatorView.setSelected(position)
+        fun initializePageIndicatorView() {
+            try {
+                pageIndicatorView = binding.pageIndicatorView
+                pageIndicatorView.setCount(onBoardFragmentList.size)
+            } catch (e: Exception) {
+                Log.i("initializePageIndicatorView", e.stackTraceToString())
+                throw Exception("pageIndicatorView is null")
             }
-        })
-        viewpager_onboarding.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        }
 
+        fun matchPagerIndicator() {
+            try {
+                initializePageIndicatorView()
+                viewpager_onboarding.registerOnPageChangeCallback(object :
+                    ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        try {
+                            super.onPageSelected(position)
+                            pageIndicatorView.setSelected(position)
+                        } catch (e: Exception) {
+                            Log.i("viewpate_onboarding.onPageSelected", e.stackTraceToString())
+                        }
+                    }
+                })
+            } catch (e: Exception) {
+                Log.i("matchPagerIndicator", e.stackTraceToString())
+            }
+        }
+
+        fun setupViewPagerAndIndicator() {
+            fun initializeViewPager()
+            {
+                viewpager_onboarding = binding.viewPagerOnBoarding
+                viewpager_onboarding.adapter =
+                    ViewPagerFragmentAdapter(
+                        this,
+                        onBoardFragmentList
+                    )
+                viewpager_onboarding.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            }
+            try {
+                initializeViewPager()
+                Thread(PagerRunnable()).start()
+                matchPagerIndicator()
+            }catch (e:Exception)
+            {
+                Log.i("initializeViewPager", e.stackTraceToString())
+            }
+        }
+
+        checkTokenValid()
+        setupViewPagerAndIndicator()
         binding.clBtnKakaoLogin.setOnClickListener {
-            if (!isCheckValid ||
-                getPreference("socialId").equals("") ||
-                getPreference("socialType").equals("")
-            )
+            if (hasValidToken())
                 kakaoLogin()
             else {
                 checkRegistered()
             }
         }
-        Thread(PagerRunnable()).start()
+    }
+
+    fun hasValidToken(): Boolean {
+        return (isCheckValid &&
+                !getPreference("socialId").isNullOrBlank() &&
+                !getPreference("socialType").isNullOrBlank())
     }
 
     fun checkTokenValid() {
@@ -224,58 +260,60 @@ class LoginActivity : MisoActivity() {
             })
     }
 
-    fun ViewPager2.setCurrentItem(
-        item: Int,
-        duration: Long,
-        interpolator: TimeInterpolator = AccelerateDecelerateInterpolator(),
-        pagePxWidth: Int = width, // Default value taken from getWidth() from ViewPager2 view
-        pagePxHeight: Int = height
-    ) {
-        val pxToDrag: Int = if (orientation == ViewPager2.ORIENTATION_HORIZONTAL)
-            pagePxWidth * (item - currentItem)
-        else
-            pagePxHeight * (item - currentItem)
-
-        val animator = ValueAnimator.ofInt(0, pxToDrag)
-        var previousValue = 0
-        animator.addUpdateListener { valueAnimator ->
-            val currentValue = valueAnimator.animatedValue as Int
-            val currentPxToDrag = (currentValue - previousValue).toFloat()
-            fakeDragBy(-currentPxToDrag)
-            previousValue = currentValue
-        }
-        animator.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator?) {
-                beginFakeDrag()
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                endFakeDrag()
-            }
-
-            override fun onAnimationCancel(animation: Animator?) { /* Ignored */
-            }
-
-            override fun onAnimationRepeat(animation: Animator?) { /* Ignored */
-            }
-        })
-        animator.interpolator = interpolator
-        animator.duration = duration
-        animator.start()
-    }
-
-
-    fun setPage() {
-        if (currentPosition == 5) currentPosition = 0
-        viewpager_onboarding.setCurrentItem(currentPosition, 500)
-        currentPosition += 1
-    }
 
     inner class PagerRunnable : Runnable {
         override fun run() {
             while (true) {
                 Thread.sleep(3000)
-                handler.sendEmptyMessage(0)
+                Handler(Looper.getMainLooper()) {
+                    fun setPage() {
+                        fun ViewPager2.setCurrentItem(
+                            item: Int,
+                            duration: Long,
+                            interpolator: TimeInterpolator = AccelerateDecelerateInterpolator(),
+                            pagePxWidth: Int = width, // Default value taken from getWidth() from ViewPager2 view
+                            pagePxHeight: Int = height
+                        ) {
+                            val pxToDrag: Int =
+                                if (orientation == ViewPager2.ORIENTATION_HORIZONTAL)
+                                    pagePxWidth * (item - currentItem)
+                                else
+                                    pagePxHeight * (item - currentItem)
+
+                            val animator = ValueAnimator.ofInt(0, pxToDrag)
+                            var previousValue = 0
+                            animator.addUpdateListener { valueAnimator ->
+                                val currentValue = valueAnimator.animatedValue as Int
+                                val currentPxToDrag = (currentValue - previousValue).toFloat()
+                                fakeDragBy(-currentPxToDrag)
+                                previousValue = currentValue
+                            }
+                            animator.addListener(object : Animator.AnimatorListener {
+                                override fun onAnimationStart(animation: Animator?) {
+                                    beginFakeDrag()
+                                }
+
+                                override fun onAnimationEnd(animation: Animator?) {
+                                    endFakeDrag()
+                                }
+
+                                override fun onAnimationCancel(animation: Animator?) { /* Ignored */
+                                }
+
+                                override fun onAnimationRepeat(animation: Animator?) { /* Ignored */
+                                }
+                            })
+                            animator.interpolator = interpolator
+                            animator.duration = duration
+                            animator.start()
+                        }
+                        if (currentPosition == 5) currentPosition = 0
+                        viewpager_onboarding.setCurrentItem(currentPosition, 500)
+                        currentPosition += 1
+                    }
+                    setPage()
+                    true
+                }.sendEmptyMessage(0)
             }
         }
     }
