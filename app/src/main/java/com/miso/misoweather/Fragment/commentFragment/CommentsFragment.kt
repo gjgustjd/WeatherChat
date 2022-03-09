@@ -21,6 +21,7 @@ import com.miso.misoweather.databinding.FragmentCommentBinding
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
 import com.miso.misoweather.model.DTO.GeneralResponseDto
+import com.miso.misoweather.model.MisoRepository
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import retrofit2.Call
 import retrofit2.Callback
@@ -89,26 +90,13 @@ class CommentsFragment : Fragment() {
     }
 
     fun addComent() {
-        if(edtComment.text.toString().length<2)
-        {
-            Toast.makeText(context,"텍스트를 2자 이상 입력해주세요.",Toast.LENGTH_SHORT).show()
-        }
-        else {
-            val retrofit = Retrofit.Builder()
-                .baseUrl(MisoActivity.MISOWEATHER_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-            val api = retrofit.create(MisoWeatherAPI::class.java)
-            val callAddComment = api.addComment(
+        if (edtComment.text.toString().length < 2) {
+            Toast.makeText(context, "텍스트를 2자 이상 입력해주세요.", Toast.LENGTH_SHORT).show()
+        } else {
+            MisoRepository.addComment(
                 activity.getPreference("misoToken")!!,
-                CommentRegisterRequestDto(edtComment.text.toString())
-            )
-
-            callAddComment.enqueue(object : Callback<GeneralResponseDto> {
-                override fun onResponse(
-                    call: Call<GeneralResponseDto>,
-                    response: Response<GeneralResponseDto>
-                ) {
+                CommentRegisterRequestDto(edtComment.text.toString()),
+                { call, response ->
                     try {
                         Log.i("결과", "성공")
                         updateChats()
@@ -116,28 +104,20 @@ class CommentsFragment : Fragment() {
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
-                }
-
-                override fun onFailure(call: Call<GeneralResponseDto>, t: Throwable) {
-                    Log.i("결과", "실패 : $t")
-                }
-            })
+                },
+                { call, response -> },
+                { call, t ->
+//                    Log.i("결과", "실패 : $t")
+                },
+            )
         }
     }
 
     fun getCommentList(commentId: Int?) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(MisoActivity.MISOWEATHER_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callgetCommentList = api.getCommentList(commentId, 5)
-
-        callgetCommentList.enqueue(object : Callback<CommentListResponseDto> {
-            override fun onResponse(
-                call: Call<CommentListResponseDto>,
-                response: Response<CommentListResponseDto>
-            ) {
+        MisoRepository.getCommentList(
+           commentId,
+           5,
+            {call, response ->
                 try {
                     Log.i("결과", "성공")
                     commentListResponseDto = response.body()!!
@@ -145,12 +125,12 @@ class CommentsFragment : Fragment() {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-            }
-
-            override fun onFailure(call: Call<CommentListResponseDto>, t: Throwable) {
-                Log.i("결과", "실패 : $t")
-            }
-        })
+            },
+            {call, response ->  },
+            {call, t ->
+//                Log.i("결과", "실패 : $t")
+            },
+        )
     }
 
     fun setRecyclerChats() {
@@ -162,8 +142,7 @@ class CommentsFragment : Fragment() {
             )
             recyclerChat.adapter = recyclerChatAdapter
             recyclerChat.layoutManager = LinearLayoutManager(activity.baseContext)
-        }catch (e:Exception)
-        {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }

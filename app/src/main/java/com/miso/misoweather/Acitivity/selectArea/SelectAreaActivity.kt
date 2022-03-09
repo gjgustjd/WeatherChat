@@ -21,6 +21,7 @@ import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.selectTown.RecyclerAreaAdapter
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
 import com.miso.misoweather.model.DTO.GeneralResponseDto
+import com.miso.misoweather.model.MisoRepository
 import com.miso.misoweather.model.TransportManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -103,44 +104,51 @@ class SelectAreaActivity : MisoActivity() {
     }
 
     fun changeRegion() {
-        val callChangeRegion = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
-            .updateRegion(getPreference("misoToken")!!, recyclerAdapter.getSelectedItem().id)
-
-        TransportManager.requestApi(callChangeRegion, { call, response ->
-            try {
-                Log.i("changeRegion", "성공")
-                addRegionPreferences()
-                addPreferencePair(
-                    "defaultRegionId",
-                    recyclerAdapter.getSelectedItem().id.toString()
-                )
-                savePreferences()
-                startActivity(Intent(this, HomeActivity::class.java))
-                transferToNext()
-                finish()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }, { call, t ->
-            Log.i("changeRegion", "실패")
-        })
+        MisoRepository.updateRegion(
+            getPreference("misoToken")!!,
+            recyclerAdapter.getSelectedItem().id,
+            {call, response ->
+                try {
+                    Log.i("changeRegion", "성공")
+                    addRegionPreferences()
+                    addPreferencePair(
+                        "defaultRegionId",
+                        recyclerAdapter.getSelectedItem().id.toString()
+                    )
+                    savePreferences()
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    transferToNext()
+                    finish()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            },
+            {call, response ->  },
+            {call,t ->
+//                Log.i("changeRegion", "실패")
+            },
+        )
     }
 
     fun getAreaList() {
-        val callGetTownList = TransportManager.getRetrofitApiObject<RegionListResponseDto>()
-            .getArea(selectedRegion, selectedTown)
-
-        TransportManager.requestApi(callGetTownList, { call, response ->
-            try {
-                Log.i("getAreaList", "3단계 지역 받아오기 성공")
-                townRequestResult = response.body()!!
-                setRecyclerTowns()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }, { call, t ->
-            Log.i("결과", "실패 : $t")
-        })
+        MisoRepository.getArea(
+            selectedRegion,
+            selectedTown,
+            {call,response->
+                try {
+                    Log.i("getAreaList", "3단계 지역 받아오기 성공")
+                    townRequestResult = response.body()!!
+                    setRecyclerTowns()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            },
+            {call,response->
+            },
+            {call,t->
+//                Log.i("결과", "실패 : $t")
+            },
+        )
     }
 
     fun setRecyclerTowns() {

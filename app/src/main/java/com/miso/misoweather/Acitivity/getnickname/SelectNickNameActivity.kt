@@ -20,6 +20,7 @@ import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
+import com.miso.misoweather.model.MisoRepository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,7 +34,7 @@ class SelectNickNameActivity : MisoActivity() {
     lateinit var btn_back: ImageButton
     lateinit var btn_next: Button
     var nicknameResponseDto = NicknameResponseDto(NicknameData("", ""), "", "")
-    var generalResponseDto = GeneralResponseDto("", "",null)
+    var generalResponseDto = GeneralResponseDto("", "", null)
     var nickName: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -72,19 +73,18 @@ class SelectNickNameActivity : MisoActivity() {
         transferToBack()
         finish()
     }
-    fun registerMember(isResetedToken: Boolean = false) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(MISOWEATHER_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val api = retrofit.create(MisoWeatherAPI::class.java)
 
-        val callRegisterMember = api.registerMember(getSignUpInfo(), getPreference("accessToken")!!)
-        callRegisterMember.enqueue(object : Callback<GeneralResponseDto> {
-            override fun onResponse(
-                call: Call<GeneralResponseDto>,
-                response: Response<GeneralResponseDto>
-            ) {
+    fun registerMember(isResetedToken: Boolean = false) {
+        fun inCaseFailedRegister() {
+            Toast.makeText(this@SelectNickNameActivity, "회원가입에 실패하였습니다.", Toast.LENGTH_LONG)
+                .show()
+            goToLoginActivity()
+        }
+
+        MisoRepository.registerMember(
+            getSignUpInfo(),
+            getPreference("accessToken")!!,
+            { call, response ->
                 if (response.body() == null) {
                     Log.i("결과", "실패")
                     if (response.errorBody()!!.source().toString().contains("UNAUTHORIZED") &&
@@ -98,19 +98,15 @@ class SelectNickNameActivity : MisoActivity() {
                     Log.i("결과", "성공")
                     issueMisoToken()
                 }
-            }
-
-            override fun onFailure(call: Call<GeneralResponseDto>, t: Throwable) {
+            },
+            { call, response ->
+                inCaseFailedRegister()
+            },
+            { call, t ->
                 Log.i("결과", "실패 : $t")
                 inCaseFailedRegister()
             }
-
-            fun inCaseFailedRegister() {
-                Toast.makeText(this@SelectNickNameActivity, "회원가입에 실패하였습니다.", Toast.LENGTH_LONG)
-                    .show()
-                goToLoginActivity()
-            }
-        })
+        )
     }
 
     fun resetAccessToken() {
@@ -133,20 +129,10 @@ class SelectNickNameActivity : MisoActivity() {
     }
 
     fun issueMisoToken() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(MISOWEATHER_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callReIssueMisoToken =
-            api.reIssueMisoToken(makeLoginRequestDto(), getPreference("accessToken")!!)
-
-
-        callReIssueMisoToken.enqueue(object : Callback<GeneralResponseDto> {
-            override fun onResponse(
-                call: Call<GeneralResponseDto>,
-                response: Response<GeneralResponseDto>
-            ) {
+        MisoRepository.issueMisoToken(
+            makeLoginRequestDto(),
+            getPreference("accessToken")!!,
+            { call, response ->
                 try {
                     Log.i("결과", "성공")
                     generalResponseDto = response.body()!!
@@ -169,12 +155,13 @@ class SelectNickNameActivity : MisoActivity() {
                     e.printStackTrace()
                 } finally {
                 }
-            }
-
-            override fun onFailure(call: Call<GeneralResponseDto>, t: Throwable) {
-                Log.i("결과", "실패 : $t")
-            }
-        })
+            },
+            { call, response ->
+//                Log.i("issueMisoToken", "실패")
+            },
+            { call, t ->
+//                Log.i("결과", "실패 : $t")
+            })
     }
 
     fun removeRegionPref() {
@@ -203,18 +190,8 @@ class SelectNickNameActivity : MisoActivity() {
     }
 
     fun getNickname() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(MISOWEATHER_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callGetNickName = api.getNickname()
-
-        callGetNickName.enqueue(object : Callback<NicknameResponseDto> {
-            override fun onResponse(
-                call: Call<NicknameResponseDto>,
-                response: Response<NicknameResponseDto>
-            ) {
+        MisoRepository.getNickname(
+            { call, response ->
                 if (response == null)
                     Toast.makeText(
                         this@SelectNickNameActivity,
@@ -229,16 +206,23 @@ class SelectNickNameActivity : MisoActivity() {
                     binding.txtGreetingBold.text = "${nickName}님!"
                     binding.txtEmoji.text = "${nicknameResponseDto.data.emoji}"
                 }
-            }
-
-            override fun onFailure(call: Call<NicknameResponseDto>, t: Throwable) {
+            },
+            { call, response ->
+                Log.i("결과", "실패")
+                Toast.makeText(
+                    this@SelectNickNameActivity,
+                    "닉네임 받기에 실패하였습니다.",
+                    Toast.LENGTH_LONG
+                ).show()
+            },
+            { call, t ->
                 Log.i("결과", "실패 : $t")
                 Toast.makeText(
                     this@SelectNickNameActivity,
                     "닉네임 받기에 실패하였습니다.",
                     Toast.LENGTH_LONG
                 ).show()
-            }
-        })
+            },
+        )
     }
 }

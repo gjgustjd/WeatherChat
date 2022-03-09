@@ -18,6 +18,7 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ListItemChatBinding
 import com.miso.misoweather.model.DTO.CommentList.Comment
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
+import com.miso.misoweather.model.MisoRepository
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import org.w3c.dom.Text
 import retrofit2.Call
@@ -75,18 +76,10 @@ class RecyclerChatsAdapter(
     }
 
     fun addCommentList(commentId: Int?, size: Int) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(MisoActivity.MISOWEATHER_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val api = retrofit.create(MisoWeatherAPI::class.java)
-        val callgetCommentList = api.getCommentList(commentId, size)
-
-        callgetCommentList.enqueue(object : Callback<CommentListResponseDto> {
-            override fun onResponse(
-                call: Call<CommentListResponseDto>,
-                response: Response<CommentListResponseDto>
-            ) {
+        MisoRepository.getCommentList(
+            commentId,
+            size,
+            {call,response->
                 try {
                     Log.i("결과", "성공")
                     var commentListResponseDto = response.body()!!
@@ -98,12 +91,12 @@ class RecyclerChatsAdapter(
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-            }
-
-            override fun onFailure(call: Call<CommentListResponseDto>, t: Throwable) {
-                Log.i("결과", "실패 : $t")
-            }
-        })
+            } ,
+            {call,respone->} ,
+            {call,t->
+//                Log.i("결과", "실패 : $t")
+            } ,
+        )
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {

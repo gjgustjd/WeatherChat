@@ -19,6 +19,7 @@ import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.model.DTO.Forecast.Detail.ForecastDetailResponseDto
 import com.miso.misoweather.model.DTO.Forecast.ForecastDetailInfo
 import com.miso.misoweather.model.DTO.Region
+import com.miso.misoweather.model.MisoRepository
 import com.miso.misoweather.model.TransportManager
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import retrofit2.Call
@@ -117,24 +118,25 @@ class WeatherDetailActivity : MisoActivity() {
     }
 
     fun getForecastDetail() {
-        val callForecastDetailList =
-            TransportManager.getRetrofitApiObject<ForecastDetailResponseDto>()
-                .getDetailForecast(getPreference("defaultRegionId")!!.toInt())
-
-        TransportManager.requestApi(callForecastDetailList, { call, response ->
-            try {
-                Log.i("결과", "성공")
-                forecastDetailResponseDto = response.body()!!
-                forecastdetailInfo = forecastDetailResponseDto.data.forecastInfo
-                region = forecastDetailResponseDto.data.region
-                setupRecyclers()
-                setForecastInfo()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }, { call, t ->
-            Log.i("결과", "실패 : $t")
-        })
+        MisoRepository.getDetailForecast(
+            getPreference("defaultRegionId")!!.toInt(),
+            {call, response ->
+                try {
+                    Log.i("결과", "성공")
+                    forecastDetailResponseDto = response.body()!!
+                    forecastdetailInfo = forecastDetailResponseDto.data.forecastInfo
+                    region = forecastDetailResponseDto.data.region
+                    setupRecyclers()
+                    setForecastInfo()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            },
+            {call, response ->  },
+            {call, t ->
+//                Log.i("결과", "실패 : $t")
+            },
+        )
     }
 
     fun setForecastInfo() {

@@ -20,6 +20,7 @@ import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
+import com.miso.misoweather.model.MisoRepository
 import com.miso.misoweather.model.TransportManager
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -58,8 +59,7 @@ class SurveyFragment : Fragment() {
             recyclerSurveysAdapter = RecyclerSurveysAdapter(activity, surveyItems)
             recyclerSurvey.adapter = recyclerSurveysAdapter
             recyclerSurvey.layoutManager = LinearLayoutManager(activity.baseContext)
-        }catch (e:Exception)
-        {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
@@ -84,46 +84,42 @@ class SurveyFragment : Fragment() {
 
 
     fun getSurveyAnswer(surveyId: Int) {
-        val callGetSurveyAnswer =
-            TransportManager.getRetrofitApiObject<SurveyAnswerResponseDto>()
-                .getSurveyAnswers(surveyId)
-
-        TransportManager.requestApi(callGetSurveyAnswer, { call, reponse ->
-            initializeDataAndSetupRecycler {
-                surveyAnswerMap.put(surveyId,(reponse.body()!!).data.responseList)
-            }
-        }, { call, throwable ->
-
-        })
+        MisoRepository.getSurveyAnswers(
+            surveyId,
+            { call, response ->
+                initializeDataAndSetupRecycler {
+                    surveyAnswerMap.put(surveyId, (response.body()!!).data.responseList)
+                }
+            },
+            { call, response -> },
+            { call, t -> },
+        )
     }
 
     fun setupSurveyResult(bigShortScale: String) {
-        val callGetSurveyResult =
-            TransportManager.getRetrofitApiObject<SurveyResultResponseDto>()
-                .getSurveyResults(bigShortScale)
-
-        TransportManager.requestApi(callGetSurveyResult, { call, reponse ->
-
-            initializeDataAndSetupRecycler {
-                surveyResultResponseDto = reponse.body()!!
-            }
-        }, { call, throwable ->
-
-        })
+        MisoRepository.getSurveyResults(
+            bigShortScale,
+            { call, response ->
+                initializeDataAndSetupRecycler {
+                    surveyResultResponseDto = response.body()!!
+                }
+            },
+            { call, response -> },
+            { call, throwable -> }
+        )
     }
 
     fun setupSurveyMyAnswer() {
-        val callGetSurveyMyAnswer =
-            TransportManager.getRetrofitApiObject<SurveyMyAnswerResponseDto>()
-                .getSurveyMyAnswers((requireActivity() as MisoActivity).getPreference("misoToken")!!)
-
-        TransportManager.requestApi(callGetSurveyMyAnswer, { call, reponse ->
-            initializeDataAndSetupRecycler {
-                surveyMyAnswerResponseDto = reponse.body()!!
-            }
-        }, { call, throwable ->
-
-        })
+        MisoRepository.getSurveyMyAnswers(
+            (requireActivity() as MisoActivity).getPreference("misoToken")!!,
+            { call, reponse ->
+                initializeDataAndSetupRecycler {
+                    surveyMyAnswerResponseDto = reponse.body()!!
+                }
+            },
+            { call, response -> },
+            { call, throwable -> }
+        )
     }
 
     fun drawSurveyRecycler() {
@@ -141,7 +137,7 @@ class SurveyFragment : Fragment() {
                 index + 1,
                 s,
                 sortedMyanswerList[index],
-                surveyAnswerMap.get(index+1)!!,
+                surveyAnswerMap.get(index + 1)!!,
                 surveyResultResponseDto.data.responseList[index]
             )
             Log.i("surveyItem", surveyItem.surveyId.toString())

@@ -23,6 +23,7 @@ import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
+import com.miso.misoweather.model.MisoRepository
 import com.miso.misoweather.model.TransportManager
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -90,24 +91,23 @@ class SelectSurveyAnswerActivity : MisoActivity() {
     }
 
     fun getSurveyAnswer(surveyId: Int) {
-        val callGetSurveyAnswer =
-            TransportManager.getRetrofitApiObject<SurveyAnswerResponseDto>()
-                .getSurveyAnswers(surveyId)
-
-        TransportManager.requestApi(callGetSurveyAnswer, { call, reponse ->
-            var questions = resources.getStringArray(R.array.survey_questions)
-            surveyItem = SurveyItem(
-                surveyId,
-                questions[surveyId - 1],
-                SurveyMyAnswerDto(false, "", -1),
-                (reponse.body()!!).data.responseList,
-                SurveyResult(listOf(), -1, listOf())
-            )
-            initializeViews()
-            setupRecycler()
-        }, { call, throwable ->
-
-        })
+        MisoRepository.getSurveyAnswers(
+            surveyId,
+            { call, response ->
+                var questions = resources.getStringArray(R.array.survey_questions)
+                surveyItem = SurveyItem(
+                    surveyId,
+                    questions[surveyId - 1],
+                    SurveyMyAnswerDto(false, "", -1),
+                    (response.body()!!).data.responseList,
+                    SurveyResult(listOf(), -1, listOf())
+                )
+                initializeViews()
+                setupRecycler()
+            },
+            { call, response -> },
+            { call, t -> },
+        )
     }
 
     fun setupRecycler() {
@@ -118,17 +118,13 @@ class SelectSurveyAnswerActivity : MisoActivity() {
 
     fun putSurveyAnswer() {
         var selectedAnswer = recyclerAdapter.getSelectedAnswerItem()
-        var callPutMyAnser =
-            TransportManager.getRetrofitApiObject<SurveyAddMyAnswerResponseDto>().putSurveyMyAnser(
-                getPreference("misoToken")!!,
-                SurveyAddMyAnswerRequestDto(
-                    selectedAnswer.answerId,
-                    getBigShortScale(getPreference("bigScale")!!),
-                    surveyItem.surveyId
-                )
-            )
-        TransportManager.requestApi(
-            callPutMyAnser,
+        MisoRepository.putSurveyMyAnswer(
+            getPreference("misoToken")!!,
+            SurveyAddMyAnswerRequestDto(
+                selectedAnswer.answerId,
+                getBigShortScale(getPreference("bigScale")!!),
+                surveyItem.surveyId
+            ),
             { call, response ->
                 addPreferencePair("isSurveyed", "true")
                 addPreferencePair(
@@ -142,8 +138,8 @@ class SelectSurveyAnswerActivity : MisoActivity() {
                 overFromUnder()
                 finish()
             },
-            { call, throwable ->
-
-            })
+            { call, response -> },
+            { call, throwable -> }
+        )
     }
 }

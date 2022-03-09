@@ -25,6 +25,7 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityLoginBinding
 import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.LoginRequestDto
+import com.miso.misoweather.model.MisoRepository
 import com.miso.misoweather.model.TransportManager
 import com.rd.PageIndicatorView
 
@@ -188,9 +189,7 @@ class LoginActivity : MisoActivity() {
                             Log.i("token", "토큰 정보 보기 실패", error)
                             Toast.makeText(this, "로그인 진행 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
                         } else if (tokenInfo != null) {
-                            Log.i(
-                                "token", "토큰 정보 보기 성공" + "\n회원번호:${tokenInfo.id}"
-                            )
+                            Log.i("token", "토큰 정보 보기 성공" + "\n회원번호:${tokenInfo.id}")
                             saveTokenInfo(token, tokenInfo)
                             issueMisoToken()
                         }
@@ -228,37 +227,32 @@ class LoginActivity : MisoActivity() {
             startRegionActivity()
         }
 
-        val callReIssueMisoToken = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
-            .reIssueMisoToken(makeLoginRequestDto(), getPreference("accessToken")!!)
-
-        TransportManager.requestApi(callReIssueMisoToken, { call, response ->
-            try {
-                if (response.isSuccessful) {
-                    Log.i("issueMisoToken", "성공")
-                    var headers = response.headers()
-                    var serverToken = headers.get("servertoken")!!
-                    addPreferencePair("misoToken", serverToken!!)
-                    savePreferences()
-                    startHomeActivity()
+        MisoRepository.issueMisoToken(
+            makeLoginRequestDto(),
+            getPreference("accessToken")!!,
+            { call, response ->
+                Log.i("issueMisoToken", "성공")
+                var headers = response.headers()
+                var serverToken = headers.get("servertoken")!!
+                addPreferencePair("misoToken", serverToken!!)
+                savePreferences()
+                startHomeActivity()
+            },
+            { call, response ->
+                Log.i("issueMisoToken", "실패")
+                if (response.errorBody()!!.source().toString().contains("UNAUTHORIZED"))
+                    kakaoLogin()
+                else if (response.errorBody()!!.source().toString().contains("NOT_FOUND")) {
+                    startRegionActivity()
                 } else {
-                    Log.i("issueMisoToken", "실패")
-                    if (response.errorBody()!!.source().toString().contains("UNAUTHORIZED"))
-                        kakaoLogin()
-                    else if (response.errorBody()!!.source().toString().contains("NOT_FOUND")) {
-                        startRegionActivity()
-                    } else {
-                        Log.i("issueMisoToken", response.errorBody()!!.source().toString())
-                        Toast.makeText(this, "로그인 토큰 발급 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
-                    }
+                    Log.i("issueMisoToken", response.errorBody()!!.source().toString())
+                    Toast.makeText(this, "로그인 토큰 발급 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
+            },
+            { call, t ->
+                Log.i("결과", "실패 : $t")
                 removeTokenAndStartRegionActivity()
-            }
-        }, { call, t ->
-            Log.i("결과", "실패 : $t")
-            removeTokenAndStartRegionActivity()
-        })
+            })
     }
 
     fun makeLoginRequestDto(): LoginRequestDto {
@@ -270,12 +264,14 @@ class LoginActivity : MisoActivity() {
     }
 
     fun checkRegistered() {
-        val callCheckRegistered = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
-            .checkRegistered(getPreference("socialId")!!, getPreference("socialType")!!)
-
-        TransportManager.requestApi(callCheckRegistered,
+        MisoRepository.checkRegistered(
+            getPreference("socialId")!!,
+            getPreference("socialType")!!,
             { call, response ->
                 issueMisoToken()
+            },
+            { call, response ->
+                startRegionActivity()
             },
             { call, throwable ->
                 startRegionActivity()

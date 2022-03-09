@@ -15,6 +15,7 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityMypageBinding
 import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.LoginRequestDto
+import com.miso.misoweather.model.MisoRepository
 import com.miso.misoweather.model.TransportManager
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import retrofit2.Call
@@ -58,7 +59,7 @@ class MyPageActivity : MisoActivity() {
         {
             val dialog = GeneralConfirmDialog(
                 this,
-                View.OnClickListener {
+                {
                     unregister()
                 },
                 "정말로 계정을 삭제할까요? \uD83D\uDE22",
@@ -70,7 +71,7 @@ class MyPageActivity : MisoActivity() {
         {
             val dialog = GeneralConfirmDialog(
                 this,
-                View.OnClickListener {
+                {
                     logout()
                 },
                 "로그아웃 하시겠습니까? \uD83D\uDD13",
@@ -93,32 +94,35 @@ class MyPageActivity : MisoActivity() {
     }
 
     fun unregister() {
-        val callUnregisterMember = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
-            .unregisterMember(getPreference("misoToken")!!, makeLoginRequestDto())
-
-        TransportManager.requestApi(callUnregisterMember, { call, response ->
-            try {
-                Log.i("결과", "성공")
-                removePreference(
-                    "misoToken",
-                    "defaultRegionId",
-                    "isSurveyed",
-                    "LastSurveyedDate",
-                    "bigScale",
-                    "BigScaleRegion",
-                    "MidScaleRegion",
-                    "SmallScaleRegion",
-                    "nickname",
-                )
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                savePreferences()
-                goToLoginActivity()
+        MisoRepository.unregisterMember(
+            getPreference("misoToken")!!,
+            makeLoginRequestDto(),
+            { call, response ->
+                try {
+                    Log.i("결과", "성공")
+                    removePreference(
+                        "misoToken",
+                        "defaultRegionId",
+                        "isSurveyed",
+                        "LastSurveyedDate",
+                        "bigScale",
+                        "BigScaleRegion",
+                        "MidScaleRegion",
+                        "SmallScaleRegion",
+                        "nickname",
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    savePreferences()
+                    goToLoginActivity()
+                }
+            },
+            { call, response -> },
+            { call, t ->
+//                Log.i("결과", "실패 : $t")
             }
-        }, { call, t ->
-            Log.i("결과", "실패 : $t")
-        })
+        )
     }
 
     fun makeLoginRequestDto(): LoginRequestDto {
