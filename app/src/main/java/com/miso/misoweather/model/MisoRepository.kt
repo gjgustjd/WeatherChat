@@ -95,7 +95,7 @@ object MisoRepository {
         onError: (
             Call<NicknameResponseDto>,
             Throwable
-        ) -> Unit?,
+        ) -> Unit,
     ) {
         val callGetNickname = TransportManager.getRetrofitApiObject<NicknameResponseDto>()
             .getNickname()

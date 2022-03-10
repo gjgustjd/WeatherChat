@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModel
 import com.kakao.sdk.auth.model.Prompt
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.common.MisoActivity
@@ -33,7 +34,7 @@ class SelectNickNameActivity : MisoActivity() {
     lateinit var txt_get_new_nick: TextView
     lateinit var btn_back: ImageButton
     lateinit var btn_next: Button
-    var nicknameResponseDto = NicknameResponseDto(NicknameData("", ""), "", "")
+    lateinit var viewModel: SelectNicknameViewModel
     var generalResponseDto = GeneralResponseDto("", "", null)
     var nickName: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +45,7 @@ class SelectNickNameActivity : MisoActivity() {
     }
 
     fun initializeViews() {
+        viewModel = SelectNicknameViewModel()
         txt_get_new_nick = binding.txtGetNewNickname
         txt_get_new_nick.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         btn_back = binding.imgbtnBack
@@ -190,39 +192,38 @@ class SelectNickNameActivity : MisoActivity() {
     }
 
     fun getNickname() {
-        MisoRepository.getNickname(
-            { call, response ->
-                if (response == null)
+        viewModel.getNickname()
+        viewModel.nicknameResponseDto.observe(this,{
+            if(it==null)
+            {
+                Toast.makeText(
+                    this@SelectNickNameActivity,
+                    "닉네임 받기에 실패하였습니다.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            else
+            {
+                if(it.isSuccessful)
+                {
+                        Log.i("결과", "성공")
+                        Log.i("결과", "닉네임 : ${it.body()?.data?.nickname}")
+                        val nicknameResponseDto = it.body()!!
+                        nickName = nicknameResponseDto.data.nickname
+                        binding.txtGreetingBold.text = "${nickName}님!"
+                        binding.txtEmoji.text = "${nicknameResponseDto.data.emoji}"
+                }
+                else
+                {
+                    Log.i("결과", "실패")
                     Toast.makeText(
                         this@SelectNickNameActivity,
                         "닉네임 받기에 실패하였습니다.",
                         Toast.LENGTH_LONG
                     ).show()
-                else {
-                    Log.i("결과", "성공")
-                    Log.i("결과", "닉네임 : ${response.body()?.data?.nickname}")
-                    nicknameResponseDto = response.body()!!
-                    nickName = nicknameResponseDto.data.nickname
-                    binding.txtGreetingBold.text = "${nickName}님!"
-                    binding.txtEmoji.text = "${nicknameResponseDto.data.emoji}"
                 }
-            },
-            { call, response ->
-                Log.i("결과", "실패")
-                Toast.makeText(
-                    this@SelectNickNameActivity,
-                    "닉네임 받기에 실패하였습니다.",
-                    Toast.LENGTH_LONG
-                ).show()
-            },
-            { call, t ->
-                Log.i("결과", "실패 : $t")
-                Toast.makeText(
-                    this@SelectNickNameActivity,
-                    "닉네임 받기에 실패하였습니다.",
-                    Toast.LENGTH_LONG
-                ).show()
-            },
-        )
+            }
+
+        })
     }
 }
