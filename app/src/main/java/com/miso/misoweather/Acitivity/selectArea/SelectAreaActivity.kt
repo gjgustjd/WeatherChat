@@ -7,6 +7,7 @@ import android.view.View.*
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout.VERTICAL
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,6 +42,7 @@ class SelectAreaActivity : MisoActivity() {
     lateinit var aPurpose: String
     lateinit var townRequestResult: RegionListResponseDto
     lateinit var recyclerAdapter: RecyclerAreaAdapter
+    lateinit var viewModel: SelectAreaViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -54,6 +56,7 @@ class SelectAreaActivity : MisoActivity() {
     }
 
     fun initializeViews() {
+        viewModel = SelectAreaViewModel()
         aPurpose = intent.getStringExtra("for") ?: ""
         grid_region = binding.gridRegions
         list_towns = binding.recyclerTowns
@@ -107,7 +110,7 @@ class SelectAreaActivity : MisoActivity() {
         MisoRepository.updateRegion(
             getPreference("misoToken")!!,
             recyclerAdapter.getSelectedItem().id,
-            {call, response ->
+            { call, response ->
                 try {
                     Log.i("changeRegion", "성공")
                     addRegionPreferences()
@@ -123,32 +126,34 @@ class SelectAreaActivity : MisoActivity() {
                     e.printStackTrace()
                 }
             },
-            {call, response ->  },
-            {call,t ->
+            { call, response -> },
+            { call, t ->
 //                Log.i("changeRegion", "실패")
             },
         )
     }
 
     fun getAreaList() {
-        MisoRepository.getArea(
+        viewModel.getAreaList(
             selectedRegion,
-            selectedTown,
-            {call,response->
-                try {
-                    Log.i("getAreaList", "3단계 지역 받아오기 성공")
-                    townRequestResult = response.body()!!
-                    setRecyclerTowns()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            },
-            {call,response->
-            },
-            {call,t->
-//                Log.i("결과", "실패 : $t")
-            },
+            selectedTown
         )
+        viewModel.areaRequestResult.observe(this, {
+            if (it == null) {
+
+            } else {
+                if (it.isSuccessful) {
+                    try {
+                        Log.i("getAreaList", "3단계 지역 받아오기 성공")
+                        townRequestResult = it!!.body()!!
+                        setRecyclerTowns()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                } else {
+                }
+            }
+        })
     }
 
     fun setRecyclerTowns() {
