@@ -39,6 +39,7 @@ class ChatMainActivity : MisoActivity() {
     lateinit var goToPreviousActivity: () -> Unit
     lateinit var surveyFragment: SurveyFragment
     lateinit var commentsFragment: CommentsFragment
+    lateinit var viewModel: ChatMainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -48,8 +49,9 @@ class ChatMainActivity : MisoActivity() {
     }
 
     fun initializeViews() {
+        viewModel = ChatMainViewModel()
         surveyFragment = SurveyFragment()
-        commentsFragment = CommentsFragment()
+        commentsFragment = CommentsFragment(viewModel)
         selectedRegion =
             if (getPreference("surveyRegion").isNullOrBlank())
                 getBigShortScale(getPreference("bigScale")!!)
