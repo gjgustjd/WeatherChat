@@ -44,24 +44,7 @@ class CommentsFragment(val viewModel: ChatMainViewModel) : Fragment() {
         val view = binding.root
         initializeViews()
         getCommentList(null)
-        viewModel.commentListResponse.observe(activity,{
-            try {
-                Log.i("결과", "성공")
-                setRecyclerChats(it!!.body()!!)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
 
-        })
-        viewModel.addCommentResponse.observe(activity,{
-            try {
-                Log.i("결과", "성공")
-                getCommentList(null)
-                edtComment.text.clear()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        })
         return view
     }
 
@@ -88,6 +71,24 @@ class CommentsFragment(val viewModel: ChatMainViewModel) : Fragment() {
                 if (lastVisibleItemPosition == itemTotalCount) {
                     Log.i("Paging", "페이징")
                 }
+            }
+        })
+        viewModel.commentListResponse.observe(activity,{
+            try {
+                Log.i("결과", "성공")
+                setRecyclerChats(it!!.body()!!)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+        })
+        viewModel.addCommentResponse.observe(activity,{
+            try {
+                Log.i("결과", "성공")
+                getCommentList(null)
+                edtComment.text.clear()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         })
     }
