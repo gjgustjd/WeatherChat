@@ -7,6 +7,7 @@ import android.view.View.*
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout.VERTICAL
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,19 +18,10 @@ import com.miso.misoweather.Acitivity.getnickname.SelectNickNameActivity
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.DTO.Region
-import com.miso.misoweather.model.DTO.RegionListResponse.RegionListData
-import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.selectArea.RecyclerTownsAdapter
 import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
-import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.MisoRepository
-import com.miso.misoweather.model.TransportManager
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
 
 class SelectTownActivity : MisoActivity() {
@@ -42,6 +34,7 @@ class SelectTownActivity : MisoActivity() {
     lateinit var townRequestResult: RegionListResponseDto
     lateinit var recyclerAdapter: RecyclerTownsAdapter
     lateinit var aPurpose: String
+    lateinit var viewModel: SelectTownViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
@@ -61,6 +54,7 @@ class SelectTownActivity : MisoActivity() {
     }
 
     fun initializeViews() {
+        viewModel = SelectTownViewModel()
         aPurpose = intent.getStringExtra("for") ?: ""
         grid_region = binding.gridRegions
         list_towns = binding.recyclerTowns
@@ -142,27 +136,32 @@ class SelectTownActivity : MisoActivity() {
     }
 
     fun getTownList() {
-        MisoRepository.getCity(
-            selectedRegion,
-            { call, response ->
-                try {
-                    Log.i("getTownList", "2단계 지역 받아오기 성공")
-                    townRequestResult = response.body()!!
-                    setRecyclerTowns()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            },
-            { call, response -> },
-            { call, t ->
-//                Log.i("getTownList", "실패 : $t")
+        viewModel.getTownList(selectedRegion)
+        viewModel.townRequestResult.observe(this, Observer {
+            if(it==null)
+            {
+
             }
-        )
+            else {
+                if(it.isSuccessful) {
+                    try {
+                        Log.i("getTownList", "2단계 지역 받아오기 성공")
+                        townRequestResult = it.body()!!
+                        setRecyclerTowns()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                else
+                {
+                }
+            }
+        })
     }
 
     fun setRecyclerTowns() {
         try {
-            var regionListData = townRequestResult.data as RegionListData
+            var regionListData = townRequestResult.data
             var townList: List<Region> = regionListData.regionList
             recyclerAdapter = RecyclerTownsAdapter(this@SelectTownActivity, townList)
             list_towns.adapter = recyclerAdapter

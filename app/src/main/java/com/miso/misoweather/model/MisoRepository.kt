@@ -158,7 +158,7 @@ object MisoRepository {
         onError: (
             Call<RegionListResponseDto>,
             Throwable
-        ) -> Unit?,
+        ) -> Unit,
     ) {
         val callGetCity = TransportManager.getRetrofitApiObject<RegionListResponseDto>()
             .getCity(bigScaleRegion)
