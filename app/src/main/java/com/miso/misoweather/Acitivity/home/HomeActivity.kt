@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kakao.sdk.user.UserApiClient
@@ -18,25 +19,13 @@ import com.miso.misoweather.Acitivity.login.LoginActivity
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityHomeBinding
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
-import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
-import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoDto
-import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.weatherdetail.WeatherDetailActivity
 import com.miso.misoweather.Acitivity.mypage.MyPageActivity
 import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
 import com.miso.misoweather.Dialog.GeneralConfirmDialog
-import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
-import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
-import com.miso.misoweather.model.MisoRepository
-import com.miso.misoweather.model.TransportManager
-import org.w3c.dom.Text
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -44,9 +33,6 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 class HomeActivity : MisoActivity() {
     lateinit var binding: ActivityHomeBinding
-    lateinit var memberInfoResponseDto: MemberInfoResponseDto
-    lateinit var forecastBriefResponseDto: ForecastBriefResponseDto
-    lateinit var commentListResponseDto: CommentListResponseDto
     lateinit var weatherLayout: ConstraintLayout
     lateinit var txtNickName: TextView
     lateinit var txtEmoji: TextView
@@ -58,7 +44,6 @@ class HomeActivity : MisoActivity() {
     lateinit var btngoToSurvey: ImageButton
     lateinit var recyclerChat: RecyclerView
     lateinit var recyclerChatAdapter: RecyclerChatsAdapter
-    lateinit var todaySurveyResultDto: SurveyResult
     lateinit var txtFirstAnswer: TextView
     lateinit var txtSecondAnswer: TextView
     lateinit var txtThirdAnswer: TextView
@@ -73,6 +58,8 @@ class HomeActivity : MisoActivity() {
     lateinit var chartLayout: ConstraintLayout
     lateinit var txtEmptyChart: TextView
 
+    lateinit var viewModel: HomeViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -85,6 +72,7 @@ class HomeActivity : MisoActivity() {
     }
 
     fun initializeViews() {
+        viewModel = HomeViewModel()
         weatherLayout = binding.weatherLayout
         txtNickName = binding.txtNickname
         txtEmoji = binding.txtEmoji
@@ -200,150 +188,156 @@ class HomeActivity : MisoActivity() {
                 }
             }
 
-            MisoRepository.getBriefForecast(
-                getPreference("defaultRegionId")!!.toInt(),
-                { call, response ->
-                    try {
-                        Log.i("결과", "성공")
-                        forecastBriefResponseDto = response.body()!!
-                        var forecast = forecastBriefResponseDto.data.forecast
-                        var region = forecastBriefResponseDto.data.region
-                        addPreferencePair("bigScale", region.bigScale)
-                        addPreferencePair(
-                            "midScale",
-                            if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
-                        )
-                        addPreferencePair(
-                            "smallScale",
-                            if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
-                        )
-                        savePreferences()
-                        txtLocation.text =
-                            region.bigScale + " " + getPreference("midScale") + " " +
-                                    if (getPreference("midScale").equals("전체")) "" else getPreference(
-                                        "smallScale"
-                                    )
-                        txtWeatherEmoji.setText(forecast.sky)
-                        txtWeatherDegree.setText(forecast.temperature + "˚")
-                        setupSurveyResult()
-                    } catch (e: Exception) {
+            viewModel.getBriefForecast(getPreference("defaultRegionId")!!.toInt())
+            viewModel.forecastBriefResponse.observe(this, {
+                if (it == null) {
+                    Log.i("getBriefForecast", "실패")
+                    repeatRequest()
+                } else {
+                    if (it.isSuccessful) {
+                        try {
+                            Log.i("결과", "성공")
+                            val forecastBriefResponseDto = it.body()!!
+                            var forecast = forecastBriefResponseDto.data.forecast
+                            var region = forecastBriefResponseDto.data.region
+                            addPreferencePair("bigScale", region.bigScale)
+                            addPreferencePair(
+                                "midScale",
+                                if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
+                            )
+                            addPreferencePair(
+                                "smallScale",
+                                if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
+                            )
+                            savePreferences()
+                            txtLocation.text =
+                                region.bigScale + " " + getPreference("midScale") + " " +
+                                        if (getPreference("midScale").equals("전체")) "" else getPreference(
+                                            "smallScale"
+                                        )
+                            txtWeatherEmoji.setText(forecast.sky)
+                            txtWeatherDegree.setText(forecast.temperature + "˚")
+                            setupSurveyResult()
+                        } catch (e: Exception) {
+                            repeatRequest()
+                            e.printStackTrace()
+                            Log.i("getBriefForecast", "excepted")
+                        }
+                    } else {
                         repeatRequest()
-                        e.printStackTrace()
-                        Log.i("getBriefForecast", "excepted")
                     }
-                },
-                { call, response ->
-                    repeatRequest()
-                },
-                { call, t ->
-                    Log.i("getBriefForecast", "실패 : $t")
-                    repeatRequest()
                 }
-            )
+            })
         }
 
         forecastRequest()
     }
 
     fun getCommentList() {
-        MisoRepository.getCommentList(
-           null,
-           5,
-            {call, response ->
-                try {
-                    Log.i("결과", "성공")
-                    commentListResponseDto = response.body()!!
-                    setRecyclerChats()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            },
-            {call, response ->  },
-            {call, throwable ->}
-        )
+        viewModel.getCommentList(null, 5)
+        viewModel.commentListResponse.observe(this, {
+            try {
+                Log.i("결과", "성공")
+
+                setRecyclerChats(it!!.body()!!)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        })
     }
 
-    fun setRecyclerChats() {
+    fun setRecyclerChats(responseDto: CommentListResponseDto) {
         recyclerChatAdapter =
-            RecyclerChatsAdapter(this, commentListResponseDto.data.commentList, false)
+            RecyclerChatsAdapter(this, responseDto.data.commentList, false)
         recyclerChat.adapter = recyclerChatAdapter
         recyclerChat.layoutManager = LinearLayoutManager(this)
     }
 
     fun getUserInfo() {
-        MisoRepository.getUserInfo(
-           getPreference("misoToken")!!,
-            {call, response ->
-                try {
-                    Log.i("결과", "성공")
-                    memberInfoResponseDto = response.body()!!
-                    var memberInfo = memberInfoResponseDto.data
-                    txtNickName.setText(memberInfo.nickname + "님!")
-                    txtEmoji.setText(memberInfo.emoji)
-                    addPreferencePair(
-                        "defaultRegionId",
-                        this@HomeActivity.memberInfoResponseDto.data.regionId.toString()
-                    )
-                    addPreferencePair("emoji", memberInfo.emoji)
-                    addPreferencePair("nickname", memberInfo.nickname)
-                    savePreferences()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }  ,
-            {call, response ->
-
-            }  ,
-            {call, t ->
-//                Log.i("결과", "실패 : $t")
+        fun onSuccessful(response: Response<MemberInfoResponseDto>) {
+            try {
+                Log.i("결과", "성공")
+                val memberInfoResponseDto = response.body()!!
+                var memberInfo = memberInfoResponseDto.data
+                txtNickName.setText(memberInfo.nickname + "님!")
+                txtEmoji.setText(memberInfo.emoji)
+                addPreferencePair(
+                    "defaultRegionId",
+                    memberInfoResponseDto.data.regionId.toString()
+                )
+                addPreferencePair("emoji", memberInfo.emoji)
+                addPreferencePair("nickname", memberInfo.nickname)
+                savePreferences()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
+        }
+
+        fun onFail() {
+            Log.i("getUserInfo", "불러오기 실패")
+        }
+
+        viewModel.getUserInfo(getPreference("misoToken")!!)
+        viewModel.memberInfoResponse.observe(this, Observer {
+            if (it == null) {
+                Log.i("getUserInfo", "에러 발생")
+            } else {
+                if (it!!.isSuccessful) {
+                    onSuccessful(it)
+                } else {
+                    onFail()
+                }
+
+            }
+        }
         )
     }
 
     fun setupSurveyResult() {
-        MisoRepository.getSurveyResults(
-            getBigShortScale(getPreference("bigScale")!!),
-            {call,reponse->
-                try {
-                    todaySurveyResultDto = reponse.body()!!.data.responseList.first { it.surveyId == 2 }
-                    if (todaySurveyResultDto.keyList[0] == null) {
-                        imgIconCheckFirst.visibility = View.GONE
-                        txtEmptyChart.visibility = View.VISIBLE
-                    } else {
-                        txtFirstAnswer.text = todaySurveyResultDto.keyList[0].toString()
-                        txtFirstRatio.text = todaySurveyResultDto.valueList[0].toString() + "%"
-                        if (txtFirstRatio.text.equals("")) {
+        viewModel.getSurveyResult(getBigShortScale(getPreference("bigScale")!!))
+        viewModel.surveyResultResponse.observe(this, Observer {
+            if (it == null) {
+
+            } else {
+                if (it.isSuccessful) {
+                    try {
+                        val todaySurveyResultDto =
+                            it.body()!!.data.responseList.first { it.surveyId == 2 }
+                        if (todaySurveyResultDto.keyList[0] == null) {
                             imgIconCheckFirst.visibility = View.GONE
                             txtEmptyChart.visibility = View.VISIBLE
-                        } else
-                            imgIconCheckFirst.visibility = View.VISIBLE
+                        } else {
+                            txtFirstAnswer.text = todaySurveyResultDto.keyList[0].toString()
+                            txtFirstRatio.text = todaySurveyResultDto.valueList[0].toString() + "%"
+                            if (txtFirstRatio.text.equals("")) {
+                                imgIconCheckFirst.visibility = View.GONE
+                                txtEmptyChart.visibility = View.VISIBLE
+                            } else
+                                imgIconCheckFirst.visibility = View.VISIBLE
 
-                        txtFirstRatio.text = todaySurveyResultDto.valueList[0].toString() + "%"
-                        firstProgressLayout.visibility = View.VISIBLE
+                            txtFirstRatio.text = todaySurveyResultDto.valueList[0].toString() + "%"
+                            firstProgressLayout.visibility = View.VISIBLE
 
-                        if (todaySurveyResultDto.keyList[1] == null)
-                            return@getSurveyResults
-                        txtSecondAnswer.text = todaySurveyResultDto.keyList[1].toString()
-                        txtSecondRatio.text = todaySurveyResultDto.valueList[1].toString() + "%"
-                        secondProgressLayout.visibility = View.VISIBLE
+                            if (todaySurveyResultDto.keyList[1] == null)
+                                return@Observer
+                            txtSecondAnswer.text = todaySurveyResultDto.keyList[1].toString()
+                            txtSecondRatio.text = todaySurveyResultDto.valueList[1].toString() + "%"
+                            secondProgressLayout.visibility = View.VISIBLE
 
-                        if (todaySurveyResultDto.keyList[2] == null)
-                            return@getSurveyResults
-                        txtThirdAnswer.text = todaySurveyResultDto.keyList[2].toString()
-                        txtThirdRatio.text = todaySurveyResultDto.valueList[2].toString() + "%"
-                        thirdProgressLayout.visibility = View.VISIBLE
+                            if (todaySurveyResultDto.keyList[2] == null)
+                                return@Observer
+                            txtThirdAnswer.text = todaySurveyResultDto.keyList[2].toString()
+                            txtThirdRatio.text = todaySurveyResultDto.valueList[2].toString() + "%"
+                            thirdProgressLayout.visibility = View.VISIBLE
+                        }
+                    } catch (e: Exception) {
+                        txtEmptyChart.visibility = View.VISIBLE
+                        e.printStackTrace()
                     }
-                } catch (e: Exception) {
+                } else {
                     txtEmptyChart.visibility = View.VISIBLE
-                    e.printStackTrace()
                 }
-            },
-            {call,reponse->
-                txtEmptyChart.visibility = View.VISIBLE
-            },
-            {call,t->
-
-            },
-        )
+            }
+        })
     }
 }

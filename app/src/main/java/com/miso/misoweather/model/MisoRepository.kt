@@ -251,7 +251,7 @@ object MisoRepository {
         onError: (
             Call<MemberInfoResponseDto>,
             Throwable
-        ) -> Unit?,
+        ) -> Unit,
     ) {
         val callGetUserInfo = TransportManager.getRetrofitApiObject<MemberInfoResponseDto>()
             .getUserInfo(serverToken)
@@ -281,7 +281,7 @@ object MisoRepository {
         onError: (
             Call<ForecastBriefResponseDto>,
             Throwable
-        ) -> Unit?,
+        ) -> Unit,
     ) {
         val callGetBriefForecast = TransportManager.getRetrofitApiObject<ForecastBriefResponseDto>()
             .getBriefForecast(regionId)
