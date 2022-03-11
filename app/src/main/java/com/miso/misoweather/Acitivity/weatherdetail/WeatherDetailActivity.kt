@@ -38,7 +38,6 @@ import java.util.*
 class WeatherDetailActivity : MisoActivity() {
     lateinit var binding: ActivityWeatherMainBinding
     lateinit var btnBack: ImageButton
-    lateinit var viewModel: WeatherDetailViewModel
     lateinit var forecastdetailInfo: ForecastDetailInfo
     lateinit var region: Region
     lateinit var chatLayout: ConstraintLayout
@@ -56,6 +55,9 @@ class WeatherDetailActivity : MisoActivity() {
     lateinit var recyclerForecast: RecyclerView
     lateinit var txtEmojiWind: TextView
     lateinit var txtDegreeWind: TextView
+    lateinit var repository: MisoRepository
+    lateinit var viewModel: WeatherDetailViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityWeatherMainBinding.inflate(layoutInflater)
@@ -65,7 +67,8 @@ class WeatherDetailActivity : MisoActivity() {
     }
 
     fun initializeViews() {
-        viewModel = WeatherDetailViewModel()
+        repository = MisoRepository(applicationContext)
+        viewModel = WeatherDetailViewModel(repository)
         chatLayout = binding.chatLayout
         txtLocation = binding.txtLocation
         txtWeatherEmoji = binding.txtWeatherEmoji

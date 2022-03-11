@@ -33,6 +33,7 @@ class MyPageActivity : MisoActivity() {
     lateinit var btn_version: Button
     lateinit var txt_emoji: TextView
     lateinit var txt_nickname: TextView
+    lateinit var repository: MisoRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +43,7 @@ class MyPageActivity : MisoActivity() {
     }
 
     fun initializeView() {
+        repository = MisoRepository(applicationContext)
         btn_back = binding.imgbtnBack
         btn_logout = binding.btnLogout
         btn_unregister = binding.btnUnregister
@@ -94,7 +96,7 @@ class MyPageActivity : MisoActivity() {
     }
 
     fun unregister() {
-        MisoRepository.unregisterMember(
+        repository.unregisterMember(
             getPreference("misoToken")!!,
             makeLoginRequestDto(),
             { call, response ->

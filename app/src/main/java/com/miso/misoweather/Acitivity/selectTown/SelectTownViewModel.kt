@@ -11,11 +11,11 @@ import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 import java.lang.Exception
 
-class SelectTownViewModel : ViewModel() {
+class SelectTownViewModel(private val repository: MisoRepository) : ViewModel() {
     val townRequestResult: MutableLiveData<Response<RegionListResponseDto>?> = MutableLiveData()
 
     fun getTownList(bigScaleRegion: String) {
-        MisoRepository.getCity(
+        repository.getCity(
             bigScaleRegion,
             { call, response ->
                 townRequestResult.value = response

@@ -14,7 +14,7 @@ import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 import java.lang.Exception
 
-class HomeViewModel() : ViewModel() {
+class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
     val memberInfoResponse: MutableLiveData<Response<MemberInfoResponseDto>?> = MutableLiveData()
     val forecastBriefResponse: MutableLiveData<Response<ForecastBriefResponseDto>?> =
         MutableLiveData()
@@ -23,7 +23,7 @@ class HomeViewModel() : ViewModel() {
         MutableLiveData()
 
     fun getUserInfo(serverToken: String) {
-        MisoRepository.getUserInfo(
+        repository.getUserInfo(
             serverToken,
             { call, response ->
                 memberInfoResponse.value = response
@@ -37,7 +37,7 @@ class HomeViewModel() : ViewModel() {
     }
 
     fun getBriefForecast(regionId: Int) {
-        MisoRepository.getBriefForecast(
+        repository.getBriefForecast(
             regionId,
             { call, response ->
                 forecastBriefResponse.value = response
@@ -52,7 +52,7 @@ class HomeViewModel() : ViewModel() {
     }
 
     fun getCommentList(commentId: Int?, size: Int) {
-        MisoRepository.getCommentList(
+        repository.getCommentList(
             commentId,
             size,
             { call, response ->
@@ -66,7 +66,7 @@ class HomeViewModel() : ViewModel() {
     }
 
     fun getSurveyResult(shortBigScale: String) {
-        MisoRepository.getSurveyResults(
+        repository.getSurveyResults(
             shortBigScale,
             { call, reponse ->
                 surveyResultResponse.value = reponse!!

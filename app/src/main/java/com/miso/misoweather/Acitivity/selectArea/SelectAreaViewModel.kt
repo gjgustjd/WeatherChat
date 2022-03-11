@@ -6,14 +6,14 @@ import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 
-class SelectAreaViewModel : ViewModel() {
+class SelectAreaViewModel(private val repository: MisoRepository) : ViewModel() {
     val areaRequestResult: MutableLiveData<Response<RegionListResponseDto>?> = MutableLiveData()
 
     fun getAreaList(
         bigScaleRegion: String,
         midScaleRegion: String
     ) {
-        MisoRepository.getArea(
+        repository.getArea(
             bigScaleRegion,
             midScaleRegion,
             { call, response ->

@@ -34,6 +34,7 @@ class LoginActivity : MisoActivity() {
     lateinit var binding: ActivityLoginBinding
     lateinit var viewpager_onboarding: ViewPager2
     lateinit var pageIndicatorView: PageIndicatorView
+    lateinit var repository: MisoRepository
     val onBoardFragmentList =
         listOf(
             OnBoardInitFragment(),
@@ -102,6 +103,7 @@ class LoginActivity : MisoActivity() {
             }
         }
 
+        repository = MisoRepository(applicationContext)
         checkTokenValid()
         setupViewPagerAndIndicator()
         binding.clBtnKakaoLogin.setOnClickListener {
@@ -227,7 +229,7 @@ class LoginActivity : MisoActivity() {
             startRegionActivity()
         }
 
-        MisoRepository.issueMisoToken(
+        repository.issueMisoToken(
             makeLoginRequestDto(),
             getPreference("accessToken")!!,
             { call, response ->
@@ -264,7 +266,7 @@ class LoginActivity : MisoActivity() {
     }
 
     fun checkRegistered() {
-        MisoRepository.checkRegistered(
+        repository.checkRegistered(
             getPreference("socialId")!!,
             getPreference("socialType")!!,
             { call, response ->

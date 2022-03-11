@@ -15,12 +15,12 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
-class WeatherDetailViewModel : ViewModel() {
+class WeatherDetailViewModel(private val repository: MisoRepository) : ViewModel() {
     val forecastDetailResponse: MutableLiveData<Response<ForecastDetailResponseDto>?> =
         MutableLiveData()
 
     fun getForecastDetail(regionId: Int) {
-        MisoRepository.getDetailForecast(
+        repository.getDetailForecast(
             regionId,
             { call, response ->
                 forecastDetailResponse.value = response

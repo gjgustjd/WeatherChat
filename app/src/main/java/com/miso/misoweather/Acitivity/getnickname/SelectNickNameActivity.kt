@@ -45,7 +45,7 @@ class SelectNickNameActivity : MisoActivity() {
     }
 
     fun initializeViews() {
-        viewModel = SelectNicknameViewModel()
+        viewModel = SelectNicknameViewModel(MisoRepository(this))
         txt_get_new_nick = binding.txtGetNewNickname
         txt_get_new_nick.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         btn_back = binding.imgbtnBack

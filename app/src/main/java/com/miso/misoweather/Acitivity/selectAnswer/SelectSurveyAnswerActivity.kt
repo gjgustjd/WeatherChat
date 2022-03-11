@@ -38,10 +38,12 @@ class SelectSurveyAnswerActivity : MisoActivity() {
     lateinit var surveyItem: SurveyItem
     lateinit var recycler_answers: RecyclerView
     lateinit var recyclerAdapter: RecyclerSurveyAnswersAdapter
+    lateinit var repository: MisoRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySurveyAnswerBinding.inflate(layoutInflater)
+        repository = MisoRepository(applicationContext)
         setContentView(binding.root)
         checkAndInitializeViews()
     }
@@ -91,7 +93,7 @@ class SelectSurveyAnswerActivity : MisoActivity() {
     }
 
     fun getSurveyAnswer(surveyId: Int) {
-        MisoRepository.getSurveyAnswers(
+        repository.getSurveyAnswers(
             surveyId,
             { call, response ->
                 var questions = resources.getStringArray(R.array.survey_questions)
@@ -118,7 +120,7 @@ class SelectSurveyAnswerActivity : MisoActivity() {
 
     fun putSurveyAnswer() {
         var selectedAnswer = recyclerAdapter.getSelectedAnswerItem()
-        MisoRepository.putSurveyMyAnswer(
+        repository.putSurveyMyAnswer(
             getPreference("misoToken")!!,
             SurveyAddMyAnswerRequestDto(
                 selectedAnswer.answerId,

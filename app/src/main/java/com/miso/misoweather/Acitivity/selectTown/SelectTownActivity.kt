@@ -34,7 +34,9 @@ class SelectTownActivity : MisoActivity() {
     lateinit var townRequestResult: RegionListResponseDto
     lateinit var recyclerAdapter: RecyclerTownsAdapter
     lateinit var aPurpose: String
+    lateinit var repository: MisoRepository
     lateinit var viewModel: SelectTownViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
@@ -54,7 +56,8 @@ class SelectTownActivity : MisoActivity() {
     }
 
     fun initializeViews() {
-        viewModel = SelectTownViewModel()
+        repository = MisoRepository(applicationContext)
+        viewModel = SelectTownViewModel(repository)
         aPurpose = intent.getStringExtra("for") ?: ""
         grid_region = binding.gridRegions
         list_towns = binding.recyclerTowns
@@ -77,7 +80,7 @@ class SelectTownActivity : MisoActivity() {
     }
 
     fun changeRegion() {
-        MisoRepository.updateRegion(
+        repository.updateRegion(
             getPreference("misoToken")!!,
             recyclerAdapter.getSelectedItem().id,
             { call, response ->

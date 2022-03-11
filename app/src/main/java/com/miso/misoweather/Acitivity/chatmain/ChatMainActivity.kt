@@ -21,6 +21,7 @@ import com.miso.misoweather.Fragment.surveyFragment.SurveyFragment
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityChatMainBinding
+import com.miso.misoweather.model.MisoRepository
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -40,6 +41,7 @@ class ChatMainActivity : MisoActivity() {
     lateinit var surveyFragment: SurveyFragment
     lateinit var commentsFragment: CommentsFragment
     lateinit var viewModel: ChatMainViewModel
+    lateinit var repository: MisoRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -49,7 +51,8 @@ class ChatMainActivity : MisoActivity() {
     }
 
     fun initializeViews() {
-        viewModel = ChatMainViewModel()
+        repository= MisoRepository(application)
+        viewModel = ChatMainViewModel(repository)
         surveyFragment = SurveyFragment()
         commentsFragment = CommentsFragment(viewModel)
         selectedRegion =

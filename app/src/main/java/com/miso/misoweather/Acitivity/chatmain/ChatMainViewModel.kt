@@ -23,7 +23,7 @@ import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 import java.lang.Exception
 
-class ChatMainViewModel() : ViewModel() {
+class ChatMainViewModel(private val repository: MisoRepository) : ViewModel() {
     val commentListResponse: MutableLiveData<Response<CommentListResponseDto>?> = MutableLiveData()
     val addCommentResponse: MutableLiveData<Response<GeneralResponseDto>?> = MutableLiveData()
     lateinit var surveyQuestions: Array<String>
@@ -37,7 +37,7 @@ class ChatMainViewModel() : ViewModel() {
     var surveyItems: MutableLiveData<ArrayList<SurveyItem>> = MutableLiveData(ArrayList())
 
     fun getCommentList(commentId: Int?, size: Int) {
-        MisoRepository.getCommentList(
+        repository.getCommentList(
             commentId,
             size,
             { call, response ->
@@ -54,7 +54,7 @@ class ChatMainViewModel() : ViewModel() {
         shortBigScale: String,
         commentRegisterRequestDto: CommentRegisterRequestDto,
     ) {
-        MisoRepository.addComment(
+        repository.addComment(
             shortBigScale,
             commentRegisterRequestDto,
             { call, response ->
@@ -78,7 +78,7 @@ class ChatMainViewModel() : ViewModel() {
     }
 
     fun getSurveyAnswer(surveyId: Int) {
-        MisoRepository.getSurveyAnswers(
+        repository.getSurveyAnswers(
             surveyId,
             { call, response ->
                 initializeDataAndSetupRecycler {
@@ -91,7 +91,7 @@ class ChatMainViewModel() : ViewModel() {
     }
 
     fun getSurveyResult(shortBigScale: String) {
-        MisoRepository.getSurveyResults(
+        repository.getSurveyResults(
             shortBigScale,
             { call, reponse ->
                 initializeDataAndSetupRecycler {
@@ -107,7 +107,7 @@ class ChatMainViewModel() : ViewModel() {
     }
 
     fun getSurveyMyAnswers(serverToken: String) {
-        MisoRepository.getSurveyMyAnswers(
+        repository.getSurveyMyAnswers(
             serverToken,
             { call, reponse ->
                 initializeDataAndSetupRecycler {

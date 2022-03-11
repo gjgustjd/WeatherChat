@@ -35,7 +35,6 @@ class RecyclerChatsAdapter(
     var context: Context,
     var comments: List<Comment>,
     var isCommentsFragment: Boolean,
-    var isInitialized: Boolean = false
 ) :
     RecyclerView.Adapter<RecyclerChatsAdapter.Holder>() {
 
@@ -76,10 +75,10 @@ class RecyclerChatsAdapter(
     }
 
     fun addCommentList(commentId: Int?, size: Int) {
-        MisoRepository.getCommentList(
+        MisoRepository(context.applicationContext).getCommentList(
             commentId,
             size,
-            {call,response->
+            { call, response ->
                 try {
                     Log.i("결과", "성공")
                     var commentListResponseDto = response.body()!!
@@ -91,11 +90,11 @@ class RecyclerChatsAdapter(
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-            } ,
-            {call,respone->} ,
-            {call,t->
+            },
+            { call, respone -> },
+            { call, t ->
 //                Log.i("결과", "실패 : $t")
-            } ,
+            },
         )
     }
 

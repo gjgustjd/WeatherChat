@@ -25,6 +25,7 @@ import com.miso.misoweather.Acitivity.mypage.MyPageActivity
 import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
 import com.miso.misoweather.Dialog.GeneralConfirmDialog
+import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 import java.lang.Exception
 import java.time.LocalDateTime
@@ -59,6 +60,7 @@ class HomeActivity : MisoActivity() {
     lateinit var txtEmptyChart: TextView
 
     lateinit var viewModel: HomeViewModel
+    lateinit var repository: MisoRepository
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +74,8 @@ class HomeActivity : MisoActivity() {
     }
 
     fun initializeViews() {
-        viewModel = HomeViewModel()
+        repository = MisoRepository(applicationContext)
+        viewModel = HomeViewModel(repository)
         weatherLayout = binding.weatherLayout
         txtNickName = binding.txtNickname
         txtEmoji = binding.txtEmoji
