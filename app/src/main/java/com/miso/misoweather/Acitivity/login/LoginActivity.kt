@@ -103,7 +103,7 @@ class LoginActivity : MisoActivity() {
             }
         }
 
-        repository = MisoRepository(applicationContext)
+        repository = MisoRepository.getInstance(applicationContext)
         checkTokenValid()
         setupViewPagerAndIndicator()
         binding.clBtnKakaoLogin.setOnClickListener {

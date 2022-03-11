@@ -67,7 +67,7 @@ class WeatherDetailActivity : MisoActivity() {
     }
 
     fun initializeViews() {
-        repository = MisoRepository(applicationContext)
+        repository = MisoRepository.getInstance(applicationContext)
         viewModel = WeatherDetailViewModel(repository)
         chatLayout = binding.chatLayout
         txtLocation = binding.txtLocation
@@ -122,31 +122,25 @@ class WeatherDetailActivity : MisoActivity() {
     }
 
     fun getForecastDetail() {
-        viewModel.getForecastDetail( getPreference("defaultRegionId")!!.toInt())
-        viewModel.forecastDetailResponse.observe(this,  {
-           if(it == null)
-           {
+        viewModel.getForecastDetail(getPreference("defaultRegionId")!!.toInt())
+        viewModel.forecastDetailResponse.observe(this, {
+            if (it == null) {
 
-           }
-            else
-           {
-               if(it.isSuccessful)
-               {
-                   try {
-                       Log.i("결과", "성공")
-                       forecastdetailInfo = it.body()!!.data.forecastInfo
-                       region = it.body()!!.data.region
-                       setupWeatherOnTimeRecycler(it.body()!!)
-                       setForecastInfo()
-                   } catch (e: Exception) {
-                       e.printStackTrace()
-                   }
-               }
-               else
-               {
+            } else {
+                if (it.isSuccessful) {
+                    try {
+                        Log.i("결과", "성공")
+                        forecastdetailInfo = it.body()!!.data.forecastInfo
+                        region = it.body()!!.data.region
+                        setupWeatherOnTimeRecycler(it.body()!!)
+                        setForecastInfo()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                } else {
 
-               }
-           }
+                }
+            }
         })
     }
 
@@ -184,7 +178,7 @@ class WeatherDetailActivity : MisoActivity() {
     }
 
 
-    fun setupWeatherOnTimeRecycler(forecastDetailResponseDto:ForecastDetailResponseDto) {
+    fun setupWeatherOnTimeRecycler(forecastDetailResponseDto: ForecastDetailResponseDto) {
         weatherOnTimeAdapter =
             RecyclerForecastOnTimeAdapter(this, forecastDetailResponseDto.data.forecastByTime)
         recyclerWeatherOnTIme.adapter = weatherOnTimeAdapter

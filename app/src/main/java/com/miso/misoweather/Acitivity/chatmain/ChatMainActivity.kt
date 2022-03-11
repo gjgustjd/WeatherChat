@@ -51,7 +51,7 @@ class ChatMainActivity : MisoActivity() {
     }
 
     fun initializeViews() {
-        repository= MisoRepository(application)
+        repository= MisoRepository.getInstance(application)
         viewModel = ChatMainViewModel(repository)
         surveyFragment = SurveyFragment()
         commentsFragment = CommentsFragment(viewModel)

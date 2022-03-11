@@ -35,6 +35,7 @@ class SelectNickNameActivity : MisoActivity() {
     lateinit var btn_back: ImageButton
     lateinit var btn_next: Button
     lateinit var viewModel: SelectNicknameViewModel
+    lateinit var repository: MisoRepository
     var generalResponseDto = GeneralResponseDto("", "", null)
     var nickName: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +46,8 @@ class SelectNickNameActivity : MisoActivity() {
     }
 
     fun initializeViews() {
-        viewModel = SelectNicknameViewModel(MisoRepository(this))
+        repository = MisoRepository.getInstance(this)
+        viewModel = SelectNicknameViewModel(repository)
         txt_get_new_nick = binding.txtGetNewNickname
         txt_get_new_nick.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         btn_back = binding.imgbtnBack
@@ -83,7 +85,7 @@ class SelectNickNameActivity : MisoActivity() {
             goToLoginActivity()
         }
 
-        MisoRepository.registerMember(
+        repository.registerMember(
             getSignUpInfo(),
             getPreference("accessToken")!!,
             { call, response ->
@@ -131,7 +133,7 @@ class SelectNickNameActivity : MisoActivity() {
     }
 
     fun issueMisoToken() {
-        MisoRepository.issueMisoToken(
+        repository.issueMisoToken(
             makeLoginRequestDto(),
             getPreference("accessToken")!!,
             { call, response ->

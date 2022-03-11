@@ -75,7 +75,7 @@ class RecyclerChatsAdapter(
     }
 
     fun addCommentList(commentId: Int?, size: Int) {
-        MisoRepository(context.applicationContext).getCommentList(
+        MisoRepository.getInstance(context.applicationContext).getCommentList(
             commentId,
             size,
             { call, response ->

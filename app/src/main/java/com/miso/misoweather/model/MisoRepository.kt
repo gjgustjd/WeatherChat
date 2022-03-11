@@ -23,9 +23,23 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
-class MisoRepository(private val context: Context) {
-    var prefs = context.getSharedPreferences("misoweather", Context.MODE_PRIVATE)
-    var pairList: ArrayList<Pair<String, String>> = ArrayList()
+class MisoRepository private constructor() {
+    companion object {
+        private var instance: MisoRepository? = null
+        private lateinit var context: Context
+        private lateinit var prefs: SharedPreferences
+        private lateinit var pairList: ArrayList<Pair<String, String>>
+        fun getInstance(_context: Context): MisoRepository {
+            return instance ?: synchronized(this) {
+                instance ?: MisoRepository().also {
+                    context = _context
+                    instance = it
+                    prefs = context.getSharedPreferences("misoweather", Context.MODE_PRIVATE)
+                    pairList = ArrayList()
+                }
+            }
+        }
+    }
 
     fun addPreferencePair(first: String, second: String) {
         val pair = Pair(first, second)

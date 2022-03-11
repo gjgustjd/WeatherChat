@@ -74,7 +74,7 @@ class HomeActivity : MisoActivity() {
     }
 
     fun initializeViews() {
-        repository = MisoRepository(applicationContext)
+        repository = MisoRepository.getInstance(applicationContext)
         viewModel = HomeViewModel(repository)
         weatherLayout = binding.weatherLayout
         txtNickName = binding.txtNickname
@@ -233,7 +233,12 @@ class HomeActivity : MisoActivity() {
             })
         }
 
-        forecastRequest()
+        try {
+            forecastRequest()
+        }catch (e:Exception)
+        {
+
+        }
     }
 
     fun getCommentList() {

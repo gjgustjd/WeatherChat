@@ -43,7 +43,7 @@ class SelectSurveyAnswerActivity : MisoActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySurveyAnswerBinding.inflate(layoutInflater)
-        repository = MisoRepository(applicationContext)
+        repository = MisoRepository.getInstance(applicationContext)
         setContentView(binding.root)
         checkAndInitializeViews()
     }

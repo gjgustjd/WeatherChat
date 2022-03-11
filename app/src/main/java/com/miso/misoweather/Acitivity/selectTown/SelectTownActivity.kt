@@ -56,7 +56,7 @@ class SelectTownActivity : MisoActivity() {
     }
 
     fun initializeViews() {
-        repository = MisoRepository(applicationContext)
+        repository = MisoRepository.getInstance(applicationContext)
         viewModel = SelectTownViewModel(repository)
         aPurpose = intent.getStringExtra("for") ?: ""
         grid_region = binding.gridRegions

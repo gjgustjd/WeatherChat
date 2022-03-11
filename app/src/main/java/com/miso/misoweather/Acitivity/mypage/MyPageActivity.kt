@@ -43,7 +43,7 @@ class MyPageActivity : MisoActivity() {
     }
 
     fun initializeView() {
-        repository = MisoRepository(applicationContext)
+        repository = MisoRepository.getInstance(applicationContext)
         btn_back = binding.imgbtnBack
         btn_logout = binding.btnLogout
         btn_unregister = binding.btnUnregister
