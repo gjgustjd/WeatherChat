@@ -34,16 +34,17 @@ class SelectTownActivity : MisoActivity() {
     lateinit var townRequestResult: RegionListResponseDto
     lateinit var recyclerAdapter: RecyclerTownsAdapter
     lateinit var aPurpose: String
-    lateinit var repository: MisoRepository
     lateinit var viewModel: SelectTownViewModel
+
+    lateinit var midScaleRegion: String
+    lateinit var bigScaleRegion: String
+    var isAllInitialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        selectedRegion = intent.getStringExtra("region") ?: getShortRegionName()
-        initializeViews()
-        getTownList()
+        initializeProperties()
 
     }
 
@@ -51,13 +52,37 @@ class SelectTownActivity : MisoActivity() {
         var regionsList = resources.getStringArray(R.array.regions).toList()
         var regionsFullList = resources.getStringArray(R.array.regions_full).toList()
         var regionShortName =
-            regionsList.get(regionsFullList.indexOf(getPreference("BigScaleRegion")!!))
+            regionsList.get(regionsFullList.indexOf(bigScaleRegion))
         return regionShortName
     }
 
+    fun initializeProperties() {
+        fun checkinitializedAll() {
+            if (!isAllInitialized) {
+                if (
+                    this::midScaleRegion.isInitialized &&
+                    this::bigScaleRegion.isInitialized
+                ) {
+                    initializeViews()
+                    getTownList()
+                    isAllInitialized = true
+                }
+            }
+        }
+        viewModel = SelectTownViewModel(MisoRepository.getInstance(applicationContext))
+        viewModel.updateProperties()
+        viewModel.midScaleRegion.observe(this, {
+            midScaleRegion = it!!
+            checkinitializedAll()
+        })
+        viewModel.bigScaleRegion.observe(this, {
+            bigScaleRegion = it!!
+            checkinitializedAll()
+        })
+    }
+
     fun initializeViews() {
-        repository = MisoRepository.getInstance(applicationContext)
-        viewModel = SelectTownViewModel(repository)
+        selectedRegion = intent.getStringExtra("region") ?: getShortRegionName()
         aPurpose = intent.getStringExtra("for") ?: ""
         grid_region = binding.gridRegions
         list_towns = binding.recyclerTowns
@@ -80,45 +105,35 @@ class SelectTownActivity : MisoActivity() {
     }
 
     fun changeRegion() {
-        repository.updateRegion(
-            getPreference("misoToken")!!,
-            recyclerAdapter.getSelectedItem().id,
-            { call, response ->
-                try {
-                    Log.i("changeRegion", "성공")
-                    addPreferencePair(
-                        "defaultRegionId",
-                        recyclerAdapter.getSelectedItem().id.toString()
-                    )
-                    savePreferences()
+        viewModel.updateRegion(
+            recyclerAdapter.getSelectedItem(),
+            recyclerAdapter.getSelectedItem().id
+        )
+        viewModel.updateRegionResponse.observe(this, {
+            if (it == null) {
+            } else {
+                if (it.isSuccessful) {
                     startActivity(Intent(this, HomeActivity::class.java))
                     transferToNext()
                     finish()
-                } catch (e: Exception) {
-                    e.printStackTrace()
+                } else {
                 }
-            },
-            { call, response -> },
-            { call, t ->
-//                Log.i("changeRegion", "실패")
             }
-        )
+        })
     }
 
     override fun doBack() {
         try {
             var selectedRegion = recyclerAdapter.getSelectedItem()
             var midScaleRegion = selectedRegion.midScale
-            var bigScaleRegion = selectedRegion.bigScale
-            addPreferencePair("BigScaleRegion", bigScaleRegion)
-            addPreferencePair("MidScaleRegion", midScaleRegion)
+            viewModel.addRegionPreferences(selectedRegion)
 
             lateinit var intent: Intent
             if (selectedRegion.midScale.contains("선택 안 함")) {
                 if (aPurpose.equals("change")) {
                     changeRegion()
                 } else {
-                    removePreference("SmallScaleRegion")
+                    viewModel.updateSmallScaleRegion("")
                     intent = Intent(this, SelectNickNameActivity::class.java)
                     intent.putExtra("RegionId", selectedRegion.id.toString())
                 }
@@ -133,20 +148,15 @@ class SelectTownActivity : MisoActivity() {
             finish()
         } catch (e: Exception) {
             e.printStackTrace()
-        } finally {
-            savePreferences()
         }
     }
 
     fun getTownList() {
         viewModel.getTownList(selectedRegion)
         viewModel.townRequestResult.observe(this, Observer {
-            if(it==null)
-            {
-
-            }
-            else {
-                if(it.isSuccessful) {
+            if (it == null) {
+            } else {
+                if (it.isSuccessful) {
                     try {
                         Log.i("getTownList", "2단계 지역 받아오기 성공")
                         townRequestResult = it.body()!!
@@ -154,9 +164,7 @@ class SelectTownActivity : MisoActivity() {
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
-                }
-                else
-                {
+                } else {
                 }
             }
         })
@@ -171,11 +179,10 @@ class SelectTownActivity : MisoActivity() {
             list_towns.layoutManager = LinearLayoutManager(this)
             val spaceDecoration = DividerItemDecoration(applicationContext, VERTICAL)
             list_towns.addItemDecoration(spaceDecoration)
-            var currentTown = getPreference("MidScaleRegion")
-            if (!currentTown.equals(""))
+            if (!midScaleRegion.equals(""))
                 recyclerAdapter.selectItem(townList.indexOf(townList.first() {
                     it.midScale.equals(
-                        currentTown
+                        midScaleRegion
                     )
                 }))
 
