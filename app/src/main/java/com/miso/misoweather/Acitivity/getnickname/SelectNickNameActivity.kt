@@ -8,26 +8,14 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.lifecycle.ViewModel
-import com.kakao.sdk.auth.model.Prompt
-import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectNicknameBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.login.LoginActivity
 import com.miso.misoweather.model.DTO.*
-import com.miso.misoweather.model.DTO.NicknameResponse.NicknameData
-import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
-import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
 import com.miso.misoweather.model.MisoRepository
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.Exception
 
 class SelectNickNameActivity : MisoActivity() {
     lateinit var binding: ActivitySelectNicknameBinding
@@ -36,13 +24,21 @@ class SelectNickNameActivity : MisoActivity() {
     lateinit var btn_next: Button
     lateinit var viewModel: SelectNicknameViewModel
     lateinit var repository: MisoRepository
-    var generalResponseDto = GeneralResponseDto("", "", null)
     var nickName: String = ""
+    var accessToken: String = ""
+    var misoToken: String = ""
+    var smallScaleRegion: String = ""
+    var midScaleRegion: String = ""
+    var bigScaleRegion: String = ""
+    var socialId: String = ""
+    var socialType: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySelectNicknameBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initializeViews()
+        initializeProperties()
     }
 
     fun initializeViews() {
@@ -66,9 +62,41 @@ class SelectNickNameActivity : MisoActivity() {
         getNickname()
     }
 
+    fun initializeProperties() {
+        viewModel.setupAccessToken()
+        viewModel.accessToken.observe(this, {
+            accessToken = it!!
+        })
+        viewModel.setupMisoToken()
+        viewModel.misoToken.observe(this, {
+            misoToken = it!!
+        })
+        viewModel.setupBigScaleRegion()
+        viewModel.bigScaleRegion.observe(this, {
+            bigScaleRegion = it!!
+        })
+        viewModel.setupMiddleScaleRegion()
+        viewModel.middleScaleRegion.observe(this, {
+            midScaleRegion = it!!
+        })
+        viewModel.setupSmallScaleRegion()
+        viewModel.smallScaleRegion.observe(this, {
+            smallScaleRegion = it!!
+        })
+        viewModel.setupSocialId()
+        viewModel.socialId.observe(this, {
+            socialId = it!!
+        })
+        viewModel.setupSocialType()
+        viewModel.socialType.observe(this, {
+            socialType = it!!
+        })
+        viewModel.defaultRegionId = intent.getStringExtra("RegionId")!!
+    }
+
     override fun doBack() {
         var intent: Intent?
-        if (getPreference("SmallScaleRegion").isNullOrBlank())
+        if (smallScaleRegion.isNullOrBlank())
             intent = Intent(this, SelectTownActivity::class.java)
         else
             intent = Intent(this, SelectAreaActivity::class.java)
@@ -78,52 +106,26 @@ class SelectNickNameActivity : MisoActivity() {
         finish()
     }
 
-    fun registerMember(isResetedToken: Boolean = false) {
+    fun registerMember() {
         fun inCaseFailedRegister() {
             Toast.makeText(this@SelectNickNameActivity, "회원가입에 실패하였습니다.", Toast.LENGTH_LONG)
                 .show()
             goToLoginActivity()
         }
-
-        repository.registerMember(
+        viewModel.loginRequestDto = makeLoginRequestDto()
+        viewModel.registerMember(
             getSignUpInfo(),
-            getPreference("accessToken")!!,
-            { call, response ->
-                if (response.body() == null) {
-                    Log.i("결과", "실패")
-                    if (response.errorBody()!!.source().toString().contains("UNAUTHORIZED") &&
-                        isResetedToken == false
-                    ) {
-                        resetAccessToken()
-                    } else {
-                        inCaseFailedRegister()
-                    }
-                } else {
-                    Log.i("결과", "성공")
-                    issueMisoToken()
-                }
-            },
-            { call, response ->
-                inCaseFailedRegister()
-            },
-            { call, t ->
-                Log.i("결과", "실패 : $t")
-                inCaseFailedRegister()
-            }
+            accessToken,
+            false
         )
-    }
-
-    fun resetAccessToken() {
-        UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
-            if (error != null) {
-                Log.e("resetAccessToken", "로그인 실패", error)
-            } else if (token != null) {
-                Log.i("resetAccessToken", "로그인 성공 ${token.accessToken}")
-                addPreferencePair("accessToken", token.accessToken)
-                savePreferences()
-                registerMember()
+        viewModel.registerResultString.observe(this, {
+            if (it.equals("OK")) {
+                var intent = Intent(this@SelectNickNameActivity, HomeActivity::class.java)
+                startActivity(intent)
+            } else {
+                inCaseFailedRegister()
             }
-        }
+        })
     }
 
     fun goToLoginActivity() {
@@ -132,55 +134,11 @@ class SelectNickNameActivity : MisoActivity() {
         finish()
     }
 
-    fun issueMisoToken() {
-        repository.issueMisoToken(
-            makeLoginRequestDto(),
-            getPreference("accessToken")!!,
-            { call, response ->
-                try {
-                    Log.i("결과", "성공")
-                    generalResponseDto = response.body()!!
-                    var headers = response.headers()
-                    var serverToken = headers.get("servertoken")
-                    addPreferencePair("misoToken", serverToken!!)
-                    addPreferencePair("defaultRegionId", intent.getStringExtra("RegionId")!!)
-                    removeRegionPref()
-                    savePreferences()
-                    if (!getPreference("misoToken").equals("")) {
-                        var intent = Intent(this@SelectNickNameActivity, HomeActivity::class.java)
-                        startActivity(intent)
-                    } else
-                        Toast.makeText(
-                            this@SelectNickNameActivity,
-                            "서버 토큰 발행에 실패하였습니다.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                } finally {
-                }
-            },
-            { call, response ->
-//                Log.i("issueMisoToken", "실패")
-            },
-            { call, t ->
-//                Log.i("결과", "실패 : $t")
-            })
-    }
-
-    fun removeRegionPref() {
-        removePreference("BigScaleRegion")
-        removePreference("MidScaleRegion")
-        removePreference("SmallScaleRegion")
-    }
-
     fun makeLoginRequestDto(): LoginRequestDto {
-        var loginRequestDto = LoginRequestDto(
-            getPreference("socialId"),
-            getPreference("socialType")
+        return LoginRequestDto(
+            socialId,
+            socialType
         )
-
-        return loginRequestDto
     }
 
     fun getSignUpInfo(): SignUpRequestDto {
@@ -188,35 +146,29 @@ class SelectNickNameActivity : MisoActivity() {
         signUpRequestDto.defaultRegionId = intent.getStringExtra("RegionId")!!.toString()
         signUpRequestDto.emoji = binding.txtEmoji.text.toString()
         signUpRequestDto.nickname = nickName
-        signUpRequestDto.socialId = getPreference("socialId")!!
-        signUpRequestDto.socialType = getPreference("socialType")!!
+        signUpRequestDto.socialId = socialId
+        signUpRequestDto.socialType = socialType
         return signUpRequestDto
     }
 
     fun getNickname() {
         viewModel.getNickname()
-        viewModel.nicknameResponseDto.observe(this,{
-            if(it==null)
-            {
+        viewModel.nicknameResponseDto.observe(this, {
+            if (it == null) {
                 Toast.makeText(
                     this@SelectNickNameActivity,
                     "닉네임 받기에 실패하였습니다.",
                     Toast.LENGTH_LONG
                 ).show()
-            }
-            else
-            {
-                if(it.isSuccessful)
-                {
-                        Log.i("결과", "성공")
-                        Log.i("결과", "닉네임 : ${it.body()?.data?.nickname}")
-                        val nicknameResponseDto = it.body()!!
-                        nickName = nicknameResponseDto.data.nickname
-                        binding.txtGreetingBold.text = "${nickName}님!"
-                        binding.txtEmoji.text = "${nicknameResponseDto.data.emoji}"
-                }
-                else
-                {
+            } else {
+                if (it.isSuccessful) {
+                    Log.i("결과", "성공")
+                    Log.i("결과", "닉네임 : ${it.body()?.data?.nickname}")
+                    val nicknameResponseDto = it.body()!!
+                    nickName = nicknameResponseDto.data.nickname
+                    binding.txtGreetingBold.text = "${nickName}님!"
+                    binding.txtEmoji.text = "${nicknameResponseDto.data.emoji}"
+                } else {
                     Log.i("결과", "실패")
                     Toast.makeText(
                         this@SelectNickNameActivity,

@@ -232,10 +232,9 @@ class HomeActivity : MisoActivity() {
                 }
             })
         }
-
         try {
             forecastRequest()
-        }catch (e:Exception)
+        } catch (e: Exception)
         {
 
         }

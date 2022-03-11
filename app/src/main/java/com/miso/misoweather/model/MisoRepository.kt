@@ -26,7 +26,7 @@ import retrofit2.http.*
 class MisoRepository private constructor() {
     companion object {
         private var instance: MisoRepository? = null
-        private lateinit var context: Context
+        lateinit var context: Context
         private lateinit var prefs: SharedPreferences
         private lateinit var pairList: ArrayList<Pair<String, String>>
         fun getInstance(_context: Context): MisoRepository {
@@ -117,7 +117,7 @@ class MisoRepository private constructor() {
         onError: (
             Call<GeneralResponseDto>,
             Throwable
-        ) -> Unit?,
+        ) -> Unit,
     ) {
 
         val callIssueMisoToken = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
@@ -179,7 +179,7 @@ class MisoRepository private constructor() {
         onError: (
             Call<GeneralResponseDto>,
             Throwable
-        ) -> Unit?,
+        ) -> Unit,
     ) {
         val callRegisterMember = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
             .registerMember(signUpRequestDto, socialToken)
