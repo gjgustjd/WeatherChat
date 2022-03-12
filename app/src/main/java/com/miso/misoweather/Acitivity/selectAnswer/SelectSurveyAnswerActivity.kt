@@ -25,6 +25,7 @@ import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.MisoRepository
 import com.miso.misoweather.model.TransportManager
+import kotlinx.coroutines.selects.select
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
@@ -38,12 +39,12 @@ class SelectSurveyAnswerActivity : MisoActivity() {
     lateinit var surveyItem: SurveyItem
     lateinit var recycler_answers: RecyclerView
     lateinit var recyclerAdapter: RecyclerSurveyAnswersAdapter
-    lateinit var repository: MisoRepository
+    lateinit var viewModel: SelectAnswerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySurveyAnswerBinding.inflate(layoutInflater)
-        repository = MisoRepository.getInstance(applicationContext)
+        viewModel = SelectAnswerViewModel(MisoRepository.getInstance(applicationContext))
         setContentView(binding.root)
         checkAndInitializeViews()
     }
@@ -93,23 +94,12 @@ class SelectSurveyAnswerActivity : MisoActivity() {
     }
 
     fun getSurveyAnswer(surveyId: Int) {
-        repository.getSurveyAnswers(
-            surveyId,
-            { call, response ->
-                var questions = resources.getStringArray(R.array.survey_questions)
-                surveyItem = SurveyItem(
-                    surveyId,
-                    questions[surveyId - 1],
-                    SurveyMyAnswerDto(false, "", -1),
-                    (response.body()!!).data.responseList,
-                    SurveyResult(listOf(), -1, listOf())
-                )
-                initializeViews()
-                setupRecycler()
-            },
-            { call, response -> },
-            { call, t -> },
-        )
+        viewModel.getSurveyAnswer(surveyId, resources.getStringArray(R.array.survey_questions))
+        viewModel.surveyItem.observe(this, {
+            surveyItem = it!!
+            initializeViews()
+            setupRecycler()
+        })
     }
 
     fun setupRecycler() {
@@ -120,28 +110,19 @@ class SelectSurveyAnswerActivity : MisoActivity() {
 
     fun putSurveyAnswer() {
         var selectedAnswer = recyclerAdapter.getSelectedAnswerItem()
-        repository.putSurveyMyAnswer(
-            getPreference("misoToken")!!,
-            SurveyAddMyAnswerRequestDto(
-                selectedAnswer.answerId,
-                getBigShortScale(getPreference("bigScale")!!),
-                surveyItem.surveyId
-            ),
-            { call, response ->
-                addPreferencePair("isSurveyed", "true")
-                addPreferencePair(
-                    "LastSurveyedDate",
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
-                )
-                savePreferences()
-                var intent = Intent(this, AnswerAnimationActivity::class.java)
-                intent.putExtra("answer", selectedAnswer.answer)
-                startActivity(intent)
-                overFromUnder()
-                finish()
-            },
-            { call, response -> },
-            { call, throwable -> }
-        )
+        viewModel.putSurveyAnswer(selectedAnswer, surveyItem.surveyId)
+        viewModel.surveyAnswerResponse.observe(this, {
+            if (it == null) {
+            } else {
+                if (it.isSuccessful) {
+                    var intent = Intent(this, AnswerAnimationActivity::class.java)
+                    intent.putExtra("answer", selectedAnswer.answer)
+                    startActivity(intent)
+                    overFromUnder()
+                    finish()
+                } else {
+                }
+            }
+        })
     }
 }
