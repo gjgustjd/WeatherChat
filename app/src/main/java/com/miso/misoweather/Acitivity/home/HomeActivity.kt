@@ -71,6 +71,8 @@ class HomeActivity : MisoActivity() {
     lateinit var midScale: String
     lateinit var smallScale: String
 
+    var isAllInitialized = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -83,21 +85,26 @@ class HomeActivity : MisoActivity() {
         getUserInfo()
         getBriefForecast()
         getCommentList()
+        Log.i("setupData","Launched")
     }
 
     fun initializeProperties() {
         fun checkinitializedAll()
         {
-            if (
-                this::isSurveyed.isInitialized &&
-                this::lastSurveyedDate.isInitialized &&
-                this::defaultRegionId.isInitialized &&
-                this::misoToken.isInitialized &&
-                this::bigScale.isInitialized &&
-                this::midScale.isInitialized &&
-                this::smallScale.isInitialized
-            )
-                setupData()
+            if(!isAllInitialized) {
+                if (
+                    this::isSurveyed.isInitialized &&
+                    this::lastSurveyedDate.isInitialized &&
+                    this::defaultRegionId.isInitialized &&
+                    this::misoToken.isInitialized &&
+                    this::bigScale.isInitialized &&
+                    this::midScale.isInitialized &&
+                    this::smallScale.isInitialized
+                ) {
+                    setupData()
+                    isAllInitialized=true
+                }
+            }
         }
         viewModel.updateProperties()
         viewModel.isSurveyed.observe(this, {
@@ -129,6 +136,7 @@ class HomeActivity : MisoActivity() {
             checkinitializedAll()
         })
 
+        Log.i("initializeProperties","Launched")
     }
 
     fun initializeViews() {
