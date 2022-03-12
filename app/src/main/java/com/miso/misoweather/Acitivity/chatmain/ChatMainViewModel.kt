@@ -35,7 +35,16 @@ class ChatMainViewModel(private val repository: MisoRepository) : ViewModel() {
     )
     var surveyMyAnswerResponseDto = SurveyMyAnswerResponseDto(SurveyMyAnswerData(listOf()), "", "")
     var surveyItems: MutableLiveData<ArrayList<SurveyItem>> = MutableLiveData(ArrayList())
+    val surveyRegion: MutableLiveData<String> = MutableLiveData()
+    val bigScaleRegion: MutableLiveData<String> = MutableLiveData()
+    val misoToken: MutableLiveData<String> = MutableLiveData()
 
+    fun updateProperties()
+    {
+        surveyRegion.value = repository.getPreference("surveyRegion")
+        bigScaleRegion.value = repository.getPreference("bigScaleRegion")
+        misoToken.value = repository.getPreference("misoToken")
+    }
     fun getCommentList(commentId: Int?, size: Int) {
         repository.getCommentList(
             commentId,
@@ -48,6 +57,12 @@ class ChatMainViewModel(private val repository: MisoRepository) : ViewModel() {
             },
             { call, throwable -> }
         )
+    }
+
+    fun removeSurveyRegion()
+    {
+        repository.removePreference("surveyRegion")
+        repository.savePreferences()
     }
 
     fun addComment(

@@ -32,7 +32,7 @@ class ChatMainActivity : MisoActivity() {
     lateinit var btnChat: Button
     lateinit var txtLocation: TextView
     lateinit var txtSurveyBtn: TextView
-    lateinit var txtChatBtn:TextView
+    lateinit var txtChatBtn: TextView
     lateinit var selectedRegion: String
     lateinit var locationLayout: ConstraintLayout
     lateinit var previousActivity: String
@@ -41,24 +41,55 @@ class ChatMainActivity : MisoActivity() {
     lateinit var surveyFragment: SurveyFragment
     lateinit var commentsFragment: CommentsFragment
     lateinit var viewModel: ChatMainViewModel
-    lateinit var repository: MisoRepository
+    lateinit var misoToken: String
+    lateinit var surveyRegion: String
+    lateinit var bigScale: String
+
+    var isAllInitialized = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityChatMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initializeViews()
+        initializeProperties()
+    }
+
+    fun initializeProperties() {
+        viewModel = ChatMainViewModel(MisoRepository.getInstance(application))
+        fun checkInitializedAll() {
+            if (!isAllInitialized) {
+                if (this::bigScale.isInitialized &&
+                    this::surveyRegion.isInitialized &&
+                    this::misoToken.isInitialized
+                ) {
+                    initializeViews()
+                    isAllInitialized = true
+                }
+            }
+        }
+        viewModel.updateProperties()
+        viewModel.misoToken.observe(this, {
+            misoToken = it
+            checkInitializedAll()
+        })
+        viewModel.surveyRegion.observe(this, {
+            surveyRegion = it
+            checkInitializedAll()
+        })
+        viewModel.bigScaleRegion.observe(this, {
+            bigScale = it
+            checkInitializedAll()
+        })
     }
 
     fun initializeViews() {
-        repository= MisoRepository.getInstance(application)
-        viewModel = ChatMainViewModel(repository)
         surveyFragment = SurveyFragment()
         commentsFragment = CommentsFragment(viewModel)
         selectedRegion =
-            if (getPreference("surveyRegion").isNullOrBlank())
-                getBigShortScale(getPreference("bigScale")!!)
-            else getPreference("surveyRegion")!!
+            if (surveyRegion.isNullOrBlank())
+                getBigShortScale(bigScale)
+            else surveyRegion!!
         previousActivity = intent.getStringExtra("previousActivity") ?: ""
         btnSurvey = binding.btnSurvey
         btnChat = binding.btnChats
@@ -68,8 +99,7 @@ class ChatMainActivity : MisoActivity() {
         txtLocation.text = selectedRegion
 
         txtSurveyBtn = binding.txtSurveyBtn
-        txtChatBtn= binding.txtChatBtn
-        Log.i("misoToken", getPreference("misoToken")!!);
+        txtChatBtn = binding.txtChatBtn
 
         when (previousActivity) {
             "Weather" -> goToPreviousActivity =
@@ -93,7 +123,7 @@ class ChatMainActivity : MisoActivity() {
         {
             btnChat.startBackgroundAlphaAnimation(0f, 1f)
             txtSurveyBtn.setTextColor(getColor(R.color.textBlack))
-            btnSurvey.startBackgroundAlphaAnimation(1f,0f)
+            btnSurvey.startBackgroundAlphaAnimation(1f, 0f)
             txtChatBtn.setTextColor(Color.WHITE)
             locationLayout.visibility = View.GONE
             locationLayout.startBackgroundAlphaAnimation(1f, 0f)
@@ -115,13 +145,12 @@ class ChatMainActivity : MisoActivity() {
         setupFragment(surveyFragment)
     }
 
-    fun View.startBackgroundAlphaAnimation(fromValue:Float, toValue: Float) {
-        ObjectAnimator.ofFloat(this,"alpha",fromValue,toValue).start()
+    fun View.startBackgroundAlphaAnimation(fromValue: Float, toValue: Float) {
+        ObjectAnimator.ofFloat(this, "alpha", fromValue, toValue).start()
     }
 
     override fun doBack() {
-        removePreference("surveyRegion")
-        savePreferences()
+        viewModel.removeSurveyRegion()
         goToPreviousActivity()
         transferToBack()
         finish()
