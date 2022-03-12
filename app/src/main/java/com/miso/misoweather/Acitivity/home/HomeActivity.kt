@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -62,15 +63,72 @@ class HomeActivity : MisoActivity() {
     lateinit var viewModel: HomeViewModel
     lateinit var repository: MisoRepository
 
+    lateinit var isSurveyed: String
+    lateinit var lastSurveyedDate: String
+    lateinit var defaultRegionId: String
+    lateinit var misoToken: String
+    lateinit var bigScale: String
+    lateinit var midScale: String
+    lateinit var smallScale: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initializeViews()
+        initializeProperties()
+    }
+
+    fun setupData() {
         getUserInfo()
         getBriefForecast()
         getCommentList()
+    }
+
+    fun initializeProperties() {
+        fun checkinitializedAll()
+        {
+            if (
+                this::isSurveyed.isInitialized &&
+                this::lastSurveyedDate.isInitialized &&
+                this::defaultRegionId.isInitialized &&
+                this::misoToken.isInitialized &&
+                this::bigScale.isInitialized &&
+                this::midScale.isInitialized &&
+                this::smallScale.isInitialized
+            )
+                setupData()
+        }
+        viewModel.updateProperties()
+        viewModel.isSurveyed.observe(this, {
+            isSurveyed = it!!
+            checkinitializedAll()
+        })
+        viewModel.lastSurveyedDate.observe(this, {
+            lastSurveyedDate = it!!
+            checkinitializedAll()
+        })
+        viewModel.defaultRegionId.observe(this, {
+            defaultRegionId = it!!
+            checkinitializedAll()
+        })
+        viewModel.misoToken.observe(this, {
+            misoToken = it!!
+            checkinitializedAll()
+        })
+        viewModel.bigScale.observe(this, {
+            bigScale = it!!
+            checkinitializedAll()
+        })
+        viewModel.midScale.observe(this, {
+            midScale = it!!
+            checkinitializedAll()
+        })
+        viewModel.smallScale.observe(this, {
+            smallScale = it!!
+            checkinitializedAll()
+        })
+
     }
 
     fun initializeViews() {
@@ -98,7 +156,6 @@ class HomeActivity : MisoActivity() {
         thirdProgressLayout = binding.itemThirdLayout
         chartLayout = binding.chartLayout
         txtEmptyChart = binding.txtEmptyChart
-
 
         chartLayout.setOnClickListener()
         {
@@ -136,32 +193,25 @@ class HomeActivity : MisoActivity() {
     override fun doBack() {
         GeneralConfirmDialog(
             this,
-            View.OnClickListener {
-                logout()
-            },
+            { logout() },
             "로그아웃 하시겠습니까? \uD83D\uDD13",
             "로그아웃"
         ).show(supportFragmentManager, "generalConfirmDialog")
     }
 
     fun logout() {
-        UserApiClient.instance.logout { error ->
-            if (error != null) {
-                Log.e("kakaoLogout", "로그아웃 실패. SDK에서 토큰 삭제됨", error)
-            } else {
-                Log.i("kakaoLogout", "로그아웃 성공. SDK에서 토큰 삭제됨")
-                removePreference("accessToken", "socialId", "socialType", "misoToken")
-                savePreferences()
+        viewModel.logout()
+        viewModel.logoutResponseString.observe(this, {
+            if (it.equals("OK")) {
                 startActivity(Intent(this, LoginActivity::class.java))
                 transferToBack()
                 finish()
+            } else {
             }
-        }
+        })
     }
 
     fun goToChatMainActivity() {
-        var isSurveyed = getPreference("isSurveyed")
-        var lastSurveyedDate = getPreference("LastSurveyedDate") ?: ""
         var currentDate =
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
         if (!isSurveyed.equals("true") || !lastSurveyedDate.equals(currentDate)) {
@@ -191,7 +241,7 @@ class HomeActivity : MisoActivity() {
                 }
             }
 
-            viewModel.getBriefForecast(getPreference("defaultRegionId")!!.toInt())
+            viewModel.getBriefForecast(defaultRegionId.toInt())
             viewModel.forecastBriefResponse.observe(this, {
                 if (it == null) {
                     Log.i("getBriefForecast", "실패")
@@ -203,21 +253,9 @@ class HomeActivity : MisoActivity() {
                             val forecastBriefResponseDto = it.body()!!
                             var forecast = forecastBriefResponseDto.data.forecast
                             var region = forecastBriefResponseDto.data.region
-                            addPreferencePair("bigScale", region.bigScale)
-                            addPreferencePair(
-                                "midScale",
-                                if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
-                            )
-                            addPreferencePair(
-                                "smallScale",
-                                if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
-                            )
-                            savePreferences()
                             txtLocation.text =
-                                region.bigScale + " " + getPreference("midScale") + " " +
-                                        if (getPreference("midScale").equals("전체")) "" else getPreference(
-                                            "smallScale"
-                                        )
+                                region.bigScale + " " + midScale + " " +
+                                        if (midScale.equals("전체")) "" else smallScale
                             txtWeatherEmoji.setText(forecast.sky)
                             txtWeatherDegree.setText(forecast.temperature + "˚")
                             setupSurveyResult()
@@ -234,8 +272,7 @@ class HomeActivity : MisoActivity() {
         }
         try {
             forecastRequest()
-        } catch (e: Exception)
-        {
+        } catch (e: Exception) {
 
         }
     }
@@ -244,8 +281,6 @@ class HomeActivity : MisoActivity() {
         viewModel.getCommentList(null, 5)
         viewModel.commentListResponse.observe(this, {
             try {
-                Log.i("결과", "성공")
-
                 setRecyclerChats(it!!.body()!!)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -268,13 +303,6 @@ class HomeActivity : MisoActivity() {
                 var memberInfo = memberInfoResponseDto.data
                 txtNickName.setText(memberInfo.nickname + "님!")
                 txtEmoji.setText(memberInfo.emoji)
-                addPreferencePair(
-                    "defaultRegionId",
-                    memberInfoResponseDto.data.regionId.toString()
-                )
-                addPreferencePair("emoji", memberInfo.emoji)
-                addPreferencePair("nickname", memberInfo.nickname)
-                savePreferences()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -284,24 +312,28 @@ class HomeActivity : MisoActivity() {
             Log.i("getUserInfo", "불러오기 실패")
         }
 
-        viewModel.getUserInfo(getPreference("misoToken")!!)
-        viewModel.memberInfoResponse.observe(this, Observer {
-            if (it == null) {
-                Log.i("getUserInfo", "에러 발생")
-            } else {
-                if (it!!.isSuccessful) {
-                    onSuccessful(it)
+        try {
+            viewModel.getUserInfo(misoToken)
+            viewModel.memberInfoResponse.observe(this, {
+                if (it == null) {
+                    Log.i("getUserInfo", "에러 발생")
                 } else {
-                    onFail()
-                }
+                    if (it!!.isSuccessful) {
+                        onSuccessful(it)
+                    } else {
+                        onFail()
+                    }
 
+                }
             }
+            )
+        } catch (e: Exception) {
+
         }
-        )
     }
 
     fun setupSurveyResult() {
-        viewModel.getSurveyResult(getBigShortScale(getPreference("bigScale")!!))
+        viewModel.getSurveyResult(getBigShortScale(bigScale))
         viewModel.surveyResultResponse.observe(this, Observer {
             if (it == null) {
 
