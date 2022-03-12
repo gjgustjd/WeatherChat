@@ -55,20 +55,52 @@ class WeatherDetailActivity : MisoActivity() {
     lateinit var recyclerForecast: RecyclerView
     lateinit var txtEmojiWind: TextView
     lateinit var txtDegreeWind: TextView
-    lateinit var repository: MisoRepository
     lateinit var viewModel: WeatherDetailViewModel
+
+    lateinit var isSurveyed: String
+    lateinit var lastSurveyedDate: String
+    lateinit var defaultRegionId: String
+    var isAllInitialized = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityWeatherMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initializeViews()
-        getForecastDetail()
+        initializeProperties()
+    }
+
+    fun initializeProperties() {
+        fun checkinitializedAll() {
+            if (!isAllInitialized) {
+                if (
+                    this::isSurveyed.isInitialized &&
+                    this::defaultRegionId.isInitialized &&
+                    this::lastSurveyedDate.isInitialized
+                ) {
+                    initializeViews()
+                    getForecastDetail()
+                    isAllInitialized = true
+                }
+            }
+        }
+        viewModel = WeatherDetailViewModel(MisoRepository.getInstance(applicationContext))
+        viewModel.updateProperties()
+        viewModel.isSurveyed.observe(this, {
+            isSurveyed = it!!
+            checkinitializedAll()
+        })
+        viewModel.lastSurveyedDate.observe(this, {
+            lastSurveyedDate = it!!
+            checkinitializedAll()
+        })
+        viewModel.defaultRegionId.observe(this, {
+            defaultRegionId = it!!
+            checkinitializedAll()
+        })
     }
 
     fun initializeViews() {
-        repository = MisoRepository.getInstance(applicationContext)
-        viewModel = WeatherDetailViewModel(repository)
         chatLayout = binding.chatLayout
         txtLocation = binding.txtLocation
         txtWeatherEmoji = binding.txtWeatherEmoji
@@ -101,8 +133,6 @@ class WeatherDetailActivity : MisoActivity() {
     }
 
     fun goToChatMainActivity() {
-        var isSurveyed = getPreference("isSurveyed")
-        var lastSurveyedDate = getPreference("LastSurveyedDate") ?: ""
         var currentDate =
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
         if (!isSurveyed.equals("true") || !lastSurveyedDate.equals(currentDate)) {
@@ -122,7 +152,7 @@ class WeatherDetailActivity : MisoActivity() {
     }
 
     fun getForecastDetail() {
-        viewModel.getForecastDetail(getPreference("defaultRegionId")!!.toInt())
+        viewModel.getForecastDetail(defaultRegionId.toInt())
         viewModel.forecastDetailResponse.observe(this, {
             if (it == null) {
 

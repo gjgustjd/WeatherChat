@@ -18,6 +18,26 @@ import java.time.format.DateTimeFormatter
 class WeatherDetailViewModel(private val repository: MisoRepository) : ViewModel() {
     val forecastDetailResponse: MutableLiveData<Response<ForecastDetailResponseDto>?> =
         MutableLiveData()
+    val isSurveyed: MutableLiveData<String?> = MutableLiveData()
+    val lastSurveyedDate: MutableLiveData<String?> = MutableLiveData()
+    val defaultRegionId: MutableLiveData<String?> = MutableLiveData()
+
+    fun updateProperties() {
+        setupSurveyed()
+        setupLastSurveyedDate()
+        setupDefaultRegionId()
+    }
+
+    fun setupSurveyed() {
+        isSurveyed.value = repository.getPreference("isSurveyed")
+    }
+
+    fun setupLastSurveyedDate() {
+        lastSurveyedDate.value = repository.getPreference("LastSurveyedDate")
+    }
+    fun setupDefaultRegionId() {
+        defaultRegionId.value = repository.getPreference("defaultRegionId")
+    }
 
     fun getForecastDetail(regionId: Int) {
         repository.getDetailForecast(
