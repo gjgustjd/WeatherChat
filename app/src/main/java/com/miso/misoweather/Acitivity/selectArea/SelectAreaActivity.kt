@@ -15,7 +15,6 @@ import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.Acitivity.getnickname.SelectNickNameActivity
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.model.DTO.Region
-import com.miso.misoweather.Acitivity.selectTown.RecyclerAreaAdapter
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
 import com.miso.misoweather.model.MisoRepository
 import java.lang.Exception

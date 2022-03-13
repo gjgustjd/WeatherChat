@@ -1,4 +1,4 @@
-package com.miso.misoweather.Acitivity.selectArea
+package com.miso.misoweather.Acitivity.selectTown
 
 import android.content.Context
 import android.graphics.Color
