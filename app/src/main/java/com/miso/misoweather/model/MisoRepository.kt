@@ -86,7 +86,7 @@ class MisoRepository private constructor() {
         onError: (
             Call<GeneralResponseDto>,
             Throwable
-        ) -> Unit?,
+        ) -> Unit,
     ) {
         val callCheckRegistered = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
             .checkRegistered(socialId, socialType)

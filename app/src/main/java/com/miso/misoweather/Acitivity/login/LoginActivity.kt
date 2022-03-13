@@ -28,13 +28,17 @@ import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.MisoRepository
 import com.miso.misoweather.model.TransportManager
 import com.rd.PageIndicatorView
+import retrofit2.Response
 
 
 class LoginActivity : MisoActivity() {
     lateinit var binding: ActivityLoginBinding
     lateinit var viewpager_onboarding: ViewPager2
     lateinit var pageIndicatorView: PageIndicatorView
-    lateinit var repository: MisoRepository
+    lateinit var viewModel: LoginViewModel
+    lateinit var socialId: String
+    lateinit var socialType: String
+    lateinit var accessToken: String
     val onBoardFragmentList =
         listOf(
             OnBoardInitFragment(),
@@ -45,12 +49,42 @@ class LoginActivity : MisoActivity() {
         )
     var isCheckValid = false
     var currentPosition = 0
+    var isAllInitialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initializeView()
+        initializeProperties()
+    }
+
+    fun initializeProperties() {
+        fun checkinitializedAll() {
+            if (!isAllInitialized) {
+                if (
+                    this::accessToken.isInitialized &&
+                    this::socialId.isInitialized &&
+                    this::socialType.isInitialized
+                ) {
+                    initializeView()
+                    isAllInitialized = true
+                }
+            }
+        }
+        viewModel = LoginViewModel(MisoRepository.getInstance(applicationContext))
+        viewModel.updateProperties()
+        viewModel.accessToken.observe(this, {
+            accessToken = it!!
+            checkinitializedAll()
+        })
+        viewModel.socialType.observe(this, {
+            socialType = it!!
+            checkinitializedAll()
+        })
+        viewModel.socialId.observe(this, {
+            socialId = it!!
+            checkinitializedAll()
+        })
     }
 
     @SuppressLint("LongLogTag")
@@ -103,7 +137,6 @@ class LoginActivity : MisoActivity() {
             }
         }
 
-        repository = MisoRepository.getInstance(applicationContext)
         checkTokenValid()
         setupViewPagerAndIndicator()
         binding.clBtnKakaoLogin.setOnClickListener {
@@ -116,8 +149,8 @@ class LoginActivity : MisoActivity() {
 
     fun hasValidToken(): Boolean {
         return (isCheckValid &&
-                !getPreference("socialId").isNullOrBlank() &&
-                !getPreference("socialType").isNullOrBlank())
+                !socialId.isNullOrBlank() &&
+                !socialType.isNullOrBlank())
     }
 
     fun checkTokenValid() {
@@ -192,7 +225,7 @@ class LoginActivity : MisoActivity() {
                             Toast.makeText(this, "로그인 진행 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
                         } else if (tokenInfo != null) {
                             Log.i("token", "토큰 정보 보기 성공" + "\n회원번호:${tokenInfo.id}")
-                            saveTokenInfo(token, tokenInfo)
+                            viewModel.saveTokenInfo(token, tokenInfo)
                             issueMisoToken()
                         }
                     }
@@ -204,12 +237,6 @@ class LoginActivity : MisoActivity() {
         }
     }
 
-    fun saveTokenInfo(token: OAuthToken, tokenInfo: AccessTokenInfo) {
-        addPreferencePair("accessToken", token.accessToken)
-        addPreferencePair("socialId", tokenInfo.id.toString())
-        addPreferencePair("socialType", "kakao")
-        savePreferences()
-    }
 
     fun startRegionActivity() {
         startActivity(Intent(this, SelectRegionActivity::class.java))
@@ -223,61 +250,38 @@ class LoginActivity : MisoActivity() {
     }
 
     fun issueMisoToken() {
-        fun removeTokenAndStartRegionActivity() {
-            removePreference("misoToken")
-            savePreferences()
-            startRegionActivity()
-        }
-
-        repository.issueMisoToken(
-            makeLoginRequestDto(),
-            getPreference("accessToken")!!,
-            { call, response ->
-                Log.i("issueMisoToken", "성공")
-                var headers = response.headers()
-                var serverToken = headers.get("servertoken")!!
-                addPreferencePair("misoToken", serverToken!!)
-                savePreferences()
-                startHomeActivity()
-            },
-            { call, response ->
-                Log.i("issueMisoToken", "실패")
-                if (response.errorBody()!!.source().toString().contains("UNAUTHORIZED"))
-                    kakaoLogin()
-                else if (response.errorBody()!!.source().toString().contains("NOT_FOUND")) {
-                    startRegionActivity()
+        viewModel.issueMisoToken()
+        viewModel.issueMisoTokenResponse.observe(this, {
+            if (it is Response<*>) {
+                if (it.isSuccessful) {
+                    startHomeActivity()
                 } else {
-                    Log.i("issueMisoToken", response.errorBody()!!.source().toString())
-                    Toast.makeText(this, "로그인 토큰 발급 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
+                    Log.i("issueMisoToken", "실패")
+                    var errorString = it.errorBody()!!.source().toString()
+                    if (errorString.contains("UNAUTHORIZED"))
+                        kakaoLogin()
+                    else if (errorString.contains("NOT_FOUND")) {
+                        startRegionActivity()
+                    } else {
+                        Log.i("issueMisoToken", errorString)
+                        Toast.makeText(this, "로그인 토큰 발급 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            },
-            { call, t ->
-                Log.i("결과", "실패 : $t")
-                removeTokenAndStartRegionActivity()
-            })
+            } else {
+                startRegionActivity()
+            }
+        })
     }
 
-    fun makeLoginRequestDto(): LoginRequestDto {
-        var loginRequestDto = LoginRequestDto(
-            getPreference("socialId"),
-            getPreference("socialType")
-        )
-        return loginRequestDto
-    }
 
     fun checkRegistered() {
-        repository.checkRegistered(
-            getPreference("socialId")!!,
-            getPreference("socialType")!!,
-            { call, response ->
+        viewModel.checkRegistered()
+        viewModel.checkRegistered.observe(this, {
+            if (it!!)
                 issueMisoToken()
-            },
-            { call, response ->
+            else
                 startRegionActivity()
-            },
-            { call, throwable ->
-                startRegionActivity()
-            })
+        })
     }
 
 
