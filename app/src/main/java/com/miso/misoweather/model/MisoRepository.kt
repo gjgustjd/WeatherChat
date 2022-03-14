@@ -596,4 +596,34 @@ class MisoRepository private constructor() {
                 onError(call, throwable)
             })
     }
+
+    fun loadWeatherInfo(
+        regionId: Int,
+        onSuccessful: (
+            Call<GeneralResponseDto>,
+            Response<GeneralResponseDto>
+        ) -> Unit,
+        onFail: (
+            Call<GeneralResponseDto>,
+            Response<GeneralResponseDto>
+        ) -> Unit,
+        onError: (
+            Call<GeneralResponseDto>,
+            Throwable
+        ) -> Unit?,
+    ) {
+        val callUpdateRegion = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
+            .loadWeatherInfo(regionId)
+
+        TransportManager.requestApi(callUpdateRegion,
+            { call, response ->
+                if (response.isSuccessful)
+                    onSuccessful(call, response)
+                else
+                    onFail(call, response)
+            },
+            { call, throwable ->
+                onError(call, throwable)
+            })
+    }
 }

@@ -17,55 +17,84 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface MisoWeatherAPI {
- @GET("api/member/nickname")
- fun getNickname(): Call<NicknameResponseDto>
+    @GET("api/member/nickname")
+    fun getNickname(): Call<NicknameResponseDto>
 
- @POST("api/member")
- fun registerMember(@Body body:SignUpRequestDto,@Query("socialToken") socialToken:String):Call<GeneralResponseDto>
+    @POST("api/member")
+    fun registerMember(
+     @Body body: SignUpRequestDto,
+     @Query("socialToken") socialToken: String
+    ): Call<GeneralResponseDto>
 
- @GET("api/region/{bigScaleRegion}")
- fun getCity(@Path("bigScaleRegion") bigScaleRegion:String):Call<RegionListResponseDto>
+    @GET("api/region/{bigScaleRegion}")
+    fun getCity(@Path("bigScaleRegion") bigScaleRegion: String): Call<RegionListResponseDto>
 
- @GET("api/region/{bigScaleRegion}/{midScaleRegion}")
- fun getArea(@Path("bigScaleRegion") bigScaleRegion:String,
- @Path("midScaleRegion")midScaleRegion:String):Call<RegionListResponseDto>
+    @GET("api/region/{bigScaleRegion}/{midScaleRegion}")
+    fun getArea(
+     @Path("bigScaleRegion") bigScaleRegion: String,
+     @Path("midScaleRegion") midScaleRegion: String
+    ): Call<RegionListResponseDto>
 
- @POST("api/member/token")
- fun reIssueMisoToken(@Body body: LoginRequestDto, @Query("socialToken")socialToken: String):Call<GeneralResponseDto>
+    @POST("api/member/token")
+    fun reIssueMisoToken(
+     @Body body: LoginRequestDto,
+     @Query("socialToken") socialToken: String
+    ): Call<GeneralResponseDto>
 
- @HTTP(method = "DELETE", path="api/member/",hasBody = true)
- fun unregisterMember(@Header("serverToken") serverToken:String,@Body body: LoginRequestDto):Call<GeneralResponseDto>
+    @HTTP(method = "DELETE", path = "api/member/", hasBody = true)
+    fun unregisterMember(
+     @Header("serverToken") serverToken: String,
+     @Body body: LoginRequestDto
+    ): Call<GeneralResponseDto>
 
- @GET("api/member")
- fun getUserInfo(@Header("serverToken") serverToken:String):Call<MemberInfoResponseDto>
+    @GET("api/member")
+    fun getUserInfo(@Header("serverToken") serverToken: String): Call<MemberInfoResponseDto>
 
- @GET("api/forecast/{regionId}")
- fun getBriefForecast(@Path("regionId")regionId:Int):Call<ForecastBriefResponseDto>
+    @GET("api/new-forecast/{regionId}")
+    fun getBriefForecast(@Path("regionId") regionId: Int): Call<ForecastBriefResponseDto>
 
- @GET("api/forecast/{regionId}/detail")
- fun getDetailForecast(@Path("regionId")regionId:Int):Call<ForecastDetailResponseDto>
+    @GET("api/forecast/{regionId}/detail")
+    fun getDetailForecast(@Path("regionId") regionId: Int): Call<ForecastDetailResponseDto>
 
-@GET("api/comment")
-fun getCommentList(@Query("commentId")commentId:Int?,@Query("size")size:Int):Call<CommentListResponseDto>
+    @GET("api/comment")
+    fun getCommentList(
+     @Query("commentId") commentId: Int?,
+     @Query("size") size: Int
+    ): Call<CommentListResponseDto>
 
- @POST("api/comment")
- fun addComment(@Header("serverToken") serverToken: String,@Body body: CommentRegisterRequestDto):Call<GeneralResponseDto>
+    @POST("api/comment")
+    fun addComment(
+     @Header("serverToken") serverToken: String,
+     @Body body: CommentRegisterRequestDto
+    ): Call<GeneralResponseDto>
 
- @GET("api/survey/answers/{surveyId}")
- fun getSurveyAnswers(@Path("surveyId")surveyId:Int):Call<SurveyAnswerResponseDto>
+    @GET("api/survey/answers/{surveyId}")
+    fun getSurveyAnswers(@Path("surveyId") surveyId: Int): Call<SurveyAnswerResponseDto>
 
- @GET("api/survey")
- fun getSurveyResults(@Query("shortBigScale") shortBigScale:String):Call<SurveyResultResponseDto>
+    @GET("api/survey")
+    fun getSurveyResults(@Query("shortBigScale") shortBigScale: String): Call<SurveyResultResponseDto>
 
- @GET("api/survey/member")
- fun getSurveyMyAnswers(@Header("serverToken")serverToken: String):Call<SurveyMyAnswerResponseDto>
+    @GET("api/survey/member")
+    fun getSurveyMyAnswers(@Header("serverToken") serverToken: String): Call<SurveyMyAnswerResponseDto>
 
- @POST("api/survey")
- fun putSurveyMyAnser(@Header("serverToken")serverToken: String,@Body answerSurveyDto:SurveyAddMyAnswerRequestDto):Call<SurveyAddMyAnswerResponseDto>
+    @POST("api/survey")
+    fun putSurveyMyAnser(
+     @Header("serverToken") serverToken: String,
+     @Body answerSurveyDto: SurveyAddMyAnswerRequestDto
+    ): Call<SurveyAddMyAnswerResponseDto>
 
- @PUT("api/member-region-mapping/default")
- fun updateRegion(@Header("serverToken")serverToken: String,@Query("regionId")regionId: Int):Call<GeneralResponseDto>
+    @PUT("api/member-region-mapping/default")
+    fun updateRegion(
+     @Header("serverToken") serverToken: String,
+     @Query("regionId") regionId: Int
+    ): Call<GeneralResponseDto>
 
- @GET("api/member/existence")
- fun checkRegistered(@Query("socialId") socialId:String,@Query("socialType")socialType:String):Call<GeneralResponseDto>
+    @GET("api/member/existence")
+    fun checkRegistered(
+     @Query("socialId") socialId: String,
+     @Query("socialType") socialType: String
+    ): Call<GeneralResponseDto>
+
+    @GET("/api/new-forecast/update/{regionId}")
+    fun loadWeatherInfo(@Path("regionId") regionId: Int): Call<GeneralResponseDto>
 }
