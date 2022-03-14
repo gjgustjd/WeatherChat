@@ -61,7 +61,7 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
     }
 
     fun setupBigScale() {
-        bigScale.value = repository.getPreference("bigScaleRegion")
+        bigScale.value = repository.getPreference("BigScaleRegion")
     }
 
     fun setupMidScale() {
@@ -101,16 +101,17 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
             regionId,
             { call, response ->
                 var region = response.body()!!.data.region
-                repository.addPreferencePair("bigScale", region.bigScale)
+                repository.addPreferencePair("BigScaleRegion", region.bigScale)
                 repository.addPreferencePair(
-                    "midScale",
+                    "MidScaleRegion",
                     if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
                 )
                 repository.addPreferencePair(
-                    "smallScale",
+                    "SmallScaleRegion",
                     if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
                 )
                 repository.savePreferences()
+                updateProperties()
                 forecastBriefResponse.value = response
             },
             { call, response ->
