@@ -26,6 +26,7 @@ import com.miso.misoweather.Acitivity.mypage.MyPageActivity
 import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
 import com.miso.misoweather.Dialog.GeneralConfirmDialog
+import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
 import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 import java.lang.Exception
@@ -85,13 +86,12 @@ class HomeActivity : MisoActivity() {
         getUserInfo()
         getBriefForecast()
         getCommentList()
-        Log.i("setupData","Launched")
+        Log.i("setupData", "Launched")
     }
 
     fun initializeProperties() {
-        fun checkinitializedAll()
-        {
-            if(!isAllInitialized) {
+        fun checkinitializedAll() {
+            if (!isAllInitialized) {
                 if (
                     this::isSurveyed.isInitialized &&
                     this::lastSurveyedDate.isInitialized &&
@@ -102,7 +102,7 @@ class HomeActivity : MisoActivity() {
                     this::smallScale.isInitialized
                 ) {
                     setupData()
-                    isAllInitialized=true
+                    isAllInitialized = true
                 }
             }
         }
@@ -136,7 +136,7 @@ class HomeActivity : MisoActivity() {
             checkinitializedAll()
         })
 
-        Log.i("initializeProperties","Launched")
+        Log.i("initializeProperties", "Launched")
     }
 
     fun initializeViews() {
@@ -239,41 +239,33 @@ class HomeActivity : MisoActivity() {
     }
 
     fun getBriefForecast() {
-        var repeatCount = 0
         fun forecastRequest() {
-            fun repeatRequest() {
-                if (repeatCount < 3) {
-                    repeatCount++
-                    forecastRequest()
-                    Log.i("getBriefForecast", "repeated")
-                }
-            }
-
-            viewModel.getBriefForecast(defaultRegionId.toInt())
+            viewModel.loadWeatherInfo(defaultRegionId.toInt())
             viewModel.forecastBriefResponse.observe(this, {
                 if (it == null) {
                     Log.i("getBriefForecast", "실패")
-                    repeatRequest()
                 } else {
-                    if (it.isSuccessful) {
+                    if (it is Response<*>) {
                         try {
                             Log.i("결과", "성공")
-                            val forecastBriefResponseDto = it.body()!!
-                            var forecast = forecastBriefResponseDto.data.forecast
+                            val forecastBriefResponseDto = it.body()!! as ForecastBriefResponseDto
                             var region = forecastBriefResponseDto.data.region
                             txtLocation.text =
                                 region.bigScale + " " + midScale + " " +
                                         if (midScale.equals("전체")) "" else smallScale
-                            txtWeatherEmoji.setText(forecast.sky)
-                            txtWeatherDegree.setText(forecast.temperature + "˚")
+                            txtWeatherEmoji.setText(forecastBriefResponseDto.data.weather)
+                            txtWeatherDegree.setText(forecastBriefResponseDto.data.temperatureMin+ "˚")
                             setupSurveyResult()
                         } catch (e: Exception) {
-                            repeatRequest()
                             e.printStackTrace()
                             Log.i("getBriefForecast", "excepted")
                         }
                     } else {
-                        repeatRequest()
+                        if (it is String) {
+
+                        } else if (it is Throwable) {
+
+                        }
                     }
                 }
             })

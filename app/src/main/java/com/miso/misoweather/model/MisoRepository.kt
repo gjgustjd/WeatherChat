@@ -1,9 +1,7 @@
 package com.miso.misoweather.model
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.core.content.ContextCompat
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
@@ -21,7 +19,6 @@ import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.*
 
 class MisoRepository private constructor() {
     companion object {
@@ -610,12 +607,12 @@ class MisoRepository private constructor() {
         onError: (
             Call<GeneralResponseDto>,
             Throwable
-        ) -> Unit?,
+        ) -> Unit,
     ) {
-        val callUpdateRegion = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
+        val callLoadWeatherInfo = TransportManager.getRetrofitApiObject<GeneralResponseDto>()
             .loadWeatherInfo(regionId)
 
-        TransportManager.requestApi(callUpdateRegion,
+        TransportManager.requestApi(callLoadWeatherInfo,
             { call, response ->
                 if (response.isSuccessful)
                     onSuccessful(call, response)

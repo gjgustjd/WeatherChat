@@ -19,7 +19,7 @@ import java.lang.Exception
 
 class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
     val memberInfoResponse: MutableLiveData<Response<MemberInfoResponseDto>?> = MutableLiveData()
-    val forecastBriefResponse: MutableLiveData<Response<ForecastBriefResponseDto>?> =
+    val forecastBriefResponse: MutableLiveData<Any?> =
         MutableLiveData()
     val commentListResponse: MutableLiveData<Response<CommentListResponseDto>?> = MutableLiveData()
     val surveyResultResponse: MutableLiveData<Response<SurveyResultResponseDto>?> =
@@ -94,6 +94,21 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
             { call, throwable ->
                 memberInfoResponse.value = null
             })
+    }
+
+    fun loadWeatherInfo(regionId: Int) {
+        repository.loadWeatherInfo(
+            regionId,
+            { call, response ->
+                getBriefForecast(regionId)
+            },
+            { call, response ->
+                forecastBriefResponse.value = response.message()
+            },
+            { call, t ->
+                forecastBriefResponse.value = null
+            }
+        )
     }
 
     fun getBriefForecast(regionId: Int) {
