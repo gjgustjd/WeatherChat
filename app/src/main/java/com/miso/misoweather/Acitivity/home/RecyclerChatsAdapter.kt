@@ -54,13 +54,24 @@ class RecyclerChatsAdapter(
 
         val currentTimeString =
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString()
-        val commentDayString = comments.get(position).createdAt.split("T")[0]
-        if (commentDayString.equals(currentTimeString))
-            holder.time.text =
-                comments.get(position).createdAt.split("T")[1].split(".")[0].substring(0, 5)
-        else
-            holder.time.text = commentDayString + " " +
-                    comments.get(position).createdAt.split("T")[1].split(".")[0].substring(0, 5)
+
+        val commentCreatedAt = comments.get(position).createdAt
+        if (commentCreatedAt != null) {
+            if (commentCreatedAt.contains("T")) {
+                val commentDayString =
+                    commentCreatedAt.split("T")[0]
+                if (commentDayString.equals(currentTimeString))
+                    holder.time.text =
+                        commentCreatedAt.split("T")[1].split(".")[0].substring(0, 5)
+                else
+                    holder.time.text = commentDayString + " " +
+                            commentCreatedAt.split("T")[1].split(".")[0].substring(0, 5)
+            } else {
+                holder.time.text = commentCreatedAt
+            }
+        } else {
+            holder.time.text = ""
+        }
 
         holder.emoji.text = comments.get(position).emoji
         if (isCommentsFragment) {
