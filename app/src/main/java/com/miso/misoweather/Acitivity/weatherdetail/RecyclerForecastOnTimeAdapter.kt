@@ -8,8 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
 import com.miso.misoweather.model.DTO.Forecast.Forecast
+import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecast
 
-class RecyclerForecastOnTimeAdapter(var context: Context, var forecasts: List<Forecast>) :
+class RecyclerForecastOnTimeAdapter(var context: Context, var forecasts: List<HourlyForecast>) :
     RecyclerView.Adapter<RecyclerForecastOnTimeAdapter.Holder>() {
 
     var viewHolders: ArrayList<Holder> = ArrayList()
@@ -19,21 +20,19 @@ class RecyclerForecastOnTimeAdapter(var context: Context, var forecasts: List<Fo
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.degree.text = forecasts.get(position).temperature+"˚"
-        holder.emoji.text = forecasts.get(position).sky
-        holder.time.text = forecasts.get(position).hour+"시"
+        holder.degree.text = forecasts.get(position).temperature.split(".")[0] + "˚"
+        holder.emoji.text = forecasts.get(position).weather
+        holder.time.text = forecasts.get(position).forecastTime
+            .split("T")[1]
+            .split(":")[0] + "시"
         viewHolders.add(holder)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.list_weather_on_time, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.list_weather_on_time, parent, false)
         return Holder(view)
-    }
-
-    fun getForecastOnHour(hour:Int):Forecast
-    {
-        return forecasts.first(){it.hour.toInt()==hour}
     }
 
     class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
