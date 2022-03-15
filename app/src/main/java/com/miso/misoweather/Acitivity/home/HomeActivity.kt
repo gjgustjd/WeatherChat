@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.MutableLiveData
@@ -249,16 +250,17 @@ class HomeActivity : MisoActivity() {
                         try {
                             Log.i("결과", "성공")
                             val forecastBriefResponseDto = it.body()!! as ForecastBriefResponseDto
-                            var region = forecastBriefResponseDto.data.region
-                            txtLocation.text =
-                                region.bigScale + " " + midScale + " " +
-                                        if (midScale.equals("전체")) "" else smallScale
                             txtWeatherEmoji.setText(forecastBriefResponseDto.data.weather)
-                            txtWeatherDegree.setText(forecastBriefResponseDto.data.temperatureMin+ "˚")
-                            setupSurveyResult()
+                            txtWeatherDegree.setText(forecastBriefResponseDto.data.temperatureMin + "˚")
                         } catch (e: Exception) {
                             e.printStackTrace()
+                            Toast.makeText(this,"날씨 단기예보 불러오기에 실패하였습니다.",Toast.LENGTH_SHORT).show()
                             Log.i("getBriefForecast", "excepted")
+                        } finally {
+                            txtLocation.text =
+                                bigScale + " " + midScale + " " +
+                                        if (midScale.equals("전체")) "" else smallScale
+                            setupSurveyResult()
                         }
                     } else {
                         if (it is String) {
