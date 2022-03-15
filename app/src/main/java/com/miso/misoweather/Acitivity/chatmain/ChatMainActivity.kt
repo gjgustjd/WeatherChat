@@ -111,23 +111,27 @@ class ChatMainActivity : MisoActivity() {
         btnSurvey.setOnClickListener()
         {
 
-            btnSurvey.startBackgroundAlphaAnimation(0f, 1f)
-            txtChatBtn.setTextColor(getColor(R.color.textBlack))
-            btnChat.startBackgroundAlphaAnimation(1f, 0f)
-            txtSurveyBtn.setTextColor(Color.WHITE)
-            locationLayout.visibility = View.VISIBLE
-            locationLayout.startBackgroundAlphaAnimation(0f, 1f)
-            setupFragment(surveyFragment)
+            if (!currentFragment.equals(surveyFragment)) {
+                btnSurvey.startBackgroundAlphaAnimation(0f, 1f)
+                txtChatBtn.setTextColor(getColor(R.color.textBlack))
+                btnChat.startBackgroundAlphaAnimation(1f, 0f)
+                txtSurveyBtn.setTextColor(Color.WHITE)
+                locationLayout.visibility = View.VISIBLE
+                locationLayout.startBackgroundAlphaAnimation(0f, 1f)
+                setupFragment(surveyFragment)
+            }
         }
         btnChat.setOnClickListener()
         {
-            btnChat.startBackgroundAlphaAnimation(0f, 1f)
-            txtSurveyBtn.setTextColor(getColor(R.color.textBlack))
-            btnSurvey.startBackgroundAlphaAnimation(1f, 0f)
-            txtChatBtn.setTextColor(Color.WHITE)
-            locationLayout.visibility = View.GONE
-            locationLayout.startBackgroundAlphaAnimation(1f, 0f)
-            setupFragment(commentsFragment)
+            if (!currentFragment.equals(commentsFragment)) {
+                btnChat.startBackgroundAlphaAnimation(0f, 1f)
+                txtSurveyBtn.setTextColor(getColor(R.color.textBlack))
+                btnSurvey.startBackgroundAlphaAnimation(1f, 0f)
+                txtChatBtn.setTextColor(Color.WHITE)
+                locationLayout.visibility = View.GONE
+                locationLayout.startBackgroundAlphaAnimation(1f, 0f)
+                setupFragment(commentsFragment)
+            }
         }
         btn_back = binding.imgbtnBack
         btn_back.setOnClickListener()
