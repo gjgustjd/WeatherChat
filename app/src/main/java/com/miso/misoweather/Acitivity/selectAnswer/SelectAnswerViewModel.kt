@@ -65,7 +65,7 @@ class SelectAnswerViewModel(private val repository: MisoRepository) : ViewModel(
             repository.getPreference("misoToken")!!,
             SurveyAddMyAnswerRequestDto(
                 selectedAnswer.answerId,
-                getBigShortScale(repository.getPreference("bigScale")!!),
+                getBigShortScale(repository.getPreference("BigScaleRegion")!!),
                 surveyId
             ),
             { call, response ->

@@ -42,7 +42,7 @@ class ChatMainViewModel(private val repository: MisoRepository) : ViewModel() {
     fun updateProperties()
     {
         surveyRegion.value = repository.getPreference("surveyRegion")
-        bigScaleRegion.value = repository.getPreference("bigScaleRegion")
+        bigScaleRegion.value = repository.getPreference("BigScaleRegion")
         misoToken.value = repository.getPreference("misoToken")
     }
     fun getCommentList(commentId: Int?, size: Int) {
