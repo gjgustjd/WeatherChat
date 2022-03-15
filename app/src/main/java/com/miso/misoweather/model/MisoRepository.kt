@@ -5,7 +5,8 @@ import android.content.SharedPreferences
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
-import com.miso.misoweather.model.DTO.Forecast.Detail.ForecastDetailResponseDto
+import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
+import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
 import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
@@ -347,24 +348,24 @@ class MisoRepository private constructor() {
             })
     }
 
-    fun getDetailForecast(
+    fun getDailyForecast(
         regionId: Int,
         onSuccessful: (
-            Call<ForecastDetailResponseDto>,
-            Response<ForecastDetailResponseDto>
+            Call<DailyForecastResponseDto>,
+            Response<DailyForecastResponseDto>
         ) -> Unit,
         onFail: (
-            Call<ForecastDetailResponseDto>,
-            Response<ForecastDetailResponseDto>
+            Call<DailyForecastResponseDto>,
+            Response<DailyForecastResponseDto>
         ) -> Unit,
         onError: (
-            Call<ForecastDetailResponseDto>,
+            Call<DailyForecastResponseDto>,
             Throwable
-        ) -> Unit?,
+        ) -> Unit,
     ) {
         val callGetDetailForecast =
-            TransportManager.getRetrofitApiObject<ForecastDetailResponseDto>()
-                .getDetailForecast(regionId)
+            TransportManager.getRetrofitApiObject<DailyForecastResponseDto>()
+                .getDailyForecast(regionId)
 
         TransportManager.requestApi(callGetDetailForecast,
             { call, response ->
@@ -378,6 +379,35 @@ class MisoRepository private constructor() {
             })
     }
 
+    fun getHourlyForecast(
+        regionId: Int,
+        onSuccessful: (
+            Call<HourlyForecastResponseDto>,
+            Response<HourlyForecastResponseDto>
+        ) -> Unit,
+        onFail: (
+            Call<HourlyForecastResponseDto>,
+            Response<HourlyForecastResponseDto>
+        ) -> Unit,
+        onError: (
+            Call<HourlyForecastResponseDto>,
+            Throwable
+        ) -> Unit,
+    ) {
+        val callGetHourlyForecast = TransportManager.getRetrofitApiObject<HourlyForecastResponseDto>()
+            .getHourlyForecast(regionId)
+
+        TransportManager.requestApi(callGetHourlyForecast,
+            { call, response ->
+                if (response.isSuccessful)
+                    onSuccessful(call, response)
+                else
+                    onFail(call, response)
+            },
+            { call, throwable ->
+                onError(call, throwable)
+            })
+    }
     fun getCommentList(
         commentId: Int?,
         size: Int,

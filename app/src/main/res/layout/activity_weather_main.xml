@@ -253,6 +253,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/unit_background"
+                android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@id/rainLayout"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintHorizontal_weight="1"
@@ -372,6 +373,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@drawable/unit_background"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/dustLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="1"
@@ -442,18 +444,17 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/projectionLayout"
+                android:id="@+id/forecastLayout"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/unit_background"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dustLayout">
 
                 <TextView
-                    android:id="@+id/txt_title_projection_day"
+                    android:id="@+id/txt_title_forecast_day"
                     style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -474,19 +475,19 @@
                     android:text="일 예보"
                     android:textSize="12dp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/txt_title_projection_day"
+                    app:layout_constraintStart_toEndOf="@+id/txt_title_forecast_day"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_forecast"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:layout_marginEnd="15dp"
                     android:layout_marginBottom="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/txt_title_projection_day"
+                    app:layout_constraintStart_toStartOf="@+id/txt_title_forecast_day"
                     app:layout_constraintTop_toBottomOf="@+id/label_title_projection"
                     tools:listitem="@layout/list_weather_day" />
 
@@ -498,10 +499,11 @@
                 android:layout_height="100dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/unit_background"
+                android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@id/humidLayout"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/projectionLayout">
+                app:layout_constraintTop_toBottomOf="@id/forecastLayout">
 
                 <TextView
                     android:id="@+id/txt_degree_wind"
@@ -564,6 +566,7 @@
                 android:layout_height="100dp"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/unit_background"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/windLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/windLayout"

@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/txt_day"
         style="@style/basicText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
@@ -17,103 +17,69 @@
         android:textSize="12dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/txt_date"
+        app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.1" />
 
     <TextView
-        android:id="@+id/xt_date"
+        android:id="@+id/txt_date"
         style="@style/basicText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:text="12/31"
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/txt_weather_emoji"
         app:layout_constraintStart_toEndOf="@+id/txt_day"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.15" />
 
     <TextView
-        android:id="@+id/label_beforenoon"
+        android:id="@+id/txt_weather_emoji"
         style="@style/basicText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:text="오전"
+        android:gravity="center"
         android:textSize="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/img_imoge_beforenoon"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toEndOf="@+id/xt_date"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/label_afternoon"
-        style="@style/basicText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="오후"
-        android:textSize="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/img_imoge_afternoon"
-        app:layout_constraintStart_toEndOf="@+id/img_imoge_beforenoon"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/txt_degree_min"
+        app:layout_constraintStart_toEndOf="@+id/txt_date"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.55" />
 
     <TextView
         android:id="@+id/txt_degree_min"
         style="@style/basicText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_day"
+        app:layout_constraintEnd_toStartOf="@id/txt_degree_max"
+        app:layout_constraintStart_toEndOf="@id/txt_weather_emoji"
+        app:layout_constraintTop_toTopOf="@+id/txt_day"
+        app:layout_constraintWidth_percent="0.1" />
+
+    <TextView
+        android:id="@+id/txt_degree_max"
+        style="@style/basicText"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="0"
         android:textSize="12dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/txt_day"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/txt_day" />
-
-    <TextView
-        android:id="@+id/txt_degree_max"
-        style="@style/basicText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:text="0"
-        android:textSize="12dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/txt_day"
-        app:layout_constraintEnd_toStartOf="@+id/txt_degree_min"
+        app:layout_constraintStart_toEndOf="@id/txt_degree_min"
         app:layout_constraintTop_toTopOf="@+id/txt_day"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/img_imoge_beforenoon"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="5dp"
-        android:adjustViewBounds="true"
-        app:layout_constraintBottom_toBottomOf="@+id/label_beforenoon"
-        app:layout_constraintEnd_toStartOf="@id/label_afternoon"
-        app:layout_constraintStart_toEndOf="@+id/label_beforenoon"
-        app:layout_constraintTop_toTopOf="@+id/label_beforenoon"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/icon_sun" />
-
-    <ImageView
-        android:id="@+id/img_imoge_afternoon"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="5dp"
-        android:adjustViewBounds="true"
-        app:layout_constraintBottom_toBottomOf="@+id/label_afternoon"
-        app:layout_constraintEnd_toStartOf="@+id/txt_degree_max"
-        app:layout_constraintStart_toEndOf="@+id/label_afternoon"
-        app:layout_constraintTop_toTopOf="@+id/label_afternoon"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/icon_sun" />
+        app:layout_constraintWidth_percent="0.1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
