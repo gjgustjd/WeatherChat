@@ -35,6 +35,8 @@ import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 import java.lang.Exception
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -253,7 +255,7 @@ class HomeActivity : MisoActivity() {
 
     fun goToChatMainActivity() {
         var currentDate =
-            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+            ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
         if (!isSurveyed.equals("true") || !lastSurveyedDate.equals(currentDate)) {
             var intent = Intent(this, SelectSurveyAnswerActivity::class.java)
             intent.putExtra("isFirstSurvey", true)

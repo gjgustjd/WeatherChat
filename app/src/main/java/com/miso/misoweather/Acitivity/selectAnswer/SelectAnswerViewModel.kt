@@ -24,6 +24,8 @@ import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 import java.lang.Exception
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class SelectAnswerViewModel(private val repository: MisoRepository) : ViewModel() {
@@ -72,7 +74,7 @@ class SelectAnswerViewModel(private val repository: MisoRepository) : ViewModel(
                 repository.addPreferencePair("isSurveyed", "true")
                 repository.addPreferencePair(
                     "LastSurveyedDate",
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+                    ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
                 )
                 repository.savePreferences()
                surveyAnswerResponse.value = response!!

@@ -15,6 +15,8 @@ import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecast
 import com.miso.misoweather.model.DTO.Forecast.Forecast
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecast
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 class RecyclerForecastOnDayAdapter(var context: Context, var forecasts: List<DailyForecast>) :
@@ -24,7 +26,7 @@ class RecyclerForecastOnDayAdapter(var context: Context, var forecasts: List<Dai
     val dayNameList = listOf("월", "화", "수", "목", "금", "토", "일")
 
     fun getDayString(position: Int): String {
-        var dayPosition = LocalDateTime.now().dayOfWeek.value
+        var dayPosition = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).dayOfWeek.value
         if (position == 0) {
             return "오늘"
         } else {
@@ -48,7 +50,7 @@ class RecyclerForecastOnDayAdapter(var context: Context, var forecasts: List<Dai
         var forecastDate = forecasts[position].forecastTime.split("T")[0]
         holder.time.text = forecastDate.split("-")[1] + "/" + forecastDate.split("-")[2]
         holder.day.text = getDayString(position)
-        Log.i("dayOfWeek", LocalDateTime.now().dayOfWeek.toString())
+        Log.i("dayOfWeek", ZonedDateTime.now(ZoneId.of("Asia/Seoul")).dayOfWeek.toString())
         viewHolders.add(holder)
     }
 
