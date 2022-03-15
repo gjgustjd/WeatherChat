@@ -1,33 +1,41 @@
 package com.miso.misoweather.Acitivity.weatherdetail
 
-import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.miso.misoweather.Acitivity.home.HomeActivity
-import com.miso.misoweather.model.DTO.Forecast.Detail.ForecastDetailResponseDto
-import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
-import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
+import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
 import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
-import java.lang.Exception
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 
 class WeatherDetailViewModel(private val repository: MisoRepository) : ViewModel() {
-    val forecastDetailResponse: MutableLiveData<Response<ForecastDetailResponseDto>?> =
+    val forecastDetailResponse: MutableLiveData<Response<DailyForecastResponseDto>?> =
         MutableLiveData()
     val isSurveyed: MutableLiveData<String?> = MutableLiveData()
     val lastSurveyedDate: MutableLiveData<String?> = MutableLiveData()
     val defaultRegionId: MutableLiveData<String?> = MutableLiveData()
+    val bigScale: MutableLiveData<String?> = MutableLiveData()
+    val midScale: MutableLiveData<String?> = MutableLiveData()
+    val smallScale: MutableLiveData<String?> = MutableLiveData()
 
     fun updateProperties() {
+        setupBigScale()
+        setupMidScale()
+        setupSmallScale()
         setupSurveyed()
         setupLastSurveyedDate()
         setupDefaultRegionId()
     }
 
+    fun setupBigScale() {
+        bigScale.value = repository.getPreference("BigScaleRegion")
+    }
+
+    fun setupMidScale() {
+        midScale.value = repository.getPreference("MidScaleRegion")
+    }
+
+    fun setupSmallScale() {
+        smallScale.value = repository.getPreference("SmallScaleRegion")
+    }
     fun setupSurveyed() {
         isSurveyed.value = repository.getPreference("isSurveyed")
     }
@@ -40,7 +48,7 @@ class WeatherDetailViewModel(private val repository: MisoRepository) : ViewModel
     }
 
     fun getForecastDetail(regionId: Int) {
-        repository.getDetailForecast(
+        repository.getDailyForecast(
             regionId,
             { call, response ->
                 forecastDetailResponse.value = response

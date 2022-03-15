@@ -1,25 +1,22 @@
 package com.miso.misoweather.Acitivity.home
 
-import android.content.Intent
 import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kakao.sdk.user.UserApiClient
-import com.miso.misoweather.Acitivity.login.LoginActivity
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
-import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
-import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
-import java.lang.Exception
 
 class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
     val memberInfoResponse: MutableLiveData<Response<MemberInfoResponseDto>?> = MutableLiveData()
     val forecastBriefResponse: MutableLiveData<Any?> =
+        MutableLiveData()
+    val dailyForecastResponse: MutableLiveData<Any?> =
+        MutableLiveData()
+    val hourlyForecastResponse: MutableLiveData<Any?> =
         MutableLiveData()
     val commentListResponse: MutableLiveData<Response<CommentListResponseDto>?> = MutableLiveData()
     val surveyResultResponse: MutableLiveData<Response<SurveyResultResponseDto>?> =
@@ -32,6 +29,7 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
     val midScale: MutableLiveData<String?> = MutableLiveData()
     val smallScale: MutableLiveData<String?> = MutableLiveData()
     val logoutResponseString: MutableLiveData<String?> = MutableLiveData()
+    val isWeatherLoaded: MutableLiveData<Boolean> = MutableLiveData(false)
 
     fun updateProperties() {
         setupBigScale()
@@ -100,13 +98,13 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         repository.loadWeatherInfo(
             regionId,
             { call, response ->
-                getBriefForecast(regionId)
+                isWeatherLoaded.value=true
             },
             { call, response ->
-                forecastBriefResponse.value = response.message()
+                isWeatherLoaded.value=false
             },
             { call, t ->
-                forecastBriefResponse.value = null
+                isWeatherLoaded.value = false
             }
         )
     }
@@ -180,5 +178,34 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
                 logoutResponseString.value = "OK"
             }
         }
+    }
+
+    fun getDailyForecast(regionId: Int) {
+        repository.getDailyForecast(
+            regionId,
+            { call, response ->
+                dailyForecastResponse.value = response
+            },
+            { call, response ->
+                dailyForecastResponse.value = response
+            },
+            { call, t ->
+                dailyForecastResponse.value = t
+            },
+        )
+    }
+    fun getHourlyForecast(regionId: Int) {
+        repository.getHourlyForecast(
+            regionId,
+            { call, response ->
+                hourlyForecastResponse.value = response
+            },
+            { call, response ->
+                hourlyForecastResponse.value = response
+            },
+            { call, t ->
+                hourlyForecastResponse.value = t
+            },
+        )
     }
 }

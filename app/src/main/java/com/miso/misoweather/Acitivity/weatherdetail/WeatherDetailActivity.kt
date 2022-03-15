@@ -3,7 +3,6 @@ package com.miso.misoweather.Acitivity.weatherdetail
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -16,29 +15,18 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityWeatherMainBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
-import com.miso.misoweather.model.DTO.Forecast.Detail.ForecastDetailResponseDto
-import com.miso.misoweather.model.DTO.Forecast.ForecastDetailInfo
+import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
+import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastData
+import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.MisoRepository
-import com.miso.misoweather.model.TransportManager
-import com.miso.misoweather.model.interfaces.MisoWeatherAPI
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.Exception
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 class WeatherDetailActivity : MisoActivity() {
     lateinit var binding: ActivityWeatherMainBinding
     lateinit var btnBack: ImageButton
-    lateinit var forecastdetailInfo: ForecastDetailInfo
     lateinit var region: Region
     lateinit var chatLayout: ConstraintLayout
     lateinit var txtLocation: TextView
@@ -47,20 +35,27 @@ class WeatherDetailActivity : MisoActivity() {
     lateinit var txtMinDegree: TextView
     lateinit var txtMaxDegree: TextView
     lateinit var btnChat: ImageButton
-    lateinit var recyclerWeatherOnTIme: RecyclerView
+    lateinit var recyclerWeatherOnTime: RecyclerView
+    lateinit var recyclerWeaterOnDay: RecyclerView
     lateinit var weatherOnTimeAdapter: RecyclerForecastOnTimeAdapter
+    lateinit var weatherOnDayAdapter: RecyclerForecastOnDayAdapter
     lateinit var txtEmojiRain: TextView
     lateinit var txtDegreeRain: TextView
     lateinit var txtDegreeRainOnHour: TextView
-    lateinit var recyclerForecast: RecyclerView
     lateinit var txtEmojiWind: TextView
     lateinit var txtDegreeWind: TextView
+    lateinit var txtForecastDay: TextView
     lateinit var viewModel: WeatherDetailViewModel
-
+    lateinit var bigScale: String
+    lateinit var midScale: String
+    lateinit var smallScale: String
     lateinit var isSurveyed: String
     lateinit var lastSurveyedDate: String
     lateinit var defaultRegionId: String
     var isAllInitialized = false
+    lateinit var briefForecastData: ForecastBriefData
+    lateinit var dailyForecastData: DailyForecastData
+    lateinit var hourlyForecastData: HourlyForecastData
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,10 +71,13 @@ class WeatherDetailActivity : MisoActivity() {
                 if (
                     this::isSurveyed.isInitialized &&
                     this::defaultRegionId.isInitialized &&
-                    this::lastSurveyedDate.isInitialized
+                    this::lastSurveyedDate.isInitialized &&
+                    this::bigScale.isInitialized &&
+                    this::midScale.isInitialized &&
+                    this::smallScale.isInitialized
                 ) {
                     initializeViews()
-                    getForecastDetail()
+                    setForecastInfo()
                     isAllInitialized = true
                 }
             }
@@ -98,9 +96,24 @@ class WeatherDetailActivity : MisoActivity() {
             defaultRegionId = it!!
             checkinitializedAll()
         })
+        viewModel.bigScale.observe(this, {
+            bigScale = it!!
+            checkinitializedAll()
+        })
+        viewModel.midScale.observe(this, {
+            midScale = it!!
+            checkinitializedAll()
+        })
+        viewModel.smallScale.observe(this, {
+            smallScale = it!!
+            checkinitializedAll()
+        })
     }
 
     fun initializeViews() {
+        briefForecastData = intent.getSerializableExtra("briefForecast") as ForecastBriefData
+        dailyForecastData = intent.getSerializableExtra("dailyForecast") as DailyForecastData
+        hourlyForecastData = intent.getSerializableExtra("hourlyForecast") as HourlyForecastData
         chatLayout = binding.chatLayout
         txtLocation = binding.txtLocation
         txtWeatherEmoji = binding.txtWeatherEmoji
@@ -113,6 +126,8 @@ class WeatherDetailActivity : MisoActivity() {
         txtDegreeRainOnHour = binding.txtRainDegreeOnHour
         txtEmojiWind = binding.txtEmojiWindSpeed
         txtDegreeWind = binding.txtDegreeWind
+        txtForecastDay = binding.txtTitleForecastDay
+        txtForecastDay.text = LocalDateTime.now().dayOfMonth.toString()
         btnBack = binding.imgbtnBack
         btnBack.setOnClickListener()
         {
@@ -122,8 +137,8 @@ class WeatherDetailActivity : MisoActivity() {
         {
             goToChatMainActivity()
         }
-        recyclerWeatherOnTIme = binding.recylcerWeatherOnTIme
-        recyclerForecast = binding.recyclerForecast
+        recyclerWeatherOnTime = binding.recylcerWeatherOnTIme
+        recyclerWeaterOnDay = binding.recyclerForecast
     }
 
     override fun doBack() {
@@ -151,53 +166,30 @@ class WeatherDetailActivity : MisoActivity() {
         }
     }
 
-    fun getForecastDetail() {
-        viewModel.getForecastDetail(defaultRegionId.toInt())
-        viewModel.forecastDetailResponse.observe(this, {
-            if (it == null) {
-
-            } else {
-                if (it.isSuccessful) {
-                    try {
-                        Log.i("결과", "성공")
-                        forecastdetailInfo = it.body()!!.data.forecastInfo
-                        region = it.body()!!.data.region
-                        setupWeatherOnTimeRecycler(it.body()!!)
-                        setForecastInfo()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                } else {
-
-                }
-            }
-        })
-    }
 
     fun setForecastInfo() {
-        val midScaleString = if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
+        val midScaleString = if (midScale.equals("선택 안 함")) "전체" else midScale
         val smallScaleString =
             if (midScaleString.equals("전체"))
                 ""
             else
-                if (region.smallScale.equals("선택 안 함"))
+                if (smallScale.equals("선택 안 함"))
                     "전체"
                 else
-                    region.smallScale
-        txtLocation.text = region.bigScale + " " + midScaleString + " " + smallScaleString
-        txtMinDegree.text = forecastdetailInfo.temperatureMin.split(".")[0] + "˚"
-        txtMaxDegree.text = forecastdetailInfo.temperatureMax.split(".")[0] + "˚"
-        txtEmojiRain.text = forecastdetailInfo.rainSnow
-        txtDegreeRain.text = forecastdetailInfo.rainSnowPossibility + "%"
-        txtDegreeRainOnHour.text = forecastdetailInfo.rainSnowValue
-        txtDegreeWind.text = getWindDegree(forecastdetailInfo.windSpeed)
-        txtEmojiWind.text = forecastdetailInfo.windSpeed
-        val forecastOnCurrentHour = weatherOnTimeAdapter.getForecastOnHour(
-            ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("HH"))
-                .toInt()
-        )
-        txtDegree.text = forecastOnCurrentHour.temperature + "˚"
-        txtWeatherEmoji.text = forecastOnCurrentHour.sky
+                    smallScale
+
+        txtLocation.text = bigScale + " " + midScaleString + " " + smallScaleString
+        txtMinDegree.text = briefForecastData.temperatureMin.split(".")[0] + "˚"
+        txtMaxDegree.text = briefForecastData.temperatureMax.split(".")[0] + "˚"
+        txtDegree.text = briefForecastData.temperature.split(".")[0] + "˚"
+        txtWeatherEmoji.text = briefForecastData.weather
+//        txtEmojiRain.text = forecastdetailInfo.rainSnow
+//        txtDegreeRain.text = forecastdetailInfo.rainSnowPossibility + "%"
+//        txtDegreeRainOnHour.text = forecastdetailInfo.rainSnowValue
+//        txtDegreeWind.text = getWindDegree(forecastdetailInfo.windSpeed)
+//        txtEmojiWind.text = forecastdetailInfo.windSpeed
+        setupWeatherOnTimeRecycler()
+        setupWeatherOnDayRecycler()
     }
 
     fun getWindDegree(emoji: String): String {
@@ -207,12 +199,20 @@ class WeatherDetailActivity : MisoActivity() {
         return degrees.get(emojies.indexOf(emoji))
     }
 
+    fun setupWeatherOnDayRecycler() {
+        weatherOnDayAdapter =
+            RecyclerForecastOnDayAdapter(this, dailyForecastData.dailyForecastList)
+        recyclerWeaterOnDay.adapter = weatherOnDayAdapter
+        recyclerWeaterOnDay.layoutManager =
+            LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+    }
 
-    fun setupWeatherOnTimeRecycler(forecastDetailResponseDto: ForecastDetailResponseDto) {
+
+    fun setupWeatherOnTimeRecycler() {
         weatherOnTimeAdapter =
-            RecyclerForecastOnTimeAdapter(this, forecastDetailResponseDto.data.forecastByTime)
-        recyclerWeatherOnTIme.adapter = weatherOnTimeAdapter
-        recyclerWeatherOnTIme.layoutManager =
+            RecyclerForecastOnTimeAdapter(this, hourlyForecastData.hourlyForecastList)
+        recyclerWeatherOnTime.adapter = weatherOnTimeAdapter
+        recyclerWeatherOnTime.layoutManager =
             LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
     }
 
