@@ -2,6 +2,7 @@ package com.miso.misoweather.Acitivity.updateRegion
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.recyclerview.widget.GridLayoutManager
@@ -14,6 +15,7 @@ import com.miso.misoweather.Acitivity.selectRegion.RecyclerRegionsAdapter
 import com.miso.misoweather.Acitivity.selectRegion.RegionItem
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
 import com.miso.misoweather.databinding.ActivityUpdateRegionBinding
+import com.miso.misoweather.model.MisoRepository
 import java.lang.Exception
 
 class UpdateRegionActivity : MisoActivity() {
@@ -22,17 +24,46 @@ class UpdateRegionActivity : MisoActivity() {
     lateinit var grid_region: RecyclerView
     lateinit var btn_back: ImageButton
     lateinit var btn_next: Button
-    lateinit var currentRegion:String
+    lateinit var currentRegion: String
+    lateinit var surveyRegion: String
+    lateinit var bigScaleRegion: String
+    var isAllInitialized = false
+    lateinit var viewModel: UpdateRegionViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityUpdateRegionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initializeViews()
-        setRecyclerRegions()
+        initializeProperties()
+    }
+
+    fun initializeProperties() {
+        fun checkinitializedAll() {
+            if (!isAllInitialized) {
+                if (
+                    this::bigScaleRegion.isInitialized &&
+                    this::surveyRegion.isInitialized
+                ) {
+                    initializeViews()
+                    setRecyclerRegions()
+                    isAllInitialized = true
+                }
+            }
+        }
+        viewModel = UpdateRegionViewModel(MisoRepository.getInstance(applicationContext))
+        viewModel.updateProperties()
+        viewModel.surveyRegion.observe(this, {
+            surveyRegion = it!!
+            checkinitializedAll()
+        })
+        viewModel.bigScaleRegion.observe(this, {
+            bigScaleRegion = it!!
+            checkinitializedAll()
+        })
     }
 
     fun initializeViews() {
-        currentRegion = intent.getStringExtra("region")?:getBigShortScale("bigScale")!!
+        currentRegion =
+            intent.getStringExtra("region") ?: bigScaleRegion
         grid_region = binding.gridRegions
         btn_back = binding.imgbtnBack
         btn_next = binding.btnAction
@@ -43,7 +74,7 @@ class UpdateRegionActivity : MisoActivity() {
         {
             try {
                 var bigScaleRegion = gridAdapter.getSelectedItemShortName()
-                addPreferencePair("surveyRegion",bigScaleRegion)
+                addPreferencePair("surveyRegion", bigScaleRegion)
                 savePreferences()
                 startActivity(Intent(this, ChatMainActivity::class.java))
                 transferToBack()
@@ -64,7 +95,7 @@ class UpdateRegionActivity : MisoActivity() {
         var regionItems = getRegionItems()
         var regionList = resources.getStringArray(R.array.regions)
         var index = regionList.indexOf(currentRegion)
-        gridAdapter = RecyclerRegionsAdapter(this@UpdateRegionActivity, regionItems,index)
+        gridAdapter = RecyclerRegionsAdapter(this@UpdateRegionActivity, regionItems, index)
         grid_region.adapter = gridAdapter
         grid_region.layoutManager = GridLayoutManager(this, 4)
         val spaceDecoration = VerticalSpaceItemDecoration(30)
