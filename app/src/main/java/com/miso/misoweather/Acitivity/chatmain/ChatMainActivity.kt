@@ -112,24 +112,18 @@ class ChatMainActivity : MisoActivity() {
         {
 
             if (!currentFragment.equals(surveyFragment)) {
-                btnSurvey.startBackgroundAlphaAnimation(0f, 1f)
-                txtChatBtn.setTextColor(getColor(R.color.textBlack))
-                btnChat.startBackgroundAlphaAnimation(1f, 0f)
-                txtSurveyBtn.setTextColor(Color.WHITE)
-                locationLayout.visibility = View.VISIBLE
-                locationLayout.startBackgroundAlphaAnimation(0f, 1f)
+                setButtonPressed(btnSurvey)
+                setButtonUnpressed(btnChat)
+                turnLocationButton(true)
                 setupFragment(surveyFragment)
             }
         }
         btnChat.setOnClickListener()
         {
             if (!currentFragment.equals(commentsFragment)) {
-                btnChat.startBackgroundAlphaAnimation(0f, 1f)
-                txtSurveyBtn.setTextColor(getColor(R.color.textBlack))
-                btnSurvey.startBackgroundAlphaAnimation(1f, 0f)
-                txtChatBtn.setTextColor(Color.WHITE)
-                locationLayout.visibility = View.GONE
-                locationLayout.startBackgroundAlphaAnimation(1f, 0f)
+                setButtonPressed(btnChat)
+                setButtonUnpressed(btnSurvey)
+                turnLocationButton(false)
                 setupFragment(commentsFragment)
             }
         }
@@ -151,6 +145,36 @@ class ChatMainActivity : MisoActivity() {
 
     fun View.startBackgroundAlphaAnimation(fromValue: Float, toValue: Float) {
         ObjectAnimator.ofFloat(this, "alpha", fromValue, toValue).start()
+    }
+
+    fun turnLocationButton(turnOn: Boolean) {
+        if (turnOn) {
+            locationLayout.visibility = View.VISIBLE
+            locationLayout.startBackgroundAlphaAnimation(0f, 1f)
+        } else {
+            locationLayout.visibility = View.GONE
+            locationLayout.startBackgroundAlphaAnimation(1f, 0f)
+        }
+    }
+
+    fun setButtonPressed(button: Button) {
+        if (button.equals(btnChat)) {
+            btnChat.startBackgroundAlphaAnimation(0f, 1f)
+            txtChatBtn.setTextColor(Color.WHITE)
+        } else if (button.equals(btnSurvey)) {
+            btnSurvey.startBackgroundAlphaAnimation(0f, 1f)
+            txtSurveyBtn.setTextColor(Color.WHITE)
+        }
+    }
+
+    fun setButtonUnpressed(button: Button) {
+        if (button.equals(btnChat)) {
+            txtChatBtn.setTextColor(getColor(R.color.textBlack))
+            btnChat.startBackgroundAlphaAnimation(1f, 0f)
+        } else if (button.equals(btnSurvey)) {
+            txtSurveyBtn.setTextColor(getColor(R.color.textBlack))
+            btnSurvey.startBackgroundAlphaAnimation(1f, 0f)
+        }
     }
 
     override fun doBack() {
