@@ -29,7 +29,7 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
     val midScale: MutableLiveData<String?> = MutableLiveData()
     val smallScale: MutableLiveData<String?> = MutableLiveData()
     val logoutResponseString: MutableLiveData<String?> = MutableLiveData()
-    val isWeatherLoaded: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isWeatherLoaded: MutableLiveData<Boolean> = MutableLiveData()
 
     fun updateProperties() {
         setupBigScale()
