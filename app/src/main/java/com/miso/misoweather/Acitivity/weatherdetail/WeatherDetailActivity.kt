@@ -162,6 +162,9 @@ class WeatherDetailActivity : MisoActivity() {
         } else {
             var intent = Intent(this, ChatMainActivity::class.java)
             intent.putExtra("previousActivity", "Weather")
+            intent.putExtra("briefForecast", briefForecastData)
+            intent.putExtra("dailyForecast", dailyForecastData)
+            intent.putExtra("hourlyForecast", hourlyForecastData)
             startActivity(intent)
             transferToNext()
             finish()

@@ -38,12 +38,20 @@ class ChatMainViewModel(private val repository: MisoRepository) : ViewModel() {
     val surveyRegion: MutableLiveData<String> = MutableLiveData()
     val bigScaleRegion: MutableLiveData<String> = MutableLiveData()
     val misoToken: MutableLiveData<String> = MutableLiveData()
+    val defaultRegionId: MutableLiveData<String> = MutableLiveData()
+    val forecastBriefResponse: MutableLiveData<Any?> =
+        MutableLiveData()
+    val dailyForecastResponse: MutableLiveData<Any?> =
+        MutableLiveData()
+    val hourlyForecastResponse: MutableLiveData<Any?> =
+        MutableLiveData()
 
     fun updateProperties()
     {
         surveyRegion.value = repository.getPreference("surveyRegion")
         bigScaleRegion.value = repository.getPreference("BigScaleRegion")
         misoToken.value = repository.getPreference("misoToken")
+        defaultRegionId.value = repository.getPreference("defaultRegionId")
     }
     fun getCommentList(commentId: Int?, size: Int) {
         repository.getCommentList(
@@ -164,5 +172,60 @@ class ChatMainViewModel(private val repository: MisoRepository) : ViewModel() {
         return ((surveyAnswerMap.size >= surveyQuestions.size) &&
                 (surveyMyAnswerResponseDto.data.responseList.size>= surveyQuestions.size)&&
                 (surveyResultResponseDto.data.responseList.size>= surveyQuestions.size))
+    }
+    fun getBriefForecast(regionId: Int) {
+        repository.getBriefForecast(
+            regionId,
+            { call, response ->
+                var region = response.body()!!.data.region
+                repository.addPreferencePair("BigScaleRegion", region.bigScale)
+                repository.addPreferencePair(
+                    "MidScaleRegion",
+                    if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
+                )
+                repository.addPreferencePair(
+                    "SmallScaleRegion",
+                    if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
+                )
+                repository.savePreferences()
+                updateProperties()
+                forecastBriefResponse.value = response
+            },
+            { call, response ->
+                forecastBriefResponse.value = response
+            },
+            { call, t ->
+                forecastBriefResponse.value = null
+            }
+        )
+    }
+
+    fun getDailyForecast(regionId: Int) {
+        repository.getDailyForecast(
+            regionId,
+            { call, response ->
+                dailyForecastResponse.value = response
+            },
+            { call, response ->
+                dailyForecastResponse.value = response
+            },
+            { call, t ->
+                dailyForecastResponse.value = t
+            },
+        )
+    }
+    fun getHourlyForecast(regionId: Int) {
+        repository.getHourlyForecast(
+            regionId,
+            { call, response ->
+                hourlyForecastResponse.value = response
+            },
+            { call, response ->
+                hourlyForecastResponse.value = response
+            },
+            { call, t ->
+                hourlyForecastResponse.value = t
+            },
+        )
     }
 }

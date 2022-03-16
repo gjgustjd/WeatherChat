@@ -318,17 +318,6 @@ class HomeActivity : MisoActivity() {
         }
     }
 
-    fun getCommentList() {
-        viewModel.getCommentList(null, 5)
-        viewModel.commentListResponse.observe(this, {
-            try {
-                setRecyclerChats(it!!.body()!!)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        })
-    }
-
     fun getDailyForecast() {
         viewModel.getDailyForecast(defaultRegionId.toInt())
         viewModel.dailyForecastResponse.observe(this, {
@@ -376,6 +365,17 @@ class HomeActivity : MisoActivity() {
             }
         })
     }
+    fun getCommentList() {
+        viewModel.getCommentList(null, 5)
+        viewModel.commentListResponse.observe(this, {
+            try {
+                setRecyclerChats(it!!.body()!!)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        })
+    }
+
 
     fun setRecyclerChats(responseDto: CommentListResponseDto) {
         recyclerChatAdapter =

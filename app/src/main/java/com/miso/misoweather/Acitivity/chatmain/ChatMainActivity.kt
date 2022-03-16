@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -21,7 +22,15 @@ import com.miso.misoweather.Fragment.surveyFragment.SurveyFragment
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityChatMainBinding
+import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
+import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
+import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastData
+import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
+import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
+import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
 import com.miso.misoweather.model.MisoRepository
+import retrofit2.Response
+import java.lang.Exception
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -44,7 +53,12 @@ class ChatMainActivity : MisoActivity() {
     lateinit var misoToken: String
     lateinit var surveyRegion: String
     lateinit var bigScale: String
+    lateinit var defaultRegionId: String
+    var briefForecastData: ForecastBriefData? = null
+    var dailyForecastData: DailyForecastData? = null
+    var hourlyForecastData: HourlyForecastData? = null
 
+    var callWeatherDataCount = 0
     var isAllInitialized = false
 
 
@@ -61,7 +75,8 @@ class ChatMainActivity : MisoActivity() {
             if (!isAllInitialized) {
                 if (this::bigScale.isInitialized &&
                     this::surveyRegion.isInitialized &&
-                    this::misoToken.isInitialized
+                    this::misoToken.isInitialized &&
+                    this::defaultRegionId.isInitialized
                 ) {
                     initializeViews()
                     isAllInitialized = true
@@ -79,6 +94,10 @@ class ChatMainActivity : MisoActivity() {
         })
         viewModel.bigScaleRegion.observe(this, {
             bigScale = it
+            checkInitializedAll()
+        })
+        viewModel.defaultRegionId.observe(this, {
+            defaultRegionId = it
             checkInitializedAll()
         })
     }
@@ -102,8 +121,12 @@ class ChatMainActivity : MisoActivity() {
         txtChatBtn = binding.txtChatBtn
 
         when (previousActivity) {
-            "Weather" -> goToPreviousActivity =
-                { startActivity(Intent(this, WeatherDetailActivity::class.java)) }
+            "Weather" -> {
+                goToPreviousActivity =
+                    {
+                        updateForecast()
+                    }
+            }
             else -> goToPreviousActivity =
                 { startActivity(Intent(this, HomeActivity::class.java)) }
         }
@@ -143,6 +166,46 @@ class ChatMainActivity : MisoActivity() {
         setupFragment(surveyFragment)
     }
 
+    fun checkAllInitializedAndLaunchWeatherActivity() {
+        if (checkAllInitialized()) {
+            launchWeatherActivity()
+        }
+    }
+
+    fun checkAllInitialized(): Boolean {
+        return callWeatherDataCount > 2
+    }
+
+    fun updateForecast() {
+        getBriefForecast()
+        getDailyForecast()
+        getHourlyForecast()
+    }
+
+    fun launchWeatherActivity() {
+        if (briefForecastData == null ||
+            dailyForecastData == null ||
+            hourlyForecastData == null
+        ) {
+            briefForecastData =
+                intent.getSerializableExtra("briefForecast") as ForecastBriefData
+            dailyForecastData =
+                intent.getSerializableExtra("dailyForecast") as DailyForecastData
+            hourlyForecastData =
+                intent.getSerializableExtra("hourlyForecast") as HourlyForecastData
+
+            Toast.makeText(this, "날씨 정보 업데이트 실패하였습니다.", Toast.LENGTH_SHORT).show()
+        }
+        var intent = Intent(this, WeatherDetailActivity::class.java)
+        intent.putExtra("briefForecast", briefForecastData)
+        intent.putExtra("dailyForecast", dailyForecastData)
+        intent.putExtra("hourlyForecast", hourlyForecastData)
+        startActivity(intent)
+        transferToBack()
+        finish()
+    }
+
+
     fun View.startBackgroundAlphaAnimation(fromValue: Float, toValue: Float) {
         ObjectAnimator.ofFloat(this, "alpha", fromValue, toValue).start()
     }
@@ -180,8 +243,6 @@ class ChatMainActivity : MisoActivity() {
     override fun doBack() {
         viewModel.removeSurveyRegion()
         goToPreviousActivity()
-        transferToBack()
-        finish()
     }
 
     fun setupFragment(fragment: Fragment) {
@@ -190,5 +251,87 @@ class ChatMainActivity : MisoActivity() {
             .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
             .replace(R.id.fragmentLayout, fragment)
             .commit()
+    }
+
+    fun getBriefForecast() {
+        try {
+            viewModel.getBriefForecast(defaultRegionId.toInt())
+            viewModel.forecastBriefResponse.observe(this, {
+                callWeatherDataCount++
+                if (it == null) {
+                    Log.i("getBriefForecast", "실패")
+                } else {
+                    if (it is Response<*>) {
+                        try {
+                            Log.i("결과", "성공")
+                            val forecastBriefResponseDto = it.body()!! as ForecastBriefResponseDto
+                            briefForecastData = forecastBriefResponseDto.data
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            Toast.makeText(this, "날씨 단기예보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT)
+                                .show()
+                            Log.i("getBriefForecast", "excepted")
+                        }
+                    } else {
+                        if (it is String) {
+                        } else if (it is Throwable) {
+                        }
+                    }
+                }
+            })
+        } catch (e: Exception) {
+        }
+        checkAllInitializedAndLaunchWeatherActivity()
+    }
+
+    fun getDailyForecast() {
+        viewModel.getDailyForecast(defaultRegionId.toInt())
+        viewModel.dailyForecastResponse.observe(this, {
+            callWeatherDataCount++
+            if (it == null) {
+            } else if (it is Response<*>) {
+                if (it.isSuccessful) {
+                    try {
+                        Log.i("결과", "성공")
+                        var dailyForecastResponseDto = it.body()!! as DailyForecastResponseDto
+                        if (dailyForecastResponseDto.data.dailyForecastList == null)
+                            dailyForecastData = null
+                        else
+                            dailyForecastData = dailyForecastResponseDto.data
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                } else {
+                }
+            } else {
+            }
+
+            checkAllInitializedAndLaunchWeatherActivity()
+        })
+    }
+
+    fun getHourlyForecast() {
+        viewModel.getHourlyForecast(defaultRegionId.toInt())
+        viewModel.hourlyForecastResponse.observe(this, {
+            callWeatherDataCount++
+            if (it == null) {
+            } else if (it is Response<*>) {
+                if (it.isSuccessful) {
+                    try {
+                        Log.i("결과", "성공")
+                        var hourlyForecastResponseDto = it.body()!! as HourlyForecastResponseDto
+                        if (hourlyForecastResponseDto.data.hourlyForecastList == null)
+                            hourlyForecastData = null
+                        else
+                            hourlyForecastData = hourlyForecastResponseDto.data
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                } else {
+                }
+            }
+
+            checkAllInitializedAndLaunchWeatherActivity()
+        })
     }
 }

@@ -136,6 +136,34 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         )
     }
 
+    fun getDailyForecast(regionId: Int) {
+        repository.getDailyForecast(
+            regionId,
+            { call, response ->
+                dailyForecastResponse.value = response
+            },
+            { call, response ->
+                dailyForecastResponse.value = response
+            },
+            { call, t ->
+                dailyForecastResponse.value = t
+            },
+        )
+    }
+    fun getHourlyForecast(regionId: Int) {
+        repository.getHourlyForecast(
+            regionId,
+            { call, response ->
+                hourlyForecastResponse.value = response
+            },
+            { call, response ->
+                hourlyForecastResponse.value = response
+            },
+            { call, t ->
+                hourlyForecastResponse.value = t
+            },
+        )
+    }
     fun getCommentList(commentId: Int?, size: Int) {
         repository.getCommentList(
             commentId,
@@ -180,32 +208,4 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         }
     }
 
-    fun getDailyForecast(regionId: Int) {
-        repository.getDailyForecast(
-            regionId,
-            { call, response ->
-                dailyForecastResponse.value = response
-            },
-            { call, response ->
-                dailyForecastResponse.value = response
-            },
-            { call, t ->
-                dailyForecastResponse.value = t
-            },
-        )
-    }
-    fun getHourlyForecast(regionId: Int) {
-        repository.getHourlyForecast(
-            regionId,
-            { call, response ->
-                hourlyForecastResponse.value = response
-            },
-            { call, response ->
-                hourlyForecastResponse.value = response
-            },
-            { call, t ->
-                hourlyForecastResponse.value = t
-            },
-        )
-    }
 }
