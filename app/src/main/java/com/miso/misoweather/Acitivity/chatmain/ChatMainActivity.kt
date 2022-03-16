@@ -128,7 +128,11 @@ class ChatMainActivity : MisoActivity() {
                     }
             }
             else -> goToPreviousActivity =
-                { startActivity(Intent(this, HomeActivity::class.java)) }
+                {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    transferToBack()
+                    finish()
+                }
         }
 
         btnSurvey.setOnClickListener()
