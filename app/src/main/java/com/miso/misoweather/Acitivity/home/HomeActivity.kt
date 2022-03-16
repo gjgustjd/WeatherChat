@@ -299,8 +299,7 @@ class HomeActivity : MisoActivity() {
                             Log.i("getBriefForecast", "excepted")
                         } finally {
                             txtLocation.text =
-                                bigScale + " " + midScale + " " +
-                                        if (midScale.equals("전체")) "" else smallScale
+                                bigScale + " " + midScale + " " + smallScale
                             setupSurveyResult()
                         }
                     } else {

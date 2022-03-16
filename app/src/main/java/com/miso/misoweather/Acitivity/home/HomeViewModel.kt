@@ -63,11 +63,21 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
     }
 
     fun setupMidScale() {
-        midScale.value = repository.getPreference("MidScaleRegion")
+        var region = repository.getPreference("MidScaleRegion")
+        midScale.value = if (region.equals("선택 안 함")) "전체" else region
     }
 
     fun setupSmallScale() {
-        smallScale.value = repository.getPreference("SmallScaleRegion")
+        var Midregion = repository.getPreference("MidScaleRegion")
+        var Smallregion = repository.getPreference("SmallScaleRegion")
+        smallScale.value =
+            if (Midregion.equals("선택 안 함"))
+                ""
+            else
+                if (Smallregion.equals("선택 안 함"))
+                    "전체"
+                else
+                    Smallregion
     }
 
     fun getUserInfo(serverToken: String) {
@@ -98,10 +108,10 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         repository.loadWeatherInfo(
             regionId,
             { call, response ->
-                isWeatherLoaded.value=true
+                isWeatherLoaded.value = true
             },
             { call, response ->
-                isWeatherLoaded.value=false
+                isWeatherLoaded.value = false
             },
             { call, t ->
                 isWeatherLoaded.value = false
@@ -150,6 +160,7 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
             },
         )
     }
+
     fun getHourlyForecast(regionId: Int) {
         repository.getHourlyForecast(
             regionId,
@@ -164,6 +175,7 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
             },
         )
     }
+
     fun getCommentList(commentId: Int?, size: Int) {
         repository.getCommentList(
             commentId,

@@ -30,7 +30,8 @@ import java.time.format.DateTimeFormatter
 
 class SelectAnswerViewModel(private val repository: MisoRepository) : ViewModel() {
     val surveyItem: MutableLiveData<SurveyItem?> = MutableLiveData()
-    val surveyAnswerResponse: MutableLiveData<Response<SurveyAddMyAnswerResponseDto>?> = MutableLiveData()
+    val surveyAnswerResponse: MutableLiveData<Response<SurveyAddMyAnswerResponseDto>?> =
+        MutableLiveData()
 
     fun getSurveyAnswer(surveyId: Int, questions: Array<String>) {
         repository.getSurveyAnswers(
@@ -62,8 +63,8 @@ class SelectAnswerViewModel(private val repository: MisoRepository) : ViewModel(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun putSurveyAnswer(selectedAnswer:SurveyAnswerDto, surveyId: Int) {
-        Log.i("putSurveyAnswer",repository.getPreference("BigScaleRegion")!!)
+    fun putSurveyAnswer(selectedAnswer: SurveyAnswerDto, surveyId: Int) {
+        Log.i("putSurveyAnswer", repository.getPreference("BigScaleRegion")!!)
         repository.putSurveyMyAnswer(
             repository.getPreference("misoToken")!!,
             SurveyAddMyAnswerRequestDto(
@@ -75,10 +76,15 @@ class SelectAnswerViewModel(private val repository: MisoRepository) : ViewModel(
                 repository.addPreferencePair("isSurveyed", "true")
                 repository.addPreferencePair(
                     "LastSurveyedDate",
-                    ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+                    ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
+                        .format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+                )
+                repository.addPreferencePair(
+                    "surveyRegion",
+                    getBigShortScale(repository.getPreference("BigScaleRegion")!!)
                 )
                 repository.savePreferences()
-               surveyAnswerResponse.value = response!!
+                surveyAnswerResponse.value = response!!
             },
             { call, response -> },
             { call, throwable -> }
