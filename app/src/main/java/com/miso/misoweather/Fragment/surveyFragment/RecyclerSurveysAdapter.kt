@@ -49,8 +49,8 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
             holder.txtSecondRatio.text = secondRatio + "%"
             holder.txtThirdRatio.text = thirdRatio + "%"
             holder.progress_first.startProgressAnimation(firstRatio.toInt())
-            holder.progress_second.startProgressAnimation(secondRatio.toInt())
-            holder.progress_third.startProgressAnimation(thirdRatio.toInt())
+            holder.progress_second.startProgressAnimation(secondRatio.toInt(),250)
+            holder.progress_third.startProgressAnimation(thirdRatio.toInt(),500)
 
             if (!myAnswer.answered || myAnswer.memberAnswer == null) {
                 holder.imgIsAnswered.setImageDrawable(context.resources.getDrawable(R.drawable.icon_unanswered))
@@ -88,9 +88,11 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
         return Holder(ListItemSurveyBinding.bind(view))
     }
 
-    fun ProgressBar.startProgressAnimation(toValue: Int) {
+    fun ProgressBar.startProgressAnimation(toValue: Int, delay: Int?=0) {
+        progress=0
         var animator = ObjectAnimator.ofInt(this, "progress", 0, toValue)
         animator.duration = 1000
+        animator.startDelay = delay!!.toLong()
         animator.interpolator = DecelerateInterpolator()
         animator.start()
     }
