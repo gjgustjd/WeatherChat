@@ -92,6 +92,7 @@ class HomeActivity : MisoActivity() {
         initializeProperties()
     }
 
+
     fun setupData() {
         getUserInfo()
         getCommentList()
@@ -274,6 +275,7 @@ class HomeActivity : MisoActivity() {
 
     fun getBriefForecast() {
         fun forecastRequest() {
+            Log.i("defaultRegionId",defaultRegionId)
             viewModel.getBriefForecast(defaultRegionId.toInt())
             viewModel.forecastBriefResponse.observe(this, {
                 if (it == null) {

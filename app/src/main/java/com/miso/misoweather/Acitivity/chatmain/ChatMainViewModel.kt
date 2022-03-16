@@ -114,6 +114,7 @@ class ChatMainViewModel(private val repository: MisoRepository) : ViewModel() {
     }
 
     fun getSurveyResult(shortBigScale: String) {
+        Log.i("getSurveyResult",shortBigScale)
         repository.getSurveyResults(
             shortBigScale,
             { call, reponse ->

@@ -63,6 +63,7 @@ class SelectAnswerViewModel(private val repository: MisoRepository) : ViewModel(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun putSurveyAnswer(selectedAnswer:SurveyAnswerDto, surveyId: Int) {
+        Log.i("putSurveyAnswer",repository.getPreference("BigScaleRegion")!!)
         repository.putSurveyMyAnswer(
             repository.getPreference("misoToken")!!,
             SurveyAddMyAnswerRequestDto(
