@@ -41,9 +41,11 @@ open class MisoActivity :AppCompatActivity() {
             return ""
         }
     }
+
     fun transferToBack(){
         overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit)
     }
+
     fun transferToNext(){
         overridePendingTransition(R.anim.slide_right_exit,R.anim.slide_right_enter)
     }
@@ -51,6 +53,11 @@ open class MisoActivity :AppCompatActivity() {
     fun overFromUnder()
     {
         overridePendingTransition(R.anim.slide_bottom_exit,R.anim.stay)
+    }
+
+    fun sinkFromTop()
+    {
+        overridePendingTransition(0,R.anim.slide_bottom_enter)
     }
 
     fun addPreferencePair(first:String,second:String)
@@ -64,6 +71,7 @@ open class MisoActivity :AppCompatActivity() {
         val pair = Pair(pref,"")
         pairList.add(pair)
     }
+
     fun removePreference(vararg pref:String)
     {
        for(i in 0..pref.size-1)

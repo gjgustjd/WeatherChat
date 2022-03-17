@@ -35,6 +35,8 @@ import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 import java.lang.Exception
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -89,6 +91,7 @@ class HomeActivity : MisoActivity() {
         initializeViews()
         initializeProperties()
     }
+
 
     fun setupData() {
         getUserInfo()
@@ -198,10 +201,9 @@ class HomeActivity : MisoActivity() {
         }
         weatherLayout.setOnClickListener()
         {
-            if (dailyForecastData != null ||
-                briefForecastData == null ||
-                dailyForecastData == null ||
-                hourlyForecastData == null
+            if (dailyForecastData != null &&
+                briefForecastData != null &&
+                dailyForecastData != null
             ) {
                 var intent = Intent(this, WeatherDetailActivity::class.java)
                 intent.putExtra("briefForecast", briefForecastData)
@@ -254,7 +256,7 @@ class HomeActivity : MisoActivity() {
 
     fun goToChatMainActivity() {
         var currentDate =
-            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+            ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
         if (!isSurveyed.equals("true") || !lastSurveyedDate.equals(currentDate)) {
             var intent = Intent(this, SelectSurveyAnswerActivity::class.java)
             intent.putExtra("isFirstSurvey", true)
@@ -273,6 +275,7 @@ class HomeActivity : MisoActivity() {
 
     fun getBriefForecast() {
         fun forecastRequest() {
+            Log.i("defaultRegionId",defaultRegionId)
             viewModel.getBriefForecast(defaultRegionId.toInt())
             viewModel.forecastBriefResponse.observe(this, {
                 if (it == null) {
@@ -296,8 +299,7 @@ class HomeActivity : MisoActivity() {
                             Log.i("getBriefForecast", "excepted")
                         } finally {
                             txtLocation.text =
-                                bigScale + " " + midScale + " " +
-                                        if (midScale.equals("전체")) "" else smallScale
+                                bigScale + " " + midScale + " " + smallScale
                             setupSurveyResult()
                         }
                     } else {
@@ -315,17 +317,6 @@ class HomeActivity : MisoActivity() {
         } catch (e: Exception) {
 
         }
-    }
-
-    fun getCommentList() {
-        viewModel.getCommentList(null, 5)
-        viewModel.commentListResponse.observe(this, {
-            try {
-                setRecyclerChats(it!!.body()!!)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        })
     }
 
     fun getDailyForecast() {
@@ -375,6 +366,17 @@ class HomeActivity : MisoActivity() {
             }
         })
     }
+    fun getCommentList() {
+        viewModel.getCommentList(null, 5)
+        viewModel.commentListResponse.observe(this, {
+            try {
+                setRecyclerChats(it!!.body()!!)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        })
+    }
+
 
     fun setRecyclerChats(responseDto: CommentListResponseDto) {
         recyclerChatAdapter =

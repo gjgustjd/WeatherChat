@@ -189,10 +189,15 @@ class LoginActivity : MisoActivity() {
 
     fun showDialogForLoginKakaoTalk() {
         fun launchKakaoTalk() {
-            val intent =
-                packageManager.getLaunchIntentForPackage("com.kakao.talk")
-            intent!!.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
+            try {
+                val intent =
+                    packageManager.getLaunchIntentForPackage("com.kakao.talk")
+                intent!!.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }catch (e:Exception)
+            {
+
+            }
         }
         GeneralConfirmDialog(
             this,
@@ -213,12 +218,12 @@ class LoginActivity : MisoActivity() {
 
     fun loginWithKakaoTalk() {
         UserApiClient.instance.loginWithKakaoTalk(this@LoginActivity) { token, error ->
-            if (error != null) {
-                Log.e("miso", "로그인 실패", error)
-                showDialogForLoginKakaoTalk()
-            } else if (token != null) {
-                Log.i("miso", "로그인 성공 ${token.accessToken}")
-                try {
+            try {
+                if (error != null) {
+                    Log.e("miso", "로그인 실패", error)
+                    showDialogForLoginKakaoTalk()
+                } else if (token != null) {
+                    Log.i("miso", "로그인 성공 ${token.accessToken}")
                     UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
                         if (error != null) {
                             Log.i("token", "토큰 정보 보기 실패", error)
@@ -229,10 +234,10 @@ class LoginActivity : MisoActivity() {
                             issueMisoToken()
                         }
                     }
-                } catch (e: Exception) {
-                    Log.i("kakaoLogin", e.stackTraceToString())
-                    Toast.makeText(this, "로그인 진행 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
                 }
+            } catch (e: Exception) {
+                Log.i("kakaoLogin", e.stackTraceToString())
+                Toast.makeText(this, "로그인 진행 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
             }
         }
     }

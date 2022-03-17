@@ -28,6 +28,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -53,7 +55,7 @@ class RecyclerChatsAdapter(
         holder.comment.text = comments.get(position).content
 
         val currentTimeString =
-            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString()
+            ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString()
 
         val commentCreatedAt = comments.get(position).createdAt
         if (commentCreatedAt != null) {

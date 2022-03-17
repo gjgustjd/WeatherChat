@@ -2,6 +2,6 @@
 <resources>
     <dimen name="backbutton_top_margin">48dp</dimen>
     <dimen name="subactivity_title_text_size">20dp</dimen>
-    <dimen name="root_side_margin_big">40dp</dimen>
-    <dimen name="root_side_margin">30dp</dimen>
+    <dimen name="root_side_margin_big">30dp</dimen>
+    <dimen name="root_side_margin">20dp</dimen>
 </resources>

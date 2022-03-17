@@ -20,4 +20,10 @@ class UpdateRegionViewModel(private val repository: MisoRepository) : ViewModel(
     fun setupBigScaleRegion() {
         bigScaleRegion.value = repository.getPreference("BigScaleRegion")
     }
+
+    fun updateSurveyRegion(region:String)
+    {
+        repository.addPreferencePair("surveyRegion", region)
+        repository.savePreferences()
+    }
 }

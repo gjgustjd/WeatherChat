@@ -74,8 +74,7 @@ class UpdateRegionActivity : MisoActivity() {
         {
             try {
                 var bigScaleRegion = gridAdapter.getSelectedItemShortName()
-                addPreferencePair("surveyRegion", bigScaleRegion)
-                savePreferences()
+                viewModel.updateSurveyRegion(bigScaleRegion)
                 startActivity(Intent(this, ChatMainActivity::class.java))
                 transferToBack()
                 finish()

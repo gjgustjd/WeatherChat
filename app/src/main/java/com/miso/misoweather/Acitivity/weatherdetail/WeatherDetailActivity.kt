@@ -21,6 +21,8 @@ import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.MisoRepository
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -127,7 +129,7 @@ class WeatherDetailActivity : MisoActivity() {
         txtEmojiWind = binding.txtEmojiWindSpeed
         txtDegreeWind = binding.txtDegreeWind
         txtForecastDay = binding.txtTitleForecastDay
-        txtForecastDay.text = LocalDateTime.now().dayOfMonth.toString()
+        txtForecastDay.text = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).dayOfMonth.toString()
         btnBack = binding.imgbtnBack
         btnBack.setOnClickListener()
         {
@@ -149,7 +151,7 @@ class WeatherDetailActivity : MisoActivity() {
 
     fun goToChatMainActivity() {
         var currentDate =
-            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+            ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
         if (!isSurveyed.equals("true") || !lastSurveyedDate.equals(currentDate)) {
             var intent = Intent(this, SelectSurveyAnswerActivity::class.java)
             intent.putExtra("isFirstSurvey", true)
@@ -160,6 +162,9 @@ class WeatherDetailActivity : MisoActivity() {
         } else {
             var intent = Intent(this, ChatMainActivity::class.java)
             intent.putExtra("previousActivity", "Weather")
+            intent.putExtra("briefForecast", briefForecastData)
+            intent.putExtra("dailyForecast", dailyForecastData)
+            intent.putExtra("hourlyForecast", hourlyForecastData)
             startActivity(intent)
             transferToNext()
             finish()

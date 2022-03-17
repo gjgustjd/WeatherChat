@@ -94,6 +94,7 @@ class SelectAreaActivity : MisoActivity() {
                 if (aPurpose.equals("change")) {
                     changeRegion()
                 } else {
+                    viewModel.addRegionPreferences(recyclerAdapter.getSelectedItem())
                     var intent: Intent?
                     intent = Intent(this, SelectNickNameActivity::class.java)
                     intent.putExtra("RegionId", recyclerAdapter.getSelectedItem().id.toString())

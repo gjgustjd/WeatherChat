@@ -29,7 +29,7 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
     val midScale: MutableLiveData<String?> = MutableLiveData()
     val smallScale: MutableLiveData<String?> = MutableLiveData()
     val logoutResponseString: MutableLiveData<String?> = MutableLiveData()
-    val isWeatherLoaded: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isWeatherLoaded: MutableLiveData<Boolean> = MutableLiveData()
 
     fun updateProperties() {
         setupBigScale()
@@ -63,11 +63,21 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
     }
 
     fun setupMidScale() {
-        midScale.value = repository.getPreference("MidScaleRegion")
+        var region = repository.getPreference("MidScaleRegion")
+        midScale.value = if (region.equals("선택 안 함")) "전체" else region
     }
 
     fun setupSmallScale() {
-        smallScale.value = repository.getPreference("SmallScaleRegion")
+        var Midregion = repository.getPreference("MidScaleRegion")
+        var Smallregion = repository.getPreference("SmallScaleRegion")
+        smallScale.value =
+            if (Midregion.equals("선택 안 함"))
+                ""
+            else
+                if (Smallregion.equals("선택 안 함"))
+                    "전체"
+                else
+                    Smallregion
     }
 
     fun getUserInfo(serverToken: String) {
@@ -98,10 +108,10 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         repository.loadWeatherInfo(
             regionId,
             { call, response ->
-                isWeatherLoaded.value=true
+                isWeatherLoaded.value = true
             },
             { call, response ->
-                isWeatherLoaded.value=false
+                isWeatherLoaded.value = false
             },
             { call, t ->
                 isWeatherLoaded.value = false
@@ -133,6 +143,36 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
             { call, t ->
                 forecastBriefResponse.value = null
             }
+        )
+    }
+
+    fun getDailyForecast(regionId: Int) {
+        repository.getDailyForecast(
+            regionId,
+            { call, response ->
+                dailyForecastResponse.value = response
+            },
+            { call, response ->
+                dailyForecastResponse.value = response
+            },
+            { call, t ->
+                dailyForecastResponse.value = t
+            },
+        )
+    }
+
+    fun getHourlyForecast(regionId: Int) {
+        repository.getHourlyForecast(
+            regionId,
+            { call, response ->
+                hourlyForecastResponse.value = response
+            },
+            { call, response ->
+                hourlyForecastResponse.value = response
+            },
+            { call, t ->
+                hourlyForecastResponse.value = t
+            },
         )
     }
 
@@ -180,32 +220,4 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         }
     }
 
-    fun getDailyForecast(regionId: Int) {
-        repository.getDailyForecast(
-            regionId,
-            { call, response ->
-                dailyForecastResponse.value = response
-            },
-            { call, response ->
-                dailyForecastResponse.value = response
-            },
-            { call, t ->
-                dailyForecastResponse.value = t
-            },
-        )
-    }
-    fun getHourlyForecast(regionId: Int) {
-        repository.getHourlyForecast(
-            regionId,
-            { call, response ->
-                hourlyForecastResponse.value = response
-            },
-            { call, response ->
-                hourlyForecastResponse.value = response
-            },
-            { call, t ->
-                hourlyForecastResponse.value = t
-            },
-        )
-    }
 }

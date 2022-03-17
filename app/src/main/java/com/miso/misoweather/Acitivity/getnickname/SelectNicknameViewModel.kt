@@ -145,7 +145,7 @@ class SelectNicknameViewModel(private val repository: MisoRepository) : ViewMode
                     var serverToken = headers.get("servertoken")
                     repository.addPreferencePair("misoToken", serverToken!!)
                     repository.addPreferencePair("defaultRegionId", defaultRegionId)
-                    removeRegionPref()
+//                    removeRegionPref()
                     repository.savePreferences()
                     updatePreferences()
                     if (!misoToken.value.isNullOrBlank()) {
