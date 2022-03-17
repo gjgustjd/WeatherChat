@@ -51,7 +51,7 @@ class AnswerAnimationActivity : MisoActivity() {
     fun goToChatMainActivity()
     {
         startActivity(Intent(this,ChatMainActivity::class.java))
-        transferToBack()
+        sinkFromTop()
         finish()
     }
 }
