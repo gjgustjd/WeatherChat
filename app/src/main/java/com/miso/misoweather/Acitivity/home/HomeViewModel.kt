@@ -18,6 +18,8 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         MutableLiveData()
     val hourlyForecastResponse: MutableLiveData<Any?> =
         MutableLiveData()
+    val currentAirResponse: MutableLiveData<Any?> =
+        MutableLiveData()
     val commentListResponse: MutableLiveData<Response<CommentListResponseDto>?> = MutableLiveData()
     val surveyResultResponse: MutableLiveData<Response<SurveyResultResponseDto>?> =
         MutableLiveData()
@@ -176,6 +178,20 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         )
     }
 
+    fun getCurrentAir(regionId: Int) {
+        repository.getCurrentAir(
+            regionId,
+            { call, response ->
+                currentAirResponse.value = response
+            },
+            { call, response ->
+                currentAirResponse.value = response
+            },
+            { call, t ->
+                currentAirResponse.value = t
+            },
+        )
+    }
     fun getCommentList(commentId: Int?, size: Int) {
         repository.getCommentList(
             commentId,

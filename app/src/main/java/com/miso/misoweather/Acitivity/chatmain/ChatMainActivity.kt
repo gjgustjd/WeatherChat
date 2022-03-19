@@ -24,6 +24,8 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityChatMainBinding
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
+import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirData
+import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastData
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
@@ -57,6 +59,7 @@ class ChatMainActivity : MisoActivity() {
     var briefForecastData: ForecastBriefData? = null
     var dailyForecastData: DailyForecastData? = null
     var hourlyForecastData: HourlyForecastData? = null
+    var currentAirData: CurrentAirData? = null
 
     var callWeatherDataCount = 0
     var isAllInitialized = false
@@ -177,19 +180,21 @@ class ChatMainActivity : MisoActivity() {
     }
 
     fun checkAllInitialized(): Boolean {
-        return callWeatherDataCount > 2
+        return callWeatherDataCount > 3
     }
 
     fun updateForecast() {
         getBriefForecast()
         getDailyForecast()
         getHourlyForecast()
+        getCurrentAir()
     }
 
     fun launchWeatherActivity() {
         if (briefForecastData == null ||
             dailyForecastData == null ||
-            hourlyForecastData == null
+            hourlyForecastData == null ||
+            currentAirData == null
         ) {
             briefForecastData =
                 intent.getSerializableExtra("briefForecast") as ForecastBriefData
@@ -197,13 +202,16 @@ class ChatMainActivity : MisoActivity() {
                 intent.getSerializableExtra("dailyForecast") as DailyForecastData
             hourlyForecastData =
                 intent.getSerializableExtra("hourlyForecast") as HourlyForecastData
+            currentAirData =
+                intent.getSerializableExtra("currentAir") as CurrentAirData
 
-            Toast.makeText(this, "날씨 정보 업데이트 실패하였습니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "날씨 정보 업데이트에 실패하였습니다.", Toast.LENGTH_SHORT).show()
         }
         var intent = Intent(this, WeatherDetailActivity::class.java)
         intent.putExtra("briefForecast", briefForecastData)
         intent.putExtra("dailyForecast", dailyForecastData)
         intent.putExtra("hourlyForecast", hourlyForecastData)
+        intent.putExtra("currentAir", currentAirData)
         startActivity(intent)
         transferToBack()
         finish()
@@ -328,6 +336,30 @@ class ChatMainActivity : MisoActivity() {
                             hourlyForecastData = null
                         else
                             hourlyForecastData = hourlyForecastResponseDto.data
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                } else {
+                }
+            }
+
+            checkAllInitializedAndLaunchWeatherActivity()
+        })
+    }
+    fun getCurrentAir() {
+        viewModel.getCurrentAir(defaultRegionId.toInt())
+        viewModel.currentAirData.observe(this, {
+            callWeatherDataCount++
+            if (it == null) {
+            } else if (it is Response<*>) {
+                if (it.isSuccessful) {
+                    try {
+                        Log.i("결과", "성공")
+                        var currentAirResponseDto = it.body()!! as CurrentAirResponseDto
+                        if (currentAirResponseDto.data == null)
+                            currentAirData = null
+                        else
+                            currentAirData = currentAirResponseDto.data
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

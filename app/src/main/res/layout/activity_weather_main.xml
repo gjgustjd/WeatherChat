@@ -269,7 +269,7 @@
                     android:text="미세먼지"
                     android:textSize="12dp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@id/img_imoge_dust"
+                    app:layout_constraintBottom_toTopOf="@id/txt_emoji_dust"
                     app:layout_constraintEnd_toStartOf="@id/label_superdust"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
@@ -285,33 +285,33 @@
                     android:text="초미세먼지"
                     android:textSize="12dp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@id/img_imoge_superdust"
+                    app:layout_constraintBottom_toTopOf="@id/txt_emoji_superdust"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.582"
                     app:layout_constraintStart_toEndOf="@+id/label_dust"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_chainStyle="packed" />
 
-                <ImageView
-                    android:id="@+id/img_imoge_dust"
+                <TextView
+                    android:id="@+id/txt_emoji_dust"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="18dp"
                     app:layout_constraintBottom_toTopOf="@id/txt_degree_dust"
                     app:layout_constraintEnd_toEndOf="@+id/label_dust"
                     app:layout_constraintStart_toStartOf="@+id/label_dust"
-                    app:layout_constraintTop_toBottomOf="@+id/label_dust"
-                    app:srcCompat="@drawable/icon_smile" />
+                    app:layout_constraintTop_toBottomOf="@+id/label_dust" />
 
-                <ImageView
-                    android:id="@+id/img_imoge_superdust"
+                <TextView
+                    android:id="@+id/txt_emoji_superdust"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
+                    android:textSize="18dp"
                     app:layout_constraintBottom_toTopOf="@id/txt_degree_superdust"
                     app:layout_constraintEnd_toEndOf="@+id/label_superdust"
                     app:layout_constraintStart_toStartOf="@+id/label_superdust"
-                    app:layout_constraintTop_toBottomOf="@+id/label_superdust"
-                    app:srcCompat="@drawable/icon_sad" />
+                    app:layout_constraintTop_toBottomOf="@+id/label_superdust" />
 
                 <TextView
                     android:id="@+id/txt_degree_dust"
@@ -319,31 +319,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="21"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/label_dust"
-                    app:layout_constraintTop_toBottomOf="@+id/img_imoge_dust" />
+                    app:layout_constraintTop_toBottomOf="@+id/txt_emoji_dust" />
 
                 <TextView
                     android:id="@+id/txt_degree_superdust"
                     style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="21"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/txt_superdust_emotion"
+                    app:layout_constraintEnd_toStartOf="@id/txt_superdust_grade"
                     app:layout_constraintStart_toStartOf="@+id/label_superdust"
-                    app:layout_constraintTop_toBottomOf="@+id/img_imoge_superdust" />
+                    app:layout_constraintTop_toBottomOf="@+id/txt_emoji_superdust" />
 
                 <TextView
-                    android:id="@+id/txt_dust_emotion"
+                    android:id="@+id/txt_dust_grade"
                     style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:text="좋음"
                     app:layout_constraintBottom_toBottomOf="@+id/txt_degree_dust"
                     app:layout_constraintEnd_toEndOf="@+id/label_dust"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -352,12 +349,11 @@
                     app:layout_constraintVertical_bias="0.476" />
 
                 <TextView
-                    android:id="@+id/txt_superdust_emotion"
+                    android:id="@+id/txt_superdust_grade"
                     style="@style/basicText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:text="나쁨"
                     app:layout_constraintBottom_toBottomOf="@+id/txt_degree_superdust"
                     app:layout_constraintEnd_toEndOf="@+id/label_superdust"
                     app:layout_constraintHorizontal_bias="0.0"

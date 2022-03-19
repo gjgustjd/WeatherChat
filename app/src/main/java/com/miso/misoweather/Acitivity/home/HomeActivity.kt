@@ -29,6 +29,8 @@ import com.miso.misoweather.Dialog.GeneralConfirmDialog
 import com.miso.misoweather.common.CommonUtil
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
+import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirData
+import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastData
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
@@ -79,6 +81,7 @@ class HomeActivity : MisoActivity() {
     lateinit var bigScale: String
     lateinit var midScale: String
     lateinit var smallScale: String
+    var currentAirData: CurrentAirData? = null
     var hourlyForecastData: HourlyForecastData? = null
     var dailyForecastData: DailyForecastData? = null
     var briefForecastData: ForecastBriefData? = null
@@ -109,6 +112,7 @@ class HomeActivity : MisoActivity() {
                 getBriefForecast()
                 getDailyForecast()
                 getHourlyForecast()
+                getCurrentAir()
             } else {
                 Toast.makeText(this, "날씨 정보 불러오기에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
@@ -168,7 +172,8 @@ class HomeActivity : MisoActivity() {
     private fun isAllForecastDataIsNotNull(): Boolean {
         return dailyForecastData != null &&
                 briefForecastData != null &&
-                dailyForecastData != null
+                dailyForecastData != null &&
+                currentAirData != null
     }
 
     fun initializeViews() {
@@ -182,6 +187,7 @@ class HomeActivity : MisoActivity() {
                         intent.putExtra("briefForecast", briefForecastData)
                         intent.putExtra("dailyForecast", dailyForecastData)
                         intent.putExtra("hourlyForecast", hourlyForecastData)
+                        intent.putExtra("currentAir", currentAirData)
                         startActivity(intent)
                         transferToNext()
                         finish()
@@ -445,6 +451,42 @@ class HomeActivity : MisoActivity() {
                     is String -> Log.e("getHourlyForecast", it)
                     is Throwable -> Log.e("getHourlyForecast", it.toString())
                     else -> Log.e("getHourlyForecast", "실패")
+                }
+
+            }
+        })
+    }
+
+    private fun getCurrentAir() {
+        viewModel.getCurrentAir(defaultRegionId.toInt())
+        viewModel.currentAirResponse.observe(this, {
+            if (it == null) {
+                currentAirData = null
+                Log.e("getCurrentAir", "null")
+            } else if (it is Response<*>) {
+                if (it.isSuccessful) {
+                    try {
+                        val currentAirResponseDto =
+                            it.body()!! as CurrentAirResponseDto
+                        if (currentAirResponseDto.data == null) {
+                            currentAirData = null
+                            Log.e("getCurrentAir", "null")
+                        } else {
+                            currentAirData = currentAirResponseDto.data
+                            Log.i("getCurrentAir", "성공")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("getCurrentAir", e.stackTraceToString())
+                        e.printStackTrace()
+                    }
+                } else {
+                    Log.e("getCurrentAir", it.errorBody().toString())
+                }
+            } else {
+                when (it) {
+                    is String -> Log.e("getCurrentAir", it)
+                    is Throwable -> Log.e("getCurrentAir", it.toString())
+                    else -> Log.e("getCurrentAir", "실패")
                 }
 
             }
