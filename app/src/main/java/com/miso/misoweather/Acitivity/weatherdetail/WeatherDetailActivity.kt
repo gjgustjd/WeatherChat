@@ -3,6 +3,7 @@ package com.miso.misoweather.Acitivity.weatherdetail
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -16,10 +17,12 @@ import com.miso.misoweather.databinding.ActivityWeatherMainBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
+import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirData
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastData
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.MisoRepository
+import java.lang.Exception
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -49,6 +52,12 @@ class WeatherDetailActivity : MisoActivity() {
     lateinit var txtEmojiHumid: TextView
     lateinit var txtDegreeHumid: TextView
     lateinit var txtForecastDay: TextView
+    lateinit var txtEmojiDust: TextView
+    lateinit var txtDegreeDust: TextView
+    lateinit var txtGradeDust: TextView
+    lateinit var txtEmojiUltraDust: TextView
+    lateinit var txtDegreeUltraDust: TextView
+    lateinit var txtGradeUltraDust: TextView
     lateinit var viewModel: WeatherDetailViewModel
     lateinit var bigScale: String
     lateinit var midScale: String
@@ -60,6 +69,7 @@ class WeatherDetailActivity : MisoActivity() {
     lateinit var briefForecastData: ForecastBriefData
     lateinit var dailyForecastData: DailyForecastData
     lateinit var hourlyForecastData: HourlyForecastData
+    lateinit var currentAirData: CurrentAirData
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,6 +128,7 @@ class WeatherDetailActivity : MisoActivity() {
         briefForecastData = intent.getSerializableExtra("briefForecast") as ForecastBriefData
         dailyForecastData = intent.getSerializableExtra("dailyForecast") as DailyForecastData
         hourlyForecastData = intent.getSerializableExtra("hourlyForecast") as HourlyForecastData
+        currentAirData = intent.getSerializableExtra("currentAir") as CurrentAirData
         chatLayout = binding.chatLayout
         txtLocation = binding.txtLocation
         txtWeatherEmoji = binding.txtWeatherEmoji
@@ -133,6 +144,12 @@ class WeatherDetailActivity : MisoActivity() {
         txtEmojiHumid = binding.txtEmojiHumid
         txtDegreeHumid = binding.txtDegreeHumid
         txtForecastDay = binding.txtTitleForecastDay
+        txtEmojiDust = binding.txtEmojiDust
+        txtDegreeDust = binding.txtDegreeDust
+        txtGradeDust = binding.txtDustGrade
+        txtEmojiUltraDust = binding.txtEmojiSuperdust
+        txtDegreeUltraDust = binding.txtDegreeSuperdust
+        txtGradeUltraDust = binding.txtSuperdustGrade
         txtForecastDay.text = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).dayOfMonth.toString()
         btnBack = binding.imgbtnBack
         btnBack.setOnClickListener()
@@ -170,6 +187,7 @@ class WeatherDetailActivity : MisoActivity() {
             intent.putExtra("briefForecast", briefForecastData)
             intent.putExtra("dailyForecast", dailyForecastData)
             intent.putExtra("hourlyForecast", hourlyForecastData)
+            intent.putExtra("currentAir", currentAirData)
             startActivity(intent)
             transferToNext()
             finish()
@@ -195,13 +213,42 @@ class WeatherDetailActivity : MisoActivity() {
         txtWeatherEmoji.text = briefForecastData.weather
         txtEmojiRain.text = hourlyForecastData.popIcon
         txtDegreeRain.text = hourlyForecastData.pop + "%"
-        txtDegreeRainOnHour.text = hourlyForecastData.rain + "%"
+        txtDegreeRainOnHour.text = getDegreeRainOnHour()
         txtDegreeWind.text = getWindDegree(hourlyForecastData.windSpeedIcon)
         txtEmojiHumid.text = hourlyForecastData.humidityIcon
         txtDegreeHumid.text = hourlyForecastData.humidity + "%"
         txtEmojiWind.text = hourlyForecastData.windSpeedIcon
+        txtEmojiDust.text = currentAirData.fineDustIcon
+        txtDegreeDust.text = currentAirData.fineDust
+        txtGradeDust.text = currentAirData.fineDustGrade
+        txtEmojiUltraDust.text = currentAirData.ultraFineDustIcon
+        txtDegreeUltraDust.text = currentAirData.ultraFineDust
+        txtGradeUltraDust.text = currentAirData.ultraFineDustGrade
         setupWeatherOnTimeRecycler()
         setupWeatherOnDayRecycler()
+    }
+
+    fun getDegreeRainOnHour(): String {
+        try {
+            var rain = hourlyForecastData.rain
+            var snow = hourlyForecastData.snow
+
+            if (rain.isNullOrBlank() && snow.isNullOrBlank())
+                return "0"
+            else if (rain.isNullOrBlank())
+                return snow
+            else if (snow.isNullOrBlank())
+                return rain
+            else {
+                if (rain.toInt() > snow.toInt())
+                    return rain
+                else
+                    return snow
+            }
+        } catch (e: Exception) {
+            Log.e("getDegreeRainOnHour", e.stackTraceToString())
+            return "0"
+        }
     }
 
     fun getWindDegree(emoji: String): String {
