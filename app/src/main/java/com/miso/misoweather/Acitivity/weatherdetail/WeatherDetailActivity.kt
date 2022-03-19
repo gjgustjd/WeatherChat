@@ -46,6 +46,8 @@ class WeatherDetailActivity : MisoActivity() {
     lateinit var txtDegreeRainOnHour: TextView
     lateinit var txtEmojiWind: TextView
     lateinit var txtDegreeWind: TextView
+    lateinit var txtEmojiHumid: TextView
+    lateinit var txtDegreeHumid: TextView
     lateinit var txtForecastDay: TextView
     lateinit var viewModel: WeatherDetailViewModel
     lateinit var bigScale: String
@@ -128,6 +130,8 @@ class WeatherDetailActivity : MisoActivity() {
         txtDegreeRainOnHour = binding.txtRainDegreeOnHour
         txtEmojiWind = binding.txtEmojiWindSpeed
         txtDegreeWind = binding.txtDegreeWind
+        txtEmojiHumid = binding.txtEmojiHumid
+        txtDegreeHumid = binding.txtDegreeHumid
         txtForecastDay = binding.txtTitleForecastDay
         txtForecastDay.text = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).dayOfMonth.toString()
         btnBack = binding.imgbtnBack
@@ -151,7 +155,8 @@ class WeatherDetailActivity : MisoActivity() {
 
     fun goToChatMainActivity() {
         var currentDate =
-            ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+            ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
+                .format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
         if (!isSurveyed.equals("true") || !lastSurveyedDate.equals(currentDate)) {
             var intent = Intent(this, SelectSurveyAnswerActivity::class.java)
             intent.putExtra("isFirstSurvey", true)
@@ -188,11 +193,13 @@ class WeatherDetailActivity : MisoActivity() {
         txtMaxDegree.text = briefForecastData.temperatureMax.split(".")[0] + "˚"
         txtDegree.text = briefForecastData.temperature.split(".")[0] + "˚"
         txtWeatherEmoji.text = briefForecastData.weather
-//        txtEmojiRain.text = forecastdetailInfo.rainSnow
-//        txtDegreeRain.text = forecastdetailInfo.rainSnowPossibility + "%"
-//        txtDegreeRainOnHour.text = forecastdetailInfo.rainSnowValue
-//        txtDegreeWind.text = getWindDegree(forecastdetailInfo.windSpeed)
-//        txtEmojiWind.text = forecastdetailInfo.windSpeed
+        txtEmojiRain.text = hourlyForecastData.popIcon
+        txtDegreeRain.text = hourlyForecastData.pop + "%"
+        txtDegreeRainOnHour.text = hourlyForecastData.rain + "%"
+        txtDegreeWind.text = getWindDegree(hourlyForecastData.windSpeedIcon)
+        txtEmojiHumid.text = hourlyForecastData.humidityIcon
+        txtDegreeHumid.text = hourlyForecastData.humidity + "%"
+        txtEmojiWind.text = hourlyForecastData.windSpeedIcon
         setupWeatherOnTimeRecycler()
         setupWeatherOnDayRecycler()
     }
@@ -200,7 +207,6 @@ class WeatherDetailActivity : MisoActivity() {
     fun getWindDegree(emoji: String): String {
         val degrees: Array<String> = resources.getStringArray(R.array.wind_degree)
         val emojies: Array<String> = resources.getStringArray(R.array.wind_emoji)
-
         return degrees.get(emojies.indexOf(emoji))
     }
 
