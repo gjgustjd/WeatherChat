@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
+import com.miso.misoweather.common.CommonUtil
 import com.miso.misoweather.databinding.ListWeatherDayBinding
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecast
 import com.miso.misoweather.model.DTO.Forecast.Forecast
@@ -44,7 +45,7 @@ class RecyclerForecastOnDayAdapter(var context: Context, var forecasts: List<Dai
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.degreeMax.text = forecasts[position].maxTemperature.split(".")[0] + "˚"
+        holder.degreeMax.text = CommonUtil.toIntString(forecasts[position].maxTemperature) + "˚"
         holder.degreeMin.text = forecasts[position].minTemperature.split(".")[0] + "˚"
         holder.emoji.text = forecasts[position].weather
         var forecastDate = forecasts[position].forecastTime.split("T")[0]

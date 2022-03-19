@@ -1,5 +1,6 @@
 package com.miso.misoweather.Acitivity.home
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -25,16 +26,20 @@ import com.miso.misoweather.Acitivity.mypage.MyPageActivity
 import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
 import com.miso.misoweather.Dialog.GeneralConfirmDialog
+import com.miso.misoweather.common.CommonUtil
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
+import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirData
+import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastData
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
+import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 import java.lang.Exception
-import java.time.LocalDateTime
+import java.lang.reflect.Executable
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -60,7 +65,7 @@ class HomeActivity : MisoActivity() {
     lateinit var txtSecondRatio: TextView
     lateinit var txtThirdRatio: TextView
     lateinit var imgIconCheckFirst: ImageView
-    lateinit var imgbtnChangeLocaion: ImageButton
+    lateinit var imgbtnChangeLocation: ImageButton
     lateinit var firstProgressLayout: ConstraintLayout
     lateinit var secondProgressLayout: ConstraintLayout
     lateinit var thirdProgressLayout: ConstraintLayout
@@ -68,7 +73,6 @@ class HomeActivity : MisoActivity() {
     lateinit var txtEmptyChart: TextView
 
     lateinit var viewModel: HomeViewModel
-    lateinit var repository: MisoRepository
 
     lateinit var isSurveyed: String
     lateinit var lastSurveyedDate: String
@@ -77,6 +81,7 @@ class HomeActivity : MisoActivity() {
     lateinit var bigScale: String
     lateinit var midScale: String
     lateinit var smallScale: String
+    var currentAirData: CurrentAirData? = null
     var hourlyForecastData: HourlyForecastData? = null
     var dailyForecastData: DailyForecastData? = null
     var briefForecastData: ForecastBriefData? = null
@@ -93,14 +98,16 @@ class HomeActivity : MisoActivity() {
     }
 
 
-    fun setupData() {
+    private fun setupData() {
         getUserInfo()
         getCommentList()
         loadWeatherInfo()
-        Log.i("setupData", "Launched")
+        setupSurveyResult()
+
+        txtLocation.text = bigScale + " " + midScale + " " + smallScale
     }
 
-    fun loadWeatherInfo() {
+    private fun loadWeatherInfo() {
         viewModel.loadWeatherInfo(defaultRegionId.toInt())
         viewModel.isWeatherLoaded.observe(this, {
             isWeatherLoaded = it
@@ -108,14 +115,19 @@ class HomeActivity : MisoActivity() {
                 getBriefForecast()
                 getDailyForecast()
                 getHourlyForecast()
+                getCurrentAir()
+
+                Log.i("loadWeatherInfo", "성공")
             } else {
+                Log.i("loadWeatherInfo", "실패")
+                Log.i("loadWeatherInfo", "defaultRegionId:${defaultRegionId}")
                 Toast.makeText(this, "날씨 정보 불러오기에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    fun initializeProperties() {
-        fun checkinitializedAll() {
+    private fun initializeProperties() {
+        fun checkInitializedAll() {
             if (!isAllInitialized) {
                 if (
                     this::isSurveyed.isInitialized &&
@@ -134,48 +146,128 @@ class HomeActivity : MisoActivity() {
         viewModel.updateProperties()
         viewModel.isSurveyed.observe(this, {
             isSurveyed = it!!
-            checkinitializedAll()
+            checkInitializedAll()
         })
         viewModel.lastSurveyedDate.observe(this, {
             lastSurveyedDate = it!!
-            checkinitializedAll()
+            checkInitializedAll()
         })
         viewModel.defaultRegionId.observe(this, {
             defaultRegionId = it!!
-            checkinitializedAll()
+            checkInitializedAll()
         })
         viewModel.misoToken.observe(this, {
             misoToken = it!!
-            checkinitializedAll()
+            checkInitializedAll()
         })
         viewModel.bigScale.observe(this, {
             bigScale = it!!
-            checkinitializedAll()
+            checkInitializedAll()
         })
         viewModel.midScale.observe(this, {
             midScale = it!!
-            checkinitializedAll()
+            checkInitializedAll()
         })
         viewModel.smallScale.observe(this, {
             smallScale = it!!
-            checkinitializedAll()
+            checkInitializedAll()
         })
 
         Log.i("initializeProperties", "Launched")
     }
 
+    private fun isAllForecastDataIsNotNull(): Boolean {
+        return dailyForecastData != null &&
+                briefForecastData != null &&
+                dailyForecastData != null &&
+                currentAirData != null
+    }
+
     fun initializeViews() {
-        repository = MisoRepository.getInstance(applicationContext)
-        viewModel = HomeViewModel(repository)
-        weatherLayout = binding.weatherLayout
+        fun initWeatherLayout() {
+            try {
+                weatherLayout = binding.weatherLayout
+                weatherLayout.setOnClickListener()
+                {
+                    if (isAllForecastDataIsNotNull()) {
+                        val intent = Intent(this, WeatherDetailActivity::class.java)
+                        intent.putExtra("briefForecast", briefForecastData)
+                        intent.putExtra("dailyForecast", dailyForecastData)
+                        intent.putExtra("hourlyForecast", hourlyForecastData)
+                        intent.putExtra("currentAir", currentAirData)
+                        startActivity(intent)
+                        transferToNext()
+                        finish()
+                    } else {
+                        Toast.makeText(this, "날씨 상세정보를 불러오는 데에 실패하였습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("initWeatherLayout", e.stackTraceToString())
+            }
+        }
+
+        fun initBtnGoToSurvey() {
+            try {
+                btngoToSurvey = binding.imgbtnSurvey
+                btngoToSurvey.setOnClickListener()
+                {
+                    goToChatMainActivity()
+                }
+            } catch (e: Exception) {
+                Log.e("initBtnGoToSurvey", e.stackTraceToString())
+            }
+        }
+
+        fun initChartLayout() {
+            try {
+                chartLayout = binding.chartLayout
+                chartLayout.setOnClickListener()
+                {
+                    goToChatMainActivity()
+                }
+            } catch (e: Exception) {
+                Log.e("initChartLayout", e.stackTraceToString())
+            }
+        }
+
+        fun initBtnProfile() {
+            try {
+                btnProfile = binding.imgbtnProfile
+                btnProfile.setOnClickListener()
+                {
+                    startActivity(Intent(this, MyPageActivity::class.java))
+                    transferToNext()
+                    finish()
+                }
+            } catch (e: Exception) {
+                Log.e("initBtnProfile", e.stackTraceToString())
+            }
+        }
+
+        @SuppressLint("LongLogTag")
+        fun initImgBtnChangeLocation() {
+            try {
+                imgbtnChangeLocation = binding.imgbtnChangeLocation
+                imgbtnChangeLocation.setOnClickListener()
+                {
+                    val intent = Intent(this, SelectRegionActivity::class.java)
+                    intent.putExtra("for", "change")
+                    startActivity(intent)
+                    transferToNext()
+                    finish()
+                }
+            } catch (e: Exception) {
+                Log.e("initImgBtnChangeLctn", e.stackTraceToString())
+            }
+        }
+        viewModel = HomeViewModel(MisoRepository.getInstance(applicationContext))
         txtNickName = binding.txtNickname
         txtEmoji = binding.txtEmoji
         txtLocation = binding.txtLocation
         txtWeatherDegree = binding.txtDegree
         txtWeatherEmoji = binding.txtWeatherEmoji
         btnShowWeatherDetail = binding.imgbtnShowWeather
-        btnProfile = binding.imgbtnProfile
-        btngoToSurvey = binding.imgbtnSurvey
         txtFirstAnswer = binding.txtAnswerFirst
         txtSecondAnswer = binding.txtAnswerSecond
         txtThirdAnswer = binding.txtAnswerThird
@@ -183,55 +275,19 @@ class HomeActivity : MisoActivity() {
         txtSecondRatio = binding.txtRatioSecond
         txtThirdRatio = binding.txtRatioThird
         imgIconCheckFirst = binding.imgIconFirst
-        imgbtnChangeLocaion = binding.imgbtnChangeLocation
         firstProgressLayout = binding.itemFirstLayout
         secondProgressLayout = binding.itemSecondLayout
         thirdProgressLayout = binding.itemThirdLayout
-        chartLayout = binding.chartLayout
         txtEmptyChart = binding.txtEmptyChart
-
-        chartLayout.setOnClickListener()
-        {
-            goToChatMainActivity()
-        }
-
-        btngoToSurvey.setOnClickListener()
-        {
-            goToChatMainActivity()
-        }
-        weatherLayout.setOnClickListener()
-        {
-            if (dailyForecastData != null &&
-                briefForecastData != null &&
-                dailyForecastData != null
-            ) {
-                var intent = Intent(this, WeatherDetailActivity::class.java)
-                intent.putExtra("briefForecast", briefForecastData)
-                intent.putExtra("dailyForecast", dailyForecastData)
-                intent.putExtra("hourlyForecast", hourlyForecastData)
-                startActivity(intent)
-                transferToNext()
-                finish()
-            } else {
-                Toast.makeText(this, "날씨 상세정보를 불러오는 데에 실패하였습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
-        btnProfile.setOnClickListener()
-        {
-            startActivity(Intent(this, MyPageActivity::class.java))
-            transferToNext()
-            finish()
-        }
         recyclerChat = binding.recyclerChats
-        imgbtnChangeLocaion.setOnClickListener()
-        {
-            var intent = Intent(this, SelectRegionActivity::class.java)
-            intent.putExtra("for", "change")
-            startActivity(intent)
-            transferToNext()
-            finish()
-        }
+
+        initWeatherLayout()
+        initChartLayout()
+        initBtnGoToSurvey()
+        initBtnProfile()
+        initImgBtnChangeLocation()
     }
+
 
     override fun doBack() {
         GeneralConfirmDialog(
@@ -242,80 +298,102 @@ class HomeActivity : MisoActivity() {
         ).show(supportFragmentManager, "generalConfirmDialog")
     }
 
-    fun logout() {
+    private fun logout() {
         viewModel.logout()
         viewModel.logoutResponseString.observe(this, {
-            if (it.equals("OK")) {
-                startActivity(Intent(this, LoginActivity::class.java))
-                transferToBack()
-                finish()
-            } else {
+            if (!it.equals("OK")) {
+                Toast.makeText(this, "카카오 로그아웃에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
+            startActivity(Intent(this, LoginActivity::class.java))
+            transferToBack()
+            finish()
         })
     }
 
-    fun goToChatMainActivity() {
-        var currentDate =
-            ZonedDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
-        if (!isSurveyed.equals("true") || !lastSurveyedDate.equals(currentDate)) {
-            var intent = Intent(this, SelectSurveyAnswerActivity::class.java)
-            intent.putExtra("isFirstSurvey", true)
+    private fun goToChatMainActivity() {
+        try {
+            val intent: Intent
+
+            if (!isSurveyed.equals("true") || !isTodaySurveyed()) {
+                intent = Intent(this, SelectSurveyAnswerActivity::class.java)
+                intent.putExtra("isFirstSurvey", true)
+            } else {
+                intent = Intent(this, ChatMainActivity::class.java)
+            }
+
             intent.putExtra("previousActivity", "Home")
             startActivity(intent)
             transferToNext()
             finish()
-        } else {
-            var intent = Intent(this, ChatMainActivity::class.java)
-            intent.putExtra("previousActivity", "Home")
-            startActivity(intent)
-            transferToNext()
-            finish()
+        } catch (e: Exception) {
+            Log.e("goToChatMainActivity", e.stackTraceToString())
+            Toast.makeText(this, "화면 이동 중 오류가 발생하였습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
-    fun getBriefForecast() {
-        fun forecastRequest() {
-            Log.i("defaultRegionId",defaultRegionId)
+    private fun isTodaySurveyed(): Boolean {
+        try {
+            val currentDate =
+                ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
+                    .format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+            return lastSurveyedDate.equals(currentDate)
+        } catch (e: Exception) {
+            Log.e("isTodaySurveyed", e.stackTraceToString())
+            return true
+        }
+    }
+
+    private fun getBriefForecast() {
+        if (defaultRegionId.isNotBlank()) {
+            Log.i("defaultRegionId", defaultRegionId)
+            var previousBigScale = bigScale
             viewModel.getBriefForecast(defaultRegionId.toInt())
             viewModel.forecastBriefResponse.observe(this, {
-                if (it == null) {
-                    Log.i("getBriefForecast", "실패")
-                } else {
-                    if (it is Response<*>) {
-                        try {
-                            Log.i("결과", "성공")
-                            val forecastBriefResponseDto = it.body()!! as ForecastBriefResponseDto
-                            briefForecastData = forecastBriefResponseDto.data
-                            txtWeatherEmoji.setText(forecastBriefResponseDto.data.weather)
-                            txtWeatherDegree.setText(
-                                forecastBriefResponseDto.data.temperature.split(
-                                    "."
-                                )[0] + "˚"
-                            )
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            Toast.makeText(this, "날씨 단기예보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT)
-                                .show()
-                            Log.i("getBriefForecast", "excepted")
-                        } finally {
-                            txtLocation.text =
-                                bigScale + " " + midScale + " " + smallScale
-                            setupSurveyResult()
+                try {
+                    if (it != null) {
+                        if (it is Response<*>) {
+                            if (it.isSuccessful) {
+                                val forecastBriefResponseDto =
+                                    it.body()!! as ForecastBriefResponseDto
+                                briefForecastData = forecastBriefResponseDto.data
+                                txtWeatherEmoji.setText(forecastBriefResponseDto.data.weather)
+                                txtWeatherDegree.setText(
+                                    CommonUtil.toIntString(forecastBriefResponseDto.data.temperature) + "˚"
+                                )
+                                txtLocation.text = bigScale + " " + midScale + " " + smallScale
+
+                                if (!previousBigScale.equals(bigScale))
+                                    setupSurveyResult()
+
+                                Log.i("결과", "성공")
+                            } else
+                                throw Exception(it.errorBody().toString())
+
+                        } else {
+                            if (it is String)
+                                throw Exception(it)
+                            else if (it is Throwable)
+                                throw it
+                            else
+                                throw Exception("실패")
                         }
                     } else {
-                        if (it is String) {
-
-                        } else if (it is Throwable) {
-
-                        }
+                        throw Exception("null")
                     }
+                } catch (e: Exception) {
+                    if (!e.message.isNullOrBlank())
+                        Log.e("getBriefForecast", e.message.toString())
+
+                    Log.e("getBriefForecast", e.stackTraceToString())
+
+                    Toast.makeText(this, "날씨 단기예보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT)
+                        .show()
                 }
             })
-        }
-        try {
-            forecastRequest()
-        } catch (e: Exception) {
-
+        } else {
+            Log.e("getBriefForecast", "defaultRegionId is blank")
+            Toast.makeText(this, "날씨 단기예보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -324,148 +402,227 @@ class HomeActivity : MisoActivity() {
         viewModel.dailyForecastResponse.observe(this, {
             if (it == null) {
                 dailyForecastData = null
+                Log.e("getDailyForecast", "null")
             } else if (it is Response<*>) {
                 if (it.isSuccessful) {
                     try {
-                        Log.i("결과", "성공")
-                        var dailyForecastResponseDto = it.body()!! as DailyForecastResponseDto
+                        var dailyForecastResponseDto =
+                            it.body()!! as DailyForecastResponseDto
+
                         if (dailyForecastResponseDto.data.dailyForecastList == null)
                             dailyForecastData = null
                         else
                             dailyForecastData = dailyForecastResponseDto.data
+
+                        Log.i("결과", "성공")
                     } catch (e: Exception) {
-                        e.printStackTrace()
+                        Log.e("getDailyForecast", e.stackTraceToString())
                     }
                 } else {
-
+                    Log.e("getDailyForecast", it.errorBody().toString())
+                }
+            } else {
+                when (it) {
+                    is String -> Log.e("getDailyForecast", it)
+                    is Throwable -> Log.e("getDailyForecast", it.stackTraceToString())
+                    else -> Log.e("getDailyForecast", "실패")
                 }
             }
         })
     }
 
-    fun getHourlyForecast() {
+    private fun getHourlyForecast() {
         viewModel.getHourlyForecast(defaultRegionId.toInt())
         viewModel.hourlyForecastResponse.observe(this, {
             if (it == null) {
                 hourlyForecastData = null
+                Log.e("getHourlyForecast", "null")
             } else if (it is Response<*>) {
                 if (it.isSuccessful) {
                     try {
-                        Log.i("결과", "성공")
-                        var hourlyForecastResponseDto = it.body()!! as HourlyForecastResponseDto
-                        if (hourlyForecastResponseDto.data.hourlyForecastList == null)
+                        val hourlyForecastResponseDto =
+                            it.body()!! as HourlyForecastResponseDto
+                        if (hourlyForecastResponseDto.data.hourlyForecastList == null) {
                             hourlyForecastData = null
-                        else
+                            Log.e("getHourlyForecast", "null")
+                        } else {
                             hourlyForecastData = hourlyForecastResponseDto.data
+                            Log.i("getHourlyForecast", "성공")
+                        }
                     } catch (e: Exception) {
+                        Log.e("getHourlyForecast", e.stackTraceToString())
                         e.printStackTrace()
                     }
                 } else {
-
+                    Log.e("getHourlyForecast", it.errorBody().toString())
                 }
+            } else {
+                when (it) {
+                    is String -> Log.e("getHourlyForecast", it)
+                    is Throwable -> Log.e("getHourlyForecast", it.toString())
+                    else -> Log.e("getHourlyForecast", "실패")
+                }
+
             }
         })
     }
+
+    private fun getCurrentAir() {
+        viewModel.getCurrentAir(defaultRegionId.toInt())
+        viewModel.currentAirResponse.observe(this, {
+            if (it == null) {
+                currentAirData = null
+                Log.e("getCurrentAir", "null")
+            } else if (it is Response<*>) {
+                if (it.isSuccessful) {
+                    try {
+                        val currentAirResponseDto =
+                            it.body()!! as CurrentAirResponseDto
+                        if (currentAirResponseDto.data == null) {
+                            currentAirData = null
+                            Log.e("getCurrentAir", "null")
+                        } else {
+                            currentAirData = currentAirResponseDto.data
+                            Log.i("getCurrentAir", "성공")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("getCurrentAir", e.stackTraceToString())
+                        e.printStackTrace()
+                    }
+                } else {
+                    Log.e("getCurrentAir", it.errorBody().toString())
+                }
+            } else {
+                when (it) {
+                    is String -> Log.e("getCurrentAir", it)
+                    is Throwable -> Log.e("getCurrentAir", it.toString())
+                    else -> Log.e("getCurrentAir", "실패")
+                }
+
+            }
+        })
+    }
+
     fun getCommentList() {
         viewModel.getCommentList(null, 5)
         viewModel.commentListResponse.observe(this, {
-            try {
-                setRecyclerChats(it!!.body()!!)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            setRecyclerChats(it!!.body()!!)
         })
     }
 
 
     fun setRecyclerChats(responseDto: CommentListResponseDto) {
-        recyclerChatAdapter =
-            RecyclerChatsAdapter(this, responseDto.data.commentList, false)
-        recyclerChat.adapter = recyclerChatAdapter
-        recyclerChat.layoutManager = LinearLayoutManager(this)
+        try {
+            recyclerChatAdapter =
+                RecyclerChatsAdapter(this, responseDto.data.commentList, false)
+            recyclerChat.adapter = recyclerChatAdapter
+            recyclerChat.layoutManager = LinearLayoutManager(this)
+            Log.i("setRecyclerChats", "성공")
+        } catch (e: Exception) {
+            Toast.makeText(this, "한줄평 목록을 불러오는 중 오류가 발생하였습니다.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun getUserInfo() {
         fun onSuccessful(response: Response<MemberInfoResponseDto>) {
             try {
-                Log.i("결과", "성공")
                 val memberInfoResponseDto = response.body()!!
                 var memberInfo = memberInfoResponseDto.data
                 txtNickName.setText(memberInfo.nickname + "님!")
                 txtEmoji.setText(memberInfo.emoji)
+                Log.i("getUserInfo", "성공")
             } catch (e: Exception) {
-                e.printStackTrace()
+                Toast.makeText(this, "사용자 정보를 불러오는 중 문제가 발생했습니다.", Toast.LENGTH_SHORT)
+                    .show()
+                Log.e("getUserInfo", e.stackTraceToString())
             }
         }
 
-        fun onFail() {
-            Log.i("getUserInfo", "불러오기 실패")
+        fun onFail(response: Response<MemberInfoResponseDto>) {
+            Toast.makeText(this, "사용자 정보를 불러오는 중 문제가 발생했습니다.", Toast.LENGTH_SHORT).show()
+            Log.e("getUserInfo", response.errorBody().toString())
         }
 
-        try {
-            viewModel.getUserInfo(misoToken)
-            viewModel.memberInfoResponse.observe(this, {
-                if (it == null) {
-                    Log.i("getUserInfo", "에러 발생")
+        viewModel.getUserInfo(misoToken)
+        viewModel.memberInfoResponse.observe(this, {
+            if (it == null) {
+                Log.i("getUserInfo", "에러 발생")
+            } else {
+                if (it!!.isSuccessful) {
+                    onSuccessful(it)
                 } else {
-                    if (it!!.isSuccessful) {
-                        onSuccessful(it)
-                    } else {
-                        onFail()
-                    }
-
+                    onFail(it)
                 }
             }
-            )
-        } catch (e: Exception) {
-
         }
+        )
     }
 
     fun setupSurveyResult() {
+        val answerViews = listOf(txtFirstAnswer, txtSecondAnswer, txtThirdAnswer)
+        val ratioViews = listOf(txtFirstRatio, txtSecondRatio, txtThirdRatio)
+        val progressLayouts =
+            listOf(firstProgressLayout, secondProgressLayout, thirdProgressLayout)
+
+        fun showEmptyChartText() {
+            txtFirstRatio.visibility = View.GONE
+            imgIconCheckFirst.visibility = View.GONE
+            txtEmptyChart.visibility = View.VISIBLE
+        }
+
+        fun showChartItem(
+            surveyResult: SurveyResult,
+            index: Int
+        ) {
+            answerViews[index].text = surveyResult.keyList[index].toString()
+            ratioViews[index].text = surveyResult.valueList[index].toString() + "%"
+            progressLayouts[index].visibility = View.VISIBLE
+        }
+
+        fun showFirstItem(surveyResultDto: SurveyResult) {
+            showChartItem(surveyResultDto, 0)
+
+            if (txtFirstRatio.text.equals("")) {
+                showEmptyChartText()
+            } else
+                imgIconCheckFirst.visibility = View.VISIBLE
+        }
+
         viewModel.getSurveyResult(getBigShortScale(bigScale))
         viewModel.surveyResultResponse.observe(this, Observer {
-            if (it == null) {
-
-            } else {
-                if (it.isSuccessful) {
-                    try {
+            try {
+                if (it == null) {
+                    throw Exception("null")
+                } else {
+                    if (it.isSuccessful) {
                         val todaySurveyResultDto =
                             it.body()!!.data.responseList.first { it.surveyId == 2 }
-                        if (todaySurveyResultDto.keyList[0] == null) {
-                            imgIconCheckFirst.visibility = View.GONE
-                            txtEmptyChart.visibility = View.VISIBLE
-                        } else {
-                            txtFirstAnswer.text = todaySurveyResultDto.keyList[0].toString()
-                            txtFirstRatio.text = todaySurveyResultDto.valueList[0].toString() + "%"
-                            if (txtFirstRatio.text.equals("")) {
-                                imgIconCheckFirst.visibility = View.GONE
-                                txtEmptyChart.visibility = View.VISIBLE
+
+                        todaySurveyResultDto.keyList.forEachIndexed { index, it ->
+                            if (index == 0) {
+                                if (it != null)
+                                    showFirstItem(todaySurveyResultDto)
+                                else
+                                    showEmptyChartText()
                             } else
-                                imgIconCheckFirst.visibility = View.VISIBLE
-
-                            txtFirstRatio.text = todaySurveyResultDto.valueList[0].toString() + "%"
-                            firstProgressLayout.visibility = View.VISIBLE
-
-                            if (todaySurveyResultDto.keyList[1] == null)
-                                return@Observer
-                            txtSecondAnswer.text = todaySurveyResultDto.keyList[1].toString()
-                            txtSecondRatio.text = todaySurveyResultDto.valueList[1].toString() + "%"
-                            secondProgressLayout.visibility = View.VISIBLE
-
-                            if (todaySurveyResultDto.keyList[2] == null)
-                                return@Observer
-                            txtThirdAnswer.text = todaySurveyResultDto.keyList[2].toString()
-                            txtThirdRatio.text = todaySurveyResultDto.valueList[2].toString() + "%"
-                            thirdProgressLayout.visibility = View.VISIBLE
+                                if (it != null)
+                                    showChartItem(todaySurveyResultDto, index)
+                                else
+                                    return@forEachIndexed
                         }
-                    } catch (e: Exception) {
-                        txtEmptyChart.visibility = View.VISIBLE
-                        e.printStackTrace()
+                    } else {
+                        throw Exception(it.errorBody().toString())
                     }
-                } else {
-                    txtEmptyChart.visibility = View.VISIBLE
                 }
+            } catch (e: Exception) {
+                showEmptyChartText()
+
+                if (!e.message.toString().equals(""))
+                    Log.e("setupSurveyResult", e.message.toString())
+                else
+                    Log.e("setupSurveyResult", e.stackTraceToString())
+
+                Toast.makeText(this, "차트를 불러오는데에 실패하였습니다.", Toast.LENGTH_SHORT).show()
             }
         })
     }

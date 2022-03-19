@@ -18,6 +18,8 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         MutableLiveData()
     val hourlyForecastResponse: MutableLiveData<Any?> =
         MutableLiveData()
+    val currentAirResponse: MutableLiveData<Any?> =
+        MutableLiveData()
     val commentListResponse: MutableLiveData<Response<CommentListResponseDto>?> = MutableLiveData()
     val surveyResultResponse: MutableLiveData<Response<SurveyResultResponseDto>?> =
         MutableLiveData()
@@ -71,7 +73,7 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         var Midregion = repository.getPreference("MidScaleRegion")
         var Smallregion = repository.getPreference("SmallScaleRegion")
         smallScale.value =
-            if (Midregion.equals("선택 안 함"))
+            if (Midregion.equals("선택 안 함")|| Midregion.equals("전체"))
                 ""
             else
                 if (Smallregion.equals("선택 안 함"))
@@ -176,6 +178,20 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         )
     }
 
+    fun getCurrentAir(regionId: Int) {
+        repository.getCurrentAir(
+            regionId,
+            { call, response ->
+                currentAirResponse.value = response
+            },
+            { call, response ->
+                currentAirResponse.value = response
+            },
+            { call, t ->
+                currentAirResponse.value = t
+            },
+        )
+    }
     fun getCommentList(commentId: Int?, size: Int) {
         repository.getCommentList(
             commentId,
