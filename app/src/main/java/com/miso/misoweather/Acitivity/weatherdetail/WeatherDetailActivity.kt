@@ -16,6 +16,7 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityWeatherMainBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
+import com.miso.misoweather.common.CommonUtil
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
 import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirData
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastData
@@ -207,9 +208,9 @@ class WeatherDetailActivity : MisoActivity() {
                     smallScale
 
         txtLocation.text = bigScale + " " + midScaleString + " " + smallScaleString
-        txtMinDegree.text = briefForecastData.temperatureMin.split(".")[0] + "˚"
-        txtMaxDegree.text = briefForecastData.temperatureMax.split(".")[0] + "˚"
-        txtDegree.text = briefForecastData.temperature.split(".")[0] + "˚"
+        txtMinDegree.text = CommonUtil.toIntString(briefForecastData.temperatureMin) + "˚"
+        txtMaxDegree.text = CommonUtil.toIntString(briefForecastData.temperatureMax) + "˚"
+        txtDegree.text = CommonUtil.toIntString(briefForecastData.temperature) + "˚"
         txtWeatherEmoji.text = briefForecastData.weather
         txtEmojiRain.text = hourlyForecastData.popIcon
         txtDegreeRain.text = hourlyForecastData.pop + "%"

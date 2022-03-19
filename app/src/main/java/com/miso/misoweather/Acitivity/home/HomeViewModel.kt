@@ -73,7 +73,7 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         var Midregion = repository.getPreference("MidScaleRegion")
         var Smallregion = repository.getPreference("SmallScaleRegion")
         smallScale.value =
-            if (Midregion.equals("선택 안 함"))
+            if (Midregion.equals("선택 안 함")|| Midregion.equals("전체"))
                 ""
             else
                 if (Smallregion.equals("선택 안 함"))

@@ -102,6 +102,9 @@ class HomeActivity : MisoActivity() {
         getUserInfo()
         getCommentList()
         loadWeatherInfo()
+        setupSurveyResult()
+
+        txtLocation.text = bigScale + " " + midScale + " " + smallScale
     }
 
     private fun loadWeatherInfo() {
@@ -113,7 +116,11 @@ class HomeActivity : MisoActivity() {
                 getDailyForecast()
                 getHourlyForecast()
                 getCurrentAir()
+
+                Log.i("loadWeatherInfo", "성공")
             } else {
+                Log.i("loadWeatherInfo", "실패")
+                Log.i("loadWeatherInfo", "defaultRegionId:${defaultRegionId}")
                 Toast.makeText(this, "날씨 정보 불러오기에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         })
@@ -339,6 +346,7 @@ class HomeActivity : MisoActivity() {
     private fun getBriefForecast() {
         if (defaultRegionId.isNotBlank()) {
             Log.i("defaultRegionId", defaultRegionId)
+            var previousBigScale = bigScale
             viewModel.getBriefForecast(defaultRegionId.toInt())
             viewModel.forecastBriefResponse.observe(this, {
                 try {
@@ -352,6 +360,11 @@ class HomeActivity : MisoActivity() {
                                 txtWeatherDegree.setText(
                                     CommonUtil.toIntString(forecastBriefResponseDto.data.temperature) + "˚"
                                 )
+                                txtLocation.text = bigScale + " " + midScale + " " + smallScale
+
+                                if (!previousBigScale.equals(bigScale))
+                                    setupSurveyResult()
+
                                 Log.i("결과", "성공")
                             } else
                                 throw Exception(it.errorBody().toString())
@@ -368,10 +381,10 @@ class HomeActivity : MisoActivity() {
                         throw Exception("null")
                     }
                 } catch (e: Exception) {
-                    if (e.message.isNullOrBlank())
-                        Log.e("getBriefForecast", e.stackTraceToString())
-                    else
+                    if (!e.message.isNullOrBlank())
                         Log.e("getBriefForecast", e.message.toString())
+
+                    Log.e("getBriefForecast", e.stackTraceToString())
 
                     Toast.makeText(this, "날씨 단기예보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT)
                         .show()
@@ -382,9 +395,6 @@ class HomeActivity : MisoActivity() {
             Toast.makeText(this, "날씨 단기예보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT)
                 .show()
         }
-
-        txtLocation.text = bigScale + " " + midScale + " " + smallScale
-        setupSurveyResult()
     }
 
     fun getDailyForecast() {
