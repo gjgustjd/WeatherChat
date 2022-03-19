@@ -28,7 +28,6 @@ class SelectNicknameViewModel(private val repository: MisoRepository) : ViewMode
     val socialType: MutableLiveData<String?> = MutableLiveData()
     val registerResultString: MutableLiveData<String?> = MutableLiveData()
 
-    @Setter
     lateinit var loginRequestDto: LoginRequestDto
     lateinit var signUpRequestDto: SignUpRequestDto
     lateinit var defaultRegionId: String

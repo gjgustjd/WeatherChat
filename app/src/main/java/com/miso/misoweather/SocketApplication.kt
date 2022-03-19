@@ -3,7 +3,9 @@ package com.miso.misoweather
 import android.app.Application
 import android.content.Context
 import com.kakao.sdk.common.KakaoSdk
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class SocketApplication : Application() {
     companion object {
         var appContext : Context? = null
