@@ -588,7 +588,7 @@ class HomeActivity : MisoActivity() {
                 imgIconCheckFirst.visibility = View.VISIBLE
         }
 
-        viewModel.getSurveyResult(getBigShortScale(bigScale))
+        viewModel.getSurveyResult()
         viewModel.surveyResultResponse.observe(this, Observer {
             try {
                 if (it == null) {

@@ -73,7 +73,7 @@ interface MisoWeatherAPI {
     fun getSurveyAnswers(@Path("surveyId") surveyId: Int): Call<SurveyAnswerResponseDto>
 
     @GET("api/survey")
-    fun getSurveyResults(@Query("shortBigScale") shortBigScale: String): Call<SurveyResultResponseDto>
+    fun getSurveyResults(@Query("shortBigScale") shortBigScale: String?=null): Call<SurveyResultResponseDto>
 
     @GET("api/survey/member")
     fun getSurveyMyAnswers(@Header("serverToken") serverToken: String): Call<SurveyMyAnswerResponseDto>

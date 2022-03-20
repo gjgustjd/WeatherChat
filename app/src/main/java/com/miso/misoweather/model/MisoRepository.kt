@@ -532,7 +532,7 @@ class MisoRepository private constructor() {
     }
 
     fun getSurveyResults(
-        shortBigScale: String,
+        shortBigScale: String?,
         onSuccessful: (
             Call<SurveyResultResponseDto>,
             Response<SurveyResultResponseDto>
