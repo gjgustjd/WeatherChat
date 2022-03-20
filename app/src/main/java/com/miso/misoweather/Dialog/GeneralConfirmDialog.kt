@@ -16,6 +16,8 @@ class GeneralConfirmDialog(
     var mContext: Context,
     var actionListener: View.OnClickListener? = null,
     var contentString: String,
+    val width: Float = 0.8f,
+    val height: Float = 0.3f
 ) : DialogFragment() {
     var actionString: String = "확인"
 
@@ -23,8 +25,10 @@ class GeneralConfirmDialog(
         ctx: Context,
         listener: View.OnClickListener?,
         contentString: String,
-        actionString: String
-    ) : this(ctx, listener, contentString) {
+        actionString: String,
+        width: Float = 0.8f,
+        height: Float = 0.3f
+    ) : this(ctx, listener, contentString,width, height) {
         this.actionString = actionString
     }
 
@@ -68,8 +72,8 @@ class GeneralConfirmDialog(
         val params: ViewGroup.LayoutParams? = dialog?.window?.attributes
         val deviceWidth = size.x
         val deviceHeight = size.y
-        params?.width = (deviceWidth * 0.8).toInt()
-        params?.height = (deviceHeight * 0.3).toInt()
+        params?.width = (deviceWidth * width).toInt()
+        params?.height = (deviceHeight * height).toInt()
         dialog?.window?.attributes = params as WindowManager.LayoutParams
     }
 

@@ -64,7 +64,9 @@ class MyPageActivity : MisoActivity() {
                         "-\uD83C\uDF4EiOS 개발: 허지인,강경훈\n" +
                         "-\uD83D\uDCE6서버 개발: 강승연\n" +
                         "-\uD83C\uDFA8UI/UX 디자인: 정한나",
-                "확인"
+                "확인",
+                0.8f,
+                0.4f
             )
             dialog.show(supportFragmentManager, "generalConfirmDialog")
         }
