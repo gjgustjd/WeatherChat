@@ -43,7 +43,7 @@
                 android:background="@android:color/transparent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_bold">
+                >
 
                 <TextView
                     android:id="@+id/txt_weather_emoji"
@@ -648,7 +648,6 @@
                         android:text="일출시간"
                         android:textSize="12dp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@id/label_sunset"
                         app:layout_constraintHorizontal_bias="0"
                         app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintHorizontal_weight="1"
