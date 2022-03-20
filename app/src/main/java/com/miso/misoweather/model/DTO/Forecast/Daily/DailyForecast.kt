@@ -7,5 +7,9 @@ data class DailyForecast (
     val forecastTime: String,
     val maxTemperature: String,
     val minTemperature: String,
-    val weather: String
+    val weather: String,
+    val pop:String,
+    val popIcon:String,
+    val rain:String,
+    val snow:String
 ):Serializable

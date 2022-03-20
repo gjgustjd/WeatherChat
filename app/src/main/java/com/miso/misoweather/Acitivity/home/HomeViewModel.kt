@@ -206,7 +206,7 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         )
     }
 
-    fun getSurveyResult(shortBigScale: String) {
+    fun getSurveyResult(shortBigScale: String?=null) {
         repository.getSurveyResults(
             shortBigScale,
             { call, reponse ->

@@ -48,6 +48,8 @@ class RecyclerForecastOnDayAdapter(var context: Context, var forecasts: List<Dai
         holder.degreeMax.text = CommonUtil.toIntString(forecasts[position].maxTemperature) + "˚"
         holder.degreeMin.text = forecasts[position].minTemperature.split(".")[0] + "˚"
         holder.emoji.text = forecasts[position].weather
+        holder.popEmoji.text = forecasts[position].popIcon
+        holder.popDegree.text = forecasts[position].pop+"%"
         var forecastDate = forecasts[position].forecastTime.split("T")[0]
         holder.time.text = forecastDate.split("-")[1] + "/" + forecastDate.split("-")[2]
         holder.day.text = getDayString(position)
@@ -64,6 +66,8 @@ class RecyclerForecastOnDayAdapter(var context: Context, var forecasts: List<Dai
 
     class Holder(itemView: ListWeatherDayBinding) : RecyclerView.ViewHolder(itemView.root) {
         var emoji = itemView.txtWeatherEmoji
+        var popEmoji = itemView.txtPopEmoji
+        var popDegree = itemView.txtPopDegree
         var degreeMin = itemView.txtDegreeMin
         var degreeMax = itemView.txtDegreeMax
         var day = itemView.txtDay

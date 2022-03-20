@@ -212,13 +212,13 @@ class WeatherDetailActivity : MisoActivity() {
         txtMaxDegree.text = CommonUtil.toIntString(briefForecastData.temperatureMax) + "˚"
         txtDegree.text = CommonUtil.toIntString(briefForecastData.temperature) + "˚"
         txtWeatherEmoji.text = briefForecastData.weather
-        txtEmojiRain.text = hourlyForecastData.popIcon
-        txtDegreeRain.text = hourlyForecastData.pop + "%"
-        txtDegreeRainOnHour.text = getDegreeRainOnHour()
-        txtDegreeWind.text = getWindDegree(hourlyForecastData.windSpeedIcon)
-        txtEmojiHumid.text = hourlyForecastData.humidityIcon
-        txtDegreeHumid.text = hourlyForecastData.humidity + "%"
-        txtEmojiWind.text = hourlyForecastData.windSpeedIcon
+        txtEmojiRain.text = dailyForecastData.popIcon
+        txtDegreeRain.text = dailyForecastData.pop + "%"
+        txtDegreeRainOnHour.text = getDegreeRainOnHour() + " mm"
+        txtDegreeWind.text = getWindDegree(briefForecastData.windSpeedIcon)
+        txtEmojiHumid.text = briefForecastData.humidityIcon
+        txtDegreeHumid.text = briefForecastData.humidity + "%"
+        txtEmojiWind.text = briefForecastData.windSpeedIcon
         txtEmojiDust.text = currentAirData.fineDustIcon
         txtDegreeDust.text = currentAirData.fineDust
         txtGradeDust.text = currentAirData.fineDustGrade
@@ -231,8 +231,8 @@ class WeatherDetailActivity : MisoActivity() {
 
     fun getDegreeRainOnHour(): String {
         try {
-            var rain = hourlyForecastData.rain
-            var snow = hourlyForecastData.snow
+            var rain = dailyForecastData.rain
+            var snow = dailyForecastData.snow
 
             if (rain.isNullOrBlank() && snow.isNullOrBlank())
                 return "0"

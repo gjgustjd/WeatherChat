@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:singleLine="true"
         android:text="오늘"
         android:textSize="12dp"
         android:textStyle="bold"
@@ -30,10 +31,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:singleLine="true"
         android:text="12/31"
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/txt_weather_emoji"
         app:layout_constraintStart_toEndOf="@+id/txt_day"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.15" />
@@ -41,29 +42,62 @@
     <TextView
         android:id="@+id/txt_weather_emoji"
         style="@style/basicText"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:textSize="10dp"
+        android:singleLine="true"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/txt_pop_emoji"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/txt_date"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_pop_emoji"
+        style="@style/basicText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/txt_pop_degree"
+        app:layout_constraintStart_toEndOf="@id/txt_weather_emoji"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_pop_degree"
+        style="@style/basicText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center|end"
+        android:singleLine="true"
+        android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/txt_degree_min"
-        app:layout_constraintStart_toEndOf="@+id/txt_date"
+        app:layout_constraintStart_toEndOf="@+id/txt_pop_emoji"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.55" />
+        app:layout_constraintWidth_percent="0.12" />
 
     <TextView
         android:id="@+id/txt_degree_min"
         style="@style/basicText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:singleLine="true"
         android:text="0"
         android:textSize="12dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/txt_day"
         app:layout_constraintEnd_toStartOf="@id/txt_degree_max"
-        app:layout_constraintStart_toEndOf="@id/txt_weather_emoji"
         app:layout_constraintTop_toTopOf="@+id/txt_day"
         app:layout_constraintWidth_percent="0.1" />
 
@@ -72,14 +106,13 @@
         style="@style/basicText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:singleLine="true"
         android:text="0"
         android:textSize="12dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/txt_day"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/txt_degree_min"
         app:layout_constraintTop_toTopOf="@+id/txt_day"
-        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintWidth_percent="0.1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

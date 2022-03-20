@@ -11,5 +11,9 @@ data class ForecastBriefData(
     val temperatureMin: String,
     val temperature: String,
     val weather: String,
-    val region: Region
+    val region: Region,
+    val windSpeed:String,
+    val windSpeedIcon:String,
+    val humidity:String,
+    val humidityIcon:String
 ):Serializable
