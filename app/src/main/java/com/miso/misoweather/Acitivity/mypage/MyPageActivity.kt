@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.login.LoginActivity
@@ -33,7 +34,7 @@ class MyPageActivity : MisoActivity() {
     lateinit var btn_version: Button
     lateinit var txt_emoji: TextView
     lateinit var txt_nickname: TextView
-    lateinit var repository: MisoRepository
+    lateinit var viewModel: MyPageViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +44,7 @@ class MyPageActivity : MisoActivity() {
     }
 
     fun initializeView() {
-        repository = MisoRepository.getInstance(applicationContext)
+        viewModel = MyPageViewModel(MisoRepository.getInstance(applicationContext))
         btn_back = binding.imgbtnBack
         btn_logout = binding.btnLogout
         btn_unregister = binding.btnUnregister
@@ -96,35 +97,33 @@ class MyPageActivity : MisoActivity() {
     }
 
     fun unregister() {
-        repository.unregisterMember(
-            getPreference("misoToken")!!,
-            makeLoginRequestDto(),
-            { call, response ->
-                try {
-                    Log.i("결과", "성공")
-                    removePreference(
-                        "misoToken",
-                        "defaultRegionId",
-                        "isSurveyed",
-                        "LastSurveyedDate",
-                        "bigScale",
-                        "BigScaleRegion",
-                        "MidScaleRegion",
-                        "SmallScaleRegion",
-                        "nickname",
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                } finally {
-                    savePreferences()
-                    goToLoginActivity()
+        viewModel.unRegister(makeLoginRequestDto())
+        viewModel.unRegisterResponse.observe(this, {
+            try {
+                if (it is Response<*>) {
+                    if (it.isSuccessful) {
+                        goToLoginActivity()
+                        Log.i("unregister", "성공")
+                    } else {
+                        goToLoginActivity()
+                        throw Exception(it.errorBody().toString())
+                    }
+                } else {
+                    if (it is String) {
+                        throw Exception(it)
+                    } else {
+                        if (it is Throwable)
+                            throw it
+                        else
+                            throw Exception()
+                    }
                 }
-            },
-            { call, response -> },
-            { call, t ->
-//                Log.i("결과", "실패 : $t")
+            } catch (e: Exception) {
+                Log.e("unregister", e.stackTraceToString())
+                Log.e("unregister", e.message.toString())
+                Toast.makeText(this, "카카오 계정 연결 해제에 실패하였습니다.", Toast.LENGTH_SHORT).show()
             }
-        )
+        })
     }
 
     fun makeLoginRequestDto(): LoginRequestDto {
