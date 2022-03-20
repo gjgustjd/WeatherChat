@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.login.LoginActivity
@@ -33,7 +34,7 @@ class MyPageActivity : MisoActivity() {
     lateinit var btn_version: Button
     lateinit var txt_emoji: TextView
     lateinit var txt_nickname: TextView
-    lateinit var repository: MisoRepository
+    lateinit var viewModel: MyPageViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +44,7 @@ class MyPageActivity : MisoActivity() {
     }
 
     fun initializeView() {
-        repository = MisoRepository.getInstance(applicationContext)
+        viewModel = MyPageViewModel(MisoRepository.getInstance(applicationContext))
         btn_back = binding.imgbtnBack
         btn_logout = binding.btnLogout
         btn_unregister = binding.btnUnregister
@@ -53,6 +54,22 @@ class MyPageActivity : MisoActivity() {
 
         txt_emoji.text = getPreference("emoji")
         txt_nickname.text = getPreference("nickname")
+        btn_version.setOnClickListener()
+        {
+            val dialog = GeneralConfirmDialog(
+                this,
+                null,
+                "버전 1.0.0\n\n" + "\uD83D\uDC65만든이\n" +
+                        "-\uD83E\uDD16안드로이드 개발: 허현성\n" +
+                        "-\uD83C\uDF4EiOS 개발: 허지인,강경훈\n" +
+                        "-\uD83D\uDCE6서버 개발: 강승연\n" +
+                        "-\uD83C\uDFA8UI/UX 디자인: 정한나",
+                "확인",
+                0.8f,
+                0.4f
+            )
+            dialog.show(supportFragmentManager, "generalConfirmDialog")
+        }
         btn_back.setOnClickListener()
         {
             doBack()
@@ -96,35 +113,33 @@ class MyPageActivity : MisoActivity() {
     }
 
     fun unregister() {
-        repository.unregisterMember(
-            getPreference("misoToken")!!,
-            makeLoginRequestDto(),
-            { call, response ->
-                try {
-                    Log.i("결과", "성공")
-                    removePreference(
-                        "misoToken",
-                        "defaultRegionId",
-                        "isSurveyed",
-                        "LastSurveyedDate",
-                        "bigScale",
-                        "BigScaleRegion",
-                        "MidScaleRegion",
-                        "SmallScaleRegion",
-                        "nickname",
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                } finally {
-                    savePreferences()
-                    goToLoginActivity()
+        viewModel.unRegister(makeLoginRequestDto())
+        viewModel.unRegisterResponse.observe(this, {
+            try {
+                if (it is Response<*>) {
+                    if (it.isSuccessful) {
+                        goToLoginActivity()
+                        Log.i("unregister", "성공")
+                    } else {
+                        goToLoginActivity()
+                        throw Exception(it.errorBody().toString())
+                    }
+                } else {
+                    if (it is String) {
+                        throw Exception(it)
+                    } else {
+                        if (it is Throwable)
+                            throw it
+                        else
+                            throw Exception()
+                    }
                 }
-            },
-            { call, response -> },
-            { call, t ->
-//                Log.i("결과", "실패 : $t")
+            } catch (e: Exception) {
+                Log.e("unregister", e.stackTraceToString())
+                Log.e("unregister", e.message.toString())
+                Toast.makeText(this, "카카오 계정 연결 해제에 실패하였습니다.", Toast.LENGTH_SHORT).show()
             }
-        )
+        })
     }
 
     fun makeLoginRequestDto(): LoginRequestDto {

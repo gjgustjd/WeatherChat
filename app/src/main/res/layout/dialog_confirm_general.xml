@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/unit_background"
-    android:backgroundTint="@color/white">
+    android:backgroundTint="@color/white"
+    android:maxWidth="300dp">
 
     <Button
         android:id="@+id/btn_cancel"
@@ -22,7 +23,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btn_action"
         app:layout_constraintHeight_percent="0.15"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_goneMarginEnd="20dp" />
 
     <Button
         android:id="@+id/btn_action"
