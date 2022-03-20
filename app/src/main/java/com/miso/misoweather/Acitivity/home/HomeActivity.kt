@@ -179,7 +179,7 @@ class HomeActivity : MisoActivity() {
     private fun isAllForecastDataIsNotNull(): Boolean {
         return dailyForecastData != null &&
                 briefForecastData != null &&
-                dailyForecastData != null &&
+                hourlyForecastData != null &&
                 currentAirData != null
     }
 
