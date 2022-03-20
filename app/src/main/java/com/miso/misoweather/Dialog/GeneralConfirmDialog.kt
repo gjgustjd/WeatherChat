@@ -14,14 +14,14 @@ import com.miso.misoweather.databinding.DialogConfirmGeneralBinding
 
 class GeneralConfirmDialog(
     var mContext: Context,
-    var actionListener: View.OnClickListener,
+    var actionListener: View.OnClickListener? = null,
     var contentString: String,
 ) : DialogFragment() {
     var actionString: String = "확인"
 
     constructor(
         ctx: Context,
-        listener: View.OnClickListener,
+        listener: View.OnClickListener?,
         contentString: String,
         actionString: String
     ) : this(ctx, listener, contentString) {
@@ -74,13 +74,19 @@ class GeneralConfirmDialog(
     }
 
     fun setupDialog() {
-        btn_action.setOnClickListener(actionListener)
+        if (actionListener == null) {
+            btn_cancel.text = "확인"
+            btn_action.visibility = View.GONE
+        } else {
+            btn_action.setOnClickListener(actionListener)
+            btn_action.text = actionString
+        }
+
         btn_cancel.setOnClickListener()
         {
             dismiss()
         }
         txt_content.text = contentString
-        btn_action.text = actionString
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 }

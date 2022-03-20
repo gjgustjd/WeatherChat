@@ -54,6 +54,20 @@ class MyPageActivity : MisoActivity() {
 
         txt_emoji.text = getPreference("emoji")
         txt_nickname.text = getPreference("nickname")
+        btn_version.setOnClickListener()
+        {
+            val dialog = GeneralConfirmDialog(
+                this,
+                null,
+                "버전 1.0.0\n\n" + "\uD83D\uDC65만든이\n" +
+                        "-\uD83E\uDD16안드로이드 개발: 허현성\n" +
+                        "-\uD83C\uDF4EiOS 개발: 허지인,강경훈\n" +
+                        "-\uD83D\uDCE6서버 개발: 강승연\n" +
+                        "-\uD83C\uDFA8UI/UX 디자인: 정한나",
+                "확인"
+            )
+            dialog.show(supportFragmentManager, "generalConfirmDialog")
+        }
         btn_back.setOnClickListener()
         {
             doBack()
