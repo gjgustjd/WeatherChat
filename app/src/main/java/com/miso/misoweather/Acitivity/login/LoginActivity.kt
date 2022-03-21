@@ -172,19 +172,29 @@ class LoginActivity : MisoActivity() {
     }
 
     fun showDialogForInstallingKakaoTalk() {
-        fun goToStoreForInstallingKakaoTalk() {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.addCategory(Intent.CATEGORY_DEFAULT)
-            intent.data = Uri.parse("market://details?id=com.kakao.talk")
-            startActivity(intent)
+        fun goToStoreForInstallingKakaoTalk(generalConfirmDialog: GeneralConfirmDialog) {
+            try {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.addCategory(Intent.CATEGORY_DEFAULT)
+                intent.data = Uri.parse("market://details?id=com.kakao.talk")
+                startActivity(intent)
+            } catch (e: Exception) {
+                Log.e("instaillingKakaoTalk", e.stackTraceToString())
+                Toast.makeText(this, "카카오톡 설치에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                generalConfirmDialog.dismiss()
+            }
         }
-        GeneralConfirmDialog(
+
+        lateinit var generalConfirmDialog: GeneralConfirmDialog
+
+        generalConfirmDialog = GeneralConfirmDialog(
             this,
             {
-                goToStoreForInstallingKakaoTalk()
+                goToStoreForInstallingKakaoTalk(generalConfirmDialog)
             }, "로그인하려면 카카오톡 설치가 필요합니다.\n설치하시겠습니까?"
         )
-            .show(supportFragmentManager, "generalConfirmDialog")
+
+        generalConfirmDialog.show(supportFragmentManager, "generalConfirmDialog")
     }
 
     fun showDialogForLoginKakaoTalk() {
@@ -194,8 +204,7 @@ class LoginActivity : MisoActivity() {
                     packageManager.getLaunchIntentForPackage("com.kakao.talk")
                 intent!!.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
-            }catch (e:Exception)
-            {
+            } catch (e: Exception) {
 
             }
         }
