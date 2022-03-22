@@ -2,9 +2,10 @@ package com.miso.misoweather
 
 import android.app.Application
 import android.content.Context
+import androidx.multidex.MultiDexApplication
 import com.kakao.sdk.common.KakaoSdk
 
-class SocketApplication : Application() {
+class SocketApplication : MultiDexApplication() {
     companion object {
         var appContext : Context? = null
     }
