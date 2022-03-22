@@ -108,22 +108,26 @@ class HomeActivity : MisoActivity() {
     }
 
     private fun loadWeatherInfo() {
-        viewModel.loadWeatherInfo(defaultRegionId.toInt())
-        viewModel.isWeatherLoaded.observe(this, {
-            isWeatherLoaded = it
-            if (isWeatherLoaded) {
-                getBriefForecast()
-                getDailyForecast()
-                getHourlyForecast()
-                getCurrentAir()
+        if (!defaultRegionId.isNullOrBlank()) {
+            viewModel.loadWeatherInfo(defaultRegionId.toInt())
+            viewModel.isWeatherLoaded.observe(this, {
+                isWeatherLoaded = it
+                if (isWeatherLoaded) {
+                    getBriefForecast()
+                    getDailyForecast()
+                    getHourlyForecast()
+                    getCurrentAir()
 
-                Log.i("loadWeatherInfo", "성공")
-            } else {
-                Log.i("loadWeatherInfo", "실패")
-                Log.i("loadWeatherInfo", "defaultRegionId:${defaultRegionId}")
-                Toast.makeText(this, "날씨 정보 불러오기에 실패했습니다.", Toast.LENGTH_SHORT).show()
-            }
-        })
+                    Log.i("loadWeatherInfo", "성공")
+                } else {
+                    Log.i("loadWeatherInfo", "실패")
+                    Log.i("loadWeatherInfo", "defaultRegionId:${defaultRegionId}")
+                    Toast.makeText(this, "날씨 정보 불러오기에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                }
+            })
+        } else {
+            Log.e("getHourlyForecast", "defaultRegionId is Blank")
+        }
     }
 
     private fun initializeProperties() {
@@ -344,7 +348,7 @@ class HomeActivity : MisoActivity() {
     }
 
     private fun getBriefForecast() {
-        if (defaultRegionId.isNotBlank()) {
+        if (!defaultRegionId.isNullOrBlank()) {
             Log.i("defaultRegionId", defaultRegionId)
             var previousBigScale = bigScale
             viewModel.getBriefForecast(defaultRegionId.toInt())
@@ -367,7 +371,7 @@ class HomeActivity : MisoActivity() {
 
                                 Log.i("결과", "성공")
                             } else
-                                throw Exception(it.errorBody().toString())
+                                throw Exception(it.errorBody()!!.source().toString())
 
                         } else {
                             if (it is String)
@@ -398,109 +402,128 @@ class HomeActivity : MisoActivity() {
     }
 
     fun getDailyForecast() {
-        viewModel.getDailyForecast(defaultRegionId.toInt())
-        viewModel.dailyForecastResponse.observe(this, {
-            if (it == null) {
-                dailyForecastData = null
-                Log.e("getDailyForecast", "null")
-            } else if (it is Response<*>) {
-                if (it.isSuccessful) {
-                    try {
-                        var dailyForecastResponseDto =
-                            it.body()!! as DailyForecastResponseDto
+        try {
+            if (!defaultRegionId.isNullOrBlank()) {
+                viewModel.getDailyForecast(defaultRegionId.toInt())
+                viewModel.dailyForecastResponse.observe(this, {
+                    if (it == null) {
+                        dailyForecastData = null
+                        Log.e("getDailyForecast", "null")
+                    } else if (it is Response<*>) {
+                        if (it.isSuccessful) {
+                            try {
+                                var dailyForecastResponseDto =
+                                    it.body()!! as DailyForecastResponseDto
 
-                        if (dailyForecastResponseDto.data.dailyForecastList == null)
-                            dailyForecastData = null
-                        else
-                            dailyForecastData = dailyForecastResponseDto.data
+                                if (dailyForecastResponseDto.data.dailyForecastList == null)
+                                    dailyForecastData = null
+                                else
+                                    dailyForecastData = dailyForecastResponseDto.data
 
-                        Log.i("결과", "성공")
-                    } catch (e: Exception) {
-                        Log.e("getDailyForecast", e.stackTraceToString())
+                                Log.i("결과", "성공")
+                            } catch (e: Exception) {
+                                Log.e("getDailyForecast", e.stackTraceToString())
+                            }
+                        } else {
+                            Log.e("getDailyForecast", it.errorBody()!!.source().toString())
+                        }
+                    } else {
+                        when (it) {
+                            is String -> Log.e("getDailyForecast", it)
+                            is Throwable -> Log.e("getDailyForecast", it.stackTraceToString())
+                            else -> Log.e("getDailyForecast", "실패")
+                        }
                     }
-                } else {
-                    Log.e("getDailyForecast", it.errorBody().toString())
-                }
+                })
             } else {
-                when (it) {
-                    is String -> Log.e("getDailyForecast", it)
-                    is Throwable -> Log.e("getDailyForecast", it.stackTraceToString())
-                    else -> Log.e("getDailyForecast", "실패")
-                }
+                Log.e("getHourlyForecast", "defaultRegionId is Blank")
             }
-        })
+        } catch (e: Exception) {
+            Log.e("getDailyForecast", e.stackTraceToString())
+        }
     }
 
     private fun getHourlyForecast() {
-        viewModel.getHourlyForecast(defaultRegionId.toInt())
-        viewModel.hourlyForecastResponse.observe(this, {
-            if (it == null) {
-                hourlyForecastData = null
-                Log.e("getHourlyForecast", "null")
-            } else if (it is Response<*>) {
-                if (it.isSuccessful) {
-                    try {
-                        val hourlyForecastResponseDto =
-                            it.body()!! as HourlyForecastResponseDto
-                        if (hourlyForecastResponseDto.data.hourlyForecastList == null) {
-                            hourlyForecastData = null
-                            Log.e("getHourlyForecast", "null")
-                        } else {
-                            hourlyForecastData = hourlyForecastResponseDto.data
-                            Log.i("getHourlyForecast", "성공")
+        if (!defaultRegionId.isNullOrBlank()) {
+            viewModel.getHourlyForecast(defaultRegionId.toInt())
+            viewModel.hourlyForecastResponse.observe(this, {
+                if (it == null) {
+                    hourlyForecastData = null
+                    Log.e("getHourlyForecast", "null")
+                } else if (it is Response<*>) {
+                    if (it.isSuccessful) {
+                        try {
+                            val hourlyForecastResponseDto =
+                                it.body()!! as HourlyForecastResponseDto
+                            if (hourlyForecastResponseDto.data.hourlyForecastList == null) {
+                                hourlyForecastData = null
+                                Log.e("getHourlyForecast", "null")
+                            } else {
+                                hourlyForecastData = hourlyForecastResponseDto.data
+                                Log.i("getHourlyForecast", "성공")
+                            }
+                        } catch (e: Exception) {
+                            Log.e("getHourlyForecast", e.stackTraceToString())
+                            e.printStackTrace()
                         }
-                    } catch (e: Exception) {
-                        Log.e("getHourlyForecast", e.stackTraceToString())
-                        e.printStackTrace()
+                    } else {
+                        Log.e("getHourlyForecast", it.errorBody()!!.source().toString())
                     }
                 } else {
-                    Log.e("getHourlyForecast", it.errorBody().toString())
-                }
-            } else {
-                when (it) {
-                    is String -> Log.e("getHourlyForecast", it)
-                    is Throwable -> Log.e("getHourlyForecast", it.toString())
-                    else -> Log.e("getHourlyForecast", "실패")
-                }
+                    when (it) {
+                        is String -> Log.e("getHourlyForecast", it)
+                        is Throwable -> Log.e("getHourlyForecast", it.toString())
+                        else -> Log.e("getHourlyForecast", "실패")
+                    }
 
-            }
-        })
+                }
+            })
+        } else {
+            Log.e("getHourlyForecast", "defaultRegionId is Blank")
+        }
     }
 
     private fun getCurrentAir() {
-        viewModel.getCurrentAir(defaultRegionId.toInt())
-        viewModel.currentAirResponse.observe(this, {
-            if (it == null) {
-                currentAirData = null
-                Log.e("getCurrentAir", "null")
-            } else if (it is Response<*>) {
-                if (it.isSuccessful) {
-                    try {
-                        val currentAirResponseDto =
-                            it.body()!! as CurrentAirResponseDto
-                        if (currentAirResponseDto.data == null) {
-                            currentAirData = null
-                            Log.e("getCurrentAir", "null")
-                        } else {
-                            currentAirData = currentAirResponseDto.data
-                            Log.i("getCurrentAir", "성공")
+        if (!defaultRegionId.isNullOrBlank()) {
+            viewModel.getCurrentAir(defaultRegionId.toInt())
+            viewModel.currentAirResponse.observe(this, {
+                if (it == null) {
+                    currentAirData = null
+                    Log.e("getCurrentAir", "null")
+                } else if (it is Response<*>) {
+                    if (it.isSuccessful) {
+                        try {
+                            val currentAirResponseDto =
+                                it.body()!! as CurrentAirResponseDto
+                            if (currentAirResponseDto.data == null) {
+                                currentAirData = null
+                                Log.e("getCurrentAir", "null")
+                                Log.e("getCurrentAir", "defaultRegionId :${defaultRegionId}")
+                            } else {
+                                currentAirData = currentAirResponseDto.data
+                                Log.i("getCurrentAir", "성공")
+                            }
+                        } catch (e: Exception) {
+                            Log.e("getCurrentAir", e.stackTraceToString())
+                            Log.e("getCurrentAir", "defaultRegionId :${defaultRegionId}")
+                            e.printStackTrace()
                         }
-                    } catch (e: Exception) {
-                        Log.e("getCurrentAir", e.stackTraceToString())
-                        e.printStackTrace()
+                    } else {
+                        Log.e("getCurrentAir", it.errorBody()!!.source().toString())
+                        Log.e("getCurrentAir", "defaultRegionId :${defaultRegionId}")
                     }
                 } else {
-                    Log.e("getCurrentAir", it.errorBody().toString())
+                    when (it) {
+                        is String -> Log.e("getCurrentAir", it)
+                        is Throwable -> Log.e("getCurrentAir", it.toString())
+                        else -> Log.e("getCurrentAir", "실패")
+                    }
+                    Log.e("getCurrentAir", "defaultRegionId :${defaultRegionId}")
                 }
-            } else {
-                when (it) {
-                    is String -> Log.e("getCurrentAir", it)
-                    is Throwable -> Log.e("getCurrentAir", it.toString())
-                    else -> Log.e("getCurrentAir", "실패")
-                }
-
-            }
-        })
+            })
+        } else {
+            Log.e("getCurrentAir", "defaultRegionId is Blank")
+        }
     }
 
     fun getCommentList() {
@@ -530,6 +553,9 @@ class HomeActivity : MisoActivity() {
                 var memberInfo = memberInfoResponseDto.data
                 txtNickName.setText(memberInfo.nickname + "님!")
                 txtEmoji.setText(memberInfo.emoji)
+                if (!isAllForecastDataIsNotNull())
+                    loadWeatherInfo()
+
                 Log.i("getUserInfo", "성공")
             } catch (e: Exception) {
                 Toast.makeText(this, "사용자 정보를 불러오는 중 문제가 발생했습니다.", Toast.LENGTH_SHORT)
@@ -540,7 +566,7 @@ class HomeActivity : MisoActivity() {
 
         fun onFail(response: Response<MemberInfoResponseDto>) {
             Toast.makeText(this, "사용자 정보를 불러오는 중 문제가 발생했습니다.", Toast.LENGTH_SHORT).show()
-            Log.e("getUserInfo", response.errorBody().toString())
+            Log.e("getUserInfo", response.errorBody()!!.source().toString())
         }
 
         viewModel.getUserInfo(misoToken)
@@ -611,7 +637,7 @@ class HomeActivity : MisoActivity() {
                                     return@forEachIndexed
                         }
                     } else {
-                        throw Exception(it.errorBody().toString())
+                        throw Exception(it.errorBody()!!.source().toString())
                     }
                 }
             } catch (e: Exception) {

@@ -122,7 +122,7 @@ class MyPageActivity : MisoActivity() {
                         Log.i("unregister", "성공")
                     } else {
                         goToLoginActivity()
-                        throw Exception(it.errorBody().toString())
+                        throw Exception(it.errorBody()!!.source().toString())
                     }
                 } else {
                     if (it is String) {
