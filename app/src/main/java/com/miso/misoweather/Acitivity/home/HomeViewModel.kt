@@ -86,7 +86,6 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         repository.getUserInfo(
             serverToken,
             { call, response ->
-                memberInfoResponse.value = response
                 val memberInfoResponseDto = response.body()!!
                 var memberInfo = memberInfoResponseDto.data
                 repository.addPreferencePair(
@@ -97,6 +96,7 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
                 repository.addPreferencePair("nickname", memberInfo.nickname)
                 repository.savePreferences()
                 updateProperties()
+                memberInfoResponse.value = response
             },
             { call, response ->
                 memberInfoResponse.value = response
