@@ -18,13 +18,17 @@ import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.common.CommonUtil
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
+import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirData
+import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastData
+import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
+import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.MisoRepository
+import retrofit2.Response
 import java.lang.Exception
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -89,7 +93,11 @@ class WeatherDetailActivity : MisoActivity() {
                     this::lastSurveyedDate.isInitialized &&
                     this::bigScale.isInitialized &&
                     this::midScale.isInitialized &&
-                    this::smallScale.isInitialized
+                    this::smallScale.isInitialized &&
+                    this::briefForecastData.isInitialized &&
+                    this::dailyForecastData.isInitialized &&
+                    this::hourlyForecastData.isInitialized &&
+                    this::currentAirData.isInitialized
                 ) {
                     initializeViews()
                     setForecastInfo()
@@ -123,13 +131,101 @@ class WeatherDetailActivity : MisoActivity() {
             smallScale = it!!
             checkinitializedAll()
         })
+        viewModel.forecastBriefResponse.observe(this, {
+            try {
+                if (it is Response<*>) {
+                    if (it.isSuccessful) {
+                        var briefResponseDto = it.body() as ForecastBriefResponseDto
+                        briefForecastData = briefResponseDto.data
+                        checkinitializedAll()
+                        Log.i("forecastBriefResponse", "성공")
+                    } else {
+                        throw Exception(it.errorBody()!!.source().toString())
+                    }
+                } else {
+                    if (it is String)
+                        throw Exception(it)
+                    else if (it is Throwable)
+                        throw it
+                }
+            } catch (e: Exception) {
+                if (e.message!!.isNotBlank())
+                    Log.e("forecastBriefResponse", e.message.toString())
+                Log.e("forecastBriefResponse", e.stackTraceToString())
+            }
+        })
+        viewModel.dailyForecastResponse.observe(this, {
+            try {
+                if (it is Response<*>) {
+                    if (it.isSuccessful) {
+                        var dailyForecastResponse = it.body() as DailyForecastResponseDto
+                        dailyForecastData = dailyForecastResponse.data
+                        checkinitializedAll()
+                        Log.i("dailyForecastResponse", "성공")
+                    } else {
+                        throw Exception(it.errorBody()!!.source().toString())
+                    }
+                } else {
+                    if (it is String)
+                        throw Exception(it)
+                    else if (it is Throwable)
+                        throw it
+                }
+            } catch (e: Exception) {
+                if (e.message!!.isNotBlank())
+                    Log.e("dailyForecastResponse", e.message.toString())
+                Log.e("dailyForecastResponse", e.stackTraceToString())
+            }
+        })
+        viewModel.hourlyForecastResponse.observe(this, {
+            try {
+                if (it is Response<*>) {
+                    if (it.isSuccessful) {
+                        var hourlyForecastResponse = it.body() as HourlyForecastResponseDto
+                        hourlyForecastData = hourlyForecastResponse.data
+                        checkinitializedAll()
+                        Log.i("hourlyForecastData", "성공")
+                    } else {
+                        throw Exception(it.errorBody()!!.source().toString())
+                    }
+                } else {
+                    if (it is String)
+                        throw Exception(it)
+                    else if (it is Throwable)
+                        throw it
+                }
+            } catch (e: Exception) {
+                if (e.message!!.isNotBlank())
+                    Log.e("hourlyForecastData", e.message.toString())
+                Log.e("hourlyForecastData", e.stackTraceToString())
+            }
+        })
+        viewModel.currentAirResponse.observe(this, {
+            try {
+                if (it is Response<*>) {
+                    if (it.isSuccessful) {
+                        var currentAirResponse = it.body() as CurrentAirResponseDto
+                        currentAirData = currentAirResponse.data
+                        checkinitializedAll()
+                        Log.i("currentAirData", "성공")
+                    } else {
+                        throw Exception(it.errorBody()!!.source().toString())
+                    }
+                } else {
+                    if (it is String)
+                        throw Exception(it)
+                    else if (it is Throwable)
+                        throw it
+                }
+            } catch (e: Exception) {
+                if (e.message!!.isNotBlank())
+                    Log.e("currentAirData", e.message.toString())
+                Log.e("currentAirData", e.stackTraceToString())
+            }
+        })
     }
 
     fun initializeViews() {
-        briefForecastData = intent.getSerializableExtra("briefForecast") as ForecastBriefData
-        dailyForecastData = intent.getSerializableExtra("dailyForecast") as DailyForecastData
-        hourlyForecastData = intent.getSerializableExtra("hourlyForecast") as HourlyForecastData
-        currentAirData = intent.getSerializableExtra("currentAir") as CurrentAirData
         chatLayout = binding.chatLayout
         txtLocation = binding.txtLocation
         txtWeatherEmoji = binding.txtWeatherEmoji
@@ -184,11 +280,6 @@ class WeatherDetailActivity : MisoActivity() {
             finish()
         } else {
             var intent = Intent(this, ChatMainActivity::class.java)
-            intent.putExtra("previousActivity", "Weather")
-            intent.putExtra("briefForecast", briefForecastData)
-            intent.putExtra("dailyForecast", dailyForecastData)
-            intent.putExtra("hourlyForecast", hourlyForecastData)
-            intent.putExtra("currentAir", currentAirData)
             startActivity(intent)
             transferToNext()
             finish()
@@ -274,6 +365,4 @@ class WeatherDetailActivity : MisoActivity() {
         recyclerWeatherOnTime.layoutManager =
             LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
     }
-
-
 }
