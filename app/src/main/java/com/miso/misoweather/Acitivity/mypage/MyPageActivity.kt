@@ -32,6 +32,7 @@ class MyPageActivity : MisoActivity() {
     lateinit var btn_logout: Button
     lateinit var btn_unregister: Button
     lateinit var btn_version: Button
+    lateinit var txt_version: TextView
     lateinit var txt_emoji: TextView
     lateinit var txt_nickname: TextView
     lateinit var viewModel: MyPageViewModel
@@ -43,23 +44,29 @@ class MyPageActivity : MisoActivity() {
         initializeView()
     }
 
+    fun getVersionString(): String {
+        return this.packageManager.getPackageInfo(this.packageName, 0).versionName
+    }
+
     fun initializeView() {
         viewModel = MyPageViewModel(MisoRepository.getInstance(applicationContext))
         btn_back = binding.imgbtnBack
         btn_logout = binding.btnLogout
         btn_unregister = binding.btnUnregister
         btn_version = binding.btnVersion
+        txt_version = binding.txtVersion
         txt_emoji = binding.txtEmoji
         txt_nickname = binding.txtNickname
 
         txt_emoji.text = getPreference("emoji")
         txt_nickname.text = getPreference("nickname")
+        txt_version.text = getVersionString()
         btn_version.setOnClickListener()
         {
             val dialog = GeneralConfirmDialog(
                 this,
                 null,
-                "버전 1.0.0\n\n" + "\uD83D\uDC65만든이\n" +
+                "버전 ${getVersionString()}\n\n" + "\uD83D\uDC65만든이\n" +
                         "-\uD83E\uDD16안드로이드 개발: 허현성\n" +
                         "-\uD83C\uDF4EiOS 개발: 허지인,강경훈\n" +
                         "-\uD83D\uDCE6서버 개발: 강승연\n" +
