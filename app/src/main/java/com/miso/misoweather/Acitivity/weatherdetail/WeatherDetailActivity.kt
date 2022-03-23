@@ -147,7 +147,7 @@ class WeatherDetailActivity : MisoActivity() {
         txtDegreeHumid.text = briefForecastData.humidity + "%"
         txtEmojiWind.text = briefForecastData.windSpeedIcon
         txtWeatherEmoji.text = briefForecastData.weather
-        txtDegreeWind.text = getWindDegree(briefForecastData.windSpeedIcon)
+        txtDegreeWind.text = briefForecastData.windSpeedComment
     }
 
     fun setupDailyForecastViews() {
@@ -395,12 +395,6 @@ class WeatherDetailActivity : MisoActivity() {
             Log.e("getDegreeRainOnHour", e.stackTraceToString())
             return "0"
         }
-    }
-
-    fun getWindDegree(emoji: String): String {
-        val degrees: Array<String> = resources.getStringArray(R.array.wind_degree)
-        val emojies: Array<String> = resources.getStringArray(R.array.wind_emoji)
-        return degrees.get(emojies.indexOf(emoji))
     }
 
     fun setupWeatherOnDayRecycler() {
