@@ -56,12 +56,6 @@ class ChatMainActivity : MisoActivity() {
     lateinit var surveyRegion: String
     lateinit var bigScale: String
     lateinit var defaultRegionId: String
-    var briefForecastData: ForecastBriefData? = null
-    var dailyForecastData: DailyForecastData? = null
-    var hourlyForecastData: HourlyForecastData? = null
-    var currentAirData: CurrentAirData? = null
-
-    var callWeatherDataCount = 0
     var isAllInitialized = false
 
 
@@ -127,7 +121,9 @@ class ChatMainActivity : MisoActivity() {
             "Weather" -> {
                 goToPreviousActivity =
                     {
-                        updateForecast()
+                        startActivity(Intent(this, WeatherDetailActivity::class.java))
+                        transferToBack()
+                        finish()
                     }
             }
             else -> goToPreviousActivity =
@@ -172,51 +168,6 @@ class ChatMainActivity : MisoActivity() {
         }
         setupFragment(surveyFragment)
     }
-
-    fun checkAllInitializedAndLaunchWeatherActivity() {
-        if (checkAllInitialized()) {
-            launchWeatherActivity()
-        }
-    }
-
-    fun checkAllInitialized(): Boolean {
-        return callWeatherDataCount > 3
-    }
-
-    fun updateForecast() {
-        getBriefForecast()
-        getDailyForecast()
-        getHourlyForecast()
-        getCurrentAir()
-    }
-
-    fun launchWeatherActivity() {
-        if (briefForecastData == null ||
-            dailyForecastData == null ||
-            hourlyForecastData == null ||
-            currentAirData == null
-        ) {
-            briefForecastData =
-                intent.getSerializableExtra("briefForecast") as ForecastBriefData
-            dailyForecastData =
-                intent.getSerializableExtra("dailyForecast") as DailyForecastData
-            hourlyForecastData =
-                intent.getSerializableExtra("hourlyForecast") as HourlyForecastData
-            currentAirData =
-                intent.getSerializableExtra("currentAir") as CurrentAirData
-
-            Toast.makeText(this, "날씨 정보 업데이트에 실패하였습니다.", Toast.LENGTH_SHORT).show()
-        }
-        var intent = Intent(this, WeatherDetailActivity::class.java)
-        intent.putExtra("briefForecast", briefForecastData)
-        intent.putExtra("dailyForecast", dailyForecastData)
-        intent.putExtra("hourlyForecast", hourlyForecastData)
-        intent.putExtra("currentAir", currentAirData)
-        startActivity(intent)
-        transferToBack()
-        finish()
-    }
-
 
     fun View.startBackgroundAlphaAnimation(fromValue: Float, toValue: Float) {
         ObjectAnimator.ofFloat(this, "alpha", fromValue, toValue).start()
@@ -265,109 +216,4 @@ class ChatMainActivity : MisoActivity() {
             .commit()
     }
 
-    fun getBriefForecast() {
-        try {
-            viewModel.getBriefForecast(defaultRegionId.toInt())
-            viewModel.forecastBriefResponse.observe(this, {
-                callWeatherDataCount++
-                if (it == null) {
-                    Log.i("getBriefForecast", "실패")
-                } else {
-                    if (it is Response<*>) {
-                        try {
-                            Log.i("결과", "성공")
-                            val forecastBriefResponseDto = it.body()!! as ForecastBriefResponseDto
-                            briefForecastData = forecastBriefResponseDto.data
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            Toast.makeText(this, "날씨 단기예보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT)
-                                .show()
-                            Log.i("getBriefForecast", "excepted")
-                        }
-                    } else {
-                        if (it is String) {
-                        } else if (it is Throwable) {
-                        }
-                    }
-                }
-            })
-        } catch (e: Exception) {
-        }
-        checkAllInitializedAndLaunchWeatherActivity()
-    }
-
-    fun getDailyForecast() {
-        viewModel.getDailyForecast(defaultRegionId.toInt())
-        viewModel.dailyForecastResponse.observe(this, {
-            callWeatherDataCount++
-            if (it == null) {
-            } else if (it is Response<*>) {
-                if (it.isSuccessful) {
-                    try {
-                        Log.i("결과", "성공")
-                        var dailyForecastResponseDto = it.body()!! as DailyForecastResponseDto
-                        if (dailyForecastResponseDto.data.dailyForecastList == null)
-                            dailyForecastData = null
-                        else
-                            dailyForecastData = dailyForecastResponseDto.data
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                } else {
-                }
-            } else {
-            }
-
-            checkAllInitializedAndLaunchWeatherActivity()
-        })
-    }
-
-    fun getHourlyForecast() {
-        viewModel.getHourlyForecast(defaultRegionId.toInt())
-        viewModel.hourlyForecastResponse.observe(this, {
-            callWeatherDataCount++
-            if (it == null) {
-            } else if (it is Response<*>) {
-                if (it.isSuccessful) {
-                    try {
-                        Log.i("결과", "성공")
-                        var hourlyForecastResponseDto = it.body()!! as HourlyForecastResponseDto
-                        if (hourlyForecastResponseDto.data.hourlyForecastList == null)
-                            hourlyForecastData = null
-                        else
-                            hourlyForecastData = hourlyForecastResponseDto.data
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                } else {
-                }
-            }
-
-            checkAllInitializedAndLaunchWeatherActivity()
-        })
-    }
-    fun getCurrentAir() {
-        viewModel.getCurrentAir(defaultRegionId.toInt())
-        viewModel.currentAirData.observe(this, {
-            callWeatherDataCount++
-            if (it == null) {
-            } else if (it is Response<*>) {
-                if (it.isSuccessful) {
-                    try {
-                        Log.i("결과", "성공")
-                        var currentAirResponseDto = it.body()!! as CurrentAirResponseDto
-                        if (currentAirResponseDto.data == null)
-                            currentAirData = null
-                        else
-                            currentAirData = currentAirResponseDto.data
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                } else {
-                }
-            }
-
-            checkAllInitializedAndLaunchWeatherActivity()
-        })
-    }
 }

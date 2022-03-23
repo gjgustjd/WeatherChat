@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,13 +19,17 @@ import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.common.CommonUtil
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
+import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirData
+import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastData
+import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
+import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.MisoRepository
+import retrofit2.Response
 import java.lang.Exception
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -92,7 +97,7 @@ class WeatherDetailActivity : MisoActivity() {
                     this::smallScale.isInitialized
                 ) {
                     initializeViews()
-                    setForecastInfo()
+                    setupWeatherInfo()
                     isAllInitialized = true
                 }
             }
@@ -123,13 +128,177 @@ class WeatherDetailActivity : MisoActivity() {
             smallScale = it!!
             checkinitializedAll()
         })
+
     }
 
+    fun setupWeatherInfo() {
+        setForecastInfo()
+        setupBriefForecastData()
+        setupDailyForecastData()
+        setupHourlyForecastData()
+        setupCurrentAir()
+    }
+
+    fun setupBriefForecastViews() {
+        txtMinDegree.text = CommonUtil.toIntString(briefForecastData.temperatureMin) + "˚"
+        txtMaxDegree.text = CommonUtil.toIntString(briefForecastData.temperatureMax) + "˚"
+        txtDegree.text = CommonUtil.toIntString(briefForecastData.temperature) + "˚"
+        txtEmojiHumid.text = briefForecastData.humidityIcon
+        txtDegreeHumid.text = briefForecastData.humidity + "%"
+        txtEmojiWind.text = briefForecastData.windSpeedIcon
+        txtWeatherEmoji.text = briefForecastData.weather
+        txtDegreeWind.text = briefForecastData.windSpeedComment
+    }
+
+    fun setupDailyForecastViews() {
+        txtEmojiRain.text = dailyForecastData.popIcon
+        txtDegreeRain.text = dailyForecastData.pop + "%"
+        txtDegreeRainOnHour.text = getDegreeRainOnHour() + " mm"
+        setupWeatherOnDayRecycler()
+    }
+
+    fun setupCurrentAirViews() {
+        txtEmojiDust.text = currentAirData.fineDustIcon
+        txtDegreeDust.text = currentAirData.fineDust
+        txtGradeDust.text = currentAirData.fineDustGrade
+        txtEmojiUltraDust.text = currentAirData.ultraFineDustIcon
+        txtDegreeUltraDust.text = currentAirData.ultraFineDust
+        txtGradeUltraDust.text = currentAirData.ultraFineDustGrade
+    }
+
+    fun setupBriefForecastData() {
+        viewModel.forecastBriefResponse.observe(this, {
+            try {
+                if (it is Response<*>) {
+                    if (it.isSuccessful) {
+                        var briefResponseDto = it.body() as ForecastBriefResponseDto
+                        briefForecastData = briefResponseDto.data
+                        setupBriefForecastViews()
+                        Log.i("forecastBriefResponse", "성공")
+                    } else {
+                        throw Exception(it.errorBody()!!.source().toString())
+                    }
+                } else {
+                    if (it is String)
+                        throw Exception(it)
+                    else if (it is Throwable)
+                        throw it
+                }
+            } catch (e: Exception) {
+                if (e.message!!.isNotBlank())
+                    Log.e("forecastBriefResponse", e.message.toString())
+                Log.e("forecastBriefResponse", e.stackTraceToString())
+            }
+        })
+    }
+
+    fun setupDailyForecastData() {
+        var repeatCount = 0
+        viewModel.dailyForecastResponse.observe(this, {
+            try {
+                if (it is Response<*>) {
+                    if (it.isSuccessful) {
+                        var dailyForecastResponse = it.body() as DailyForecastResponseDto
+                        dailyForecastData = dailyForecastResponse.data
+                        setupDailyForecastViews()
+                        Log.i("setupDailyForecastData", "성공")
+                    } else {
+                        throw Exception(it.errorBody()!!.source().toString())
+                    }
+                } else {
+                    if (it is String)
+                        throw Exception(it)
+                    else if (it is Throwable)
+                        throw it
+                }
+            } catch (e: Exception) {
+                if (repeatCount > 2)
+                    Toast.makeText(this, "일 별 예보를 불러오는데 실패하였습니다.", Toast.LENGTH_SHORT).show()
+                else {
+                    repeatCount++
+                    Log.e("setupDailyForecastData", "repeated:${repeatCount}")
+                    viewModel.getDailyForecast()
+                }
+
+                if (e.message!!.isNotBlank())
+                    Log.e("setupDailyForecastData", e.message.toString())
+                Log.e("setupDailyForecastData", e.stackTraceToString())
+            }
+        })
+    }
+
+    fun setupHourlyForecastData() {
+        var repeatCount = 0
+        viewModel.hourlyForecastResponse.observe(this, {
+            try {
+                if (it is Response<*>) {
+                    if (it.isSuccessful) {
+                        var hourlyForecastResponse = it.body() as HourlyForecastResponseDto
+                        hourlyForecastData = hourlyForecastResponse.data
+                        setupWeatherOnTimeRecycler()
+                        Log.i("setupHourlyForecastData", "성공")
+                    } else {
+                        throw Exception(it.errorBody()!!.source().toString())
+                    }
+                } else {
+                    if (it is String)
+                        throw Exception(it)
+                    else if (it is Throwable)
+                        throw it
+                }
+            } catch (e: Exception) {
+                if (repeatCount > 2)
+                    Toast.makeText(this, "시간 별 예보를 불러오는데 실패하였습니다.", Toast.LENGTH_SHORT).show()
+                else {
+                    repeatCount++
+                    Log.e("setupHourlyForecastData", "repeated:${repeatCount}")
+                    viewModel.getDailyForecast()
+                }
+
+                if (e.message!!.isNotBlank())
+                    Log.e("setupHourlyForecastData", e.message.toString())
+                Log.e("setupHourlyForecastData", e.stackTraceToString())
+            }
+        })
+    }
+
+    fun setupCurrentAir() {
+        var repeatCount = 0
+        viewModel.currentAirResponse.observe(this, {
+            try {
+                if (it is Response<*>) {
+                    if (it.isSuccessful) {
+                        var currentAirResponse = it.body() as CurrentAirResponseDto
+                        currentAirData = currentAirResponse.data
+                        setupCurrentAirViews()
+                        Log.i("currentAirData", "성공")
+                    } else {
+                        throw Exception(it.errorBody()!!.source().toString())
+                    }
+                } else {
+                    if (it is String)
+                        throw Exception(it)
+                    else if (it is Throwable)
+                        throw it
+                }
+            } catch (e: Exception) {
+                if (repeatCount > 2)
+                    Toast.makeText(this, "미세먼지 정보를 불러오는데 실패하였습니다.", Toast.LENGTH_SHORT).show()
+                else {
+                    repeatCount++
+                    Log.e("setupCurrentAir", "repeated:${repeatCount}")
+                    viewModel.getDailyForecast()
+                }
+
+                if (e.message!!.isNotBlank())
+                    Log.e("currentAirData", e.message.toString())
+                Log.e("currentAirData", e.stackTraceToString())
+            }
+        })
+    }
+
+
     fun initializeViews() {
-        briefForecastData = intent.getSerializableExtra("briefForecast") as ForecastBriefData
-        dailyForecastData = intent.getSerializableExtra("dailyForecast") as DailyForecastData
-        hourlyForecastData = intent.getSerializableExtra("hourlyForecast") as HourlyForecastData
-        currentAirData = intent.getSerializableExtra("currentAir") as CurrentAirData
         chatLayout = binding.chatLayout
         txtLocation = binding.txtLocation
         txtWeatherEmoji = binding.txtWeatherEmoji
@@ -178,17 +347,13 @@ class WeatherDetailActivity : MisoActivity() {
         if (!isSurveyed.equals("true") || !lastSurveyedDate.equals(currentDate)) {
             var intent = Intent(this, SelectSurveyAnswerActivity::class.java)
             intent.putExtra("isFirstSurvey", true)
-            intent.putExtra("previousActivity", "Home")
+            intent.putExtra("previousActivity", "Weather")
             startActivity(intent)
             transferToNext()
             finish()
         } else {
             var intent = Intent(this, ChatMainActivity::class.java)
             intent.putExtra("previousActivity", "Weather")
-            intent.putExtra("briefForecast", briefForecastData)
-            intent.putExtra("dailyForecast", dailyForecastData)
-            intent.putExtra("hourlyForecast", hourlyForecastData)
-            intent.putExtra("currentAir", currentAirData)
             startActivity(intent)
             transferToNext()
             finish()
@@ -208,25 +373,6 @@ class WeatherDetailActivity : MisoActivity() {
                     smallScale
 
         txtLocation.text = bigScale + " " + midScaleString + " " + smallScaleString
-        txtMinDegree.text = CommonUtil.toIntString(briefForecastData.temperatureMin) + "˚"
-        txtMaxDegree.text = CommonUtil.toIntString(briefForecastData.temperatureMax) + "˚"
-        txtDegree.text = CommonUtil.toIntString(briefForecastData.temperature) + "˚"
-        txtWeatherEmoji.text = briefForecastData.weather
-        txtEmojiRain.text = dailyForecastData.popIcon
-        txtDegreeRain.text = dailyForecastData.pop + "%"
-        txtDegreeRainOnHour.text = getDegreeRainOnHour() + " mm"
-        txtDegreeWind.text = getWindDegree(briefForecastData.windSpeedIcon)
-        txtEmojiHumid.text = briefForecastData.humidityIcon
-        txtDegreeHumid.text = briefForecastData.humidity + "%"
-        txtEmojiWind.text = briefForecastData.windSpeedIcon
-        txtEmojiDust.text = currentAirData.fineDustIcon
-        txtDegreeDust.text = currentAirData.fineDust
-        txtGradeDust.text = currentAirData.fineDustGrade
-        txtEmojiUltraDust.text = currentAirData.ultraFineDustIcon
-        txtDegreeUltraDust.text = currentAirData.ultraFineDust
-        txtGradeUltraDust.text = currentAirData.ultraFineDustGrade
-        setupWeatherOnTimeRecycler()
-        setupWeatherOnDayRecycler()
     }
 
     fun getDegreeRainOnHour(): String {
@@ -252,12 +398,6 @@ class WeatherDetailActivity : MisoActivity() {
         }
     }
 
-    fun getWindDegree(emoji: String): String {
-        val degrees: Array<String> = resources.getStringArray(R.array.wind_degree)
-        val emojies: Array<String> = resources.getStringArray(R.array.wind_emoji)
-        return degrees.get(emojies.indexOf(emoji))
-    }
-
     fun setupWeatherOnDayRecycler() {
         weatherOnDayAdapter =
             RecyclerForecastOnDayAdapter(this, dailyForecastData.dailyForecastList)
@@ -274,6 +414,4 @@ class WeatherDetailActivity : MisoActivity() {
         recyclerWeatherOnTime.layoutManager =
             LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
     }
-
-
 }

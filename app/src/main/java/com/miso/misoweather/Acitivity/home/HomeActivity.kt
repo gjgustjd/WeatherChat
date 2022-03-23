@@ -39,6 +39,7 @@ import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 import java.lang.Exception
+import java.lang.IndexOutOfBoundsException
 import java.lang.reflect.Executable
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -101,33 +102,10 @@ class HomeActivity : MisoActivity() {
     private fun setupData() {
         getUserInfo()
         getCommentList()
-        loadWeatherInfo()
+        getBriefForecast()
         setupSurveyResult()
 
         txtLocation.text = bigScale + " " + midScale + " " + smallScale
-    }
-
-    private fun loadWeatherInfo() {
-        if (!defaultRegionId.isNullOrBlank()) {
-            viewModel.loadWeatherInfo(defaultRegionId.toInt())
-            viewModel.isWeatherLoaded.observe(this, {
-                isWeatherLoaded = it
-                if (isWeatherLoaded) {
-                    getBriefForecast()
-                    getDailyForecast()
-                    getHourlyForecast()
-                    getCurrentAir()
-
-                    Log.i("loadWeatherInfo", "성공")
-                } else {
-                    Log.i("loadWeatherInfo", "실패")
-                    Log.i("loadWeatherInfo", "defaultRegionId:${defaultRegionId}")
-                    Toast.makeText(this, "날씨 정보 불러오기에 실패했습니다.", Toast.LENGTH_SHORT).show()
-                }
-            })
-        } else {
-            Log.e("getHourlyForecast", "defaultRegionId is Blank")
-        }
     }
 
     private fun initializeProperties() {
@@ -193,18 +171,10 @@ class HomeActivity : MisoActivity() {
                 weatherLayout = binding.weatherLayout
                 weatherLayout.setOnClickListener()
                 {
-                    if (isAllForecastDataIsNotNull()) {
-                        val intent = Intent(this, WeatherDetailActivity::class.java)
-                        intent.putExtra("briefForecast", briefForecastData)
-                        intent.putExtra("dailyForecast", dailyForecastData)
-                        intent.putExtra("hourlyForecast", hourlyForecastData)
-                        intent.putExtra("currentAir", currentAirData)
-                        startActivity(intent)
-                        transferToNext()
-                        finish()
-                    } else {
-                        Toast.makeText(this, "날씨 상세정보를 불러오는 데에 실패하였습니다.", Toast.LENGTH_SHORT).show()
-                    }
+                    val intent = Intent(this, WeatherDetailActivity::class.java)
+                    startActivity(intent)
+                    transferToNext()
+                    finish()
                 }
             } catch (e: Exception) {
                 Log.e("initWeatherLayout", e.stackTraceToString())
@@ -401,130 +371,6 @@ class HomeActivity : MisoActivity() {
         }
     }
 
-    fun getDailyForecast() {
-        try {
-            if (!defaultRegionId.isNullOrBlank()) {
-                viewModel.getDailyForecast(defaultRegionId.toInt())
-                viewModel.dailyForecastResponse.observe(this, {
-                    if (it == null) {
-                        dailyForecastData = null
-                        Log.e("getDailyForecast", "null")
-                    } else if (it is Response<*>) {
-                        if (it.isSuccessful) {
-                            try {
-                                var dailyForecastResponseDto =
-                                    it.body()!! as DailyForecastResponseDto
-
-                                if (dailyForecastResponseDto.data.dailyForecastList == null)
-                                    dailyForecastData = null
-                                else
-                                    dailyForecastData = dailyForecastResponseDto.data
-
-                                Log.i("결과", "성공")
-                            } catch (e: Exception) {
-                                Log.e("getDailyForecast", e.stackTraceToString())
-                            }
-                        } else {
-                            Log.e("getDailyForecast", it.errorBody()!!.source().toString())
-                        }
-                    } else {
-                        when (it) {
-                            is String -> Log.e("getDailyForecast", it)
-                            is Throwable -> Log.e("getDailyForecast", it.stackTraceToString())
-                            else -> Log.e("getDailyForecast", "실패")
-                        }
-                    }
-                })
-            } else {
-                Log.e("getHourlyForecast", "defaultRegionId is Blank")
-            }
-        } catch (e: Exception) {
-            Log.e("getDailyForecast", e.stackTraceToString())
-        }
-    }
-
-    private fun getHourlyForecast() {
-        if (!defaultRegionId.isNullOrBlank()) {
-            viewModel.getHourlyForecast(defaultRegionId.toInt())
-            viewModel.hourlyForecastResponse.observe(this, {
-                if (it == null) {
-                    hourlyForecastData = null
-                    Log.e("getHourlyForecast", "null")
-                } else if (it is Response<*>) {
-                    if (it.isSuccessful) {
-                        try {
-                            val hourlyForecastResponseDto =
-                                it.body()!! as HourlyForecastResponseDto
-                            if (hourlyForecastResponseDto.data.hourlyForecastList == null) {
-                                hourlyForecastData = null
-                                Log.e("getHourlyForecast", "null")
-                            } else {
-                                hourlyForecastData = hourlyForecastResponseDto.data
-                                Log.i("getHourlyForecast", "성공")
-                            }
-                        } catch (e: Exception) {
-                            Log.e("getHourlyForecast", e.stackTraceToString())
-                            e.printStackTrace()
-                        }
-                    } else {
-                        Log.e("getHourlyForecast", it.errorBody()!!.source().toString())
-                    }
-                } else {
-                    when (it) {
-                        is String -> Log.e("getHourlyForecast", it)
-                        is Throwable -> Log.e("getHourlyForecast", it.toString())
-                        else -> Log.e("getHourlyForecast", "실패")
-                    }
-
-                }
-            })
-        } else {
-            Log.e("getHourlyForecast", "defaultRegionId is Blank")
-        }
-    }
-
-    private fun getCurrentAir() {
-        if (!defaultRegionId.isNullOrBlank()) {
-            viewModel.getCurrentAir(defaultRegionId.toInt())
-            viewModel.currentAirResponse.observe(this, {
-                if (it == null) {
-                    currentAirData = null
-                    Log.e("getCurrentAir", "null")
-                } else if (it is Response<*>) {
-                    if (it.isSuccessful) {
-                        try {
-                            val currentAirResponseDto =
-                                it.body()!! as CurrentAirResponseDto
-                            if (currentAirResponseDto.data == null) {
-                                currentAirData = null
-                                Log.e("getCurrentAir", "null")
-                                Log.e("getCurrentAir", "defaultRegionId :${defaultRegionId}")
-                            } else {
-                                currentAirData = currentAirResponseDto.data
-                                Log.i("getCurrentAir", "성공")
-                            }
-                        } catch (e: Exception) {
-                            Log.e("getCurrentAir", e.stackTraceToString())
-                            Log.e("getCurrentAir", "defaultRegionId :${defaultRegionId}")
-                            e.printStackTrace()
-                        }
-                    } else {
-                        Log.e("getCurrentAir", it.errorBody()!!.source().toString())
-                        Log.e("getCurrentAir", "defaultRegionId :${defaultRegionId}")
-                    }
-                } else {
-                    when (it) {
-                        is String -> Log.e("getCurrentAir", it)
-                        is Throwable -> Log.e("getCurrentAir", it.toString())
-                        else -> Log.e("getCurrentAir", "실패")
-                    }
-                    Log.e("getCurrentAir", "defaultRegionId :${defaultRegionId}")
-                }
-            })
-        } else {
-            Log.e("getCurrentAir", "defaultRegionId is Blank")
-        }
-    }
 
     fun getCommentList() {
         viewModel.getCommentList(null, 5)
@@ -554,7 +400,7 @@ class HomeActivity : MisoActivity() {
                 txtNickName.setText(memberInfo.nickname + "님!")
                 txtEmoji.setText(memberInfo.emoji)
                 if (!isAllForecastDataIsNotNull())
-                    loadWeatherInfo()
+                    getBriefForecast()
 
                 Log.i("getUserInfo", "성공")
             } catch (e: Exception) {
@@ -625,16 +471,21 @@ class HomeActivity : MisoActivity() {
                             it.body()!!.data.responseList.first { it.surveyId == 2 }
 
                         todaySurveyResultDto.keyList.forEachIndexed { index, it ->
-                            if (index == 0) {
-                                if (it != null)
-                                    showFirstItem(todaySurveyResultDto)
-                                else
-                                    showEmptyChartText()
-                            } else
-                                if (it != null)
-                                    showChartItem(todaySurveyResultDto, index)
-                                else
-                                    return@forEachIndexed
+                            try {
+                                if (index == 0) {
+                                    if (it != null)
+                                        showFirstItem(todaySurveyResultDto)
+                                    else
+                                        showEmptyChartText()
+                                } else
+                                    if (it != null)
+                                        showChartItem(todaySurveyResultDto, index)
+                                    else
+                                        return@forEachIndexed
+                            } catch (e: IndexOutOfBoundsException) {
+                                Log.e("setupSurveyResult", e.stackTraceToString())
+                                return@forEachIndexed
+                            }
                         }
                     } else {
                         throw Exception(it.errorBody()!!.source().toString())
