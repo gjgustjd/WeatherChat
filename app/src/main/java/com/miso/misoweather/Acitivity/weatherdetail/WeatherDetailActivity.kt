@@ -347,7 +347,7 @@ class WeatherDetailActivity : MisoActivity() {
         if (!isSurveyed.equals("true") || !lastSurveyedDate.equals(currentDate)) {
             var intent = Intent(this, SelectSurveyAnswerActivity::class.java)
             intent.putExtra("isFirstSurvey", true)
-            intent.putExtra("previousActivity", "Home")
+            intent.putExtra("previousActivity", "Weather")
             startActivity(intent)
             transferToNext()
             finish()
