@@ -353,6 +353,7 @@ class WeatherDetailActivity : MisoActivity() {
             finish()
         } else {
             var intent = Intent(this, ChatMainActivity::class.java)
+            intent.putExtra("previousActivity", "Weather")
             startActivity(intent)
             transferToNext()
             finish()
