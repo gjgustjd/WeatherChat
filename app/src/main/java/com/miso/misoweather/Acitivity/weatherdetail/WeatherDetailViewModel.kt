@@ -89,9 +89,9 @@ class WeatherDetailViewModel(private val repository: MisoRepository) : ViewModel
         )
     }
 
-    fun getDailyForecast(regionId: Int) {
+    fun getDailyForecast(regionId: Int? = defaultRegionId.value!!.toInt()) {
         repository.getDailyForecast(
-            regionId,
+            regionId!!,
             { call, response ->
                 dailyForecastResponse.value = response
             },
@@ -104,9 +104,9 @@ class WeatherDetailViewModel(private val repository: MisoRepository) : ViewModel
         )
     }
 
-    fun getHourlyForecast(regionId: Int) {
+    fun getHourlyForecast(regionId: Int? = defaultRegionId.value!!.toInt()) {
         repository.getHourlyForecast(
-            regionId,
+            regionId!!,
             { call, response ->
                 hourlyForecastResponse.value = response
             },
@@ -119,9 +119,9 @@ class WeatherDetailViewModel(private val repository: MisoRepository) : ViewModel
         )
     }
 
-    fun getCurrentAir(regionId: Int) {
+    fun getCurrentAir(regionId: Int? = defaultRegionId.value!!.toInt()) {
         repository.getCurrentAir(
-            regionId,
+            regionId!!,
             { call, response ->
                 currentAirResponse.value = response
             },
