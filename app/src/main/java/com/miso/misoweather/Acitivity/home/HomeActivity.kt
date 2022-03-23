@@ -39,6 +39,7 @@ import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 import java.lang.Exception
+import java.lang.IndexOutOfBoundsException
 import java.lang.reflect.Executable
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -470,16 +471,21 @@ class HomeActivity : MisoActivity() {
                             it.body()!!.data.responseList.first { it.surveyId == 2 }
 
                         todaySurveyResultDto.keyList.forEachIndexed { index, it ->
-                            if (index == 0) {
-                                if (it != null)
-                                    showFirstItem(todaySurveyResultDto)
-                                else
-                                    showEmptyChartText()
-                            } else
-                                if (it != null)
-                                    showChartItem(todaySurveyResultDto, index)
-                                else
-                                    return@forEachIndexed
+                            try {
+                                if (index == 0) {
+                                    if (it != null)
+                                        showFirstItem(todaySurveyResultDto)
+                                    else
+                                        showEmptyChartText()
+                                } else
+                                    if (it != null)
+                                        showChartItem(todaySurveyResultDto, index)
+                                    else
+                                        return@forEachIndexed
+                            } catch (e: IndexOutOfBoundsException) {
+                                Log.e("setupSurveyResult", e.stackTraceToString())
+                                return@forEachIndexed
+                            }
                         }
                     } else {
                         throw Exception(it.errorBody()!!.source().toString())
