@@ -45,6 +45,8 @@ class ChatMainViewModel(private val repository: MisoRepository) : ViewModel() {
         MutableLiveData()
     val hourlyForecastResponse: MutableLiveData<Any?> =
         MutableLiveData()
+    val currentAirData: MutableLiveData<Any?> =
+        MutableLiveData()
 
     fun updateProperties()
     {
@@ -226,6 +228,20 @@ class ChatMainViewModel(private val repository: MisoRepository) : ViewModel() {
             },
             { call, t ->
                 hourlyForecastResponse.value = t
+            },
+        )
+    }
+    fun getCurrentAir(regionId: Int) {
+        repository.getCurrentAir(
+            regionId,
+            { call, response ->
+                currentAirData.value = response
+            },
+            { call, response ->
+                currentAirData.value = response
+            },
+            { call, t ->
+                currentAirData.value = t
             },
         )
     }

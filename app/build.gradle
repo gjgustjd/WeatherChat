@@ -9,12 +9,21 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
+    signingConfigs{
+        release{
+            keyAlias 'key0'
+            keyPassword 'zxcv1234'
+            storeFile file('miso_weather_sign_key.jks')
+            storePassword 'zxcv1234'
+        }
+    }
     defaultConfig {
         applicationId "com.miso.weatherchat"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.0"
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         configurations.all {
             resolutionStrategy { force 'androidx.core:core-ktx:1.6.0' }
@@ -27,6 +36,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -83,6 +93,10 @@ dependencies {
     // livedata
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     kapt 'android.arch.lifecycle:compiler:1.1.1'
+
+    //multidex
+    implementation 'com.android.support:multidex:1.0.3'
+
 
     //hilt
     implementation "com.google.dagger:hilt-android:2.28-alpha"

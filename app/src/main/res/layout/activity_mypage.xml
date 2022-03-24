@@ -106,6 +106,15 @@
         app:layout_constraintStart_toStartOf="@+id/profileLayout"
         app:layout_constraintTop_toBottomOf="@+id/btn_logout" />
 
+    <TextView
+        android:id="@+id/txt_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start|center_vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_version"
+        app:layout_constraintEnd_toEndOf="@+id/profileLayout"
+        app:layout_constraintTop_toTopOf="@+id/btn_version" />
+
     <Button
         android:id="@+id/btn_unregister"
         style="@style/basicText"

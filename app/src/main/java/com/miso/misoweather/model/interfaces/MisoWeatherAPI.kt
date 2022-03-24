@@ -3,6 +3,7 @@ package com.miso.misoweather.model.interfaces
 import com.miso.misoweather.model.DTO.*
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
+import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
@@ -72,7 +73,7 @@ interface MisoWeatherAPI {
     fun getSurveyAnswers(@Path("surveyId") surveyId: Int): Call<SurveyAnswerResponseDto>
 
     @GET("api/survey")
-    fun getSurveyResults(@Query("shortBigScale") shortBigScale: String): Call<SurveyResultResponseDto>
+    fun getSurveyResults(@Query("shortBigScale") shortBigScale: String?=null): Call<SurveyResultResponseDto>
 
     @GET("api/survey/member")
     fun getSurveyMyAnswers(@Header("serverToken") serverToken: String): Call<SurveyMyAnswerResponseDto>
@@ -103,4 +104,7 @@ interface MisoWeatherAPI {
 
     @GET("/api/new-forecast/hourly/{regionId}")
     fun getHourlyForecast(@Path("regionId") regionId: Int): Call<HourlyForecastResponseDto>
+
+    @GET("/api/new-forecast/airdust/{regionId}")
+    fun getCurrentAir(@Path("regionId") regionId: Int): Call<CurrentAirResponseDto>
 }

@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
+import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
 import com.miso.misoweather.model.DTO.GeneralResponseDto
@@ -408,6 +409,36 @@ class MisoRepository private constructor() {
                 onError(call, throwable)
             })
     }
+
+    fun getCurrentAir(
+        regionId: Int,
+        onSuccessful: (
+            Call<CurrentAirResponseDto>,
+            Response<CurrentAirResponseDto>
+        ) -> Unit,
+        onFail: (
+            Call<CurrentAirResponseDto>,
+            Response<CurrentAirResponseDto>
+        ) -> Unit,
+        onError: (
+            Call<CurrentAirResponseDto>,
+            Throwable
+        ) -> Unit,
+    ) {
+        val callGetCurrentAir = TransportManager.getRetrofitApiObject<CurrentAirResponseDto>()
+            .getCurrentAir(regionId)
+
+        TransportManager.requestApi(callGetCurrentAir,
+            { call, response ->
+                if (response.isSuccessful)
+                    onSuccessful(call, response)
+                else
+                    onFail(call, response)
+            },
+            { call, throwable ->
+                onError(call, throwable)
+            })
+    }
     fun getCommentList(
         commentId: Int?,
         size: Int,
@@ -501,7 +532,7 @@ class MisoRepository private constructor() {
     }
 
     fun getSurveyResults(
-        shortBigScale: String,
+        shortBigScale: String?,
         onSuccessful: (
             Call<SurveyResultResponseDto>,
             Response<SurveyResultResponseDto>

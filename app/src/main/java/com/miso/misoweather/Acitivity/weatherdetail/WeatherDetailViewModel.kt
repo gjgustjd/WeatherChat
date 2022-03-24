@@ -7,7 +7,13 @@ import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 
 class WeatherDetailViewModel(private val repository: MisoRepository) : ViewModel() {
-    val forecastDetailResponse: MutableLiveData<Response<DailyForecastResponseDto>?> =
+    val forecastBriefResponse: MutableLiveData<Any?> =
+        MutableLiveData()
+    val dailyForecastResponse: MutableLiveData<Any?> =
+        MutableLiveData()
+    val hourlyForecastResponse: MutableLiveData<Any?> =
+        MutableLiveData()
+    val currentAirResponse: MutableLiveData<Any?> =
         MutableLiveData()
     val isSurveyed: MutableLiveData<String?> = MutableLiveData()
     val lastSurveyedDate: MutableLiveData<String?> = MutableLiveData()
@@ -23,6 +29,14 @@ class WeatherDetailViewModel(private val repository: MisoRepository) : ViewModel
         setupSurveyed()
         setupLastSurveyedDate()
         setupDefaultRegionId()
+        setupWeatherData()
+    }
+
+    fun setupWeatherData() {
+        getBriefForecast(defaultRegionId.value!!.toInt())
+        getDailyForecast(defaultRegionId.value!!.toInt())
+        getHourlyForecast(defaultRegionId.value!!.toInt())
+        getCurrentAir(defaultRegionId.value!!.toInt())
     }
 
     fun setupBigScale() {
@@ -36,6 +50,7 @@ class WeatherDetailViewModel(private val repository: MisoRepository) : ViewModel
     fun setupSmallScale() {
         smallScale.value = repository.getPreference("SmallScaleRegion")
     }
+
     fun setupSurveyed() {
         isSurveyed.value = repository.getPreference("isSurveyed")
     }
@@ -43,21 +58,78 @@ class WeatherDetailViewModel(private val repository: MisoRepository) : ViewModel
     fun setupLastSurveyedDate() {
         lastSurveyedDate.value = repository.getPreference("LastSurveyedDate")
     }
+
     fun setupDefaultRegionId() {
         defaultRegionId.value = repository.getPreference("defaultRegionId")
     }
 
-    fun getForecastDetail(regionId: Int) {
-        repository.getDailyForecast(
+    fun getBriefForecast(regionId: Int) {
+        repository.getBriefForecast(
             regionId,
             { call, response ->
-                forecastDetailResponse.value = response
+                var region = response.body()!!.data.region
+                repository.addPreferencePair("BigScaleRegion", region.bigScale)
+                repository.addPreferencePair(
+                    "MidScaleRegion",
+                    if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
+                )
+                repository.addPreferencePair(
+                    "SmallScaleRegion",
+                    if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
+                )
+                repository.savePreferences()
+                forecastBriefResponse.value = response
             },
             { call, response ->
-                forecastDetailResponse.value = response
+                forecastBriefResponse.value = response
             },
             { call, t ->
-//                Log.i("결과", "실패 : $t")
+                forecastBriefResponse.value = null
+            }
+        )
+    }
+
+    fun getDailyForecast(regionId: Int? = defaultRegionId.value!!.toInt()) {
+        repository.getDailyForecast(
+            regionId!!,
+            { call, response ->
+                dailyForecastResponse.value = response
+            },
+            { call, response ->
+                dailyForecastResponse.value = response
+            },
+            { call, t ->
+                dailyForecastResponse.value = t
+            },
+        )
+    }
+
+    fun getHourlyForecast(regionId: Int? = defaultRegionId.value!!.toInt()) {
+        repository.getHourlyForecast(
+            regionId!!,
+            { call, response ->
+                hourlyForecastResponse.value = response
+            },
+            { call, response ->
+                hourlyForecastResponse.value = response
+            },
+            { call, t ->
+                hourlyForecastResponse.value = t
+            },
+        )
+    }
+
+    fun getCurrentAir(regionId: Int? = defaultRegionId.value!!.toInt()) {
+        repository.getCurrentAir(
+            regionId!!,
+            { call, response ->
+                currentAirResponse.value = response
+            },
+            { call, response ->
+                currentAirResponse.value = response
+            },
+            { call, t ->
+                currentAirResponse.value = t
             },
         )
     }

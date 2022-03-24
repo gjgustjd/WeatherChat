@@ -10,7 +10,7 @@ object CommonUtil {
         else {
             try {
                 var numericString = text.replace("[^0-9.]".toRegex(), "")
-                var intNumber = numericString.toInt()
+                var intNumber = numericString.toFloat().toInt()
                 return intNumber.toString()
             }catch (e:Exception)
             {

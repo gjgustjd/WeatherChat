@@ -29,6 +29,8 @@ import com.miso.misoweather.Dialog.GeneralConfirmDialog
 import com.miso.misoweather.common.CommonUtil
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
+import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirData
+import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastData
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
@@ -37,6 +39,7 @@ import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 import java.lang.Exception
+import java.lang.IndexOutOfBoundsException
 import java.lang.reflect.Executable
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -79,6 +82,7 @@ class HomeActivity : MisoActivity() {
     lateinit var bigScale: String
     lateinit var midScale: String
     lateinit var smallScale: String
+    var currentAirData: CurrentAirData? = null
     var hourlyForecastData: HourlyForecastData? = null
     var dailyForecastData: DailyForecastData? = null
     var briefForecastData: ForecastBriefData? = null
@@ -98,21 +102,10 @@ class HomeActivity : MisoActivity() {
     private fun setupData() {
         getUserInfo()
         getCommentList()
-        loadWeatherInfo()
-    }
+        getBriefForecast()
+        setupSurveyResult()
 
-    private fun loadWeatherInfo() {
-        viewModel.loadWeatherInfo(defaultRegionId.toInt())
-        viewModel.isWeatherLoaded.observe(this, {
-            isWeatherLoaded = it
-            if (isWeatherLoaded) {
-                getBriefForecast()
-                getDailyForecast()
-                getHourlyForecast()
-            } else {
-                Toast.makeText(this, "날씨 정보 불러오기에 실패했습니다.", Toast.LENGTH_SHORT).show()
-            }
-        })
+        txtLocation.text = bigScale + " " + midScale + " " + smallScale
     }
 
     private fun initializeProperties() {
@@ -168,7 +161,8 @@ class HomeActivity : MisoActivity() {
     private fun isAllForecastDataIsNotNull(): Boolean {
         return dailyForecastData != null &&
                 briefForecastData != null &&
-                dailyForecastData != null
+                hourlyForecastData != null &&
+                currentAirData != null
     }
 
     fun initializeViews() {
@@ -177,17 +171,10 @@ class HomeActivity : MisoActivity() {
                 weatherLayout = binding.weatherLayout
                 weatherLayout.setOnClickListener()
                 {
-                    if (isAllForecastDataIsNotNull()) {
-                        val intent = Intent(this, WeatherDetailActivity::class.java)
-                        intent.putExtra("briefForecast", briefForecastData)
-                        intent.putExtra("dailyForecast", dailyForecastData)
-                        intent.putExtra("hourlyForecast", hourlyForecastData)
-                        startActivity(intent)
-                        transferToNext()
-                        finish()
-                    } else {
-                        Toast.makeText(this, "날씨 상세정보를 불러오는 데에 실패하였습니다.", Toast.LENGTH_SHORT).show()
-                    }
+                    val intent = Intent(this, WeatherDetailActivity::class.java)
+                    startActivity(intent)
+                    transferToNext()
+                    finish()
                 }
             } catch (e: Exception) {
                 Log.e("initWeatherLayout", e.stackTraceToString())
@@ -331,8 +318,9 @@ class HomeActivity : MisoActivity() {
     }
 
     private fun getBriefForecast() {
-        if (defaultRegionId.isNotBlank()) {
+        if (!defaultRegionId.isNullOrBlank()) {
             Log.i("defaultRegionId", defaultRegionId)
+            var previousBigScale = bigScale
             viewModel.getBriefForecast(defaultRegionId.toInt())
             viewModel.forecastBriefResponse.observe(this, {
                 try {
@@ -346,9 +334,14 @@ class HomeActivity : MisoActivity() {
                                 txtWeatherDegree.setText(
                                     CommonUtil.toIntString(forecastBriefResponseDto.data.temperature) + "˚"
                                 )
+                                txtLocation.text = bigScale + " " + midScale + " " + smallScale
+
+                                if (!previousBigScale.equals(bigScale))
+                                    setupSurveyResult()
+
                                 Log.i("결과", "성공")
                             } else
-                                throw Exception(it.errorBody().toString())
+                                throw Exception(it.errorBody()!!.source().toString())
 
                         } else {
                             if (it is String)
@@ -362,10 +355,10 @@ class HomeActivity : MisoActivity() {
                         throw Exception("null")
                     }
                 } catch (e: Exception) {
-                    if (e.message.isNullOrBlank())
-                        Log.e("getBriefForecast", e.stackTraceToString())
-                    else
+                    if (!e.message.isNullOrBlank())
                         Log.e("getBriefForecast", e.message.toString())
+
+                    Log.e("getBriefForecast", e.stackTraceToString())
 
                     Toast.makeText(this, "날씨 단기예보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT)
                         .show()
@@ -376,80 +369,8 @@ class HomeActivity : MisoActivity() {
             Toast.makeText(this, "날씨 단기예보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT)
                 .show()
         }
-
-        txtLocation.text = bigScale + " " + midScale + " " + smallScale
-        setupSurveyResult()
     }
 
-    fun getDailyForecast() {
-        viewModel.getDailyForecast(defaultRegionId.toInt())
-        viewModel.dailyForecastResponse.observe(this, {
-            if (it == null) {
-                dailyForecastData = null
-                Log.e("getDailyForecast", "null")
-            } else if (it is Response<*>) {
-                if (it.isSuccessful) {
-                    try {
-                        var dailyForecastResponseDto =
-                            it.body()!! as DailyForecastResponseDto
-
-                        if (dailyForecastResponseDto.data.dailyForecastList == null)
-                            dailyForecastData = null
-                        else
-                            dailyForecastData = dailyForecastResponseDto.data
-
-                        Log.i("결과", "성공")
-                    } catch (e: Exception) {
-                        Log.e("getDailyForecast", e.stackTraceToString())
-                    }
-                } else {
-                    Log.e("getDailyForecast", it.errorBody().toString())
-                }
-            } else {
-                when (it) {
-                    is String -> Log.e("getDailyForecast", it)
-                    is Throwable -> Log.e("getDailyForecast", it.stackTraceToString())
-                    else -> Log.e("getDailyForecast", "실패")
-                }
-            }
-        })
-    }
-
-    private fun getHourlyForecast() {
-        viewModel.getHourlyForecast(defaultRegionId.toInt())
-        viewModel.hourlyForecastResponse.observe(this, {
-            if (it == null) {
-                hourlyForecastData = null
-                Log.e("getHourlyForecast", "null")
-            } else if (it is Response<*>) {
-                if (it.isSuccessful) {
-                    try {
-                        val hourlyForecastResponseDto =
-                            it.body()!! as HourlyForecastResponseDto
-                        if (hourlyForecastResponseDto.data.hourlyForecastList == null) {
-                            hourlyForecastData = null
-                            Log.e("getHourlyForecast", "null")
-                        } else {
-                            hourlyForecastData = hourlyForecastResponseDto.data
-                            Log.i("getHourlyForecast", "성공")
-                        }
-                    } catch (e: Exception) {
-                        Log.e("getHourlyForecast", e.stackTraceToString())
-                        e.printStackTrace()
-                    }
-                } else {
-                    Log.e("getHourlyForecast", it.errorBody().toString())
-                }
-            } else {
-                when (it) {
-                    is String -> Log.e("getHourlyForecast", it)
-                    is Throwable -> Log.e("getHourlyForecast", it.toString())
-                    else -> Log.e("getHourlyForecast", "실패")
-                }
-
-            }
-        })
-    }
 
     fun getCommentList() {
         viewModel.getCommentList(null, 5)
@@ -478,6 +399,9 @@ class HomeActivity : MisoActivity() {
                 var memberInfo = memberInfoResponseDto.data
                 txtNickName.setText(memberInfo.nickname + "님!")
                 txtEmoji.setText(memberInfo.emoji)
+                if (!isAllForecastDataIsNotNull())
+                    getBriefForecast()
+
                 Log.i("getUserInfo", "성공")
             } catch (e: Exception) {
                 Toast.makeText(this, "사용자 정보를 불러오는 중 문제가 발생했습니다.", Toast.LENGTH_SHORT)
@@ -488,7 +412,7 @@ class HomeActivity : MisoActivity() {
 
         fun onFail(response: Response<MemberInfoResponseDto>) {
             Toast.makeText(this, "사용자 정보를 불러오는 중 문제가 발생했습니다.", Toast.LENGTH_SHORT).show()
-            Log.e("getUserInfo", response.errorBody().toString())
+            Log.e("getUserInfo", response.errorBody()!!.source().toString())
         }
 
         viewModel.getUserInfo(misoToken)
@@ -536,7 +460,7 @@ class HomeActivity : MisoActivity() {
                 imgIconCheckFirst.visibility = View.VISIBLE
         }
 
-        viewModel.getSurveyResult(getBigShortScale(bigScale))
+        viewModel.getSurveyResult()
         viewModel.surveyResultResponse.observe(this, Observer {
             try {
                 if (it == null) {
@@ -547,19 +471,24 @@ class HomeActivity : MisoActivity() {
                             it.body()!!.data.responseList.first { it.surveyId == 2 }
 
                         todaySurveyResultDto.keyList.forEachIndexed { index, it ->
-                            if (index == 0) {
-                                if (it != null)
-                                    showFirstItem(todaySurveyResultDto)
-                                else
-                                    showEmptyChartText()
-                            } else
-                                if (it != null)
-                                    showChartItem(todaySurveyResultDto, index)
-                                else
-                                    return@forEachIndexed
+                            try {
+                                if (index == 0) {
+                                    if (it != null)
+                                        showFirstItem(todaySurveyResultDto)
+                                    else
+                                        showEmptyChartText()
+                                } else
+                                    if (it != null)
+                                        showChartItem(todaySurveyResultDto, index)
+                                    else
+                                        return@forEachIndexed
+                            } catch (e: IndexOutOfBoundsException) {
+                                Log.e("setupSurveyResult", e.stackTraceToString())
+                                return@forEachIndexed
+                            }
                         }
                     } else {
-                        throw Exception(it.errorBody().toString())
+                        throw Exception(it.errorBody()!!.source().toString())
                     }
                 }
             } catch (e: Exception) {

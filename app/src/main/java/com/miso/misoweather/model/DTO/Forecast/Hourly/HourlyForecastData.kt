@@ -5,5 +5,5 @@ import java.io.Serializable
 
 data class HourlyForecastData(
     val hourlyForecastList:List<HourlyForecast>,
-    val region: Region
+    val region: Region,
 ):Serializable

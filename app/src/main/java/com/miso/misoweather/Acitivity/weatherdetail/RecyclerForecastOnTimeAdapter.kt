@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
+import com.miso.misoweather.common.CommonUtil
 import com.miso.misoweather.model.DTO.Forecast.Forecast
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecast
 
@@ -20,7 +21,7 @@ class RecyclerForecastOnTimeAdapter(var context: Context, var forecasts: List<Ho
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.degree.text = forecasts.get(position).temperature.split(".")[0] + "˚"
+        holder.degree.text = CommonUtil.toIntString(forecasts.get(position).temperature) + "˚"
         holder.emoji.text = forecasts.get(position).weather
         holder.time.text = forecasts.get(position).forecastTime
             .split("T")[1]
