@@ -12,3 +12,11 @@
 - Retrofit2를 이용한 REST API 통신
 - ValueAnimator를 활용한 ProgressBar 애니메이션
 
+## 참여 인원
+[미소짓다](https://github.com/misobuild)
+- 안드로이드 개발: [허현성](https://github.com/gjgustjd)
+- iOS 개발
+  - [허지인](https://github.com/JIINHEO)
+  - [강경훈](https://github.com/KangKyung)
+- 서버 개발: [강승연](https://github.com/tmddusgood)
+- UI/UX 디자인: [정한나](https://shadow-doll-9bb.notion.site/a0753965f865412eaef69d1c2aa0ccdc)
