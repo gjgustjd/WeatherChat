@@ -1,4 +1,5 @@
 # 미소웨더(MisoWeather)
+![](https://i.imgur.com/l3Wj7vn.png)
 ## 소개
 사용자의 의견을 기반으로 한 날씨 정보 어플리케이션입니다.  
 현재 날씨,일 별 예보,주간 예보 등의 날씨 정보를 확인할 수 있으며,  
@@ -6,11 +7,12 @@
 서베이를 통해 해당 날씨에 어울리는 항목을 투표할 수 있고, 반영된 결과가 차트로 표시됩니다.  
 추가적으로 한줄평을 남겨 오늘 날씨에 대한 소감을 선택된 지역의 사람들과 공유할 수 있습니다.    
 
-## 활용 기술  
+## 활용 기술 
 - MVVM 패턴 적용
 - Android AAC 사용
 - Retrofit2를 이용한 REST API 통신
 - ValueAnimator를 활용한 ProgressBar 애니메이션
+- 카카오 API를 활용한 로그인
 
 ## 참여 인원
 [미소짓다](https://github.com/misobuild)
