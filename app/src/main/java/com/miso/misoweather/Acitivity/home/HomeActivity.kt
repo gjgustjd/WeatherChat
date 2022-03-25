@@ -37,6 +37,7 @@ import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Response
 import java.lang.Exception
 import java.lang.IndexOutOfBoundsException
@@ -44,8 +45,10 @@ import java.lang.reflect.Executable
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
+@AndroidEntryPoint
 class HomeActivity : MisoActivity() {
     lateinit var binding: ActivityHomeBinding
     lateinit var weatherLayout: ConstraintLayout
@@ -73,7 +76,8 @@ class HomeActivity : MisoActivity() {
     lateinit var chartLayout: ConstraintLayout
     lateinit var txtEmptyChart: TextView
 
-    lateinit var viewModel: HomeViewModel
+    @Inject
+    lateinit var  viewModel: HomeViewModel
 
     lateinit var isSurveyed: String
     lateinit var lastSurveyedDate: String
@@ -235,7 +239,6 @@ class HomeActivity : MisoActivity() {
                 Log.e("initImgBtnChangeLctn", e.stackTraceToString())
             }
         }
-        viewModel = HomeViewModel(MisoRepository.getInstance(applicationContext))
         txtNickName = binding.txtNickname
         txtEmoji = binding.txtEmoji
         txtLocation = binding.txtLocation

@@ -7,10 +7,13 @@ import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
+import com.miso.misoweather.model.MisoHiltRepository
 import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
+import javax.inject.Inject
 
-class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
+class HomeViewModel @Inject constructor () : ViewModel() {
+    @Inject lateinit var repository: MisoHiltRepository
     val memberInfoResponse: MutableLiveData<Response<MemberInfoResponseDto>?> = MutableLiveData()
     val forecastBriefResponse: MutableLiveData<Any?> =
         MutableLiveData()
