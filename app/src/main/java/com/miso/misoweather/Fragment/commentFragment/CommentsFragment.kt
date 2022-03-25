@@ -73,16 +73,22 @@ class CommentsFragment(val viewModel: ChatMainViewModel) : Fragment() {
                 }
             }
         })
-        viewModel.commentListResponse.observe(activity,{
+        viewModel.commentListResponse.observe(activity, {
             try {
                 Log.i("결과", "성공")
-                setRecyclerChats(it!!.body()!!)
+                if (this::recyclerChatAdapter.isInitialized) {
+                    if (recyclerChatAdapter.currentBindedPosition.value == recyclerChatAdapter.itemCount - 1) {
+                        recyclerChatAdapter.comments += it!!.body()!!.data.commentList
+                        recyclerChatAdapter.notifyDataSetChanged()
+                    } else if (recyclerChat.adapter == null)
+                        setRecyclerChats(it!!.body()!!)
+                } else
+                    setRecyclerChats(it!!.body()!!)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
         })
-        viewModel.addCommentResponse.observe(activity,{
+        viewModel.addCommentResponse.observe(activity, {
             try {
                 Log.i("결과", "성공")
                 getCommentList(null)
@@ -99,14 +105,15 @@ class CommentsFragment(val viewModel: ChatMainViewModel) : Fragment() {
         } else {
             viewModel.addComment(
                 activity.getPreference("misoToken")!!,
-                CommentRegisterRequestDto(edtComment.text.toString()))
+                CommentRegisterRequestDto(edtComment.text.toString())
+            )
         }
     }
 
     fun getCommentList(commentId: Int?) {
         viewModel.getCommentList(
             commentId,
-            5
+            10
         )
     }
 
@@ -119,6 +126,11 @@ class CommentsFragment(val viewModel: ChatMainViewModel) : Fragment() {
             )
             recyclerChat.adapter = recyclerChatAdapter
             recyclerChat.layoutManager = LinearLayoutManager(activity.baseContext)
+            recyclerChatAdapter.currentBindedPosition.observe(activity, {
+                if (it == recyclerChatAdapter.comments.size - 1) {
+                    getCommentList(recyclerChatAdapter.getCommentItem(it).id)
+                }
+            })
         } catch (e: Exception) {
             e.printStackTrace()
         }
