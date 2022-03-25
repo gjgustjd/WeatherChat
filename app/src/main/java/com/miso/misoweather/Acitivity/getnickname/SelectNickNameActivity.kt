@@ -15,15 +15,17 @@ import com.miso.misoweather.Acitivity.login.LoginActivity
 import com.miso.misoweather.model.DTO.*
 import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
-import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SelectNickNameActivity : MisoActivity() {
+    @Inject
+    lateinit var viewModel: SelectNicknameViewModel
     lateinit var binding: ActivitySelectNicknameBinding
     lateinit var txt_get_new_nick: TextView
     lateinit var btn_back: ImageButton
     lateinit var btn_next: Button
-    lateinit var viewModel: SelectNicknameViewModel
-    lateinit var repository: MisoRepository
     var nickName: String = ""
     var accessToken: String = ""
     var misoToken: String = ""
@@ -42,8 +44,6 @@ class SelectNickNameActivity : MisoActivity() {
     }
 
     fun initializeViews() {
-        repository = MisoRepository.getInstance(this)
-        viewModel = SelectNicknameViewModel(repository)
         txt_get_new_nick = binding.txtGetNewNickname
         txt_get_new_nick.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         btn_back = binding.imgbtnBack

@@ -1,5 +1,6 @@
 package com.miso.misoweather.model
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
@@ -19,25 +20,23 @@ import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerRespons
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
+import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.Call
 import retrofit2.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MisoRepository private constructor() {
-    companion object {
-        private var instance: MisoRepository? = null
-        lateinit var context: Context
-        private lateinit var prefs: SharedPreferences
-        private lateinit var pairList: ArrayList<Pair<String, String>>
-        fun getInstance(_context: Context): MisoRepository {
-            return instance ?: synchronized(this) {
-                instance ?: MisoRepository().also {
-                    context = _context
-                    instance = it
-                    prefs = context.getSharedPreferences("misoweather", Context.MODE_PRIVATE)
-                    pairList = ArrayList()
-                }
-            }
-        }
+@Singleton
+class MisoRepository {
+    var prefs: SharedPreferences
+    var pairList: ArrayList<Pair<String, String>>
+    var context: Context
+
+    @Inject
+    constructor(@ApplicationContext aContext:Context) {
+        context = aContext
+        prefs = context.getSharedPreferences("misoweather", Context.MODE_PRIVATE)
+        pairList = ArrayList()
     }
 
     fun addPreferencePair(first: String, second: String) {
@@ -395,8 +394,9 @@ class MisoRepository private constructor() {
             Throwable
         ) -> Unit,
     ) {
-        val callGetHourlyForecast = TransportManager.getRetrofitApiObject<HourlyForecastResponseDto>()
-            .getHourlyForecast(regionId)
+        val callGetHourlyForecast =
+            TransportManager.getRetrofitApiObject<HourlyForecastResponseDto>()
+                .getHourlyForecast(regionId)
 
         TransportManager.requestApi(callGetHourlyForecast,
             { call, response ->
@@ -439,6 +439,7 @@ class MisoRepository private constructor() {
                 onError(call, throwable)
             })
     }
+
     fun getCommentList(
         commentId: Int?,
         size: Int,

@@ -5,12 +5,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -22,21 +20,19 @@ import com.miso.misoweather.Fragment.surveyFragment.SurveyFragment
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityChatMainBinding
-import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
-import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
-import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirData
-import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirResponseDto
-import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastData
-import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
-import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
-import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Response
 import java.lang.Exception
+import javax.inject.Inject
 
 
 @RequiresApi(Build.VERSION_CODES.O)
+@AndroidEntryPoint
 class ChatMainActivity : MisoActivity() {
+    @Inject
+    lateinit var viewModel: ChatMainViewModel
+
     lateinit var binding: ActivityChatMainBinding
     lateinit var btn_back: ImageButton
     lateinit var btnSurvey: Button
@@ -51,7 +47,6 @@ class ChatMainActivity : MisoActivity() {
     lateinit var goToPreviousActivity: () -> Unit
     lateinit var surveyFragment: SurveyFragment
     lateinit var commentsFragment: CommentsFragment
-    lateinit var viewModel: ChatMainViewModel
     lateinit var misoToken: String
     lateinit var surveyRegion: String
     lateinit var bigScale: String
@@ -67,7 +62,6 @@ class ChatMainActivity : MisoActivity() {
     }
 
     fun initializeProperties() {
-        viewModel = ChatMainViewModel(MisoRepository.getInstance(application))
         fun checkInitializedAll() {
             if (!isAllInitialized) {
                 if (this::bigScale.isInitialized &&

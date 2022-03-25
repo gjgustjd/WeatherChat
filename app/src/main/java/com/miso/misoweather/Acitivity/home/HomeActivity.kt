@@ -30,18 +30,13 @@ import com.miso.misoweather.common.CommonUtil
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirData
-import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastData
-import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
-import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
-import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Response
 import java.lang.Exception
 import java.lang.IndexOutOfBoundsException
-import java.lang.reflect.Executable
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -92,7 +87,6 @@ class HomeActivity : MisoActivity() {
     var briefForecastData: ForecastBriefData? = null
 
     var isAllInitialized = false
-    var isWeatherLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);

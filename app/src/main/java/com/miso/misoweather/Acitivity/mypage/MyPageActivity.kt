@@ -3,7 +3,6 @@ package com.miso.misoweather.Acitivity.mypage
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -14,19 +13,16 @@ import com.miso.misoweather.Acitivity.login.LoginActivity
 import com.miso.misoweather.Dialog.GeneralConfirmDialog
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityMypageBinding
-import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.LoginRequestDto
-import com.miso.misoweather.model.MisoRepository
-import com.miso.misoweather.model.TransportManager
-import com.miso.misoweather.model.interfaces.MisoWeatherAPI
-import retrofit2.Call
-import retrofit2.Callback
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MyPageActivity : MisoActivity() {
+    @Inject
+    lateinit var viewModel: MyPageViewModel
     lateinit var binding: ActivityMypageBinding
     lateinit var btn_back: ImageButton
     lateinit var btn_logout: Button
@@ -35,7 +31,6 @@ class MyPageActivity : MisoActivity() {
     lateinit var txt_version: TextView
     lateinit var txt_emoji: TextView
     lateinit var txt_nickname: TextView
-    lateinit var viewModel: MyPageViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +44,6 @@ class MyPageActivity : MisoActivity() {
     }
 
     fun initializeView() {
-        viewModel = MyPageViewModel(MisoRepository.getInstance(applicationContext))
         btn_back = binding.imgbtnBack
         btn_logout = binding.btnLogout
         btn_unregister = binding.btnUnregister

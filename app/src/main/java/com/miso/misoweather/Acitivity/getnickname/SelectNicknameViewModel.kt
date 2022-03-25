@@ -1,23 +1,22 @@
 package com.miso.misoweather.Acitivity.getnickname
 
-import android.content.Intent
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kakao.sdk.user.UserApiClient
-import com.miso.misoweather.Acitivity.home.HomeActivity
-import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.DTO.SignUpRequestDto
 import com.miso.misoweather.model.MisoRepository
-import lombok.Setter
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Response
 import java.lang.Exception
-import kotlin.math.log
+import javax.inject.Inject
 
-class SelectNicknameViewModel(private val repository: MisoRepository) : ViewModel() {
+@ActivityRetainedScoped
+class SelectNicknameViewModel @Inject constructor() : ViewModel() {
+    @Inject
+    lateinit var repository: MisoRepository
     val nicknameResponseDto: MutableLiveData<Response<NicknameResponseDto>?> = MutableLiveData()
     val smallScaleRegion: MutableLiveData<String?> = MutableLiveData()
     val bigScaleRegion: MutableLiveData<String?> = MutableLiveData()
@@ -112,7 +111,7 @@ class SelectNicknameViewModel(private val repository: MisoRepository) : ViewMode
     }
 
     fun resetAccessToken() {
-        UserApiClient.instance.loginWithKakaoTalk(MisoRepository.context) { token, error ->
+        UserApiClient.instance.loginWithKakaoTalk(repository.context) { token, error ->
             if (error != null) {
                 Log.e("resetAccessToken", "로그인 실패", error)
             } else if (token != null) {

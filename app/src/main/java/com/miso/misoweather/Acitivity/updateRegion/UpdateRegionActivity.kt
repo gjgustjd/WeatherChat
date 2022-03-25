@@ -2,7 +2,6 @@ package com.miso.misoweather.Acitivity.updateRegion
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.recyclerview.widget.GridLayoutManager
@@ -13,12 +12,15 @@ import com.miso.misoweather.common.VerticalSpaceItemDecoration
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.Acitivity.selectRegion.RecyclerRegionsAdapter
 import com.miso.misoweather.Acitivity.selectRegion.RegionItem
-import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
 import com.miso.misoweather.databinding.ActivityUpdateRegionBinding
-import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class UpdateRegionActivity : MisoActivity() {
+    @Inject
+    lateinit var viewModel: UpdateRegionViewModel
     lateinit var binding: ActivityUpdateRegionBinding
     lateinit var gridAdapter: RecyclerRegionsAdapter
     lateinit var grid_region: RecyclerView
@@ -28,7 +30,6 @@ class UpdateRegionActivity : MisoActivity() {
     lateinit var surveyRegion: String
     lateinit var bigScaleRegion: String
     var isAllInitialized = false
-    lateinit var viewModel: UpdateRegionViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityUpdateRegionBinding.inflate(layoutInflater)
@@ -49,7 +50,6 @@ class UpdateRegionActivity : MisoActivity() {
                 }
             }
         }
-        viewModel = UpdateRegionViewModel(MisoRepository.getInstance(applicationContext))
         viewModel.updateProperties()
         viewModel.surveyRegion.observe(this, {
             surveyRegion = it!!

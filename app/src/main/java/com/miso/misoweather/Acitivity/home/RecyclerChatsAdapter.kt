@@ -8,15 +8,15 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.miso.misoweather.Acitivity.chatmain.ChatMainViewModel
 import com.miso.misoweather.R
 import com.miso.misoweather.databinding.ListItemChatBinding
 import com.miso.misoweather.model.DTO.CommentList.Comment
-import com.miso.misoweather.model.MisoRepository
 import lombok.Getter
-import java.lang.Exception
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 class RecyclerChatsAdapter(
@@ -27,6 +27,8 @@ class RecyclerChatsAdapter(
 ) :
     RecyclerView.Adapter<RecyclerChatsAdapter.Holder>() {
 
+    @Inject
+    lateinit var viewModel: ChatMainViewModel
     var viewHolders: ArrayList<Holder> = ArrayList()
     var currentBindedPosition = MutableLiveData<Int>()
 

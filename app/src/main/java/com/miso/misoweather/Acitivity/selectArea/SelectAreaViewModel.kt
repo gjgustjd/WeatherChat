@@ -1,19 +1,21 @@
 package com.miso.misoweather.Acitivity.selectArea
 
-import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.miso.misoweather.Acitivity.home.HomeActivity
-import com.miso.misoweather.Acitivity.selectRegion.RegionItem
 import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Response
 import java.lang.Exception
+import javax.inject.Inject
 
-class SelectAreaViewModel(private val repository: MisoRepository) : ViewModel() {
+@ActivityRetainedScoped
+class SelectAreaViewModel @Inject constructor() : ViewModel() {
+    @Inject
+    lateinit var repository: MisoRepository
     val areaRequestResult: MutableLiveData<Response<RegionListResponseDto>?> = MutableLiveData()
     val updateRegionResponse: MutableLiveData<Response<GeneralResponseDto>?> = MutableLiveData()
     val smallScaleRegion: MutableLiveData<String?> = MutableLiveData()

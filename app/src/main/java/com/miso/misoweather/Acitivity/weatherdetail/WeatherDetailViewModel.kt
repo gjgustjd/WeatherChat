@@ -2,11 +2,14 @@ package com.miso.misoweather.Acitivity.weatherdetail
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
 import com.miso.misoweather.model.MisoRepository
-import retrofit2.Response
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import javax.inject.Inject
 
-class WeatherDetailViewModel(private val repository: MisoRepository) : ViewModel() {
+@ActivityRetainedScoped
+class WeatherDetailViewModel @Inject constructor() : ViewModel() {
+    @Inject
+    lateinit var repository: MisoRepository
     val forecastBriefResponse: MutableLiveData<Any?> =
         MutableLiveData()
     val dailyForecastResponse: MutableLiveData<Any?> =

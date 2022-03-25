@@ -20,10 +20,14 @@ import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
-import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SelectTownActivity : MisoActivity() {
+    @Inject
+    lateinit var viewModel: SelectTownViewModel
     lateinit var binding: ActivitySelectRegionBinding
     lateinit var grid_region: RecyclerView
     lateinit var list_towns: RecyclerView
@@ -33,7 +37,6 @@ class SelectTownActivity : MisoActivity() {
     lateinit var townRequestResult: RegionListResponseDto
     lateinit var recyclerAdapter: RecyclerTownsAdapter
     lateinit var aPurpose: String
-    lateinit var viewModel: SelectTownViewModel
 
     lateinit var midScaleRegion: String
     lateinit var bigScaleRegion: String
@@ -68,7 +71,6 @@ class SelectTownActivity : MisoActivity() {
                 }
             }
         }
-        viewModel = SelectTownViewModel(MisoRepository.getInstance(applicationContext))
         viewModel.updateProperties()
         viewModel.midScaleRegion.observe(this, {
             midScaleRegion = it!!

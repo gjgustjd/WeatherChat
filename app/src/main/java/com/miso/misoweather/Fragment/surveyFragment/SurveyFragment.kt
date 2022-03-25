@@ -2,7 +2,6 @@ package com.miso.misoweather.Fragment.surveyFragment
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,16 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
 import com.miso.misoweather.Acitivity.chatmain.ChatMainViewModel
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
-import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.FragmentSurveyBinding
-import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
-import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
-import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
-import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
-import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
-import com.miso.misoweather.model.MisoRepository
-import com.miso.misoweather.model.TransportManager
 
 @RequiresApi(Build.VERSION_CODES.O)
 class SurveyFragment : Fragment() {

@@ -18,21 +18,15 @@ import com.miso.misoweather.Acitivity.weatherdetail.WeatherDetailActivity
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySurveyAnswerBinding
-import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerRequestDto
-import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerResponseDto
-import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
-import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
-import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
-import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
-import com.miso.misoweather.model.MisoRepository
-import com.miso.misoweather.model.TransportManager
-import kotlinx.coroutines.selects.select
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.random.Random
 
 @RequiresApi(Build.VERSION_CODES.O)
+@AndroidEntryPoint
 class SelectSurveyAnswerActivity : MisoActivity() {
+    @Inject
+    lateinit var viewModel: SelectAnswerViewModel
     lateinit var binding: ActivitySurveyAnswerBinding
     lateinit var btn_back: ImageButton
     lateinit var btn_action: Button
@@ -40,12 +34,10 @@ class SelectSurveyAnswerActivity : MisoActivity() {
     lateinit var surveyItem: SurveyItem
     lateinit var recycler_answers: RecyclerView
     lateinit var recyclerAdapter: RecyclerSurveyAnswersAdapter
-    lateinit var viewModel: SelectAnswerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySurveyAnswerBinding.inflate(layoutInflater)
-        viewModel = SelectAnswerViewModel(MisoRepository.getInstance(applicationContext))
         setContentView(binding.root)
         checkAndInitializeViews()
     }

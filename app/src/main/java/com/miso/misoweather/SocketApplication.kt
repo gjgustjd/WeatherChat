@@ -8,12 +8,8 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class SocketApplication : MultiDexApplication() {
-    companion object {
-        var appContext : Context? = null
-    }
     override fun onCreate() {
         super.onCreate()
-        appContext = this
-        KakaoSdk.init(this,getString(R.string.kakao_app_key))
+        KakaoSdk.init(applicationContext,getString(R.string.kakao_app_key))
     }
 }

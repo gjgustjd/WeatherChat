@@ -7,10 +7,15 @@ import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Response
 import java.lang.Exception
+import javax.inject.Inject
 
-class SelectTownViewModel(private val repository: MisoRepository) : ViewModel() {
+@ActivityRetainedScoped
+class SelectTownViewModel @Inject constructor() : ViewModel() {
+    @Inject
+    lateinit var repository: MisoRepository
     val townRequestResult: MutableLiveData<Response<RegionListResponseDto>?> = MutableLiveData()
     val updateRegionResponse: MutableLiveData<Response<GeneralResponseDto>?> = MutableLiveData()
     val smallScaleRegion: MutableLiveData<String?> = MutableLiveData()

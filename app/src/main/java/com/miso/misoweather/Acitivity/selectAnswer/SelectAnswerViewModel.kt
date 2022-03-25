@@ -1,34 +1,30 @@
 package com.miso.misoweather.Acitivity.selectAnswer
 
-import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.miso.misoweather.Acitivity.answerAnimationActivity.AnswerAnimationActivity
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
-import com.miso.misoweather.Acitivity.home.HomeActivity
-import com.miso.misoweather.Acitivity.selectRegion.RegionItem
 import com.miso.misoweather.R
-import com.miso.misoweather.model.DTO.GeneralResponseDto
-import com.miso.misoweather.model.DTO.Region
-import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerRequestDto
 import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
-import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Response
 import java.lang.Exception
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
-class SelectAnswerViewModel(private val repository: MisoRepository) : ViewModel() {
+@ActivityRetainedScoped
+class SelectAnswerViewModel @Inject constructor() : ViewModel() {
+    @Inject
+    lateinit var repository: MisoRepository
     val surveyItem: MutableLiveData<SurveyItem?> = MutableLiveData()
     val surveyAnswerResponse: MutableLiveData<Response<SurveyAddMyAnswerResponseDto>?> =
         MutableLiveData()
@@ -52,9 +48,9 @@ class SelectAnswerViewModel(private val repository: MisoRepository) : ViewModel(
 
     fun getBigShortScale(bigScale: String): String {
         try {
-            val regionList = MisoRepository.context.resources.getStringArray(R.array.regions_full)
+            val regionList = repository.context.resources.getStringArray(R.array.regions_full)
             val index = regionList.indexOf(bigScale)
-            val regionSmallList = MisoRepository.context.resources.getStringArray(R.array.regions)
+            val regionSmallList = repository.context.resources.getStringArray(R.array.regions)
 
             return regionSmallList.get(index)
         } catch (e: Exception) {

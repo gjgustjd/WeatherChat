@@ -1,18 +1,12 @@
 package com.miso.misoweather.Acitivity.chatmain
 
 import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.miso.misoweather.R
-import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
-import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.GeneralResponseDto
-import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
-import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerData
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
@@ -20,10 +14,14 @@ import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultData
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Response
-import java.lang.Exception
+import javax.inject.Inject
 
-class ChatMainViewModel(private val repository: MisoRepository) : ViewModel() {
+@ActivityRetainedScoped
+class ChatMainViewModel @Inject constructor() : ViewModel() {
+    @Inject
+    lateinit var repository: MisoRepository
     val commentListResponse: MutableLiveData<Response<CommentListResponseDto>?> = MutableLiveData()
     val addCommentResponse: MutableLiveData<Response<GeneralResponseDto>?> = MutableLiveData()
     lateinit var surveyQuestions: Array<String>

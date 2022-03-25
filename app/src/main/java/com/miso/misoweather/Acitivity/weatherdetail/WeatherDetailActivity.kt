@@ -12,7 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
-import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityWeatherMainBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
@@ -27,15 +26,19 @@ import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
 import com.miso.misoweather.model.DTO.Region
-import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Response
 import java.lang.Exception
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
+@AndroidEntryPoint
 class WeatherDetailActivity : MisoActivity() {
+    @Inject
+    lateinit var viewModel: WeatherDetailViewModel
     lateinit var binding: ActivityWeatherMainBinding
     lateinit var btnBack: ImageButton
     lateinit var region: Region
@@ -64,7 +67,6 @@ class WeatherDetailActivity : MisoActivity() {
     lateinit var txtEmojiUltraDust: TextView
     lateinit var txtDegreeUltraDust: TextView
     lateinit var txtGradeUltraDust: TextView
-    lateinit var viewModel: WeatherDetailViewModel
     lateinit var bigScale: String
     lateinit var midScale: String
     lateinit var smallScale: String
@@ -102,7 +104,6 @@ class WeatherDetailActivity : MisoActivity() {
                 }
             }
         }
-        viewModel = WeatherDetailViewModel(MisoRepository.getInstance(applicationContext))
         viewModel.updateProperties()
         viewModel.isSurveyed.observe(this, {
             isSurveyed = it!!

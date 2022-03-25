@@ -7,13 +7,15 @@ import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
-import com.miso.misoweather.model.MisoHiltRepository
 import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Response
 import javax.inject.Inject
 
-class HomeViewModel @Inject constructor () : ViewModel() {
-    @Inject lateinit var repository: MisoHiltRepository
+@ActivityRetainedScoped
+class HomeViewModel @Inject constructor() : ViewModel() {
+    @Inject
+    lateinit var repository: MisoRepository
     val memberInfoResponse: MutableLiveData<Response<MemberInfoResponseDto>?> = MutableLiveData()
     val forecastBriefResponse: MutableLiveData<Any?> =
         MutableLiveData()
@@ -76,7 +78,7 @@ class HomeViewModel @Inject constructor () : ViewModel() {
         var Midregion = repository.getPreference("MidScaleRegion")
         var Smallregion = repository.getPreference("SmallScaleRegion")
         smallScale.value =
-            if (Midregion.equals("선택 안 함")|| Midregion.equals("전체"))
+            if (Midregion.equals("선택 안 함") || Midregion.equals("전체"))
                 ""
             else
                 if (Smallregion.equals("선택 안 함"))
@@ -195,6 +197,7 @@ class HomeViewModel @Inject constructor () : ViewModel() {
             },
         )
     }
+
     fun getCommentList(commentId: Int?, size: Int) {
         repository.getCommentList(
             commentId,
@@ -209,7 +212,7 @@ class HomeViewModel @Inject constructor () : ViewModel() {
         )
     }
 
-    fun getSurveyResult(shortBigScale: String?=null) {
+    fun getSurveyResult(shortBigScale: String? = null) {
         repository.getSurveyResults(
             shortBigScale,
             { call, reponse ->

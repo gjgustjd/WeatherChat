@@ -10,32 +10,29 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
-import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
-import com.kakao.sdk.user.model.AccessTokenInfo
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.login.viewPagerFragments.*
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
 import com.miso.misoweather.Dialog.GeneralConfirmDialog
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityLoginBinding
-import com.miso.misoweather.model.DTO.GeneralResponseDto
-import com.miso.misoweather.model.DTO.LoginRequestDto
-import com.miso.misoweather.model.MisoRepository
-import com.miso.misoweather.model.TransportManager
 import com.rd.PageIndicatorView
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Response
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class LoginActivity : MisoActivity() {
+    @Inject
+    lateinit var viewModel: LoginViewModel
     lateinit var binding: ActivityLoginBinding
     lateinit var viewpager_onboarding: ViewPager2
     lateinit var pageIndicatorView: PageIndicatorView
-    lateinit var viewModel: LoginViewModel
     lateinit var socialId: String
     lateinit var socialType: String
     lateinit var accessToken: String
@@ -71,7 +68,6 @@ class LoginActivity : MisoActivity() {
                 }
             }
         }
-        viewModel = LoginViewModel(MisoRepository.getInstance(applicationContext))
         viewModel.updateProperties()
         viewModel.accessToken.observe(this, {
             accessToken = it!!

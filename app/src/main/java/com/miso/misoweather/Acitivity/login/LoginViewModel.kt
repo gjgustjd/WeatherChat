@@ -1,38 +1,22 @@
 package com.miso.misoweather.Acitivity.login
 
 import android.content.Context
-import android.content.Intent
-import android.os.Build
 import android.util.Log
-import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.sdk.user.model.AccessTokenInfo
-import com.miso.misoweather.Acitivity.answerAnimationActivity.AnswerAnimationActivity
-import com.miso.misoweather.Acitivity.chatmain.SurveyItem
-import com.miso.misoweather.Acitivity.home.HomeActivity
-import com.miso.misoweather.Acitivity.selectRegion.RegionItem
-import com.miso.misoweather.R
-import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.LoginRequestDto
-import com.miso.misoweather.model.DTO.Region
-import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
-import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerRequestDto
-import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerResponseDto
-import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
-import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
-import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
-import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.MisoRepository
-import retrofit2.Response
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import java.lang.Exception
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
-class LoginViewModel(private val repository: MisoRepository) : ViewModel() {
+@ActivityRetainedScoped
+class LoginViewModel @Inject constructor() : ViewModel() {
+    @Inject
+    lateinit var repository: MisoRepository
     val socialId: MutableLiveData<String?> = MutableLiveData()
     val socialType: MutableLiveData<String?> = MutableLiveData()
     val accessToken: MutableLiveData<String?> = MutableLiveData()
@@ -40,7 +24,6 @@ class LoginViewModel(private val repository: MisoRepository) : ViewModel() {
     val issueMisoTokenResponse: MutableLiveData<Any?> = MutableLiveData()
     val isCheckValid: MutableLiveData<Boolean?> = MutableLiveData()
     val loginWithKakaoTalkResponse: MutableLiveData<Any?> = MutableLiveData()
-    val kakaoLoginAvailableResponse: MutableLiveData<Boolean?> = MutableLiveData()
 
     fun updateProperties() {
         setupSocialId()
@@ -112,7 +95,7 @@ class LoginViewModel(private val repository: MisoRepository) : ViewModel() {
     }
 
     fun checkTokenValid() {
-        if (UserApiClient.instance.isKakaoTalkLoginAvailable(MisoRepository.context)) {
+        if (UserApiClient.instance.isKakaoTalkLoginAvailable(repository.context)) {
             UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
                 if (error != null) {
                     Log.i("token", "토큰 정보 보기 실패", error)
@@ -129,7 +112,7 @@ class LoginViewModel(private val repository: MisoRepository) : ViewModel() {
             isCheckValid.value = false
     }
     fun kakaoLoginAvailable():Boolean {
-        return UserApiClient.instance.isKakaoTalkLoginAvailable(MisoRepository.context)
+        return UserApiClient.instance.isKakaoTalkLoginAvailable(repository.context)
     }
 
     fun loginWithKakaoTalk(context: Context) {
