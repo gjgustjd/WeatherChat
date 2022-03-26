@@ -2,6 +2,7 @@ package com.miso.misoweather.Acitivity.weatherdetail
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.miso.misoweather.common.MisoHiltModule.*
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
@@ -10,6 +11,30 @@ import javax.inject.Inject
 class WeatherDetailViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var repository: MisoRepository
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var isSurveyed: MutableLiveData<String?>
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var lastSurveyedDate: MutableLiveData<String?>
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var defaultRegionId: MutableLiveData<String?>
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var bigScale: MutableLiveData<String?>
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var midScale: MutableLiveData<String?>
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var smallScale: MutableLiveData<String?>
     val forecastBriefResponse: MutableLiveData<Any?> =
         MutableLiveData()
     val dailyForecastResponse: MutableLiveData<Any?> =
@@ -18,12 +43,6 @@ class WeatherDetailViewModel @Inject constructor() : ViewModel() {
         MutableLiveData()
     val currentAirResponse: MutableLiveData<Any?> =
         MutableLiveData()
-    val isSurveyed: MutableLiveData<String?> = MutableLiveData()
-    val lastSurveyedDate: MutableLiveData<String?> = MutableLiveData()
-    val defaultRegionId: MutableLiveData<String?> = MutableLiveData()
-    val bigScale: MutableLiveData<String?> = MutableLiveData()
-    val midScale: MutableLiveData<String?> = MutableLiveData()
-    val smallScale: MutableLiveData<String?> = MutableLiveData()
 
     fun updateProperties() {
         setupBigScale()

@@ -21,9 +21,12 @@ import com.miso.misoweather.databinding.FragmentCommentBinding
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
 import java.lang.Exception
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
-class CommentsFragment(val viewModel: ChatMainViewModel) : Fragment() {
+class CommentsFragment @Inject constructor() : Fragment() {
+    @Inject
+    lateinit var viewModel: ChatMainViewModel
     lateinit var binding: FragmentCommentBinding
     lateinit var recyclerChatAdapter: RecyclerChatsAdapter
     lateinit var refreshLayout: SwipeRefreshLayout

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kakao.sdk.user.UserApiClient
+import com.miso.misoweather.common.MisoHiltModule.*
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
@@ -16,6 +17,43 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var repository: MisoRepository
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var isSurveyed: MutableLiveData<String?>
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var lastSurveyedDate: MutableLiveData<String?>
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var defaultRegionId: MutableLiveData<String?>
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var misoToken: MutableLiveData<String?>
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var bigScale: MutableLiveData<String?>
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var midScale: MutableLiveData<String?>
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var smallScale: MutableLiveData<String?>
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var logoutResponseString: MutableLiveData<String?>
+
+    @MutableBooleanLiveData
+    @Inject
+    lateinit var isWeatherLoaded: MutableLiveData<Boolean>
+
     val memberInfoResponse: MutableLiveData<Response<MemberInfoResponseDto>?> = MutableLiveData()
     val forecastBriefResponse: MutableLiveData<Any?> =
         MutableLiveData()
@@ -28,15 +66,6 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     val commentListResponse: MutableLiveData<Response<CommentListResponseDto>?> = MutableLiveData()
     val surveyResultResponse: MutableLiveData<Response<SurveyResultResponseDto>?> =
         MutableLiveData()
-    val isSurveyed: MutableLiveData<String?> = MutableLiveData()
-    val lastSurveyedDate: MutableLiveData<String?> = MutableLiveData()
-    val defaultRegionId: MutableLiveData<String?> = MutableLiveData()
-    val misoToken: MutableLiveData<String?> = MutableLiveData()
-    val bigScale: MutableLiveData<String?> = MutableLiveData()
-    val midScale: MutableLiveData<String?> = MutableLiveData()
-    val smallScale: MutableLiveData<String?> = MutableLiveData()
-    val logoutResponseString: MutableLiveData<String?> = MutableLiveData()
-    val isWeatherLoaded: MutableLiveData<Boolean> = MutableLiveData()
 
     fun updateProperties() {
         setupBigScale()

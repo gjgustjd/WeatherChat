@@ -45,6 +45,9 @@ import javax.inject.Inject
 @RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
 class HomeActivity : MisoActivity() {
+    @Inject
+    lateinit var  viewModel: HomeViewModel
+
     lateinit var binding: ActivityHomeBinding
     lateinit var weatherLayout: ConstraintLayout
     lateinit var txtNickName: TextView
@@ -70,10 +73,6 @@ class HomeActivity : MisoActivity() {
     lateinit var thirdProgressLayout: ConstraintLayout
     lateinit var chartLayout: ConstraintLayout
     lateinit var txtEmptyChart: TextView
-
-    @Inject
-    lateinit var  viewModel: HomeViewModel
-
     lateinit var isSurveyed: String
     lateinit var lastSurveyedDate: String
     lateinit var defaultRegionId: String

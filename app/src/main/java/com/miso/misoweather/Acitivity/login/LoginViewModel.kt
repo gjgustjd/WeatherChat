@@ -7,9 +7,11 @@ import androidx.lifecycle.ViewModel
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.sdk.user.model.AccessTokenInfo
+import com.miso.misoweather.common.MisoHiltModule
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import com.miso.misoweather.common.MisoHiltModule.*
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -17,9 +19,15 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var repository: MisoRepository
-    val socialId: MutableLiveData<String?> = MutableLiveData()
-    val socialType: MutableLiveData<String?> = MutableLiveData()
-    val accessToken: MutableLiveData<String?> = MutableLiveData()
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var socialId: MutableLiveData<String?>
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var socialType: MutableLiveData<String?>
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var accessToken: MutableLiveData<String?>
     val checkRegistered: MutableLiveData<Boolean?> = MutableLiveData()
     val issueMisoTokenResponse: MutableLiveData<Any?> = MutableLiveData()
     val isCheckValid: MutableLiveData<Boolean?> = MutableLiveData()

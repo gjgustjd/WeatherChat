@@ -2,6 +2,7 @@ package com.miso.misoweather.Acitivity.updateRegion
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.miso.misoweather.common.MisoHiltModule.*
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
@@ -10,8 +11,14 @@ import javax.inject.Inject
 class UpdateRegionViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var repository: MisoRepository
-    val surveyRegion: MutableLiveData<String?> = MutableLiveData()
-    val bigScaleRegion: MutableLiveData<String?> = MutableLiveData()
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var surveyRegion: MutableLiveData<String?>
+
+    @MutableNullableStringLiveData
+    @Inject
+    lateinit var bigScaleRegion: MutableLiveData<String?>
 
     fun updateProperties() {
         setupBigScaleRegion()
@@ -26,8 +33,7 @@ class UpdateRegionViewModel @Inject constructor() : ViewModel() {
         bigScaleRegion.value = repository.getPreference("BigScaleRegion")
     }
 
-    fun updateSurveyRegion(region:String)
-    {
+    fun updateSurveyRegion(region: String) {
         repository.addPreferencePair("surveyRegion", region)
         repository.savePreferences()
     }

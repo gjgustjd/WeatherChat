@@ -32,6 +32,10 @@ import javax.inject.Inject
 class ChatMainActivity : MisoActivity() {
     @Inject
     lateinit var viewModel: ChatMainViewModel
+    @Inject
+    lateinit var surveyFragment: SurveyFragment
+    @Inject
+    lateinit var commentsFragment: CommentsFragment
 
     lateinit var binding: ActivityChatMainBinding
     lateinit var btn_back: ImageButton
@@ -45,8 +49,6 @@ class ChatMainActivity : MisoActivity() {
     lateinit var previousActivity: String
     lateinit var currentFragment: Fragment
     lateinit var goToPreviousActivity: () -> Unit
-    lateinit var surveyFragment: SurveyFragment
-    lateinit var commentsFragment: CommentsFragment
     lateinit var misoToken: String
     lateinit var surveyRegion: String
     lateinit var bigScale: String
@@ -94,8 +96,6 @@ class ChatMainActivity : MisoActivity() {
     }
 
     fun initializeViews() {
-        surveyFragment = SurveyFragment()
-        commentsFragment = CommentsFragment(viewModel)
         selectedRegion =
             if (surveyRegion.isNullOrBlank())
                 getBigShortScale(bigScale)

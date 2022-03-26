@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kakao.sdk.user.UserApiClient
+import com.miso.misoweather.common.MisoHiltModule
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.DTO.SignUpRequestDto
@@ -18,14 +19,38 @@ class SelectNicknameViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var repository: MisoRepository
     val nicknameResponseDto: MutableLiveData<Response<NicknameResponseDto>?> = MutableLiveData()
-    val smallScaleRegion: MutableLiveData<String?> = MutableLiveData()
-    val bigScaleRegion: MutableLiveData<String?> = MutableLiveData()
-    val middleScaleRegion: MutableLiveData<String?> = MutableLiveData()
-    val accessToken: MutableLiveData<String?> = MutableLiveData()
-    val misoToken: MutableLiveData<String?> = MutableLiveData()
-    val socialId: MutableLiveData<String?> = MutableLiveData()
-    val socialType: MutableLiveData<String?> = MutableLiveData()
-    val registerResultString: MutableLiveData<String?> = MutableLiveData()
+
+    @MisoHiltModule.MutableNullableStringLiveData
+    @Inject
+    lateinit var smallScaleRegion: MutableLiveData<String?>
+
+    @MisoHiltModule.MutableNullableStringLiveData
+    @Inject
+    lateinit var bigScaleRegion: MutableLiveData<String?>
+
+    @MisoHiltModule.MutableNullableStringLiveData
+    @Inject
+    lateinit var middleScaleRegion: MutableLiveData<String?>
+
+    @MisoHiltModule.MutableNullableStringLiveData
+    @Inject
+    lateinit var accessToken: MutableLiveData<String?>
+
+    @MisoHiltModule.MutableNullableStringLiveData
+    @Inject
+    lateinit var misoToken: MutableLiveData<String?>
+
+    @MisoHiltModule.MutableNullableStringLiveData
+    @Inject
+    lateinit var socialId: MutableLiveData<String?>
+
+    @MisoHiltModule.MutableNullableStringLiveData
+    @Inject
+    lateinit var socialType: MutableLiveData<String?>
+
+    @MisoHiltModule.MutableNullableStringLiveData
+    @Inject
+    lateinit var registerResultString: MutableLiveData<String?>
 
     lateinit var loginRequestDto: LoginRequestDto
     lateinit var signUpRequestDto: SignUpRequestDto

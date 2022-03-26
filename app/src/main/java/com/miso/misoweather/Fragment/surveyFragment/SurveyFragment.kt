@@ -14,9 +14,10 @@ import com.miso.misoweather.Acitivity.chatmain.ChatMainViewModel
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.FragmentSurveyBinding
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
-class SurveyFragment : Fragment() {
+class SurveyFragment @Inject constructor(): Fragment() {
     lateinit var binding: FragmentSurveyBinding
     lateinit var recyclerSurvey: RecyclerView
     lateinit var recyclerSurveysAdapter: RecyclerSurveysAdapter

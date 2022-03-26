@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.miso.misoweather.R
+import com.miso.misoweather.common.MisoHiltModule
+import com.miso.misoweather.common.MisoHiltModule.MutableStringLiveData
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
 import com.miso.misoweather.model.DTO.GeneralResponseDto
@@ -33,10 +35,23 @@ class ChatMainViewModel @Inject constructor() : ViewModel() {
     )
     var surveyMyAnswerResponseDto = SurveyMyAnswerResponseDto(SurveyMyAnswerData(listOf()), "", "")
     var surveyItems: MutableLiveData<ArrayList<SurveyItem>> = MutableLiveData(ArrayList())
-    val surveyRegion: MutableLiveData<String> = MutableLiveData()
-    val bigScaleRegion: MutableLiveData<String> = MutableLiveData()
-    val misoToken: MutableLiveData<String> = MutableLiveData()
-    val defaultRegionId: MutableLiveData<String> = MutableLiveData()
+
+    @MutableStringLiveData
+    @Inject
+    lateinit var surveyRegion: MutableLiveData<String>
+
+    @MutableStringLiveData
+    @Inject
+    lateinit var bigScaleRegion: MutableLiveData<String>
+
+    @MutableStringLiveData
+    @Inject
+    lateinit var misoToken: MutableLiveData<String>
+
+    @MutableStringLiveData
+    @Inject
+    lateinit var defaultRegionId: MutableLiveData<String>
+
     val forecastBriefResponse: MutableLiveData<Any?> =
         MutableLiveData()
     val dailyForecastResponse: MutableLiveData<Any?> =
@@ -46,13 +61,13 @@ class ChatMainViewModel @Inject constructor() : ViewModel() {
     val currentAirData: MutableLiveData<Any?> =
         MutableLiveData()
 
-    fun updateProperties()
-    {
+    fun updateProperties() {
         surveyRegion.value = repository.getPreference("surveyRegion")
         bigScaleRegion.value = repository.getPreference("BigScaleRegion")
         misoToken.value = repository.getPreference("misoToken")
         defaultRegionId.value = repository.getPreference("defaultRegionId")
     }
+
     fun getCommentList(commentId: Int?, size: Int) {
         repository.getCommentList(
             commentId,
@@ -67,8 +82,7 @@ class ChatMainViewModel @Inject constructor() : ViewModel() {
         )
     }
 
-    fun removeSurveyRegion()
-    {
+    fun removeSurveyRegion() {
         repository.removePreference("surveyRegion")
         repository.savePreferences()
     }
@@ -114,7 +128,7 @@ class ChatMainViewModel @Inject constructor() : ViewModel() {
     }
 
     fun getSurveyResult(shortBigScale: String) {
-        Log.i("getSurveyResult",shortBigScale)
+        Log.i("getSurveyResult", shortBigScale)
         repository.getSurveyResults(
             shortBigScale,
             { call, reponse ->
@@ -171,9 +185,10 @@ class ChatMainViewModel @Inject constructor() : ViewModel() {
 
     fun isAllSurveyResponseInitialized(): Boolean {
         return ((surveyAnswerMap.size >= surveyQuestions.size) &&
-                (surveyMyAnswerResponseDto.data.responseList.size>= surveyQuestions.size)&&
-                (surveyResultResponseDto.data.responseList.size>= surveyQuestions.size))
+                (surveyMyAnswerResponseDto.data.responseList.size >= surveyQuestions.size) &&
+                (surveyResultResponseDto.data.responseList.size >= surveyQuestions.size))
     }
+
     fun getBriefForecast(regionId: Int) {
         repository.getBriefForecast(
             regionId,
@@ -215,6 +230,7 @@ class ChatMainViewModel @Inject constructor() : ViewModel() {
             },
         )
     }
+
     fun getHourlyForecast(regionId: Int) {
         repository.getHourlyForecast(
             regionId,
@@ -229,6 +245,7 @@ class ChatMainViewModel @Inject constructor() : ViewModel() {
             },
         )
     }
+
     fun getCurrentAir(regionId: Int) {
         repository.getCurrentAir(
             regionId,
