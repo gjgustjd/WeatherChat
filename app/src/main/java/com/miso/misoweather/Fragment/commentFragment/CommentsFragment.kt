@@ -57,7 +57,9 @@ class CommentsFragment(val viewModel: ChatMainViewModel) : Fragment() {
             refreshLayout.isRefreshing = false
         }
         edtComment = binding.edtComment
-        edtComment.hint = "오늘 날씨에 대한 ${activity.getPreference("nickname")!!}님의 느낌은 어떠신가요?"
+        edtComment.hint = "오늘 날씨에 대한 " +
+                "${activity.getBigShortScale(activity.getPreference("BigScaleRegion")!!)}의" +
+                " ${activity.getPreference("nickname")!!}님의 느낌은 어떠신가요?"
         btnSubmit = binding.btnSubmit
         btnSubmit.setOnClickListener()
         {
@@ -73,7 +75,7 @@ class CommentsFragment(val viewModel: ChatMainViewModel) : Fragment() {
                 }
             }
         })
-        viewModel.commentListResponse.observe(activity,{
+        viewModel.commentListResponse.observe(activity, {
             try {
                 Log.i("결과", "성공")
                 setRecyclerChats(it!!.body()!!)
@@ -82,7 +84,7 @@ class CommentsFragment(val viewModel: ChatMainViewModel) : Fragment() {
             }
 
         })
-        viewModel.addCommentResponse.observe(activity,{
+        viewModel.addCommentResponse.observe(activity, {
             try {
                 Log.i("결과", "성공")
                 getCommentList(null)
@@ -99,7 +101,8 @@ class CommentsFragment(val viewModel: ChatMainViewModel) : Fragment() {
         } else {
             viewModel.addComment(
                 activity.getPreference("misoToken")!!,
-                CommentRegisterRequestDto(edtComment.text.toString()))
+                CommentRegisterRequestDto(edtComment.text.toString())
+            )
         }
     }
 

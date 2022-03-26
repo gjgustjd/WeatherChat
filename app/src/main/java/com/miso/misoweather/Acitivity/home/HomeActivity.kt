@@ -397,7 +397,7 @@ class HomeActivity : MisoActivity() {
             try {
                 val memberInfoResponseDto = response.body()!!
                 var memberInfo = memberInfoResponseDto.data
-                txtNickName.setText(memberInfo.nickname + "님!")
+                txtNickName.setText("${memberInfo.regionName}의 ${memberInfo.nickname}님!")
                 txtEmoji.setText(memberInfo.emoji)
                 if (!isAllForecastDataIsNotNull())
                     getBriefForecast()
