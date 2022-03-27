@@ -2,7 +2,7 @@ package com.miso.misoweather.Acitivity.updateRegion
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.miso.misoweather.common.MisoHiltModule.*
+import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject

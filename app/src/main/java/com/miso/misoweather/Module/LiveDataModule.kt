@@ -1,4 +1,4 @@
-package com.miso.misoweather.common
+package com.miso.misoweather.Module
 
 import androidx.lifecycle.MutableLiveData
 import dagger.Module
@@ -9,7 +9,7 @@ import javax.inject.Qualifier
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-class MisoHiltModule {
+class LiveDataModule {
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class MutableStringLiveData
@@ -30,6 +30,10 @@ class MisoHiltModule {
     @Retention(AnnotationRetention.BINARY)
     annotation class MutableBooleanLiveData
 
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class MutableNullableBooleanLiveData
+
     @MutableNullableStringLiveData
     @Provides
     fun getNullableStringMutableLiveData(): MutableLiveData<String?> {
@@ -45,6 +49,12 @@ class MisoHiltModule {
     @MutableBooleanLiveData
     @Provides
     fun getBoolenaMutableLiveData(): MutableLiveData<Boolean> {
+        return MutableLiveData()
+    }
+
+    @MutableNullableBooleanLiveData
+    @Provides
+    fun getNullableBoolenaMutableLiveData(): MutableLiveData<Boolean?> {
         return MutableLiveData()
     }
 

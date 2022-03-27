@@ -7,11 +7,10 @@ import androidx.lifecycle.ViewModel
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.sdk.user.model.AccessTokenInfo
-import com.miso.misoweather.common.MisoHiltModule
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import com.miso.misoweather.common.MisoHiltModule.*
+import com.miso.misoweather.Module.LiveDataModule.*
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -19,19 +18,33 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var repository: MisoRepository
+
     @MutableNullableStringLiveData
     @Inject
     lateinit var socialId: MutableLiveData<String?>
+
     @MutableNullableStringLiveData
     @Inject
     lateinit var socialType: MutableLiveData<String?>
+
     @MutableNullableStringLiveData
     @Inject
     lateinit var accessToken: MutableLiveData<String?>
-    val checkRegistered: MutableLiveData<Boolean?> = MutableLiveData()
-    val issueMisoTokenResponse: MutableLiveData<Any?> = MutableLiveData()
-    val isCheckValid: MutableLiveData<Boolean?> = MutableLiveData()
-    val loginWithKakaoTalkResponse: MutableLiveData<Any?> = MutableLiveData()
+
+    @MutableNullableBooleanLiveData
+    @Inject
+    lateinit var checkRegistered: MutableLiveData<Boolean?>
+    @MutableNullableBooleanLiveData
+    @Inject
+    lateinit var isCheckValid: MutableLiveData<Boolean?>
+
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var issueMisoTokenResponse: MutableLiveData<Any?>
+
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var loginWithKakaoTalkResponse: MutableLiveData<Any?>
 
     fun updateProperties() {
         setupSocialId()
@@ -119,7 +132,8 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         } else
             isCheckValid.value = false
     }
-    fun kakaoLoginAvailable():Boolean {
+
+    fun kakaoLoginAvailable(): Boolean {
         return UserApiClient.instance.isKakaoTalkLoginAvailable(repository.context)
     }
 

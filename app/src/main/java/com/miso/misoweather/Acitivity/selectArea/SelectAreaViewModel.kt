@@ -3,7 +3,7 @@ package com.miso.misoweather.Acitivity.selectArea
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.miso.misoweather.common.MisoHiltModule.*
+import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
@@ -17,8 +17,6 @@ import javax.inject.Inject
 class SelectAreaViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var repository: MisoRepository
-    val areaRequestResult: MutableLiveData<Response<RegionListResponseDto>?> = MutableLiveData()
-    val updateRegionResponse: MutableLiveData<Response<GeneralResponseDto>?> = MutableLiveData()
 
     @MutableNullableStringLiveData
     @Inject
@@ -31,6 +29,9 @@ class SelectAreaViewModel @Inject constructor() : ViewModel() {
     @MutableNullableStringLiveData
     @Inject
     lateinit var bigScaleRegion: MutableLiveData<String?>
+    val areaRequestResult: MutableLiveData<Response<RegionListResponseDto>?> = MutableLiveData()
+    val updateRegionResponse: MutableLiveData<Response<GeneralResponseDto>?> = MutableLiveData()
+
 
     fun setupSmallScaleRegion() {
         smallScaleRegion.value = repository.getPreference("SmallScaleRegion")

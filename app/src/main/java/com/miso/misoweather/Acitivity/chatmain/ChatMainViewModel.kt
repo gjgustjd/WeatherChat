@@ -4,8 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.miso.misoweather.R
-import com.miso.misoweather.common.MisoHiltModule
-import com.miso.misoweather.common.MisoHiltModule.MutableStringLiveData
+import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
 import com.miso.misoweather.model.DTO.GeneralResponseDto
@@ -24,17 +23,6 @@ import javax.inject.Inject
 class ChatMainViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var repository: MisoRepository
-    val commentListResponse: MutableLiveData<Response<CommentListResponseDto>?> = MutableLiveData()
-    val addCommentResponse: MutableLiveData<Response<GeneralResponseDto>?> = MutableLiveData()
-    lateinit var surveyQuestions: Array<String>
-    var surveyAnswerMap: HashMap<Int, List<SurveyAnswerDto>> = HashMap()
-    var surveyResultResponseDto = SurveyResultResponseDto(
-        SurveyResultData(
-            listOf()
-        ), "", ""
-    )
-    var surveyMyAnswerResponseDto = SurveyMyAnswerResponseDto(SurveyMyAnswerData(listOf()), "", "")
-    var surveyItems: MutableLiveData<ArrayList<SurveyItem>> = MutableLiveData(ArrayList())
 
     @MutableStringLiveData
     @Inject
@@ -52,14 +40,33 @@ class ChatMainViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var defaultRegionId: MutableLiveData<String>
 
-    val forecastBriefResponse: MutableLiveData<Any?> =
-        MutableLiveData()
-    val dailyForecastResponse: MutableLiveData<Any?> =
-        MutableLiveData()
-    val hourlyForecastResponse: MutableLiveData<Any?> =
-        MutableLiveData()
-    val currentAirData: MutableLiveData<Any?> =
-        MutableLiveData()
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var forecastBriefResponse: MutableLiveData<Any?>
+
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var dailyForecastResponse: MutableLiveData<Any?>
+
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var hourlyForecastResponse: MutableLiveData<Any?>
+
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var currentAirData: MutableLiveData<Any?>
+    val commentListResponse: MutableLiveData<Response<CommentListResponseDto>?> = MutableLiveData()
+    val addCommentResponse: MutableLiveData<Response<GeneralResponseDto>?> = MutableLiveData()
+    lateinit var surveyQuestions: Array<String>
+    var surveyAnswerMap: HashMap<Int, List<SurveyAnswerDto>> = HashMap()
+    var surveyResultResponseDto = SurveyResultResponseDto(
+        SurveyResultData(
+            listOf()
+        ), "", ""
+    )
+    var surveyMyAnswerResponseDto = SurveyMyAnswerResponseDto(SurveyMyAnswerData(listOf()), "", "")
+    var surveyItems: MutableLiveData<ArrayList<SurveyItem>> = MutableLiveData(ArrayList())
+
 
     fun updateProperties() {
         surveyRegion.value = repository.getPreference("surveyRegion")

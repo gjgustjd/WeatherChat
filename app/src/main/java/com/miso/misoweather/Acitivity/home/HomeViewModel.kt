@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kakao.sdk.user.UserApiClient
-import com.miso.misoweather.common.MisoHiltModule.*
+import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
@@ -54,15 +54,22 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var isWeatherLoaded: MutableLiveData<Boolean>
 
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var forecastBriefResponse: MutableLiveData<Any?>
+
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var dailyForecastResponse: MutableLiveData<Any?>
+
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var hourlyForecastResponse: MutableLiveData<Any?>
+
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var currentAirResponse: MutableLiveData<Any?>
     val memberInfoResponse: MutableLiveData<Response<MemberInfoResponseDto>?> = MutableLiveData()
-    val forecastBriefResponse: MutableLiveData<Any?> =
-        MutableLiveData()
-    val dailyForecastResponse: MutableLiveData<Any?> =
-        MutableLiveData()
-    val hourlyForecastResponse: MutableLiveData<Any?> =
-        MutableLiveData()
-    val currentAirResponse: MutableLiveData<Any?> =
-        MutableLiveData()
     val commentListResponse: MutableLiveData<Response<CommentListResponseDto>?> = MutableLiveData()
     val surveyResultResponse: MutableLiveData<Response<SurveyResultResponseDto>?> =
         MutableLiveData()

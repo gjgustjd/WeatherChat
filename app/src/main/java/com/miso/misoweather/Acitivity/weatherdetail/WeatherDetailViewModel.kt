@@ -2,7 +2,7 @@ package com.miso.misoweather.Acitivity.weatherdetail
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.miso.misoweather.common.MisoHiltModule.*
+import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
@@ -35,14 +35,22 @@ class WeatherDetailViewModel @Inject constructor() : ViewModel() {
     @MutableNullableStringLiveData
     @Inject
     lateinit var smallScale: MutableLiveData<String?>
-    val forecastBriefResponse: MutableLiveData<Any?> =
-        MutableLiveData()
-    val dailyForecastResponse: MutableLiveData<Any?> =
-        MutableLiveData()
-    val hourlyForecastResponse: MutableLiveData<Any?> =
-        MutableLiveData()
-    val currentAirResponse: MutableLiveData<Any?> =
-        MutableLiveData()
+
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var forecastBriefResponse: MutableLiveData<Any?>
+
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var dailyForecastResponse: MutableLiveData<Any?>
+
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var hourlyForecastResponse: MutableLiveData<Any?>
+
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var currentAirResponse: MutableLiveData<Any?>
 
     fun updateProperties() {
         setupBigScale()

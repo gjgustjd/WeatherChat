@@ -3,6 +3,7 @@ package com.miso.misoweather.Acitivity.mypage
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -14,8 +15,9 @@ class MyPageViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var repository: MisoRepository
 
-    val unRegisterResponse: MutableLiveData<Any?> =
-        MutableLiveData()
+    @MutableNullableAnyLiveData
+    @Inject
+    lateinit var unRegisterResponse: MutableLiveData<Any?>
 
     fun unRegister(
         loginRequestDto: LoginRequestDto

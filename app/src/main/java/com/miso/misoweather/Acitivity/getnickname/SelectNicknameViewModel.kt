@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kakao.sdk.user.UserApiClient
-import com.miso.misoweather.common.MisoHiltModule
+import com.miso.misoweather.Module.LiveDataModule
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.DTO.SignUpRequestDto
@@ -20,35 +20,35 @@ class SelectNicknameViewModel @Inject constructor() : ViewModel() {
     lateinit var repository: MisoRepository
     val nicknameResponseDto: MutableLiveData<Response<NicknameResponseDto>?> = MutableLiveData()
 
-    @MisoHiltModule.MutableNullableStringLiveData
+    @LiveDataModule.MutableNullableStringLiveData
     @Inject
     lateinit var smallScaleRegion: MutableLiveData<String?>
 
-    @MisoHiltModule.MutableNullableStringLiveData
+    @LiveDataModule.MutableNullableStringLiveData
     @Inject
     lateinit var bigScaleRegion: MutableLiveData<String?>
 
-    @MisoHiltModule.MutableNullableStringLiveData
+    @LiveDataModule.MutableNullableStringLiveData
     @Inject
     lateinit var middleScaleRegion: MutableLiveData<String?>
 
-    @MisoHiltModule.MutableNullableStringLiveData
+    @LiveDataModule.MutableNullableStringLiveData
     @Inject
     lateinit var accessToken: MutableLiveData<String?>
 
-    @MisoHiltModule.MutableNullableStringLiveData
+    @LiveDataModule.MutableNullableStringLiveData
     @Inject
     lateinit var misoToken: MutableLiveData<String?>
 
-    @MisoHiltModule.MutableNullableStringLiveData
+    @LiveDataModule.MutableNullableStringLiveData
     @Inject
     lateinit var socialId: MutableLiveData<String?>
 
-    @MisoHiltModule.MutableNullableStringLiveData
+    @LiveDataModule.MutableNullableStringLiveData
     @Inject
     lateinit var socialType: MutableLiveData<String?>
 
-    @MisoHiltModule.MutableNullableStringLiveData
+    @LiveDataModule.MutableNullableStringLiveData
     @Inject
     lateinit var registerResultString: MutableLiveData<String?>
 
