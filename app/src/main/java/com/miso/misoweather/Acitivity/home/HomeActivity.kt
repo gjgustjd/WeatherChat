@@ -165,6 +165,10 @@ class HomeActivity : MisoActivity() {
                 weatherLayout.setOnClickListener()
                 {
                     val intent = Intent(this, WeatherDetailActivity::class.java)
+                    intent.putExtra(
+                        "isTodaySurveyed",
+                        (isSurveyed.equals("surveyed") || isTodaySurveyed())
+                    )
                     startActivity(intent)
                     transferToNext()
                     finish()
@@ -281,11 +285,11 @@ class HomeActivity : MisoActivity() {
         try {
             val intent: Intent
 
-            if (!isSurveyed.equals("true") || !isTodaySurveyed()) {
+            if (isTodaySurveyed() || isSurveyed.equals("surveyed")) {
+                intent = Intent(this, ChatMainActivity::class.java)
+            } else {
                 intent = Intent(this, SelectSurveyAnswerActivity::class.java)
                 intent.putExtra("isFirstSurvey", true)
-            } else {
-                intent = Intent(this, ChatMainActivity::class.java)
             }
 
             intent.putExtra("previousActivity", "Home")
@@ -309,10 +313,6 @@ class HomeActivity : MisoActivity() {
             return true
         }
     }
-
-//    fun hasAnswered(): Boolean {
-//        var surveyResponse = viewModel.surveyResultResponse.value as SurveyResultResponseDto
-//    }
 
     private fun getBriefForecast() {
         if (briefForecastData == null) {
