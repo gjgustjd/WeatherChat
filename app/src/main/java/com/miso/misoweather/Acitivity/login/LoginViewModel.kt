@@ -34,6 +34,7 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     @MutableNullableBooleanLiveData
     @Inject
     lateinit var checkRegistered: MutableLiveData<Boolean?>
+
     @MutableNullableBooleanLiveData
     @Inject
     lateinit var isCheckValid: MutableLiveData<Boolean?>
