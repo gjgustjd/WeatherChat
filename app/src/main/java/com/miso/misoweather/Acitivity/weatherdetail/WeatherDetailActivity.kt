@@ -153,7 +153,7 @@ class WeatherDetailActivity : MisoActivity() {
     fun setupDailyForecastViews() {
         txtEmojiRain.text = dailyForecastData.popIcon
         txtDegreeRain.text = dailyForecastData.pop + "%"
-        txtDegreeRainOnHour.text = getDegreeRainOnHour() + " mm"
+        txtDegreeRainOnHour.text = "시간당 ${getDegreeRainOnHour()}mm"
         setupWeatherOnDayRecycler()
     }
 
