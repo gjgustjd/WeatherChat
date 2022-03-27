@@ -53,7 +53,7 @@ class RecyclerSurveysAdapter(var context: Context, var surveyItems: List<SurveyI
             holder.progress_third.startProgressAnimation(thirdRatio.toInt(),500)
 
             if (!myAnswer.answered || myAnswer.memberAnswer == null) {
-                holder.imgIsAnswered.setImageDrawable(context.resources.getDrawable(R.drawable.icon_unanswered))
+                holder.imgIsAnswered.setImageDrawable(context.resources.getDrawable(R.drawable.icon_unsurveyed_vector))
                 holder.txtMyAnswer.setTextColor(context.resources.getColor(R.color.textBlack))
                 holder.txtMyAnswer.text = "답변하기"
                 holder.imgIconNext.visibility = View.VISIBLE

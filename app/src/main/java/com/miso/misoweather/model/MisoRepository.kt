@@ -575,7 +575,7 @@ class MisoRepository {
         onError: (
             Call<SurveyMyAnswerResponseDto>,
             Throwable
-        ) -> Unit?,
+        ) -> Unit,
     ) {
         val callGetSurveyMyAnswers =
             TransportManager.getRetrofitApiObject<SurveyMyAnswerResponseDto>()

@@ -53,7 +53,7 @@ class MyPageActivity : MisoActivity() {
         txt_nickname = binding.txtNickname
 
         txt_emoji.text = getPreference("emoji")
-        txt_nickname.text = getPreference("nickname")
+        txt_nickname.text = "${getBigShortScale(getPreference("BigScaleRegion")!!)}의 ${getPreference("nickname")}"
         txt_version.text = getVersionString()
         btn_version.setOnClickListener()
         {

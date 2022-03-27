@@ -46,7 +46,7 @@ class RecyclerChatsAdapter(
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         currentBindedPosition.value = position
-        holder.nickname.text = comments.get(position).nickname
+        holder.nickname.text = "${comments.get(position).bigScale}의 ${comments.get(position).nickname}"
         holder.comment.text = comments.get(position).content
 
         val currentTimeString =

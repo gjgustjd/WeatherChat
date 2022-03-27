@@ -79,7 +79,12 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     }
 
     fun setupSurveyed() {
-        isSurveyed.value = repository.getPreference("isSurveyed")
+        var isSurveyedString = repository.getPreference("isSurveyed")
+
+        if (isSurveyedString.isNullOrBlank())
+            getSurveyMyAnswer()
+        else
+            isSurveyed.value = isSurveyedString
     }
 
     fun setupLastSurveyedDate() {
@@ -269,6 +274,26 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 logoutResponseString.value = "OK"
             }
         }
+    }
+
+    fun getSurveyMyAnswer() {
+        repository.getSurveyMyAnswers(
+            repository.getPreference("misoToken")!!,
+            { call, response ->
+                if (response.isSuccessful) {
+                    if (response.body()!!.data.responseList.filter { it.answered == true }.size > 0)
+                        isSurveyed.value = "surveyed"
+                    else
+                        isSurveyed.value = "false"
+                }
+            },
+            { call, response ->
+                isSurveyed.value = "false"
+            },
+            { call, t ->
+                isSurveyed.value = "false"
+            }
+        )
     }
 
 }

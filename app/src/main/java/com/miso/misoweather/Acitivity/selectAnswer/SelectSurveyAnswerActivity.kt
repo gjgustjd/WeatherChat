@@ -3,6 +3,7 @@ package com.miso.misoweather.Acitivity.selectAnswer
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -108,6 +109,8 @@ class SelectSurveyAnswerActivity : MisoActivity() {
         viewModel.putSurveyAnswer(selectedAnswer, surveyItem.surveyId)
         viewModel.surveyAnswerResponse.observe(this, {
             if (it == null) {
+                Toast.makeText(this, "답변 선택에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                doBack()
             } else {
                 if (it.isSuccessful) {
                     var intent = Intent(this, AnswerAnimationActivity::class.java)
@@ -116,6 +119,9 @@ class SelectSurveyAnswerActivity : MisoActivity() {
                     overFromUnder()
                     finish()
                 } else {
+                    Log.e("putSurveyAnswer", it.errorBody()!!.source().toString())
+                    Toast.makeText(this, "답변 선택에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    doBack()
                 }
             }
         })

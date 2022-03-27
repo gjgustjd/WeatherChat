@@ -60,7 +60,9 @@ class CommentsFragment @Inject constructor() : Fragment() {
             refreshLayout.isRefreshing = false
         }
         edtComment = binding.edtComment
-        edtComment.hint = "오늘 날씨에 대한 ${activity.getPreference("nickname")!!}님의 느낌은 어떠신가요?"
+        edtComment.hint = "오늘 날씨에 대한 " +
+                "${activity.getBigShortScale(activity.getPreference("BigScaleRegion")!!)}의" +
+                " ${activity.getPreference("nickname")!!}님의 느낌은 어떠신가요?"
         btnSubmit = binding.btnSubmit
         btnSubmit.setOnClickListener()
         {

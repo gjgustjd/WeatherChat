@@ -166,7 +166,7 @@ class SelectNickNameActivity : MisoActivity() {
                     Log.i("결과", "닉네임 : ${it.body()?.data?.nickname}")
                     val nicknameResponseDto = it.body()!!
                     nickName = nicknameResponseDto.data.nickname
-                    binding.txtGreetingBold.text = "${nickName}님!"
+                    binding.txtGreetingBold.text = "${getBigShortScale(bigScaleRegion)}의 ${nickName}님!"
                     binding.txtEmoji.text = "${nicknameResponseDto.data.emoji}"
                 } else {
                     Log.i("결과", "실패")

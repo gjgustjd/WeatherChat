@@ -25,7 +25,7 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/txt_description"
-        app:srcCompat="@drawable/icon_check" />
+        app:srcCompat="@drawable/icon_check_vector" />
 
     <TextView
         android:id="@+id/txt_description"

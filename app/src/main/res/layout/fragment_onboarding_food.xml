@@ -9,8 +9,10 @@
     <ImageView
         android:id="@+id/img_illust"
         style="@style/imgViewAdjusted"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.7"
@@ -22,6 +24,7 @@
         style="@style/boldWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/root_side_margin_big"
         android:text="이따 뭐 먹지?"
         android:textSize="24dp"
         app:layout_constraintBottom_toTopOf="@id/txt_subtitle"
@@ -39,6 +42,6 @@
         android:textSize="14dp"
         android:textStyle="normal"
         app:layout_constraintBottom_toTopOf="@+id/img_illust"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/txt_title_bold"
         app:layout_constraintTop_toBottomOf="@+id/txt_title_bold" />
 </androidx.constraintlayout.widget.ConstraintLayout>
