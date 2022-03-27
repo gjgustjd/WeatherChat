@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
+import retrofit2.Response
 import javax.inject.Qualifier
 
 @Module
@@ -33,6 +34,10 @@ class LiveDataModule {
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class MutableNullableBooleanLiveData
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class MutableResponseLiveData
 
     @MutableNullableStringLiveData
     @Provides
@@ -67,6 +72,12 @@ class LiveDataModule {
     @MutableNullableAnyLiveData
     @Provides
     fun getNullableAnyMutableLiveData(): MutableLiveData<Any?> {
+        return MutableLiveData()
+    }
+
+    @MutableResponseLiveData
+    @Provides
+    fun getResponseMutableLiveData(): MutableLiveData<Response<*>?> {
         return MutableLiveData()
     }
 

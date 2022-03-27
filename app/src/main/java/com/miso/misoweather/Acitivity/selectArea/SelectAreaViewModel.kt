@@ -29,9 +29,14 @@ class SelectAreaViewModel @Inject constructor() : ViewModel() {
     @MutableNullableStringLiveData
     @Inject
     lateinit var bigScaleRegion: MutableLiveData<String?>
-    val areaRequestResult: MutableLiveData<Response<RegionListResponseDto>?> = MutableLiveData()
-    val updateRegionResponse: MutableLiveData<Response<GeneralResponseDto>?> = MutableLiveData()
 
+    @MutableResponseLiveData
+    @Inject
+    lateinit var areaRequestResult: MutableLiveData<Response<*>?>
+
+    @MutableResponseLiveData
+    @Inject
+    lateinit var updateRegionResponse: MutableLiveData<Response<*>?>
 
     fun setupSmallScaleRegion() {
         smallScaleRegion.value = repository.getPreference("SmallScaleRegion")

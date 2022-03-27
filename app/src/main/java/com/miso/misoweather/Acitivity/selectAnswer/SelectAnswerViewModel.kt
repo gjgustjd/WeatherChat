@@ -6,9 +6,9 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
+import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.R
 import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerRequestDto
-import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
@@ -26,8 +26,10 @@ class SelectAnswerViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var repository: MisoRepository
     val surveyItem: MutableLiveData<SurveyItem?> = MutableLiveData()
-    val surveyAnswerResponse: MutableLiveData<Response<SurveyAddMyAnswerResponseDto>?> =
-        MutableLiveData()
+
+    @MutableResponseLiveData
+    @Inject
+    lateinit var surveyAnswerResponse: MutableLiveData<Response<*>?>
 
     fun getSurveyAnswer(surveyId: Int, questions: Array<String>) {
         repository.getSurveyAnswers(

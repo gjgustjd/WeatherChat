@@ -29,8 +29,14 @@ class SelectTownViewModel @Inject constructor() : ViewModel() {
     @MutableNullableStringLiveData
     @Inject
     lateinit var bigScaleRegion: MutableLiveData<String?>
-    val townRequestResult: MutableLiveData<Response<RegionListResponseDto>?> = MutableLiveData()
-    val updateRegionResponse: MutableLiveData<Response<GeneralResponseDto>?> = MutableLiveData()
+
+    @MutableResponseLiveData
+    @Inject
+    lateinit var townRequestResult: MutableLiveData<Response<*>?>
+
+    @MutableResponseLiveData
+    @Inject
+    lateinit var updateRegionResponse: MutableLiveData<Response<*>?>
 
 
     fun updateSmallScaleRegion(region: String) {

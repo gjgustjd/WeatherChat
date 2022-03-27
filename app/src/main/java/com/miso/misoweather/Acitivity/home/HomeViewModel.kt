@@ -69,10 +69,18 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     @MutableNullableAnyLiveData
     @Inject
     lateinit var currentAirResponse: MutableLiveData<Any?>
-    val memberInfoResponse: MutableLiveData<Response<MemberInfoResponseDto>?> = MutableLiveData()
-    val commentListResponse: MutableLiveData<Response<CommentListResponseDto>?> = MutableLiveData()
-    val surveyResultResponse: MutableLiveData<Response<SurveyResultResponseDto>?> =
-        MutableLiveData()
+
+    @MutableResponseLiveData
+    @Inject
+    lateinit var memberInfoResponse: MutableLiveData<Response<*>?>
+
+    @MutableResponseLiveData
+    @Inject
+    lateinit var commentListResponse: MutableLiveData<Response<*>?>
+
+    @MutableResponseLiveData
+    @Inject
+    lateinit var surveyResultResponse: MutableLiveData<Response<*>?>
 
     fun updateProperties() {
         setupBigScale()

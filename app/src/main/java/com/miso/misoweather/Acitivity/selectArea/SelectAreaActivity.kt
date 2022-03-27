@@ -16,7 +16,9 @@ import com.miso.misoweather.Acitivity.getnickname.SelectNickNameActivity
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
+import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import dagger.hilt.android.AndroidEntryPoint
+import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -143,12 +145,13 @@ class SelectAreaActivity : MisoActivity() {
             selectedTown
         )
         viewModel.areaRequestResult.observe(this, {
+            var responseDto = it as Response<RegionListResponseDto>
             if (it == null) {
             } else {
                 if (it.isSuccessful) {
                     try {
                         Log.i("getAreaList", "3단계 지역 받아오기 성공")
-                        setRecyclerTowns(it!!.body()!!.data.regionList)
+                        setRecyclerTowns(responseDto.body()!!.data.regionList)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

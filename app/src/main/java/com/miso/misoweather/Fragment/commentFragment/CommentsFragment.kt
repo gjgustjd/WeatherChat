@@ -80,15 +80,16 @@ class CommentsFragment @Inject constructor() : Fragment() {
         })
         viewModel.commentListResponse.observe(activity, {
             try {
+                var responseDto = it!!.body() as CommentListResponseDto
                 Log.i("결과", "성공")
                 if (this::recyclerChatAdapter.isInitialized) {
                     if (recyclerChatAdapter.currentBindedPosition.value == recyclerChatAdapter.itemCount - 1) {
-                        recyclerChatAdapter.comments += it!!.body()!!.data.commentList
+                        recyclerChatAdapter.comments += responseDto.data.commentList
                         recyclerChatAdapter.notifyDataSetChanged()
                     } else if (recyclerChat.adapter == null)
-                        setRecyclerChats(it!!.body()!!)
+                        setRecyclerChats(responseDto)
                 } else
-                    setRecyclerChats(it!!.body()!!)
+                    setRecyclerChats(responseDto)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

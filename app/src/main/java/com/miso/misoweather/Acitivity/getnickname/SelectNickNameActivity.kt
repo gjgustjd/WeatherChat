@@ -15,7 +15,9 @@ import com.miso.misoweather.Acitivity.login.LoginActivity
 import com.miso.misoweather.model.DTO.*
 import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
+import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import dagger.hilt.android.AndroidEntryPoint
+import retrofit2.Response
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -154,6 +156,7 @@ class SelectNickNameActivity : MisoActivity() {
     fun getNickname() {
         viewModel.getNickname()
         viewModel.nicknameResponseDto.observe(this, {
+            var responseDto = it as Response<NicknameResponseDto>
             if (it == null) {
                 Toast.makeText(
                     this@SelectNickNameActivity,
@@ -163,10 +166,11 @@ class SelectNickNameActivity : MisoActivity() {
             } else {
                 if (it.isSuccessful) {
                     Log.i("결과", "성공")
-                    Log.i("결과", "닉네임 : ${it.body()?.data?.nickname}")
-                    val nicknameResponseDto = it.body()!!
+                    Log.i("결과", "닉네임 : ${responseDto.body()?.data?.nickname}")
+                    val nicknameResponseDto = responseDto.body()!!
                     nickName = nicknameResponseDto.data.nickname
-                    binding.txtGreetingBold.text = "${getBigShortScale(bigScaleRegion)}의 ${nickName}님!"
+                    binding.txtGreetingBold.text =
+                        "${getBigShortScale(bigScaleRegion)}의 ${nickName}님!"
                     binding.txtEmoji.text = "${nicknameResponseDto.data.emoji}"
                 } else {
                     Log.i("결과", "실패")

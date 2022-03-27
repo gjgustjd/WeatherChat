@@ -48,7 +48,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HomeActivity : MisoActivity() {
     @Inject
-    lateinit var  viewModel: HomeViewModel
+    lateinit var viewModel: HomeViewModel
 
     lateinit var binding: ActivityHomeBinding
     lateinit var weatherLayout: ConstraintLayout
@@ -371,7 +371,7 @@ class HomeActivity : MisoActivity() {
     fun getCommentList() {
         viewModel.getCommentList(null, 5)
         viewModel.commentListResponse.observe(this, {
-            setRecyclerChats(it!!.body()!!)
+            setRecyclerChats(it!!.body()!! as CommentListResponseDto)
         })
     }
 
@@ -414,10 +414,11 @@ class HomeActivity : MisoActivity() {
             if (it == null) {
                 Log.i("getUserInfo", "에러 발생")
             } else {
+                var responseDto = it as Response<MemberInfoResponseDto>
                 if (it!!.isSuccessful) {
-                    onSuccessful(it)
+                    onSuccessful(responseDto)
                 } else {
-                    onFail(it)
+                    onFail(responseDto)
                 }
             }
 
@@ -462,9 +463,10 @@ class HomeActivity : MisoActivity() {
                 if (it == null) {
                     throw Exception("null")
                 } else {
+                    var responseDto = it as Response<SurveyResultResponseDto>
                     if (it.isSuccessful) {
                         val todaySurveyResultDto =
-                            it.body()!!.data.responseList.first { it.surveyId == 2 }
+                            responseDto.body()!!.data.responseList.first { it.surveyId == 2 }
 
                         todaySurveyResultDto.keyList.forEachIndexed { index, it ->
                             try {

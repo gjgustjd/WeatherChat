@@ -55,8 +55,15 @@ class ChatMainViewModel @Inject constructor() : ViewModel() {
     @MutableNullableAnyLiveData
     @Inject
     lateinit var currentAirData: MutableLiveData<Any?>
-    val commentListResponse: MutableLiveData<Response<CommentListResponseDto>?> = MutableLiveData()
-    val addCommentResponse: MutableLiveData<Response<GeneralResponseDto>?> = MutableLiveData()
+
+    @MutableResponseLiveData
+    @Inject
+    lateinit var commentListResponse: MutableLiveData<Response<*>?>
+
+    @MutableResponseLiveData
+    @Inject
+    lateinit var addCommentResponse: MutableLiveData<Response<*>?>
+
     lateinit var surveyQuestions: Array<String>
     var surveyAnswerMap: HashMap<Int, List<SurveyAnswerDto>> = HashMap()
     var surveyResultResponseDto = SurveyResultResponseDto(

@@ -161,7 +161,7 @@ class SelectTownActivity : MisoActivity() {
                 if (it.isSuccessful) {
                     try {
                         Log.i("getTownList", "2단계 지역 받아오기 성공")
-                        townRequestResult = it.body()!!
+                        townRequestResult = it.body()!! as RegionListResponseDto
                         setRecyclerTowns()
                     } catch (e: Exception) {
                         e.printStackTrace()
