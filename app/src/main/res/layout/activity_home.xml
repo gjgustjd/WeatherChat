@@ -10,7 +10,7 @@
         android:id="@+id/imgbtn_back"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="@dimen/root_side_margin"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="30dp"
         android:adjustViewBounds="true"
@@ -21,7 +21,7 @@
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_misoweather_colored" />
+        app:srcCompat="@drawable/logo_misoweather_colored_vector" />
 
     <ImageView
         android:id="@+id/img_banner"
@@ -31,7 +31,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/imgbtn_back"
         app:layout_constraintStart_toEndOf="@+id/imgbtn_back"
         app:layout_constraintTop_toTopOf="@+id/imgbtn_back"
-        app:srcCompat="@drawable/banner_misoweather" />
+        app:srcCompat="@drawable/misoweather_banner" />
 
     <ImageButton
         android:id="@+id/imgbtn_profile"
@@ -41,7 +41,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/img_banner"
         app:layout_constraintEnd_toEndOf="@+id/scrollView2"
         app:layout_constraintTop_toTopOf="@+id/img_banner"
-        app:srcCompat="@drawable/icon_person" />
+        app:srcCompat="@drawable/person_vector" />
 
     <ImageButton
         android:id="@+id/imgbtn_change_location"
@@ -55,7 +55,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/imgbtn_profile"
         app:layout_constraintEnd_toStartOf="@+id/imgbtn_profile"
         app:layout_constraintTop_toTopOf="@+id/imgbtn_profile"
-        app:srcCompat="@drawable/location_on" />
+        app:srcCompat="@drawable/location_on_vector" />
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -66,7 +66,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgbtn_back">
+        app:layout_constraintTop_toBottomOf="@+id/imgbtn_change_location">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -166,13 +166,13 @@
                 <ImageView
                     android:id="@+id/img_location"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginStart="20dp"
                     app:layout_constraintBottom_toBottomOf="@+id/txt_location"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/txt_location"
-                    app:srcCompat="@drawable/location_on" />
+                    app:srcCompat="@drawable/location_on_vector" />
 
                 <ImageButton
                     android:id="@+id/imgbtn_show_weather"
@@ -186,7 +186,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/txt_degree"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/txt_degree"
-                    app:srcCompat="@drawable/arrow_black_next" />
+                    app:srcCompat="@drawable/icon_next_vector" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -229,7 +229,7 @@
                     app:layout_constraintHorizontal_bias="1"
                     app:layout_constraintStart_toEndOf="@+id/txt_chart_title"
                     app:layout_constraintTop_toTopOf="@+id/txt_chart_title"
-                    app:srcCompat="@drawable/arrow_black_next" />
+                    app:srcCompat="@drawable/icon_next_vector" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/chartLayout"
@@ -418,7 +418,7 @@
                         app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintStart_toStartOf="@+id/txt_answer_first"
                         app:layout_constraintTop_toTopOf="@+id/txt_ratio_first"
-                        app:srcCompat="@drawable/check_purple" />
+                        app:srcCompat="@drawable/icon_survey_check" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView

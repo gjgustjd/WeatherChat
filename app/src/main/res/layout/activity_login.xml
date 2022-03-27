@@ -27,7 +27,7 @@
             app:layout_constraintHeight_percent="0.1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/logo_misoweather" />
+            app:srcCompat="@drawable/app_icon_vector" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager_onBoarding"
@@ -88,11 +88,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/icon_kakao" />
+                app:srcCompat="@drawable/icon_kakao_vector" />
 
             <TextView
                 android:id="@+id/textView3"

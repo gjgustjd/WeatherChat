@@ -18,7 +18,7 @@
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_arrow_back" />
+        app:srcCompat="@drawable/icon_back_vector" />
 
     <ScrollView
         android:layout_width="0dp"
@@ -103,7 +103,7 @@
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/txt_location"
-                    app:srcCompat="@drawable/location_on" />
+                    app:srcCompat="@drawable/location_on_vector" />
 
                 <TextView
                     android:id="@+id/label_min"
@@ -201,7 +201,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/arrow_white_next" />
+                    app:srcCompat="@drawable/arrow_white_next_vector" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
