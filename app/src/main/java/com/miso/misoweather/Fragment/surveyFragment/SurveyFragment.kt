@@ -48,7 +48,7 @@ class SurveyFragment @Inject constructor(): Fragment() {
         recyclerSurvey = binding.recyclerSurveys
         viewModel.surveyItems.observe(this, {
             if (it.size > 0)
-                setupRecyclerSurveys(it)
+                setupRecyclerSurveys(it as ArrayList<SurveyItem>)
         })
     }
 

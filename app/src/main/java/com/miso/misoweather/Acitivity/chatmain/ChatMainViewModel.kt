@@ -66,13 +66,16 @@ class ChatMainViewModel @Inject constructor() : ViewModel() {
 
     lateinit var surveyQuestions: Array<String>
     var surveyAnswerMap: HashMap<Int, List<SurveyAnswerDto>> = HashMap()
-    var surveyResultResponseDto = SurveyResultResponseDto(
-        SurveyResultData(
-            listOf()
-        ), "", ""
-    )
-    var surveyMyAnswerResponseDto = SurveyMyAnswerResponseDto(SurveyMyAnswerData(listOf()), "", "")
-    var surveyItems: MutableLiveData<ArrayList<SurveyItem>> = MutableLiveData(ArrayList())
+
+    @Inject
+    lateinit var surveyResultResponseDto: SurveyResultResponseDto
+
+    @Inject
+    lateinit var surveyMyAnswerResponseDto: SurveyMyAnswerResponseDto
+
+    @MutableAnyArrayListLiveData
+    @Inject
+    lateinit var surveyItems: MutableLiveData<ArrayList<Any>>
 
 
     fun updateProperties() {

@@ -39,6 +39,10 @@ class LiveDataModule {
     @Retention(AnnotationRetention.BINARY)
     annotation class MutableResponseLiveData
 
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class MutableAnyArrayListLiveData
+
     @MutableNullableStringLiveData
     @Provides
     fun getNullableStringMutableLiveData(): MutableLiveData<String?> {
@@ -79,6 +83,12 @@ class LiveDataModule {
     @Provides
     fun getResponseMutableLiveData(): MutableLiveData<Response<*>?> {
         return MutableLiveData()
+    }
+
+    @MutableAnyArrayListLiveData
+    @Provides
+    fun getAnyArrayListLiveData(): MutableLiveData<ArrayList<Any>> {
+        return MutableLiveData(ArrayList())
     }
 
 }
