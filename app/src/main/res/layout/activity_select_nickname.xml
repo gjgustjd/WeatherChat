@@ -16,7 +16,7 @@
         android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_arrow_back" />
+        app:srcCompat="@drawable/icon_back_vector" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/greetingLayout"

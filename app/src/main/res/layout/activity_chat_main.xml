@@ -23,7 +23,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/txtLocation"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/txtLocation"
-            app:srcCompat="@drawable/location_purple" />
+            app:srcCompat="@drawable/icon_location_purple_vector" />
 
         <TextView
             android:id="@+id/txtLocation"
@@ -50,7 +50,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/txtLocation"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/arrow_black_next" />
+            app:srcCompat="@drawable/icon_next_vector" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -65,7 +65,7 @@
         android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_arrow_back" />
+        app:srcCompat="@drawable/icon_back_vector" />
 
     <TextView
         android:id="@+id/txt_itemText"

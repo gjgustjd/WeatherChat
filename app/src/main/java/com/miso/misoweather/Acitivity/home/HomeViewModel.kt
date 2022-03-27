@@ -45,7 +45,12 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
     }
 
     fun setupSurveyed() {
-        isSurveyed.value = repository.getPreference("isSurveyed")
+        var isSurveyedString = repository.getPreference("isSurveyed")
+
+        if (isSurveyedString.isNullOrBlank())
+            getSurveyMyAnswer()
+        else
+            isSurveyed.value = isSurveyedString
     }
 
     fun setupLastSurveyedDate() {
@@ -73,7 +78,7 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         var Midregion = repository.getPreference("MidScaleRegion")
         var Smallregion = repository.getPreference("SmallScaleRegion")
         smallScale.value =
-            if (Midregion.equals("선택 안 함")|| Midregion.equals("전체"))
+            if (Midregion.equals("선택 안 함") || Midregion.equals("전체"))
                 ""
             else
                 if (Smallregion.equals("선택 안 함"))
@@ -192,6 +197,7 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
             },
         )
     }
+
     fun getCommentList(commentId: Int?, size: Int) {
         repository.getCommentList(
             commentId,
@@ -206,7 +212,7 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
         )
     }
 
-    fun getSurveyResult(shortBigScale: String?=null) {
+    fun getSurveyResult(shortBigScale: String? = null) {
         repository.getSurveyResults(
             shortBigScale,
             { call, reponse ->
@@ -234,6 +240,26 @@ class HomeViewModel(private val repository: MisoRepository) : ViewModel() {
                 logoutResponseString.value = "OK"
             }
         }
+    }
+
+    fun getSurveyMyAnswer() {
+        repository.getSurveyMyAnswers(
+            repository.getPreference("misoToken")!!,
+            { call, response ->
+                if (response.isSuccessful) {
+                    if (response.body()!!.data.responseList.filter { it.answered == true }.size > 0)
+                        isSurveyed.value = "surveyed"
+                    else
+                        isSurveyed.value = "false"
+                }
+            },
+            { call, response ->
+                isSurveyed.value = "false"
+            },
+            { call, t ->
+                isSurveyed.value = "false"
+            }
+        )
     }
 
 }

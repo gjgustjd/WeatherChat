@@ -153,7 +153,7 @@ class WeatherDetailActivity : MisoActivity() {
     fun setupDailyForecastViews() {
         txtEmojiRain.text = dailyForecastData.popIcon
         txtDegreeRain.text = dailyForecastData.pop + "%"
-        txtDegreeRainOnHour.text = getDegreeRainOnHour() + " mm"
+        txtDegreeRainOnHour.text = "시간당 ${getDegreeRainOnHour()}mm"
         setupWeatherOnDayRecycler()
     }
 
@@ -341,10 +341,7 @@ class WeatherDetailActivity : MisoActivity() {
     }
 
     fun goToChatMainActivity() {
-        var currentDate =
-            ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
-                .format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
-        if (!isSurveyed.equals("true") || !lastSurveyedDate.equals(currentDate)) {
+        if (!this.intent.getBooleanExtra("isTodaySurveyed", true)) {
             var intent = Intent(this, SelectSurveyAnswerActivity::class.java)
             intent.putExtra("isFirstSurvey", true)
             intent.putExtra("previousActivity", "Weather")
