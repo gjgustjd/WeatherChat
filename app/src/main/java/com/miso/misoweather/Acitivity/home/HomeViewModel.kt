@@ -160,21 +160,6 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             })
     }
 
-    fun loadWeatherInfo(regionId: Int) {
-        repository.loadWeatherInfo(
-            regionId,
-            { call, response ->
-                isWeatherLoaded.value = true
-            },
-            { call, response ->
-                isWeatherLoaded.value = false
-            },
-            { call, t ->
-                isWeatherLoaded.value = false
-            }
-        )
-    }
-
     fun getBriefForecast(regionId: Int) {
         repository.getBriefForecast(
             regionId,
@@ -199,51 +184,6 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             { call, t ->
                 forecastBriefResponse.value = null
             }
-        )
-    }
-
-    fun getDailyForecast(regionId: Int) {
-        repository.getDailyForecast(
-            regionId,
-            { call, response ->
-                dailyForecastResponse.value = response
-            },
-            { call, response ->
-                dailyForecastResponse.value = response
-            },
-            { call, t ->
-                dailyForecastResponse.value = t
-            },
-        )
-    }
-
-    fun getHourlyForecast(regionId: Int) {
-        repository.getHourlyForecast(
-            regionId,
-            { call, response ->
-                hourlyForecastResponse.value = response
-            },
-            { call, response ->
-                hourlyForecastResponse.value = response
-            },
-            { call, t ->
-                hourlyForecastResponse.value = t
-            },
-        )
-    }
-
-    fun getCurrentAir(regionId: Int) {
-        repository.getCurrentAir(
-            regionId,
-            { call, response ->
-                currentAirResponse.value = response
-            },
-            { call, response ->
-                currentAirResponse.value = response
-            },
-            { call, t ->
-                currentAirResponse.value = t
-            },
         )
     }
 

@@ -29,13 +29,9 @@ import com.miso.misoweather.Dialog.GeneralConfirmDialog
 import com.miso.misoweather.common.CommonUtil
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
-import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirData
-import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastData
-import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import dagger.hilt.android.AndroidEntryPoint
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
-import com.miso.misoweather.model.MisoRepository
 import retrofit2.Response
 import java.lang.Exception
 import java.lang.IndexOutOfBoundsException
@@ -82,9 +78,6 @@ class HomeActivity : MisoActivity() {
     lateinit var bigScale: String
     lateinit var midScale: String
     lateinit var smallScale: String
-    var currentAirData: CurrentAirData? = null
-    var hourlyForecastData: HourlyForecastData? = null
-    var dailyForecastData: DailyForecastData? = null
     var briefForecastData: ForecastBriefData? = null
 
     var isAllInitialized = false
