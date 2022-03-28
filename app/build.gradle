@@ -9,8 +9,8 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
-    signingConfigs{
-        release{
+    signingConfigs {
+        release {
             keyAlias 'key0'
             keyPassword 'zxcv1234'
             storeFile file('miso_weather_sign_key.jks')
@@ -30,7 +30,7 @@ android {
             resolutionStrategy { force 'androidx.core:core-ktx:1.6.0' }
         }
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding = true
     }
 
@@ -102,4 +102,20 @@ dependencies {
     //hilt
     implementation "com.google.dagger:hilt-android:2.41"
     kapt "com.google.dagger:hilt-android-compiler:2.41"
+
+    //test
+    testImplementation 'junit:junit:4.13'
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1"
+    testImplementation "com.google.truth:truth:1.0.1"
+    testImplementation 'androidx.test.ext:junit:1.1.2'
+    testImplementation "org.robolectric:robolectric:4.4"
+
+    androidTestImplementation "junit:junit:4.13"
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1"
+    androidTestImplementation "com.google.truth:truth:1.0.1"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
 }
