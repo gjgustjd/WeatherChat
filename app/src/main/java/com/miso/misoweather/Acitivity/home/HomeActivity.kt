@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
@@ -43,8 +44,7 @@ import javax.inject.Inject
 @RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
 class HomeActivity : MisoActivity() {
-    @Inject
-    lateinit var viewModel: HomeViewModel
+    private val viewModel: HomeViewModel by viewModels()
 
     lateinit var binding: ActivityHomeBinding
     lateinit var weatherLayout: ConstraintLayout

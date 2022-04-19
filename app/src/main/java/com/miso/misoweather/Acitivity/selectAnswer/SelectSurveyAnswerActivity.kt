@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,8 +27,7 @@ import kotlin.random.Random
 @RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
 class SelectSurveyAnswerActivity : MisoActivity() {
-    @Inject
-    lateinit var viewModel: SelectAnswerViewModel
+    private val viewModel: SelectAnswerViewModel by viewModels()
     lateinit var binding: ActivitySurveyAnswerBinding
     lateinit var btn_back: ImageButton
     lateinit var btn_action: Button

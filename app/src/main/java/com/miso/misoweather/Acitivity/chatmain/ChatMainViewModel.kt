@@ -15,14 +15,14 @@ import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultData
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Response
 import javax.inject.Inject
 
-@ActivityRetainedScoped
-class ChatMainViewModel @Inject constructor() : ViewModel() {
-    @Inject
-    lateinit var repository: MisoRepository
+
+@HiltViewModel
+class ChatMainViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
 
     @MutableStringLiveData
     @Inject

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
@@ -19,8 +20,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class UpdateRegionActivity : MisoActivity() {
-    @Inject
-    lateinit var viewModel: UpdateRegionViewModel
+    private val viewModel: UpdateRegionViewModel by viewModels()
     lateinit var binding: ActivityUpdateRegionBinding
     lateinit var gridAdapter: RecyclerRegionsAdapter
     lateinit var grid_region: RecyclerView

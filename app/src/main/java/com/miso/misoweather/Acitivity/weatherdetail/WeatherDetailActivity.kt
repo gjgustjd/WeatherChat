@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,8 +38,7 @@ import javax.inject.Inject
 @RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
 class WeatherDetailActivity : MisoActivity() {
-    @Inject
-    lateinit var viewModel: WeatherDetailViewModel
+    private val viewModel: WeatherDetailViewModel by viewModels()
     lateinit var binding: ActivityWeatherMainBinding
     lateinit var btnBack: ImageButton
     lateinit var region: Region

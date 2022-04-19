@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
@@ -17,19 +18,18 @@ import com.miso.misoweather.databinding.FragmentSurveyBinding
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
-class SurveyFragment @Inject constructor(): Fragment() {
+class SurveyFragment @Inject constructor() : Fragment() {
     lateinit var binding: FragmentSurveyBinding
     lateinit var recyclerSurvey: RecyclerView
     lateinit var recyclerSurveysAdapter: RecyclerSurveysAdapter
     lateinit var currentLocation: String
     lateinit var bigShortScale: String
     lateinit var activity: ChatMainActivity
-    lateinit var viewModel: ChatMainViewModel
+    private val viewModel: ChatMainViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentSurveyBinding.inflate(layoutInflater)
         activity = getActivity() as ChatMainActivity
-        viewModel = activity.viewModel
         bigShortScale = activity.selectedRegion
         initializeView()
         setupData()

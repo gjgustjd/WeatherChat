@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.login.LoginActivity
@@ -21,8 +22,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MyPageActivity : MisoActivity() {
-    @Inject
-    lateinit var viewModel: MyPageViewModel
+    private val viewModel: MyPageViewModel by viewModels()
     lateinit var binding: ActivityMypageBinding
     lateinit var btn_back: ImageButton
     lateinit var btn_logout: Button
@@ -53,7 +53,8 @@ class MyPageActivity : MisoActivity() {
         txt_nickname = binding.txtNickname
 
         txt_emoji.text = getPreference("emoji")
-        txt_nickname.text = "${getBigShortScale(getPreference("BigScaleRegion")!!)}의 ${getPreference("nickname")}"
+        txt_nickname.text =
+            "${getBigShortScale(getPreference("BigScaleRegion")!!)}의 ${getPreference("nickname")}"
         txt_version.text = getVersionString()
         btn_version.setOnClickListener()
         {

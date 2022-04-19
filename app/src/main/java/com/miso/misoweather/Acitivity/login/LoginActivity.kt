@@ -12,6 +12,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.Acitivity.home.HomeActivity
@@ -28,8 +29,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : MisoActivity() {
-    @Inject
-    lateinit var viewModel: LoginViewModel
+    private val viewModel: LoginViewModel by viewModels()
     lateinit var binding: ActivityLoginBinding
     lateinit var viewpager_onboarding: ViewPager2
     lateinit var pageIndicatorView: PageIndicatorView

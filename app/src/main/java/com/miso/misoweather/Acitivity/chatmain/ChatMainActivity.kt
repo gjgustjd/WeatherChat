@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -30,10 +31,11 @@ import javax.inject.Inject
 @RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
 class ChatMainActivity : MisoActivity() {
-    @Inject
-    lateinit var viewModel: ChatMainViewModel
+    private val viewModel: ChatMainViewModel by viewModels()
+
     @Inject
     lateinit var surveyFragment: SurveyFragment
+
     @Inject
     lateinit var commentsFragment: CommentsFragment
 

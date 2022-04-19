@@ -6,14 +6,13 @@ import androidx.lifecycle.ViewModel
 import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import java.lang.Exception
 import javax.inject.Inject
 
-@ActivityRetainedScoped
-class MyPageViewModel @Inject constructor() : ViewModel() {
-    @Inject
-    lateinit var repository: MisoRepository
+@HiltViewModel
+class MyPageViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
 
     @MutableNullableAnyLiveData
     @Inject

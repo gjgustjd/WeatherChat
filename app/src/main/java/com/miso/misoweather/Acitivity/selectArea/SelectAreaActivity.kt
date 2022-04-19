@@ -7,6 +7,7 @@ import android.view.View.*
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout.VERTICAL
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,8 +25,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SelectAreaActivity : MisoActivity() {
-    @Inject
-    lateinit var viewModel: SelectAreaViewModel
+    private val viewModel: SelectAreaViewModel by viewModels()
     lateinit var binding: ActivitySelectRegionBinding
     lateinit var grid_region: RecyclerView
     lateinit var list_towns: RecyclerView

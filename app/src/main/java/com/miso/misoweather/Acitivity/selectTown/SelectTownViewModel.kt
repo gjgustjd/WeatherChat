@@ -8,15 +8,14 @@ import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject
 
-@ActivityRetainedScoped
-class SelectTownViewModel @Inject constructor() : ViewModel() {
-    @Inject
-    lateinit var repository: MisoRepository
+@HiltViewModel
+class SelectTownViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
 
     @MutableNullableStringLiveData
     @Inject

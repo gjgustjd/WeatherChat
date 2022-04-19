@@ -11,13 +11,12 @@ import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import com.miso.misoweather.Module.LiveDataModule.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.lang.Exception
 import javax.inject.Inject
 
-@ActivityRetainedScoped
-class LoginViewModel @Inject constructor() : ViewModel() {
-    @Inject
-    lateinit var repository: MisoRepository
+@HiltViewModel
+class LoginViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
 
     @MutableNullableStringLiveData
     @Inject

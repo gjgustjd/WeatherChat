@@ -4,13 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
-@ActivityRetainedScoped
-class UpdateRegionViewModel @Inject constructor() : ViewModel() {
-    @Inject
-    lateinit var repository: MisoRepository
+@HiltViewModel
+class UpdateRegionViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
 
     @MutableNullableStringLiveData
     @Inject
