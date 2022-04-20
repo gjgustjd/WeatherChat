@@ -44,9 +44,9 @@ class RecyclerSurveysAdapter(
             holder.apply {
                 txtTitle.text = surveyItems.get(position).surveyQuestion
                 txtMyAnswer.text = myAnswer.memberAnswer
-                txtFirstScore.text = surveyResult.keyList.get(0).toString()
-                txtSecondScore.text = surveyResult.keyList.get(1).toString()
-                txtThirdScore.text = surveyResult.keyList.get(2).toString()
+                txtFirstScore.text = surveyResult.keyList.get(0)?.toString()
+                txtSecondScore.text = surveyResult.keyList.get(1)?.toString()
+                txtThirdScore.text = surveyResult.keyList.get(2)?.toString()
 
                 val firstRatio = surveyResult.valueList[0].toString()
                 val secondRatio = surveyResult.valueList[1].toString()
