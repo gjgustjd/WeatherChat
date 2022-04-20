@@ -150,9 +150,9 @@ class SelectNickNameActivity : MisoActivity() {
         return SignUpRequestDto().apply {
             defaultRegionId = intent.getStringExtra("RegionId")!!.toString()
             emoji = binding.txtEmoji.text.toString()
-            nickname = nickName
-            socialId = socialId
-            socialType = socialType
+            nickname = this@SelectNickNameActivity.nickName
+            socialId = this@SelectNickNameActivity.socialId
+            socialType = this@SelectNickNameActivity.socialType
         }
     }
 
