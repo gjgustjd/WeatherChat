@@ -94,6 +94,7 @@ dependencies {
     // livedata
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     kapt 'android.arch.lifecycle:compiler:1.1.1'
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
 
     //multidex
     implementation 'com.android.support:multidex:1.0.3'
@@ -106,5 +107,8 @@ dependencies {
     //viewmodel 관련
     implementation 'androidx.fragment:fragment-ktx:1.3.3'
     implementation 'androidx.activity:activity-ktx:1.2.2'
+
+    // Preferences DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 
 }

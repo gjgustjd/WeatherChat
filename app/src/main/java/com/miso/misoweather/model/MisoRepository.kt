@@ -3,6 +3,7 @@ package com.miso.misoweather.model
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.datastore.preferences.core.Preferences
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
@@ -33,7 +34,10 @@ class MisoRepository {
     var context: Context
 
     @Inject
-    constructor(@ApplicationContext aContext:Context) {
+    lateinit var dataStoreManager: DataStoreManager
+
+    @Inject
+    constructor(@ApplicationContext aContext: Context) {
         context = aContext
         prefs = context.getSharedPreferences("misoweather", Context.MODE_PRIVATE)
         pairList = ArrayList()
@@ -69,6 +73,12 @@ class MisoRepository {
         edit.apply()
         pairList.clear()
     }
+
+    fun savePreferences(key: Preferences.Key<String>, value: String) {
+        dataStoreManager.savePreferences(key, value)
+    }
+
+    fun getPreference(key: Preferences.Key<String>) = dataStoreManager.getPreference(key)
 
     fun checkRegistered(
         socialId: String,
