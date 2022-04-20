@@ -25,7 +25,7 @@ class SurveyFragment @Inject constructor() : Fragment() {
     private lateinit var currentLocation: String
     private lateinit var bigShortScale: String
     private lateinit var activity: ChatMainActivity
-    private val viewModel: ChatMainViewModel by activityViewModels()
+    private val viewModel by activityViewModels<ChatMainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

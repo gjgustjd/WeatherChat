@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,7 +27,7 @@ import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 class CommentsFragment @Inject constructor() : Fragment() {
-    private val viewModel: ChatMainViewModel by viewModels()
+    private val viewModel by activityViewModels<ChatMainViewModel>()
     private lateinit var binding: FragmentCommentBinding
     private lateinit var recyclerChatAdapter: RecyclerChatsAdapter
     private lateinit var refreshLayout: SwipeRefreshLayout
