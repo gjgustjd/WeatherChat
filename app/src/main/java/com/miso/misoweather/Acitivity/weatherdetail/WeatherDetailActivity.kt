@@ -39,45 +39,44 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class WeatherDetailActivity : MisoActivity() {
     private val viewModel: WeatherDetailViewModel by viewModels()
-    lateinit var binding: ActivityWeatherMainBinding
-    lateinit var btnBack: ImageButton
-    lateinit var region: Region
-    lateinit var chatLayout: ConstraintLayout
-    lateinit var txtLocation: TextView
-    lateinit var txtWeatherEmoji: TextView
-    lateinit var txtDegree: TextView
-    lateinit var txtMinDegree: TextView
-    lateinit var txtMaxDegree: TextView
-    lateinit var btnChat: ImageButton
-    lateinit var recyclerWeatherOnTime: RecyclerView
-    lateinit var recyclerWeaterOnDay: RecyclerView
-    lateinit var weatherOnTimeAdapter: RecyclerForecastOnTimeAdapter
-    lateinit var weatherOnDayAdapter: RecyclerForecastOnDayAdapter
-    lateinit var txtEmojiRain: TextView
-    lateinit var txtDegreeRain: TextView
-    lateinit var txtDegreeRainOnHour: TextView
-    lateinit var txtEmojiWind: TextView
-    lateinit var txtDegreeWind: TextView
-    lateinit var txtEmojiHumid: TextView
-    lateinit var txtDegreeHumid: TextView
-    lateinit var txtForecastDay: TextView
-    lateinit var txtEmojiDust: TextView
-    lateinit var txtDegreeDust: TextView
-    lateinit var txtGradeDust: TextView
-    lateinit var txtEmojiUltraDust: TextView
-    lateinit var txtDegreeUltraDust: TextView
-    lateinit var txtGradeUltraDust: TextView
-    lateinit var bigScale: String
-    lateinit var midScale: String
-    lateinit var smallScale: String
-    lateinit var isSurveyed: String
-    lateinit var lastSurveyedDate: String
-    lateinit var defaultRegionId: String
-    var isAllInitialized = false
-    lateinit var briefForecastData: ForecastBriefData
-    lateinit var dailyForecastData: DailyForecastData
-    lateinit var hourlyForecastData: HourlyForecastData
-    lateinit var currentAirData: CurrentAirData
+    private lateinit var binding: ActivityWeatherMainBinding
+    private lateinit var btnBack: ImageButton
+    private lateinit var chatLayout: ConstraintLayout
+    private lateinit var txtLocation: TextView
+    private lateinit var txtWeatherEmoji: TextView
+    private lateinit var txtDegree: TextView
+    private lateinit var txtMinDegree: TextView
+    private lateinit var txtMaxDegree: TextView
+    private lateinit var btnChat: ImageButton
+    private lateinit var recyclerWeatherOnTime: RecyclerView
+    private lateinit var recyclerWeaterOnDay: RecyclerView
+    private lateinit var weatherOnTimeAdapter: RecyclerForecastOnTimeAdapter
+    private lateinit var weatherOnDayAdapter: RecyclerForecastOnDayAdapter
+    private lateinit var txtEmojiRain: TextView
+    private lateinit var txtDegreeRain: TextView
+    private lateinit var txtDegreeRainOnHour: TextView
+    private lateinit var txtEmojiWind: TextView
+    private lateinit var txtDegreeWind: TextView
+    private lateinit var txtEmojiHumid: TextView
+    private lateinit var txtDegreeHumid: TextView
+    private lateinit var txtForecastDay: TextView
+    private lateinit var txtEmojiDust: TextView
+    private lateinit var txtDegreeDust: TextView
+    private lateinit var txtGradeDust: TextView
+    private lateinit var txtEmojiUltraDust: TextView
+    private lateinit var txtDegreeUltraDust: TextView
+    private lateinit var txtGradeUltraDust: TextView
+    private lateinit var bigScale: String
+    private lateinit var midScale: String
+    private lateinit var smallScale: String
+    private lateinit var isSurveyed: String
+    private lateinit var lastSurveyedDate: String
+    private lateinit var defaultRegionId: String
+    private var isAllInitialized = false
+    private lateinit var briefForecastData: ForecastBriefData
+    private lateinit var dailyForecastData: DailyForecastData
+    private lateinit var hourlyForecastData: HourlyForecastData
+    private lateinit var currentAirData: CurrentAirData
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,7 +86,7 @@ class WeatherDetailActivity : MisoActivity() {
         initializeProperties()
     }
 
-    fun initializeProperties() {
+    private fun initializeProperties() {
         fun checkinitializedAll() {
             if (!isAllInitialized) {
                 if (
@@ -105,34 +104,34 @@ class WeatherDetailActivity : MisoActivity() {
             }
         }
         viewModel.updateProperties()
-        viewModel.isSurveyed.observe(this, {
+        viewModel.isSurveyed.observe(this) {
             isSurveyed = it!!
             checkinitializedAll()
-        })
-        viewModel.lastSurveyedDate.observe(this, {
+        }
+        viewModel.lastSurveyedDate.observe(this) {
             lastSurveyedDate = it!!
             checkinitializedAll()
-        })
-        viewModel.defaultRegionId.observe(this, {
+        }
+        viewModel.defaultRegionId.observe(this) {
             defaultRegionId = it!!
             checkinitializedAll()
-        })
-        viewModel.bigScale.observe(this, {
+        }
+        viewModel.bigScale.observe(this) {
             bigScale = it!!
             checkinitializedAll()
-        })
-        viewModel.midScale.observe(this, {
+        }
+        viewModel.midScale.observe(this) {
             midScale = it!!
             checkinitializedAll()
-        })
-        viewModel.smallScale.observe(this, {
+        }
+        viewModel.smallScale.observe(this) {
             smallScale = it!!
             checkinitializedAll()
-        })
+        }
 
     }
 
-    fun setupWeatherInfo() {
+    private fun setupWeatherInfo() {
         setForecastInfo()
         setupBriefForecastData()
         setupDailyForecastData()
@@ -140,7 +139,7 @@ class WeatherDetailActivity : MisoActivity() {
         setupCurrentAir()
     }
 
-    fun setupBriefForecastViews() {
+    private fun setupBriefForecastViews() {
         txtMinDegree.text = CommonUtil.toIntString(briefForecastData.temperatureMin) + "˚"
         txtMaxDegree.text = CommonUtil.toIntString(briefForecastData.temperatureMax) + "˚"
         txtDegree.text = CommonUtil.toIntString(briefForecastData.temperature) + "˚"
@@ -151,14 +150,14 @@ class WeatherDetailActivity : MisoActivity() {
         txtDegreeWind.text = briefForecastData.windSpeedComment
     }
 
-    fun setupDailyForecastViews() {
+    private fun setupDailyForecastViews() {
         txtEmojiRain.text = dailyForecastData.popIcon
         txtDegreeRain.text = dailyForecastData.pop + "%"
         txtDegreeRainOnHour.text = "시간당 ${getDegreeRainOnHour()}mm"
         setupWeatherOnDayRecycler()
     }
 
-    fun setupCurrentAirViews() {
+    private fun setupCurrentAirViews() {
         txtEmojiDust.text = currentAirData.fineDustIcon
         txtDegreeDust.text = currentAirData.fineDust
         txtGradeDust.text = currentAirData.fineDustGrade
@@ -167,12 +166,12 @@ class WeatherDetailActivity : MisoActivity() {
         txtGradeUltraDust.text = currentAirData.ultraFineDustGrade
     }
 
-    fun setupBriefForecastData() {
-        viewModel.forecastBriefResponse.observe(this, {
+    private fun setupBriefForecastData() {
+        viewModel.forecastBriefResponse.observe(this) {
             try {
                 if (it is Response<*>) {
                     if (it.isSuccessful) {
-                        var briefResponseDto = it.body() as ForecastBriefResponseDto
+                        val briefResponseDto = it.body() as ForecastBriefResponseDto
                         briefForecastData = briefResponseDto.data
                         setupBriefForecastViews()
                         Log.i("forecastBriefResponse", "성공")
@@ -190,16 +189,16 @@ class WeatherDetailActivity : MisoActivity() {
                     Log.e("forecastBriefResponse", e.message.toString())
                 Log.e("forecastBriefResponse", e.stackTraceToString())
             }
-        })
+        }
     }
 
-    fun setupDailyForecastData() {
+    private fun setupDailyForecastData() {
         var repeatCount = 0
-        viewModel.dailyForecastResponse.observe(this, {
+        viewModel.dailyForecastResponse.observe(this) {
             try {
                 if (it is Response<*>) {
                     if (it.isSuccessful) {
-                        var dailyForecastResponse = it.body() as DailyForecastResponseDto
+                        val dailyForecastResponse = it.body() as DailyForecastResponseDto
                         dailyForecastData = dailyForecastResponse.data
                         setupDailyForecastViews()
                         Log.i("setupDailyForecastData", "성공")
@@ -225,16 +224,16 @@ class WeatherDetailActivity : MisoActivity() {
                     Log.e("setupDailyForecastData", e.message.toString())
                 Log.e("setupDailyForecastData", e.stackTraceToString())
             }
-        })
+        }
     }
 
-    fun setupHourlyForecastData() {
+    private fun setupHourlyForecastData() {
         var repeatCount = 0
-        viewModel.hourlyForecastResponse.observe(this, {
+        viewModel.hourlyForecastResponse.observe(this) {
             try {
                 if (it is Response<*>) {
                     if (it.isSuccessful) {
-                        var hourlyForecastResponse = it.body() as HourlyForecastResponseDto
+                        val hourlyForecastResponse = it.body() as HourlyForecastResponseDto
                         hourlyForecastData = hourlyForecastResponse.data
                         setupWeatherOnTimeRecycler()
                         Log.i("setupHourlyForecastData", "성공")
@@ -260,16 +259,16 @@ class WeatherDetailActivity : MisoActivity() {
                     Log.e("setupHourlyForecastData", e.message.toString())
                 Log.e("setupHourlyForecastData", e.stackTraceToString())
             }
-        })
+        }
     }
 
-    fun setupCurrentAir() {
+    private fun setupCurrentAir() {
         var repeatCount = 0
-        viewModel.currentAirResponse.observe(this, {
+        viewModel.currentAirResponse.observe(this) {
             try {
                 if (it is Response<*>) {
                     if (it.isSuccessful) {
-                        var currentAirResponse = it.body() as CurrentAirResponseDto
+                        val currentAirResponse = it.body() as CurrentAirResponseDto
                         currentAirData = currentAirResponse.data
                         setupCurrentAirViews()
                         Log.i("currentAirData", "성공")
@@ -295,11 +294,11 @@ class WeatherDetailActivity : MisoActivity() {
                     Log.e("currentAirData", e.message.toString())
                 Log.e("currentAirData", e.stackTraceToString())
             }
-        })
+        }
     }
 
 
-    fun initializeViews() {
+    private fun initializeViews() {
         chatLayout = binding.chatLayout
         txtLocation = binding.txtLocation
         txtWeatherEmoji = binding.txtWeatherEmoji
@@ -341,16 +340,18 @@ class WeatherDetailActivity : MisoActivity() {
         finish()
     }
 
-    fun goToChatMainActivity() {
+    private fun goToChatMainActivity() {
         if (!this.intent.getBooleanExtra("isTodaySurveyed", true)) {
-            var intent = Intent(this, SelectSurveyAnswerActivity::class.java)
-            intent.putExtra("isFirstSurvey", true)
-            intent.putExtra("previousActivity", "Weather")
+            val intent = Intent(this, SelectSurveyAnswerActivity::class.java)
+            intent.apply {
+                intent.putExtra("isFirstSurvey", true)
+                intent.putExtra("previousActivity", "Weather")
+            }
             startActivity(intent)
             transferToNext()
             finish()
         } else {
-            var intent = Intent(this, ChatMainActivity::class.java)
+            val intent = Intent(this, ChatMainActivity::class.java)
             intent.putExtra("previousActivity", "Weather")
             startActivity(intent)
             transferToNext()
@@ -359,7 +360,7 @@ class WeatherDetailActivity : MisoActivity() {
     }
 
 
-    fun setForecastInfo() {
+    private fun setForecastInfo() {
         val midScaleString = if (midScale.equals("선택 안 함")) "전체" else midScale
         val smallScaleString =
             if (midScaleString.equals("전체"))
@@ -373,22 +374,22 @@ class WeatherDetailActivity : MisoActivity() {
         txtLocation.text = bigScale + " " + midScaleString + " " + smallScaleString
     }
 
-    fun getDegreeRainOnHour(): String {
+    private fun getDegreeRainOnHour(): String {
         try {
-            var rain = dailyForecastData.rain
-            var snow = dailyForecastData.snow
+            val rain = dailyForecastData.rain
+            val snow = dailyForecastData.snow
 
-            if (rain.isNullOrBlank() && snow.isNullOrBlank())
-                return "0"
+            return if (rain.isNullOrBlank() && snow.isNullOrBlank())
+                "0"
             else if (rain.isNullOrBlank())
-                return snow
+                snow
             else if (snow.isNullOrBlank())
-                return rain
+                rain
             else {
                 if (rain.toInt() > snow.toInt())
-                    return rain
+                    rain
                 else
-                    return snow
+                    snow
             }
         } catch (e: Exception) {
             Log.e("getDegreeRainOnHour", e.stackTraceToString())
@@ -396,20 +397,24 @@ class WeatherDetailActivity : MisoActivity() {
         }
     }
 
-    fun setupWeatherOnDayRecycler() {
+    private fun setupWeatherOnDayRecycler() {
         weatherOnDayAdapter =
             RecyclerForecastOnDayAdapter(dailyForecastData.dailyForecastList)
-        recyclerWeaterOnDay.adapter = weatherOnDayAdapter
-        recyclerWeaterOnDay.layoutManager =
-            LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerWeaterOnDay.apply {
+            adapter = weatherOnDayAdapter
+            layoutManager =
+                LinearLayoutManager(this@WeatherDetailActivity, RecyclerView.VERTICAL, false)
+        }
     }
 
 
-    fun setupWeatherOnTimeRecycler() {
+    private fun setupWeatherOnTimeRecycler() {
         weatherOnTimeAdapter =
             RecyclerForecastOnTimeAdapter(hourlyForecastData.hourlyForecastList)
-        recyclerWeatherOnTime.adapter = weatherOnTimeAdapter
-        recyclerWeatherOnTime.layoutManager =
-            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        recyclerWeatherOnTime.apply {
+            adapter = weatherOnTimeAdapter
+            layoutManager =
+                LinearLayoutManager(this@WeatherDetailActivity, RecyclerView.HORIZONTAL, false)
+        }
     }
 }

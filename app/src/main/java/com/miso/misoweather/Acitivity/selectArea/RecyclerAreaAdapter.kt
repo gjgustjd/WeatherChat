@@ -4,17 +4,19 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface.BOLD
 import android.graphics.Typeface.NORMAL
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
 import com.miso.misoweather.model.DTO.Region
 import java.lang.Exception
 
+@RequiresApi(Build.VERSION_CODES.M)
 class RecyclerAreaAdapter(
-    private val context: Context,
     private val regions: List<Region>
 ) :
     RecyclerView.Adapter<RecyclerAreaAdapter.Holder>() {
@@ -31,30 +33,35 @@ class RecyclerAreaAdapter(
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        val layoutParams = holder.itemView.layoutParams
-        layoutParams.height = 140
-        holder.itemView.requestLayout()
-        val region = regions.get(position)
-        var name: String = region.smallScale
-        if (region.smallScale.contains("선택 안 함"))
-            name = "전체"
-        holder.setText(name)
-        applySelection(holder, selectedPosition == position)
-        holder.itemView.setOnClickListener {
-            selectItem(position)
+        holder.apply {
+            val layoutParams = itemView.layoutParams
+            layoutParams.height = 140
+
+            itemView.requestLayout()
+            val region = regions[position]
+            var name: String = region.smallScale
+            if (region.smallScale.contains("선택 안 함"))
+                name = "전체"
+            setText(name)
+            applySelection(holder, selectedPosition == position)
+            itemView.setOnClickListener {
+                selectItem(position)
+            }
         }
         viewHolders.add(holder)
     }
 
     private fun applySelection(holder: Holder, isSelected: Boolean) {
         try {
-            var txt_name = holder.txt_name
-            if (isSelected) {
-                txt_name.setTextColor(context.resources.getColor(R.color.primaryPurple))
-                txt_name.setTypeface(null, BOLD)
-            } else {
-                txt_name.setTextColor(Color.BLACK)
-                txt_name.setTypeface(null, NORMAL)
+            val txt_name = holder.txt_name
+            txt_name.apply {
+                if (isSelected) {
+                    setTextColor(context.resources.getColor(R.color.primaryPurple, null))
+                    setTypeface(null, BOLD)
+                } else {
+                    setTextColor(Color.BLACK)
+                    setTypeface(null, NORMAL)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()

@@ -38,7 +38,6 @@ class SelectAreaActivity : MisoActivity() {
     private lateinit var selectedTown: String
     private lateinit var aPurpose: String
     private lateinit var recyclerAdapter: RecyclerAreaAdapter
-
     private lateinit var smallScaleRegion: String
     private lateinit var midScaleRegion: String
     private lateinit var bigScaleRegion: String
@@ -87,7 +86,6 @@ class SelectAreaActivity : MisoActivity() {
         aPurpose = intent.getStringExtra("for") ?: ""
         grid_region = binding.gridRegions
         list_towns = binding.recyclerTowns
-
         grid_region.visibility = INVISIBLE
         list_towns.visibility = VISIBLE
         btn_back = binding.imgbtnBack
@@ -102,8 +100,7 @@ class SelectAreaActivity : MisoActivity() {
                     changeRegion()
                 } else {
                     viewModel.addRegionPreferences(recyclerAdapter.getSelectedItem())
-                    var intent: Intent?
-                    intent = Intent(this, SelectNickNameActivity::class.java)
+                    val intent = Intent(this, SelectNickNameActivity::class.java)
                     intent.putExtra("RegionId", recyclerAdapter.getSelectedItem().id.toString())
                     startActivity(intent)
                     transferToNext()
@@ -125,9 +122,10 @@ class SelectAreaActivity : MisoActivity() {
 
 
     private fun changeRegion() {
+        var currentItem = recyclerAdapter.getSelectedItem()
         viewModel.updateRegion(
-            recyclerAdapter.getSelectedItem(),
-            recyclerAdapter.getSelectedItem().id
+            currentItem,
+            currentItem.id
         )
         viewModel.updateRegionResponse.observe(this) {
             if (it == null) {
@@ -166,11 +164,12 @@ class SelectAreaActivity : MisoActivity() {
 
     private fun setRecyclerTowns(townList: List<Region>) {
         try {
-            recyclerAdapter = RecyclerAreaAdapter(this@SelectAreaActivity, townList)
-            list_towns.adapter = recyclerAdapter
-            list_towns.layoutManager = LinearLayoutManager(this)
-            val spaceDecoration = DividerItemDecoration(applicationContext, VERTICAL)
-            list_towns.addItemDecoration(spaceDecoration)
+            recyclerAdapter = RecyclerAreaAdapter(townList)
+            list_towns.apply {
+                adapter = recyclerAdapter
+                layoutManager = LinearLayoutManager(this@SelectAreaActivity)
+                addItemDecoration(DividerItemDecoration(applicationContext, VERTICAL))
+            }
             if (!smallScaleRegion.equals(""))
                 recyclerAdapter.selectItem(townList.indexOf(townList.first {
                     it.smallScale == smallScaleRegion

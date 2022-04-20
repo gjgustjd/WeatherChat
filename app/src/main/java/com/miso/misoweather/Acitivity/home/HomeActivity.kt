@@ -292,14 +292,14 @@ class HomeActivity : MisoActivity() {
     }
 
     private fun isTodaySurveyed(): Boolean {
-        try {
+        return try {
             val currentDate =
                 ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
                     .format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
-            return lastSurveyedDate.equals(currentDate)
+            lastSurveyedDate.equals(currentDate)
         } catch (e: Exception) {
             Log.e("isTodaySurveyed", e.stackTraceToString())
-            return true
+            true
         }
     }
 
@@ -307,7 +307,7 @@ class HomeActivity : MisoActivity() {
         if (briefForecastData == null) {
             if (!defaultRegionId.isNullOrBlank()) {
                 Log.i("defaultRegionId", defaultRegionId)
-                var previousBigScale = bigScale
+                val previousBigScale = bigScale
                 viewModel.getBriefForecast(defaultRegionId.toInt())
                 viewModel.forecastBriefResponse.observe(this) {
                     try {
@@ -371,9 +371,11 @@ class HomeActivity : MisoActivity() {
     private fun setRecyclerChats(responseDto: CommentListResponseDto) {
         try {
             recyclerChatAdapter =
-                RecyclerChatsAdapter(this, responseDto.data.commentList, false)
-            recyclerChat.adapter = recyclerChatAdapter
-            recyclerChat.layoutManager = LinearLayoutManager(this)
+                RecyclerChatsAdapter(responseDto.data.commentList, false)
+            recyclerChat.apply {
+                adapter = recyclerChatAdapter
+                layoutManager = LinearLayoutManager(this@HomeActivity)
+            }
             Log.i("setRecyclerChats", "성공")
         } catch (e: Exception) {
             Toast.makeText(this, "한줄평 목록을 불러오는 중 오류가 발생하였습니다.", Toast.LENGTH_SHORT).show()

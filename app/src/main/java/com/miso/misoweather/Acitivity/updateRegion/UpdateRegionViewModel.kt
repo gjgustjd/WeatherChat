@@ -9,7 +9,8 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @HiltViewModel
-class UpdateRegionViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
+class UpdateRegionViewModel @Inject constructor(private val repository: MisoRepository) :
+    ViewModel() {
 
     @MutableNullableStringLiveData
     @Inject
@@ -33,7 +34,9 @@ class UpdateRegionViewModel @Inject constructor(private val repository: MisoRepo
     }
 
     fun updateSurveyRegion(region: String) {
-        repository.addPreferencePair("surveyRegion", region)
-        repository.savePreferences()
+        repository.apply {
+            addPreferencePair("surveyRegion", region)
+            savePreferences()
+        }
     }
 }

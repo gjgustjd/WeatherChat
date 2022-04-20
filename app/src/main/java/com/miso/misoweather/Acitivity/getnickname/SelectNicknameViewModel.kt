@@ -143,8 +143,10 @@ class SelectNicknameViewModel @Inject constructor() : ViewModel() {
                 Log.e("resetAccessToken", "로그인 실패", error)
             } else if (token != null) {
                 Log.i("resetAccessToken", "로그인 성공 ${token.accessToken}")
-                repository.addPreferencePair("accessToken", token.accessToken)
-                repository.savePreferences()
+                repository.apply {
+                    addPreferencePair("accessToken", token.accessToken)
+                    savePreferences()
+                }
                 updatePreferences()
                 registerMember(signUpRequestDto, socialType.value!!, true)
             }
@@ -152,9 +154,11 @@ class SelectNicknameViewModel @Inject constructor() : ViewModel() {
     }
 
     fun removeRegionPref() {
-        repository.removePreference("BigScaleRegion")
-        repository.removePreference("MidScaleRegion")
-        repository.removePreference("SmallScaleRegion")
+        repository.apply {
+            removePreference("BigScaleRegion")
+            removePreference("MidScaleRegion")
+            removePreference("SmallScaleRegion")
+        }
     }
 
     fun issueMisoToken(
@@ -168,9 +172,11 @@ class SelectNicknameViewModel @Inject constructor() : ViewModel() {
                     Log.i("결과", "성공")
                     val headers = response.headers()
                     val serverToken = headers.get("servertoken")
-                    repository.addPreferencePair("misoToken", serverToken!!)
-                    repository.addPreferencePair("defaultRegionId", defaultRegionId)
-                    repository.savePreferences()
+                    repository.apply {
+                        addPreferencePair("misoToken", serverToken!!)
+                        addPreferencePair("defaultRegionId", defaultRegionId)
+                        savePreferences()
+                    }
                     updatePreferences()
                     if (!misoToken.value.isNullOrBlank()) {
                         registerResultString.value = "OK"

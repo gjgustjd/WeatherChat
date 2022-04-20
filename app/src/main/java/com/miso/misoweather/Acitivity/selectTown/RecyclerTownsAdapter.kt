@@ -34,30 +34,36 @@ class RecyclerTownsAdapter(
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        val layoutParams = holder.itemView.layoutParams
-        layoutParams.height = 140
-        holder.itemView.requestLayout()
-        val region = regions[position]
-        var name: String = region.midScale
-        if (region.midScale.contains("선택 안 함"))
-            name = "전체"
-        holder.setText(name)
-        applySelection(holder, selectedPosition == position)
-        holder.itemView.setOnClickListener {
-            selectItem(position)
+        holder.apply {
+            val layoutParams = itemView.layoutParams
+            layoutParams.height = 140
+            itemView.requestLayout()
+            regions[position].apply {
+                var name = midScale
+                if (midScale.contains("선택 안 함"))
+                    name = "전체"
+
+                setText(name)
+            }
+            applySelection(this@apply, selectedPosition == position)
+            itemView.setOnClickListener {
+                selectItem(position)
+            }
+            viewHolders.add(this@apply)
         }
-        viewHolders.add(holder)
     }
 
     private fun applySelection(holder: Holder, isSelected: Boolean) {
         try {
             val txt_name = holder.txt_name
-            if (isSelected) {
-                txt_name.setTextColor(context.resources.getColor(R.color.primaryPurple, null))
-                txt_name.setTypeface(null, BOLD)
-            } else {
-                txt_name.setTextColor(Color.BLACK)
-                txt_name.setTypeface(null, NORMAL)
+            txt_name.apply {
+                if (isSelected) {
+                    setTextColor(context.resources.getColor(R.color.primaryPurple, null))
+                    setTypeface(null, BOLD)
+                } else {
+                    setTextColor(Color.BLACK)
+                    setTypeface(null, NORMAL)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()

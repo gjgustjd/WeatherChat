@@ -79,10 +79,12 @@ class ChatMainViewModel @Inject constructor(private val repository: MisoReposito
 
 
     fun updateProperties() {
-        surveyRegion.value = repository.getPreference("surveyRegion")
-        bigScaleRegion.value = repository.getPreference("BigScaleRegion")
-        misoToken.value = repository.getPreference("misoToken")
-        defaultRegionId.value = repository.getPreference("defaultRegionId")
+        repository.apply {
+            surveyRegion.value = getPreference("surveyRegion")
+            bigScaleRegion.value = getPreference("BigScaleRegion")
+            misoToken.value = getPreference("misoToken")
+            defaultRegionId.value = getPreference("defaultRegionId")
+        }
     }
 
     fun getCommentList(commentId: Int?, size: Int) {
@@ -100,8 +102,10 @@ class ChatMainViewModel @Inject constructor(private val repository: MisoReposito
     }
 
     fun removeSurveyRegion() {
-        repository.removePreference("surveyRegion")
-        repository.savePreferences()
+        repository.apply {
+            removePreference("surveyRegion")
+            savePreferences()
+        }
     }
 
     fun addComment(
@@ -136,7 +140,7 @@ class ChatMainViewModel @Inject constructor(private val repository: MisoReposito
             surveyId,
             { call, response ->
                 initializeDataAndSetupRecycler {
-                    surveyAnswerMap.put(surveyId, (response.body()!!).data.responseList)
+                    surveyAnswerMap[surveyId] = (response.body()!!).data.responseList
                 }
             },
             { call, response -> },
@@ -178,19 +182,19 @@ class ChatMainViewModel @Inject constructor(private val repository: MisoReposito
     private fun makeSurveyItems() {
         surveyItems.value = ArrayList()
         val comparator: Comparator<SurveyMyAnswerDto> = compareBy { it.surveyId }
-        var sortedMyanswerList = surveyMyAnswerResponseDto.data.responseList.sortedWith(comparator)
+        val sortedMyanswerList = surveyMyAnswerResponseDto.data.responseList.sortedWith(comparator)
 
         surveyQuestions.forEachIndexed { index, s ->
             val surveyItem = SurveyItem(
                 index + 1,
                 s,
                 sortedMyanswerList[index],
-                surveyAnswerMap.get(index + 1)!!,
+                surveyAnswerMap[index + 1]!!,
                 surveyResultResponseDto.data.responseList[index]
             )
-            var tempList = surveyItems.value!!
-            tempList.add(surveyItem)
-            surveyItems.value = tempList
+            surveyItems.value = surveyItems.value!!.apply {
+                add(surveyItem)
+            }
         }
     }
 
@@ -204,77 +208,5 @@ class ChatMainViewModel @Inject constructor(private val repository: MisoReposito
         return ((surveyAnswerMap.size >= surveyQuestions.size) &&
                 (surveyMyAnswerResponseDto.data.responseList.size >= surveyQuestions.size) &&
                 (surveyResultResponseDto.data.responseList.size >= surveyQuestions.size))
-    }
-
-    fun getBriefForecast(regionId: Int) {
-        repository.getBriefForecast(
-            regionId,
-            { call, response ->
-                var region = response.body()!!.data.region
-                repository.addPreferencePair("BigScaleRegion", region.bigScale)
-                repository.addPreferencePair(
-                    "MidScaleRegion",
-                    if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
-                )
-                repository.addPreferencePair(
-                    "SmallScaleRegion",
-                    if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
-                )
-                repository.savePreferences()
-                updateProperties()
-                forecastBriefResponse.value = response
-            },
-            { call, response ->
-                forecastBriefResponse.value = response
-            },
-            { call, t ->
-                forecastBriefResponse.value = null
-            }
-        )
-    }
-
-    fun getDailyForecast(regionId: Int) {
-        repository.getDailyForecast(
-            regionId,
-            { call, response ->
-                dailyForecastResponse.value = response
-            },
-            { call, response ->
-                dailyForecastResponse.value = response
-            },
-            { call, t ->
-                dailyForecastResponse.value = t
-            },
-        )
-    }
-
-    fun getHourlyForecast(regionId: Int) {
-        repository.getHourlyForecast(
-            regionId,
-            { call, response ->
-                hourlyForecastResponse.value = response
-            },
-            { call, response ->
-                hourlyForecastResponse.value = response
-            },
-            { call, t ->
-                hourlyForecastResponse.value = t
-            },
-        )
-    }
-
-    fun getCurrentAir(regionId: Int) {
-        repository.getCurrentAir(
-            regionId,
-            { call, response ->
-                currentAirData.value = response
-            },
-            { call, response ->
-                currentAirData.value = response
-            },
-            { call, t ->
-                currentAirData.value = t
-            },
-        )
     }
 }

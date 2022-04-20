@@ -97,22 +97,25 @@ class UpdateRegionActivity : MisoActivity() {
         val regionItems = getRegionItems()
         val regionList = resources.getStringArray(R.array.regions)
         val index = regionList.indexOf(currentRegion)
-        gridAdapter = RecyclerRegionsAdapter(this@UpdateRegionActivity, regionItems, index)
-        grid_region.adapter = gridAdapter
-        grid_region.layoutManager = GridLayoutManager(this, 4)
-        val spaceDecoration = VerticalSpaceItemDecoration(30)
-        grid_region.addItemDecoration(spaceDecoration)
+        val context = this@UpdateRegionActivity
+        gridAdapter = RecyclerRegionsAdapter(context, regionItems, index)
+        grid_region.apply {
+            adapter = gridAdapter
+            layoutManager = GridLayoutManager(context, 4)
+            addItemDecoration(VerticalSpaceItemDecoration(30))
+        }
 
     }
 
     private fun getRegionItems(): ArrayList<RegionItem> {
         val regions = resources.getStringArray(R.array.regions)
         val regions_full = resources.getStringArray(R.array.regions_full)
-        val regionItems: ArrayList<RegionItem> = ArrayList<RegionItem>()
+        val regionItems = arrayListOf<RegionItem>()
         for (i: Int in regions.indices) {
-            val item = RegionItem()
-            item.shortName = regions[i]
-            item.longName = regions_full[i]
+            val item = RegionItem().apply {
+                shortName = regions[i]
+                longName = regions_full[i]
+            }
             regionItems.add(item)
         }
 

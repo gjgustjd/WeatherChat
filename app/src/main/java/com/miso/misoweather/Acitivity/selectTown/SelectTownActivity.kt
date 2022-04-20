@@ -97,8 +97,8 @@ class SelectTownActivity : MisoActivity() {
         btn_next.setOnClickListener()
         {
             try {
-                var selectedRegion = recyclerAdapter.getSelectedItem()
-                var midScaleRegion = selectedRegion.midScale
+                val selectedRegion = recyclerAdapter.getSelectedItem()
+                val midScaleRegion = selectedRegion.midScale
                 viewModel.addRegionPreferences(selectedRegion)
 
                 lateinit var intent: Intent
@@ -114,9 +114,11 @@ class SelectTownActivity : MisoActivity() {
                 } else
                     intent = Intent(this, SelectAreaActivity::class.java)
 
-                intent.putExtra("for", aPurpose)
-                intent.putExtra("region", recyclerAdapter.getSelectedItem().bigScale)
-                intent.putExtra("town", midScaleRegion)
+                intent.apply {
+                    intent.putExtra("for", aPurpose)
+                    intent.putExtra("region", recyclerAdapter.getSelectedItem().bigScale)
+                    intent.putExtra("town", midScaleRegion)
+                }
                 startActivity(intent)
                 transferToNext()
                 finish()
@@ -127,9 +129,10 @@ class SelectTownActivity : MisoActivity() {
     }
 
     private fun changeRegion() {
+        var currentItem = recyclerAdapter.getSelectedItem()
         viewModel.updateRegion(
-            recyclerAdapter.getSelectedItem(),
-            recyclerAdapter.getSelectedItem().id
+            currentItem,
+            currentItem.id
         )
         viewModel.updateRegionResponse.observe(this) {
             if (it == null) {
@@ -176,16 +179,17 @@ class SelectTownActivity : MisoActivity() {
             val regionListData = townRequestResult.data
             val townList: List<Region> = regionListData.regionList
             recyclerAdapter = RecyclerTownsAdapter(this@SelectTownActivity, townList)
-            list_towns.adapter = recyclerAdapter
-            list_towns.layoutManager = LinearLayoutManager(this)
-            val spaceDecoration = DividerItemDecoration(applicationContext, VERTICAL)
-            list_towns.addItemDecoration(spaceDecoration)
-            if (!midScaleRegion.equals(""))
-                recyclerAdapter.selectItem(townList.indexOf(townList.first() {
-                    it.midScale.equals(
-                        midScaleRegion
-                    )
-                }))
+            list_towns.apply {
+                adapter = recyclerAdapter
+                layoutManager = LinearLayoutManager(this@SelectTownActivity)
+                addItemDecoration(DividerItemDecoration(applicationContext, VERTICAL))
+                if (!midScaleRegion.equals(""))
+                    recyclerAdapter.selectItem(townList.indexOf(townList.first() {
+                        it.midScale.equals(
+                            midScaleRegion
+                        )
+                    }))
+            }
 
         } catch (e: Exception) {
             e.printStackTrace()

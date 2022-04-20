@@ -19,7 +19,7 @@ class RecyclerForecastOnDayAdapter(
 ) :
     RecyclerView.Adapter<RecyclerForecastOnDayAdapter.Holder>() {
 
-    private var viewHolders: ArrayList<Holder> = ArrayList()
+    private val viewHolders = arrayListOf<Holder>()
     private val dayNameList = listOf("월", "화", "수", "목", "금", "토", "일")
 
     private fun getDayString(position: Int): String {
@@ -41,14 +41,16 @@ class RecyclerForecastOnDayAdapter(
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.degreeMax.text = CommonUtil.toIntString(forecasts[position].maxTemperature) + "˚"
-        holder.degreeMin.text = forecasts[position].minTemperature.split(".")[0] + "˚"
-        holder.emoji.text = forecasts[position].weather
-        holder.popEmoji.text = forecasts[position].popIcon
-        holder.popDegree.text = forecasts[position].pop + "%"
-        val forecastDate = forecasts[position].forecastTime.split("T")[0]
-        holder.time.text = forecastDate.split("-")[1] + "/" + forecastDate.split("-")[2]
-        holder.day.text = getDayString(position)
+        holder.apply {
+            degreeMax.text = CommonUtil.toIntString(forecasts[position].maxTemperature) + "˚"
+            degreeMin.text = forecasts[position].minTemperature.split(".")[0] + "˚"
+            emoji.text = forecasts[position].weather
+            popEmoji.text = forecasts[position].popIcon
+            popDegree.text = forecasts[position].pop + "%"
+            val forecastDate = forecasts[position].forecastTime.split("T")[0]
+            time.text = forecastDate.split("-")[1] + "/" + forecastDate.split("-")[2]
+            day.text = getDayString(position)
+        }
         Log.i("dayOfWeek", ZonedDateTime.now(ZoneId.of("Asia/Seoul")).dayOfWeek.toString())
         viewHolders.add(holder)
     }

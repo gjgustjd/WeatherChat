@@ -76,12 +76,12 @@ class SelectSurveyAnswerActivity : MisoActivity() {
 
     override fun doBack() {
         val aIntent: Intent
-        if (intent.getStringExtra("previousActivity").equals("Home"))
-            aIntent = Intent(this, HomeActivity::class.java)
+        aIntent = if (intent.getStringExtra("previousActivity").equals("Home"))
+            Intent(this, HomeActivity::class.java)
         else if (intent.getStringExtra("previousActivity").equals("Weather"))
-            aIntent = Intent(this, WeatherDetailActivity::class.java)
+            Intent(this, WeatherDetailActivity::class.java)
         else
-            aIntent = Intent(this, ChatMainActivity::class.java)
+            Intent(this, ChatMainActivity::class.java)
 
         aIntent.putExtra("previousActivity", "Home")
         startActivity(aIntent)
@@ -113,7 +113,7 @@ class SelectSurveyAnswerActivity : MisoActivity() {
                 doBack()
             } else {
                 if (it.isSuccessful) {
-                    var intent = Intent(this, AnswerAnimationActivity::class.java)
+                    val intent = Intent(this, AnswerAnimationActivity::class.java)
                     intent.putExtra("answer", selectedAnswer.answer)
                     startActivity(intent)
                     overFromUnder()

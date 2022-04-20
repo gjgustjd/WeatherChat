@@ -30,14 +30,16 @@ class RecyclerSurveyAnswersAdapter(
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         try {
-            holder.txtAnswer.text = surveyItems.get(position).answer
-            holder.txtDescription.text = surveyItems.get(position).answerDescription
-            holder.itemView.setOnClickListener()
-            {
-                if (selectedIndex != -1)
-                    applyHolderSelection(selectedIndex, false)
-                selectedIndex = position
-                applyHolderSelection(selectedIndex, true)
+            holder.apply {
+                txtAnswer.text = surveyItems[position].answer
+                txtDescription.text = surveyItems[position].answerDescription
+                itemView.setOnClickListener()
+                {
+                    if (selectedIndex != -1)
+                        applyHolderSelection(selectedIndex, false)
+                    selectedIndex = position
+                    applyHolderSelection(selectedIndex, true)
+                }
             }
 
             viewHolders.add(holder)
@@ -45,8 +47,8 @@ class RecyclerSurveyAnswersAdapter(
             e.printStackTrace()
         }
     }
-    fun getSelectedAnswerItem():SurveyAnswerDto
-    {
+
+    fun getSelectedAnswerItem(): SurveyAnswerDto {
         return surveyItems.get(selectedIndex)
     }
 
@@ -58,21 +60,23 @@ class RecyclerSurveyAnswersAdapter(
     }
 
     private fun selectHolder(position: Int) {
-        val selectedHolder = viewHolders.get(position)
-        selectedHolder.itemView.background =
-            context.resources.getDrawable(R.drawable.toggle_track_background_purple, null)
-        selectedHolder.txtAnswer.setTextColor(Color.WHITE)
-        selectedHolder.txtDescription.setTextColor(Color.WHITE)
-        selectedHolder.imgCheck.visibility = View.VISIBLE
+        viewHolders[position].apply {
+            itemView.background =
+                context.resources.getDrawable(R.drawable.toggle_track_background_purple, null)
+            txtAnswer.setTextColor(Color.WHITE)
+            txtDescription.setTextColor(Color.WHITE)
+            imgCheck.visibility = View.VISIBLE
+        }
     }
 
     private fun unselectHolder(position: Int) {
-        val unselectedHolder = viewHolders.get(position)
-        unselectedHolder.itemView.background =
-            context.resources.getDrawable(R.drawable.toggle_track_background_stroke, null)
-        unselectedHolder.txtAnswer.setTextColor(Color.BLACK)
-        unselectedHolder.txtDescription.setTextColor(Color.BLACK)
-        unselectedHolder.imgCheck.visibility = View.GONE
+        viewHolders[position].apply {
+            itemView.background =
+                context.resources.getDrawable(R.drawable.toggle_track_background_stroke, null)
+            txtAnswer.setTextColor(Color.BLACK)
+            txtDescription.setTextColor(Color.BLACK)
+            imgCheck.visibility = View.GONE
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {

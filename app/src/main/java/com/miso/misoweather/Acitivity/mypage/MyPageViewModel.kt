@@ -27,18 +27,20 @@ class MyPageViewModel @Inject constructor(private val repository: MisoRepository
             { call, response ->
                 try {
                     Log.i("결과", "성공")
-                    repository.removePreference(
-                        "misoToken",
-                        "defaultRegionId",
-                        "isSurveyed",
-                        "LastSurveyedDate",
-                        "bigScale",
-                        "BigScaleRegion",
-                        "MidScaleRegion",
-                        "SmallScaleRegion",
-                        "nickname",
-                    )
-                    repository.savePreferences()
+                    repository.apply {
+                        removePreference(
+                            "misoToken",
+                            "defaultRegionId",
+                            "isSurveyed",
+                            "LastSurveyedDate",
+                            "bigScale",
+                            "BigScaleRegion",
+                            "MidScaleRegion",
+                            "SmallScaleRegion",
+                            "nickname",
+                        )
+                        savePreferences()
+                    }
                     unRegisterResponse.value = response
                 } catch (e: Exception) {
                     e.printStackTrace()

@@ -17,6 +17,7 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.viewpager2.widget.ViewPager2
 import com.kakao.sdk.user.UserApiClient
+import com.kakao.usermgmt.response.model.User
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.login.viewPagerFragments.*
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
@@ -89,7 +90,7 @@ class LoginActivity : MisoActivity() {
         fun initializePageIndicatorView() {
             try {
                 pageIndicatorView = binding.pageIndicatorView
-                pageIndicatorView.setCount(onBoardFragmentList.size)
+                pageIndicatorView.count = onBoardFragmentList.size
             } catch (e: Exception) {
                 Log.i("initializePageIndicatorView", e.stackTraceToString())
                 throw Exception("pageIndicatorView is null")
@@ -118,12 +119,14 @@ class LoginActivity : MisoActivity() {
         fun setupViewPagerAndIndicator() {
             fun initializeViewPager() {
                 viewpager_onboarding = binding.viewPagerOnBoarding
-                viewpager_onboarding.adapter =
-                    ViewPagerFragmentAdapter(
-                        this,
-                        onBoardFragmentList
-                    )
-                viewpager_onboarding.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+                viewpager_onboarding.apply {
+                    adapter =
+                        ViewPagerFragmentAdapter(
+                            this@LoginActivity,
+                            onBoardFragmentList
+                        )
+                    orientation = ViewPager2.ORIENTATION_HORIZONTAL
+                }
             }
             try {
                 initializeViewPager()
@@ -151,29 +154,33 @@ class LoginActivity : MisoActivity() {
     }
 
     private fun checkTokenValid() {
-        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@LoginActivity)) {
-            UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-                if (error != null) {
-                    Log.i("token", "토큰 정보 보기 실패", error)
-                    isCheckValid = false
-                } else if (tokenInfo != null) {
-                    Log.i(
-                        "token", "토큰 정보 보기 성공" +
-                                "\n회원번호:${tokenInfo.id}"
-                    )
-                    isCheckValid = true
+        UserApiClient.instance.apply {
+            if (isKakaoTalkLoginAvailable(this@LoginActivity)) {
+                accessTokenInfo { tokenInfo, error ->
+                    if (error != null) {
+                        Log.i("token", "토큰 정보 보기 실패", error)
+                        isCheckValid = false
+                    } else if (tokenInfo != null) {
+                        Log.i(
+                            "token", "토큰 정보 보기 성공" +
+                                    "\n회원번호:${tokenInfo.id}"
+                        )
+                        isCheckValid = true
+                    }
                 }
-            }
-        } else
-            isCheckValid = false
+            } else
+                isCheckValid = false
+        }
     }
 
     private fun showDialogForInstallingKakaoTalk() {
         fun goToStoreForInstallingKakaoTalk(generalConfirmDialog: GeneralConfirmDialog) {
             try {
                 val intent = Intent(Intent.ACTION_VIEW)
-                intent.addCategory(Intent.CATEGORY_DEFAULT)
-                intent.data = Uri.parse("market://details?id=com.kakao.talk")
+                intent.apply {
+                    addCategory(Intent.CATEGORY_DEFAULT)
+                    data = Uri.parse("market://details?id=com.kakao.talk")
+                }
                 startActivity(intent)
             } catch (e: Exception) {
                 Log.e("instaillingKakaoTalk", e.stackTraceToString())
@@ -223,27 +230,35 @@ class LoginActivity : MisoActivity() {
     }
 
     private fun loginWithKakaoTalk() {
-        UserApiClient.instance.loginWithKakaoTalk(this@LoginActivity) { token, error ->
-            try {
-                if (error != null) {
-                    Log.e("miso", "로그인 실패", error)
-                    showDialogForLoginKakaoTalk()
-                } else if (token != null) {
-                    Log.i("miso", "로그인 성공 ${token.accessToken}")
-                    UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-                        if (error != null) {
-                            Log.i("token", "토큰 정보 보기 실패", error)
-                            Toast.makeText(this, "로그인 진행 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
-                        } else if (tokenInfo != null) {
-                            Log.i("token", "토큰 정보 보기 성공" + "\n회원번호:${tokenInfo.id}")
-                            viewModel.saveTokenInfo(token, tokenInfo)
-                            issueMisoToken()
+        UserApiClient.instance.apply {
+            loginWithKakaoTalk(this@LoginActivity) { token, error ->
+                try {
+                    if (error != null) {
+                        Log.e("miso", "로그인 실패", error)
+                        showDialogForLoginKakaoTalk()
+                    } else if (token != null) {
+                        Log.i("miso", "로그인 성공 ${token.accessToken}")
+                        accessTokenInfo { tokenInfo, error ->
+                            if (error != null) {
+                                Log.i("token", "토큰 정보 보기 실패", error)
+                                Toast.makeText(
+                                    this@LoginActivity,
+                                    "로그인 진행 중 문제가 발생하였습니다.",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            } else if (tokenInfo != null) {
+                                Log.i("token", "토큰 정보 보기 성공" + "\n회원번호:${tokenInfo.id}")
+                                viewModel.saveTokenInfo(token, tokenInfo)
+                                issueMisoToken()
+                            }
                         }
                     }
+                } catch (e: Exception) {
+                    Log.i("kakaoLogin", e.stackTraceToString())
+                    Toast.makeText(this@LoginActivity, "로그인 진행 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT)
+                        .show()
                 }
-            } catch (e: Exception) {
-                Log.i("kakaoLogin", e.stackTraceToString())
-                Toast.makeText(this, "로그인 진행 중 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -304,8 +319,8 @@ class LoginActivity : MisoActivity() {
                     fun setPage() {
                         fun ViewPager2.setCurrentItem(
                             item: Int,
-                            duration: Long,
-                            interpolator: TimeInterpolator = AccelerateDecelerateInterpolator(),
+                            aDuration: Long,
+                            aInterpolator: TimeInterpolator = AccelerateDecelerateInterpolator(),
                             pagePxWidth: Int = width, // Default value taken from getWidth() from ViewPager2 view
                             pagePxHeight: Int = height
                         ) {
@@ -315,32 +330,33 @@ class LoginActivity : MisoActivity() {
                                 else
                                     pagePxHeight * (item - currentItem)
 
-                            val animator = ValueAnimator.ofInt(0, pxToDrag)
                             var previousValue = 0
-                            animator.addUpdateListener { valueAnimator ->
-                                val currentValue = valueAnimator.animatedValue as Int
-                                val currentPxToDrag = (currentValue - previousValue).toFloat()
-                                fakeDragBy(-currentPxToDrag)
-                                previousValue = currentValue
+                            ValueAnimator.ofInt(0, pxToDrag).apply {
+                                addUpdateListener { valueAnimator ->
+                                    val currentValue = valueAnimator.animatedValue as Int
+                                    val currentPxToDrag = (currentValue - previousValue).toFloat()
+                                    fakeDragBy(-currentPxToDrag)
+                                    previousValue = currentValue
+                                }
+                                addListener(object : Animator.AnimatorListener {
+                                    override fun onAnimationStart(animation: Animator?) {
+                                        beginFakeDrag()
+                                    }
+
+                                    override fun onAnimationEnd(animation: Animator?) {
+                                        endFakeDrag()
+                                    }
+
+                                    override fun onAnimationCancel(animation: Animator?) { /* Ignored */
+                                    }
+
+                                    override fun onAnimationRepeat(animation: Animator?) { /* Ignored */
+                                    }
+                                })
+                                interpolator = aInterpolator
+                                duration = aDuration
+                                start()
                             }
-                            animator.addListener(object : Animator.AnimatorListener {
-                                override fun onAnimationStart(animation: Animator?) {
-                                    beginFakeDrag()
-                                }
-
-                                override fun onAnimationEnd(animation: Animator?) {
-                                    endFakeDrag()
-                                }
-
-                                override fun onAnimationCancel(animation: Animator?) { /* Ignored */
-                                }
-
-                                override fun onAnimationRepeat(animation: Animator?) { /* Ignored */
-                                }
-                            })
-                            animator.interpolator = interpolator
-                            animator.duration = duration
-                            animator.start()
                         }
                         if (currentPosition == 5) currentPosition = 0
                         viewpager_onboarding.setCurrentItem(currentPosition, 500)

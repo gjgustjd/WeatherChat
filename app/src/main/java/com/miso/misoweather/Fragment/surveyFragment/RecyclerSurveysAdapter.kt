@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.view.LayoutInflater
-import android.view.View
+import android.view.View.*
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.ProgressBar
@@ -41,51 +41,53 @@ class RecyclerSurveysAdapter(
             val myAnswer = surveyItem.surveyMyAnswer
             val surveyResult = surveyItem.surveyResult
 
-            holder.txtTitle.text = surveyItems.get(position).surveyQuestion
-            holder.txtMyAnswer.text = myAnswer.memberAnswer
-            holder.txtFirstScore.text = surveyResult.keyList.get(0).toString()
-            holder.txtSecondScore.text = surveyResult.keyList.get(1).toString()
-            holder.txtThirdScore.text = surveyResult.keyList.get(2).toString()
+            holder.apply {
+                txtTitle.text = surveyItems.get(position).surveyQuestion
+                txtMyAnswer.text = myAnswer.memberAnswer
+                txtFirstScore.text = surveyResult.keyList.get(0).toString()
+                txtSecondScore.text = surveyResult.keyList.get(1).toString()
+                txtThirdScore.text = surveyResult.keyList.get(2).toString()
 
-            val firstRatio = surveyResult.valueList[0].toString()
-            val secondRatio = surveyResult.valueList[1].toString()
-            val thirdRatio = surveyResult.valueList[2].toString()
-            holder.txtFirstRatio.text = firstRatio + "%"
-            holder.txtSecondRatio.text = secondRatio + "%"
-            holder.txtThirdRatio.text = thirdRatio + "%"
-            holder.progress_first.startProgressAnimation(firstRatio.toInt())
-            holder.progress_second.startProgressAnimation(secondRatio.toInt(), 250)
-            holder.progress_third.startProgressAnimation(thirdRatio.toInt(), 500)
+                val firstRatio = surveyResult.valueList[0].toString()
+                val secondRatio = surveyResult.valueList[1].toString()
+                val thirdRatio = surveyResult.valueList[2].toString()
+                txtFirstRatio.text = firstRatio + "%"
+                txtSecondRatio.text = secondRatio + "%"
+                txtThirdRatio.text = thirdRatio + "%"
+                progress_first.startProgressAnimation(firstRatio.toInt())
+                progress_second.startProgressAnimation(secondRatio.toInt(), 250)
+                progress_third.startProgressAnimation(thirdRatio.toInt(), 500)
 
-            if (!myAnswer.answered || myAnswer.memberAnswer == null) {
-                holder.imgIsAnswered.setImageDrawable(
-                    context.resources.getDrawable(
-                        R.drawable.icon_unsurveyed_vector,
-                        null
+                if (!myAnswer.answered || myAnswer.memberAnswer == null) {
+                    imgIsAnswered.setImageDrawable(
+                        context.resources.getDrawable(
+                            R.drawable.icon_unsurveyed_vector,
+                            null
+                        )
                     )
-                )
-                holder.txtMyAnswer.setTextColor(context.resources.getColor(R.color.textBlack))
-                holder.txtMyAnswer.text = "답변하기"
-                holder.imgIconNext.visibility = View.VISIBLE
-            }
-
-            holder.myAnswerLayout.setOnClickListener {
-                if (!surveyItems[position].surveyMyAnswer.answered) {
-                    val misoActivity = context as MisoActivity
-                    val intent = Intent(context, SelectSurveyAnswerActivity::class.java)
-                    intent.putExtra("SurveyItem", surveyItem)
-                    misoActivity.startActivity(intent)
-                    misoActivity.transferToNext()
-                    misoActivity.finish()
+                    txtMyAnswer.setTextColor(context.resources.getColor(R.color.textBlack))
+                    txtMyAnswer.text = "답변하기"
+                    imgIconNext.visibility = VISIBLE
                 }
-            }
 
-            if (surveyResult.valueList.filter { !it.equals(0) }.size == 0) {
-                holder.txtEmptySurvey.visibility = View.VISIBLE
-                holder.txtOtherTitle.visibility = View.GONE
-                holder.progressLayout.visibility = View.GONE
-            }
+                myAnswerLayout.setOnClickListener {
+                    if (!surveyItems[position].surveyMyAnswer.answered) {
+                        val misoActivity = context as MisoActivity
+                        val intent = Intent(context, SelectSurveyAnswerActivity::class.java)
+                        intent.putExtra("SurveyItem", surveyItem)
+                        misoActivity.startActivity(intent)
+                        misoActivity.transferToNext()
+                        misoActivity.finish()
+                    }
+                }
 
+                if (surveyResult.valueList.none { it != 0 }) {
+                    txtEmptySurvey.visibility = VISIBLE
+                    txtOtherTitle.visibility = GONE
+                    progressLayout.visibility = GONE
+                }
+
+            }
             viewHolders.add(holder)
         } catch (e: Exception) {
             e.printStackTrace()

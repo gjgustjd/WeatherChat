@@ -39,8 +39,10 @@ class SelectTownViewModel @Inject constructor(private val repository: MisoReposi
 
 
     fun updateSmallScaleRegion(region: String) {
-        repository.addPreferencePair("SmallScaleRegion", region)
-        repository.savePreferences()
+        repository.apply {
+            addPreferencePair("SmallScaleRegion", region)
+            savePreferences()
+        }
     }
 
     fun setupSmallScaleRegion() {
@@ -64,9 +66,11 @@ class SelectTownViewModel @Inject constructor(private val repository: MisoReposi
     fun addRegionPreferences(selectedRegion: Region) {
         var midScaleRegion = selectedRegion.midScale
         var bigScaleRegion = selectedRegion.bigScale
-        repository.addPreferencePair("BigScaleRegion", bigScaleRegion)
-        repository.addPreferencePair("MidScaleRegion", midScaleRegion)
-        repository.savePreferences()
+        repository.apply {
+            addPreferencePair("BigScaleRegion", bigScaleRegion)
+            addPreferencePair("MidScaleRegion", midScaleRegion)
+            savePreferences()
+        }
     }
 
     fun updateRegion(selectedRegion: Region, regionId: Int) {

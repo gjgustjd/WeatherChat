@@ -87,10 +87,12 @@ class LoginViewModel @Inject constructor(private val repository: MisoRepository)
     }
 
     fun saveTokenInfo(token: OAuthToken, tokenInfo: AccessTokenInfo) {
-        repository.addPreferencePair("accessToken", token.accessToken)
-        repository.addPreferencePair("socialId", tokenInfo.id.toString())
-        repository.addPreferencePair("socialType", "kakao")
-        repository.savePreferences()
+        repository.apply {
+            addPreferencePair("accessToken", token.accessToken)
+            addPreferencePair("socialId", tokenInfo.id.toString())
+            addPreferencePair("socialType", "kakao")
+            savePreferences()
+        }
         updateProperties()
     }
 
@@ -99,10 +101,12 @@ class LoginViewModel @Inject constructor(private val repository: MisoRepository)
             makeLoginRequestDto(),
             accessToken.value!!,
             { call, response ->
-                var headers = response.headers()
-                var serverToken = headers.get("servertoken")!!
-                repository.addPreferencePair("misoToken", serverToken!!)
-                repository.savePreferences()
+                val headers = response.headers()
+                val serverToken = headers.get("servertoken")!!
+                repository.apply {
+                    addPreferencePair("misoToken", serverToken!!)
+                    savePreferences()
+                }
                 issueMisoTokenResponse.value = response
             },
             { call, response ->
@@ -110,54 +114,10 @@ class LoginViewModel @Inject constructor(private val repository: MisoRepository)
             },
             { call, t ->
                 issueMisoTokenResponse.value = t
-                repository.removePreference("misoToken")
-                repository.savePreferences()
+                repository.apply {
+                    removePreference("misoToken")
+                    savePreferences()
+                }
             })
-    }
-
-    fun checkTokenValid() {
-        if (UserApiClient.instance.isKakaoTalkLoginAvailable(repository.context)) {
-            UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-                if (error != null) {
-                    Log.i("token", "토큰 정보 보기 실패", error)
-                    isCheckValid.value = false
-                } else if (tokenInfo != null) {
-                    Log.i(
-                        "token", "토큰 정보 보기 성공" +
-                                "\n회원번호:${tokenInfo.id}"
-                    )
-                    isCheckValid.value = true
-                }
-            }
-        } else
-            isCheckValid.value = false
-    }
-
-    fun kakaoLoginAvailable(): Boolean {
-        return UserApiClient.instance.isKakaoTalkLoginAvailable(repository.context)
-    }
-
-    fun loginWithKakaoTalk(context: Context) {
-        UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
-            if (error != null) {
-                loginWithKakaoTalkResponse.value = "Login Failed"
-            } else if (token != null) {
-                Log.i("miso", "로그인 성공 ${token.accessToken}")
-                try {
-                    UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-                        if (error != null) {
-                            loginWithKakaoTalkResponse.value = error
-                        } else if (tokenInfo != null) {
-                            Log.i("token", "토큰 정보 보기 성공" + "\n회원번호:${tokenInfo.id}")
-                            loginWithKakaoTalkResponse.value = "OK"
-                            saveTokenInfo(token, tokenInfo)
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.i("kakaoLogin", e.stackTraceToString())
-                    loginWithKakaoTalkResponse.value = error
-                }
-            }
-        }
     }
 }

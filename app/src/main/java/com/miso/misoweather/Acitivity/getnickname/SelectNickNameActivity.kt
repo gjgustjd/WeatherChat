@@ -147,13 +147,13 @@ class SelectNickNameActivity : MisoActivity() {
     }
 
     private fun getSignUpInfo(): SignUpRequestDto {
-        val signUpRequestDto = SignUpRequestDto()
-        signUpRequestDto.defaultRegionId = intent.getStringExtra("RegionId")!!.toString()
-        signUpRequestDto.emoji = binding.txtEmoji.text.toString()
-        signUpRequestDto.nickname = nickName
-        signUpRequestDto.socialId = socialId
-        signUpRequestDto.socialType = socialType
-        return signUpRequestDto
+        return SignUpRequestDto().apply {
+            defaultRegionId = intent.getStringExtra("RegionId")!!.toString()
+            emoji = binding.txtEmoji.text.toString()
+            nickname = nickName
+            socialId = socialId
+            socialType = socialType
+        }
     }
 
     private fun getNickname() {

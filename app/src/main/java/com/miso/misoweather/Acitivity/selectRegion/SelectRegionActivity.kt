@@ -52,8 +52,10 @@ class SelectRegionActivity : MisoActivity() {
                 else {
                     val intent = Intent(this, SelectTownActivity::class.java)
                     val bigScaleRegion = gridAdapter.getSelectedItemShortName()
-                    intent.putExtra("for", aPurpose)
-                    intent.putExtra("region", bigScaleRegion)
+                    intent.apply {
+                        putExtra("for", aPurpose)
+                        putExtra("region", bigScaleRegion)
+                    }
                     startActivity(intent)
                     addPreferencePair("BigScaleRegion", bigScaleRegion)
                     transferToNext()
@@ -82,10 +84,11 @@ class SelectRegionActivity : MisoActivity() {
 
     private fun setRecyclerRegions() {
         gridAdapter = RecyclerRegionsAdapter(this@SelectRegionActivity, getRegionItems())
-        grid_region.adapter = gridAdapter
-        grid_region.layoutManager = GridLayoutManager(this, 4)
-        val spaceDecoration = VerticalSpaceItemDecoration(30)
-        grid_region.addItemDecoration(spaceDecoration)
+        grid_region.apply {
+            adapter = gridAdapter
+            layoutManager = GridLayoutManager(this@SelectRegionActivity, 4)
+            addItemDecoration(VerticalSpaceItemDecoration(30))
+        }
     }
 
     private fun getRegionItems(): ArrayList<RegionItem> {
@@ -93,9 +96,10 @@ class SelectRegionActivity : MisoActivity() {
         val regions_full = resources.getStringArray(R.array.regions_full)
         val regionItems: ArrayList<RegionItem> = ArrayList()
         for (i: Int in regions.indices) {
-            val item = RegionItem()
-            item.shortName = regions[i]
-            item.longName = regions_full[i]
+            val item = RegionItem().apply {
+                shortName = regions[i]
+                longName = regions_full[i]
+            }
             regionItems.add(item)
         }
 

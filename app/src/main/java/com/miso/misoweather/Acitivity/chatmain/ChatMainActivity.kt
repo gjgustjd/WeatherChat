@@ -43,7 +43,7 @@ class ChatMainActivity : MisoActivity() {
     private lateinit var txtLocation: TextView
     private lateinit var txtSurveyBtn: TextView
     private lateinit var txtChatBtn: TextView
-    private lateinit var selectedRegion: String
+    lateinit var selectedRegion: String
     private lateinit var locationLayout: ConstraintLayout
     private lateinit var previousActivity: String
     private lateinit var currentFragment: Fragment
@@ -99,6 +99,7 @@ class ChatMainActivity : MisoActivity() {
             if (surveyRegion.isNullOrBlank())
                 getBigShortScale(bigScale)
             else surveyRegion!!
+
         previousActivity = intent.getStringExtra("previousActivity") ?: ""
         btnSurvey = binding.btnSurvey
         btnChat = binding.btnChats
@@ -153,7 +154,7 @@ class ChatMainActivity : MisoActivity() {
         }
         txtLocation.setOnClickListener()
         {
-            var intent = Intent(this, UpdateRegionActivity::class.java)
+            val intent = Intent(this, UpdateRegionActivity::class.java)
             intent.putExtra("region", selectedRegion)
             startActivity(intent)
             transferToNext()

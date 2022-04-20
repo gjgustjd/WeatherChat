@@ -72,17 +72,19 @@ class SelectAnswerViewModel @Inject constructor(private val repository: MisoRepo
                 surveyId
             ),
             { call, response ->
-                repository.addPreferencePair("isSurveyed", "true")
-                repository.addPreferencePair(
-                    "LastSurveyedDate",
-                    ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
-                        .format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
-                )
-                repository.addPreferencePair(
-                    "surveyRegion",
-                    getBigShortScale(repository.getPreference("BigScaleRegion")!!)
-                )
-                repository.savePreferences()
+                repository.apply {
+                    addPreferencePair("isSurveyed", "true")
+                    addPreferencePair(
+                        "LastSurveyedDate",
+                        ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
+                            .format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+                    )
+                    addPreferencePair(
+                        "surveyRegion",
+                        getBigShortScale(getPreference("BigScaleRegion")!!)
+                    )
+                    savePreferences()
+                }
                 surveyAnswerResponse.value = response!!
             },
             { call, response -> },

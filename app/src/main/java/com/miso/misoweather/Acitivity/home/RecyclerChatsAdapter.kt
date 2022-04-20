@@ -20,7 +20,6 @@ import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 class RecyclerChatsAdapter(
-    private val context: Context,
     @Getter
     var comments: List<Comment>,
     private val isCommentsFragment: Boolean,

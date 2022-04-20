@@ -15,7 +15,8 @@ import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class SelectAreaViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
+class SelectAreaViewModel @Inject constructor(private val repository: MisoRepository) :
+    ViewModel() {
 
     @MutableNullableStringLiveData
     @Inject
@@ -63,11 +64,13 @@ class SelectAreaViewModel @Inject constructor(private val repository: MisoReposi
                 try {
                     Log.i("changeRegion", "성공")
                     addRegionPreferences(selectedRegion)
-                    repository.addPreferencePair(
-                        "defaultRegionId",
-                        regionId.toString()
-                    )
-                    repository.savePreferences()
+                    repository.apply {
+                        addPreferencePair(
+                            "defaultRegionId",
+                            regionId.toString()
+                        )
+                        savePreferences()
+                    }
                     updateRegionResponse.value = response
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -86,10 +89,12 @@ class SelectAreaViewModel @Inject constructor(private val repository: MisoReposi
         var midScaleRegion = selectedRegion.midScale
         var bigScaleRegion = selectedRegion.bigScale
         var smallScaleRegion = selectedRegion.smallScale
-        repository.addPreferencePair("BigScaleRegion", bigScaleRegion)
-        repository.addPreferencePair("MidScaleRegion", midScaleRegion)
-        repository.addPreferencePair("SmallScaleRegion", smallScaleRegion)
-        repository.savePreferences()
+        repository.apply {
+            addPreferencePair("BigScaleRegion", bigScaleRegion)
+            addPreferencePair("MidScaleRegion", midScaleRegion)
+            addPreferencePair("SmallScaleRegion", smallScaleRegion)
+            savePreferences()
+        }
     }
 
     fun getAreaList(

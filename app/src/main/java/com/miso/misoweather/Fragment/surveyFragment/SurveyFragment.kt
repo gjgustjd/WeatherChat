@@ -57,8 +57,10 @@ class SurveyFragment @Inject constructor() : Fragment() {
     private fun setupRecyclerSurveys(surveyItems: ArrayList<SurveyItem>) {
         try {
             recyclerSurveysAdapter = RecyclerSurveysAdapter(activity, surveyItems)
-            recyclerSurvey.adapter = recyclerSurveysAdapter
-            recyclerSurvey.layoutManager = LinearLayoutManager(activity.baseContext)
+            recyclerSurvey.apply {
+                adapter = recyclerSurveysAdapter
+                layoutManager = LinearLayoutManager(activity.baseContext)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

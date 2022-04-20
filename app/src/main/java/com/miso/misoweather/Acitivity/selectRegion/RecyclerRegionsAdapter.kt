@@ -36,35 +36,41 @@ class RecyclerRegionsAdapter(
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        val layoutParams = holder.itemView.layoutParams
-        layoutParams.height = 100
-        holder.itemView.requestLayout()
-        val data = regions.get(position)
-        holder.setText(data.shortName)
-        viewHolders.add(holder)
-        if (position == selectedIndex) {
-            applySelection(position)
-        }
+        holder.apply {
+            val layoutParams = itemView.layoutParams
+            layoutParams.height = 100
 
-        holder.itemView.setOnClickListener {
-            if (selectedIndex != -1) {
-                applyUnselection(selectedIndex)
+            itemView.requestLayout()
+            val data = regions.get(position)
+            setText(data.shortName)
+            viewHolders.add(holder)
+            if (position == selectedIndex) {
+                applySelection(position)
             }
-            selectedIndex = position
-            applySelection(selectedIndex)
+
+            itemView.setOnClickListener {
+                if (selectedIndex != -1) {
+                    applyUnselection(selectedIndex)
+                }
+                selectedIndex = position
+                applySelection(selectedIndex)
+            }
         }
     }
 
     private fun applySelection(position: Int) {
         val holder = viewHolders[position]
-        holder.itemView.setBackgroundResource(R.drawable.grid_region_background_purple)
-        holder.txt_name.setTextColor(Color.WHITE)
+        holder.apply {
+            itemView.setBackgroundResource(R.drawable.grid_region_background_purple)
+            txt_name.setTextColor(Color.WHITE)
+        }
     }
 
     private fun applyUnselection(position: Int) {
-        val viewHolder = viewHolders[position]
-        viewHolder.itemView.setBackgroundResource(R.drawable.grid_region_background)
-        viewHolder.txt_name.setTextColor(context.resources.getColor(R.color.black, null))
+        viewHolders[position].apply {
+            itemView.setBackgroundResource(R.drawable.grid_region_background)
+            txt_name.setTextColor(context.resources.getColor(R.color.black, null))
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -74,10 +80,6 @@ class RecyclerRegionsAdapter(
 
     fun getSelectedItemShortName(): String {
         return regions[selectedIndex].shortName
-    }
-
-    fun getSelectedItemLongName(): String {
-        return regions[selectedIndex].longName
     }
 
     class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {

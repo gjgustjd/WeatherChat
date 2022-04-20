@@ -9,7 +9,8 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @HiltViewModel
-class WeatherDetailViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
+class WeatherDetailViewModel @Inject constructor(private val repository: MisoRepository) :
+    ViewModel() {
 
     @MutableNullableStringLiveData
     @Inject
@@ -62,10 +63,11 @@ class WeatherDetailViewModel @Inject constructor(private val repository: MisoRep
     }
 
     fun setupWeatherData() {
-        getBriefForecast(defaultRegionId.value!!.toInt())
-        getDailyForecast(defaultRegionId.value!!.toInt())
-        getHourlyForecast(defaultRegionId.value!!.toInt())
-        getCurrentAir(defaultRegionId.value!!.toInt())
+        val defaultRegion = defaultRegionId.value!!.toInt()
+        getBriefForecast(defaultRegion)
+        getDailyForecast(defaultRegion)
+        getHourlyForecast(defaultRegion)
+        getCurrentAir(defaultRegion)
     }
 
     fun setupBigScale() {
@@ -96,17 +98,19 @@ class WeatherDetailViewModel @Inject constructor(private val repository: MisoRep
         repository.getBriefForecast(
             regionId,
             { call, response ->
-                var region = response.body()!!.data.region
-                repository.addPreferencePair("BigScaleRegion", region.bigScale)
-                repository.addPreferencePair(
-                    "MidScaleRegion",
-                    if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
-                )
-                repository.addPreferencePair(
-                    "SmallScaleRegion",
-                    if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
-                )
-                repository.savePreferences()
+                val region = response.body()!!.data.region
+                repository.apply {
+                    addPreferencePair("BigScaleRegion", region.bigScale)
+                    addPreferencePair(
+                        "MidScaleRegion",
+                        if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
+                    )
+                    addPreferencePair(
+                        "SmallScaleRegion",
+                        if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
+                    )
+                    savePreferences()
+                }
                 forecastBriefResponse.value = response
             },
             { call, response ->

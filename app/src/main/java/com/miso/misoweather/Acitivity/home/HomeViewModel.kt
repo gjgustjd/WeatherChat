@@ -140,14 +140,16 @@ class HomeViewModel @Inject constructor(private val repository: MisoRepository) 
             serverToken,
             { call, response ->
                 val memberInfoResponseDto = response.body()!!
-                var memberInfo = memberInfoResponseDto.data
-                repository.addPreferencePair(
-                    "defaultRegionId",
-                    memberInfoResponseDto.data.regionId.toString()
-                )
-                repository.addPreferencePair("emoji", memberInfo.emoji)
-                repository.addPreferencePair("nickname", memberInfo.nickname)
-                repository.savePreferences()
+                val memberInfo = memberInfoResponseDto.data
+                repository.apply {
+                    addPreferencePair(
+                        "defaultRegionId",
+                        memberInfoResponseDto.data.regionId.toString()
+                    )
+                    addPreferencePair("emoji", memberInfo.emoji)
+                    addPreferencePair("nickname", memberInfo.nickname)
+                    savePreferences()
+                }
                 updateProperties()
                 memberInfoResponse.value = response
             },
@@ -163,17 +165,19 @@ class HomeViewModel @Inject constructor(private val repository: MisoRepository) 
         repository.getBriefForecast(
             regionId,
             { call, response ->
-                var region = response.body()!!.data.region
-                repository.addPreferencePair("BigScaleRegion", region.bigScale)
-                repository.addPreferencePair(
-                    "MidScaleRegion",
-                    if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
-                )
-                repository.addPreferencePair(
-                    "SmallScaleRegion",
-                    if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
-                )
-                repository.savePreferences()
+                val region = response.body()!!.data.region
+                repository.apply {
+                    addPreferencePair("BigScaleRegion", region.bigScale)
+                    addPreferencePair(
+                        "MidScaleRegion",
+                        if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
+                    )
+                    addPreferencePair(
+                        "SmallScaleRegion",
+                        if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
+                    )
+                    savePreferences()
+                }
                 updateProperties()
                 forecastBriefResponse.value = response
             },
@@ -222,9 +226,10 @@ class HomeViewModel @Inject constructor(private val repository: MisoRepository) 
                 logoutResponseString.value = error.toString()
             } else {
                 Log.i("kakaoLogout", "로그아웃 성공. SDK에서 토큰 삭제됨")
-                repository.removePreference("accessToken", "socialId", "socialType", "misoToken")
-                repository.savePreferences()
-//                updateProperties()
+                repository.apply {
+                    removePreference("accessToken", "socialId", "socialType", "misoToken")
+                    savePreferences()
+                }
                 logoutResponseString.value = "OK"
             }
         }

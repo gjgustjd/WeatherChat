@@ -71,9 +71,9 @@ class CommentsFragment @Inject constructor() : Fragment() {
         }
         recyclerChat.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                var lastVisibleItemPosition =
+                val lastVisibleItemPosition =
                     ((recyclerChat.layoutManager) as LinearLayoutManager).findLastVisibleItemPosition()
-                var itemTotalCount = recyclerChat.adapter!!.itemCount - 1
+                val itemTotalCount = recyclerChat.adapter!!.itemCount - 1
                 if (lastVisibleItemPosition == itemTotalCount) {
                     Log.i("Paging", "페이징")
                 }
@@ -81,14 +81,16 @@ class CommentsFragment @Inject constructor() : Fragment() {
         })
         viewModel.commentListResponse.observe(activity) {
             try {
-                var responseDto = it!!.body() as CommentListResponseDto
+                val responseDto = it!!.body() as CommentListResponseDto
                 Log.i("결과", "성공")
                 if (this::recyclerChatAdapter.isInitialized) {
-                    if (recyclerChatAdapter.currentBindedPosition.value == recyclerChatAdapter.itemCount - 1) {
-                        recyclerChatAdapter.comments += responseDto.data.commentList
-                        recyclerChatAdapter.notifyDataSetChanged()
-                    } else if (recyclerChat.adapter == null)
-                        setRecyclerChats(responseDto)
+                    recyclerChatAdapter.apply {
+                        if (currentBindedPosition.value == itemCount - 1) {
+                            comments += responseDto.data.commentList
+                            notifyDataSetChanged()
+                        } else if (recyclerChat.adapter == null)
+                            setRecyclerChats(responseDto)
+                    }
                 } else
                     setRecyclerChats(responseDto)
             } catch (e: Exception) {
@@ -127,12 +129,13 @@ class CommentsFragment @Inject constructor() : Fragment() {
     private fun setRecyclerChats(commentListResponseDto: CommentListResponseDto) {
         try {
             recyclerChatAdapter = RecyclerChatsAdapter(
-                activity.baseContext,
                 commentListResponseDto.data.commentList,
                 true
             )
-            recyclerChat.adapter = recyclerChatAdapter
-            recyclerChat.layoutManager = LinearLayoutManager(activity.baseContext)
+            recyclerChat.apply {
+                adapter = recyclerChatAdapter
+                layoutManager = LinearLayoutManager(activity.baseContext)
+            }
             recyclerChatAdapter.currentBindedPosition.observe(activity) {
                 if (it == recyclerChatAdapter.comments.size - 1) {
                     getCommentList(recyclerChatAdapter.getCommentItem(it).id)

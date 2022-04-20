@@ -148,7 +148,7 @@ class MyPageActivity : MisoActivity() {
     }
 
     private fun makeLoginRequestDto(): LoginRequestDto {
-        var loginRequestDto = LoginRequestDto(
+        val loginRequestDto = LoginRequestDto(
             getPreference("socialId"),
             getPreference("socialType")
         )
