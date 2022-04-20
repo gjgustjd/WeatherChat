@@ -13,11 +13,11 @@ import androidx.fragment.app.DialogFragment
 import com.miso.misoweather.databinding.DialogConfirmGeneralBinding
 
 class GeneralConfirmDialog(
-    var mContext: Context,
-    var actionListener: View.OnClickListener? = null,
-    var contentString: String,
-    val width: Float = 0.8f,
-    val height: Float = 0.3f
+    private val mContext: Context,
+    private var actionListener: View.OnClickListener? = null,
+    private var contentString: String,
+    private val width: Float = 0.8f,
+    private val height: Float = 0.3f
 ) : DialogFragment() {
     var actionString: String = "확인"
 
@@ -28,15 +28,15 @@ class GeneralConfirmDialog(
         actionString: String,
         width: Float = 0.8f,
         height: Float = 0.3f
-    ) : this(ctx, listener, contentString,width, height) {
+    ) : this(ctx, listener, contentString, width, height) {
         this.actionString = actionString
     }
 
-    lateinit var binding: DialogConfirmGeneralBinding
-    lateinit var root: ConstraintLayout
-    lateinit var txt_content: TextView
-    lateinit var btn_action: Button
-    lateinit var btn_cancel: Button
+    private lateinit var binding: DialogConfirmGeneralBinding
+    private lateinit var root: ConstraintLayout
+    private lateinit var txt_content: TextView
+    private lateinit var btn_action: Button
+    private lateinit var btn_cancel: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,7 +51,7 @@ class GeneralConfirmDialog(
         return view
     }
 
-    fun initializeView() {
+    private fun initializeView() {
         root = binding.root
         txt_content = binding.txtContent
         btn_action = binding.btnAction
@@ -64,7 +64,7 @@ class GeneralConfirmDialog(
         resizeDialog()
     }
 
-    fun resizeDialog() {
+    private fun resizeDialog() {
         val windowManager = mContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display = windowManager.defaultDisplay
         val size = Point()
@@ -77,7 +77,7 @@ class GeneralConfirmDialog(
         dialog?.window?.attributes = params as WindowManager.LayoutParams
     }
 
-    fun setupDialog() {
+    private fun setupDialog() {
         if (actionListener == null) {
             btn_cancel.text = "확인"
             btn_action.visibility = View.GONE

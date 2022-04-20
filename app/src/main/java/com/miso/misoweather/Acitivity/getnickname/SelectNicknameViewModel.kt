@@ -137,7 +137,7 @@ class SelectNicknameViewModel @Inject constructor() : ViewModel() {
         )
     }
 
-    fun resetAccessToken() {
+    private fun resetAccessToken() {
         UserApiClient.instance.loginWithKakaoTalk(repository.context) { token, error ->
             if (error != null) {
                 Log.e("resetAccessToken", "로그인 실패", error)
@@ -166,11 +166,10 @@ class SelectNicknameViewModel @Inject constructor() : ViewModel() {
             { call, response ->
                 try {
                     Log.i("결과", "성공")
-                    var headers = response.headers()
-                    var serverToken = headers.get("servertoken")
+                    val headers = response.headers()
+                    val serverToken = headers.get("servertoken")
                     repository.addPreferencePair("misoToken", serverToken!!)
                     repository.addPreferencePair("defaultRegionId", defaultRegionId)
-//                    removeRegionPref()
                     repository.savePreferences()
                     updatePreferences()
                     if (!misoToken.value.isNullOrBlank()) {

@@ -6,6 +6,7 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,6 +14,7 @@ import android.util.Log
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.viewpager2.widget.ViewPager2
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.Acitivity.home.HomeActivity
@@ -24,19 +26,18 @@ import com.miso.misoweather.databinding.ActivityLoginBinding
 import com.rd.PageIndicatorView
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Response
-import javax.inject.Inject
-
 
 @AndroidEntryPoint
+@RequiresApi(Build.VERSION_CODES.O)
 class LoginActivity : MisoActivity() {
     private val viewModel: LoginViewModel by viewModels()
-    lateinit var binding: ActivityLoginBinding
-    lateinit var viewpager_onboarding: ViewPager2
-    lateinit var pageIndicatorView: PageIndicatorView
-    lateinit var socialId: String
-    lateinit var socialType: String
-    lateinit var accessToken: String
-    val onBoardFragmentList =
+    private lateinit var binding: ActivityLoginBinding
+    private lateinit var viewpager_onboarding: ViewPager2
+    private lateinit var pageIndicatorView: PageIndicatorView
+    private lateinit var socialId: String
+    private lateinit var socialType: String
+    private lateinit var accessToken: String
+    private val onBoardFragmentList =
         listOf(
             OnBoardInitFragment(),
             OnBoardApparellFragment(),
@@ -44,9 +45,9 @@ class LoginActivity : MisoActivity() {
             OnBoardLocationFragment(),
             OnBoardChatFragment()
         )
-    var isCheckValid = false
-    var currentPosition = 0
-    var isAllInitialized = false
+    private var isCheckValid = false
+    private var currentPosition = 0
+    private var isAllInitialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +56,7 @@ class LoginActivity : MisoActivity() {
         initializeProperties()
     }
 
-    fun initializeProperties() {
+    private fun initializeProperties() {
         fun checkinitializedAll() {
             if (!isAllInitialized) {
                 if (
@@ -69,22 +70,22 @@ class LoginActivity : MisoActivity() {
             }
         }
         viewModel.updateProperties()
-        viewModel.accessToken.observe(this, {
+        viewModel.accessToken.observe(this) {
             accessToken = it!!
             checkinitializedAll()
-        })
-        viewModel.socialType.observe(this, {
+        }
+        viewModel.socialType.observe(this) {
             socialType = it!!
             checkinitializedAll()
-        })
-        viewModel.socialId.observe(this, {
+        }
+        viewModel.socialId.observe(this) {
             socialId = it!!
             checkinitializedAll()
-        })
+        }
     }
 
     @SuppressLint("LongLogTag")
-    fun initializeView() {
+    private fun initializeView() {
         fun initializePageIndicatorView() {
             try {
                 pageIndicatorView = binding.pageIndicatorView
@@ -143,13 +144,13 @@ class LoginActivity : MisoActivity() {
         }
     }
 
-    fun hasValidToken(): Boolean {
+    private fun hasValidToken(): Boolean {
         return (isCheckValid &&
                 !socialId.isNullOrBlank() &&
                 !socialType.isNullOrBlank())
     }
 
-    fun checkTokenValid() {
+    private fun checkTokenValid() {
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(this@LoginActivity)) {
             UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
                 if (error != null) {
@@ -167,7 +168,7 @@ class LoginActivity : MisoActivity() {
             isCheckValid = false
     }
 
-    fun showDialogForInstallingKakaoTalk() {
+    private fun showDialogForInstallingKakaoTalk() {
         fun goToStoreForInstallingKakaoTalk(generalConfirmDialog: GeneralConfirmDialog) {
             try {
                 val intent = Intent(Intent.ACTION_VIEW)
@@ -193,7 +194,7 @@ class LoginActivity : MisoActivity() {
         generalConfirmDialog.show(supportFragmentManager, "generalConfirmDialog")
     }
 
-    fun showDialogForLoginKakaoTalk() {
+    private fun showDialogForLoginKakaoTalk() {
         fun launchKakaoTalk() {
             try {
                 val intent =
@@ -221,7 +222,7 @@ class LoginActivity : MisoActivity() {
         }
     }
 
-    fun loginWithKakaoTalk() {
+    private fun loginWithKakaoTalk() {
         UserApiClient.instance.loginWithKakaoTalk(this@LoginActivity) { token, error ->
             try {
                 if (error != null) {
@@ -248,20 +249,20 @@ class LoginActivity : MisoActivity() {
     }
 
 
-    fun startRegionActivity() {
+    private fun startRegionActivity() {
         startActivity(Intent(this, SelectRegionActivity::class.java))
         transferToNext()
         finish()
     }
 
-    fun startHomeActivity() {
+    private fun startHomeActivity() {
         startActivity(Intent(this, HomeActivity::class.java))
         finish()
     }
 
-    fun issueMisoToken() {
+    private fun issueMisoToken() {
         viewModel.issueMisoToken()
-        viewModel.issueMisoTokenResponse.observe(this, {
+        viewModel.issueMisoTokenResponse.observe(this) {
             if (it is Response<*>) {
                 if (it.isSuccessful) {
                     startHomeActivity()
@@ -280,18 +281,18 @@ class LoginActivity : MisoActivity() {
             } else {
                 startRegionActivity()
             }
-        })
+        }
     }
 
 
-    fun checkRegistered() {
+    private fun checkRegistered() {
         viewModel.checkRegistered()
-        viewModel.checkRegistered.observe(this, {
+        viewModel.checkRegistered.observe(this) {
             if (it!!)
                 issueMisoToken()
             else
                 startRegionActivity()
-        })
+        }
     }
 
 

@@ -2,12 +2,14 @@ package com.miso.misoweather.Acitivity.getnickname
 
 import android.content.Intent
 import android.graphics.Paint
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectNicknameBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
@@ -21,36 +23,37 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@RequiresApi(Build.VERSION_CODES.O)
 class SelectNickNameActivity : MisoActivity() {
     @Inject
     lateinit var viewModel: SelectNicknameViewModel
-    lateinit var binding: ActivitySelectNicknameBinding
-    lateinit var txt_get_new_nick: TextView
-    lateinit var btn_back: ImageButton
-    lateinit var btn_next: Button
-    var nickName: String = ""
-    var accessToken: String = ""
-    var misoToken: String = ""
-    var smallScaleRegion: String = ""
-    var midScaleRegion: String = ""
-    var bigScaleRegion: String = ""
-    var socialId: String = ""
-    var socialType: String = ""
+    private lateinit var binding: ActivitySelectNicknameBinding
+    private lateinit var txt_get_new_nick: TextView
+    private lateinit var btn_back: ImageButton
+    private lateinit var btn_next: Button
+    private var nickName: String = ""
+    private var accessToken: String = ""
+    private var misoToken: String = ""
+    private var smallScaleRegion: String = ""
+    private var midScaleRegion: String = ""
+    private var bigScaleRegion: String = ""
+    private var socialId: String = ""
+    private var socialType: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState)
         binding = ActivitySelectNicknameBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initializeViews()
         initializeProperties()
     }
 
-    fun initializeViews() {
+    private fun initializeViews() {
         txt_get_new_nick = binding.txtGetNewNickname
         txt_get_new_nick.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         btn_back = binding.imgbtnBack
         btn_next = binding.btnAction
-        txt_get_new_nick.setOnClickListener() {
+        txt_get_new_nick.setOnClickListener {
             getNickname()
         }
         btn_back.setOnClickListener()
@@ -64,41 +67,41 @@ class SelectNickNameActivity : MisoActivity() {
         getNickname()
     }
 
-    fun initializeProperties() {
+    private fun initializeProperties() {
         viewModel.setupAccessToken()
-        viewModel.accessToken.observe(this, {
+        viewModel.accessToken.observe(this) {
             accessToken = it!!
-        })
+        }
         viewModel.setupMisoToken()
-        viewModel.misoToken.observe(this, {
+        viewModel.misoToken.observe(this) {
             misoToken = it!!
-        })
+        }
         viewModel.setupBigScaleRegion()
-        viewModel.bigScaleRegion.observe(this, {
+        viewModel.bigScaleRegion.observe(this) {
             bigScaleRegion = it!!
-        })
+        }
         viewModel.setupMiddleScaleRegion()
-        viewModel.middleScaleRegion.observe(this, {
+        viewModel.middleScaleRegion.observe(this) {
             midScaleRegion = it!!
-        })
+        }
         viewModel.setupSmallScaleRegion()
-        viewModel.smallScaleRegion.observe(this, {
+        viewModel.smallScaleRegion.observe(this) {
             smallScaleRegion = it!!
-        })
+        }
         viewModel.setupSocialId()
-        viewModel.socialId.observe(this, {
+        viewModel.socialId.observe(this) {
             socialId = it!!
-        })
+        }
         viewModel.setupSocialType()
-        viewModel.socialType.observe(this, {
+        viewModel.socialType.observe(this) {
             socialType = it!!
-        })
+        }
         viewModel.defaultRegionId = intent.getStringExtra("RegionId")!!
     }
 
     override fun doBack() {
-        var intent: Intent?
-        if (smallScaleRegion.isNullOrBlank())
+        val intent: Intent?
+        if (smallScaleRegion.isBlank())
             intent = Intent(this, SelectTownActivity::class.java)
         else
             intent = Intent(this, SelectAreaActivity::class.java)
@@ -108,7 +111,7 @@ class SelectNickNameActivity : MisoActivity() {
         finish()
     }
 
-    fun registerMember() {
+    private fun registerMember() {
         fun inCaseFailedRegister() {
             Toast.makeText(this@SelectNickNameActivity, "회원가입에 실패하였습니다.", Toast.LENGTH_LONG)
                 .show()
@@ -120,31 +123,31 @@ class SelectNickNameActivity : MisoActivity() {
             accessToken,
             false
         )
-        viewModel.registerResultString.observe(this, {
+        viewModel.registerResultString.observe(this) {
             if (it.equals("OK")) {
-                var intent = Intent(this@SelectNickNameActivity, HomeActivity::class.java)
+                val intent = Intent(this@SelectNickNameActivity, HomeActivity::class.java)
                 startActivity(intent)
             } else {
                 inCaseFailedRegister()
             }
-        })
+        }
     }
 
-    fun goToLoginActivity() {
+    private fun goToLoginActivity() {
         startActivity(Intent(this@SelectNickNameActivity, LoginActivity::class.java))
         transferToBack()
         finish()
     }
 
-    fun makeLoginRequestDto(): LoginRequestDto {
+    private fun makeLoginRequestDto(): LoginRequestDto {
         return LoginRequestDto(
             socialId,
             socialType
         )
     }
 
-    fun getSignUpInfo(): SignUpRequestDto {
-        var signUpRequestDto = SignUpRequestDto()
+    private fun getSignUpInfo(): SignUpRequestDto {
+        val signUpRequestDto = SignUpRequestDto()
         signUpRequestDto.defaultRegionId = intent.getStringExtra("RegionId")!!.toString()
         signUpRequestDto.emoji = binding.txtEmoji.text.toString()
         signUpRequestDto.nickname = nickName
@@ -153,10 +156,10 @@ class SelectNickNameActivity : MisoActivity() {
         return signUpRequestDto
     }
 
-    fun getNickname() {
+    private fun getNickname() {
         viewModel.getNickname()
-        viewModel.nicknameResponseDto.observe(this, {
-            var responseDto = it as Response<NicknameResponseDto>
+        viewModel.nicknameResponseDto.observe(this) {
+            val responseDto = it as Response<NicknameResponseDto>
             if (it == null) {
                 Toast.makeText(
                     this@SelectNickNameActivity,
@@ -171,7 +174,7 @@ class SelectNickNameActivity : MisoActivity() {
                     nickName = nicknameResponseDto.data.nickname
                     binding.txtGreetingBold.text =
                         "${getBigShortScale(bigScaleRegion)}의 ${nickName}님!"
-                    binding.txtEmoji.text = "${nicknameResponseDto.data.emoji}"
+                    binding.txtEmoji.text = nicknameResponseDto.data.emoji
                 } else {
                     Log.i("결과", "실패")
                     Toast.makeText(
@@ -182,6 +185,6 @@ class SelectNickNameActivity : MisoActivity() {
                 }
             }
 
-        })
+        }
     }
 }

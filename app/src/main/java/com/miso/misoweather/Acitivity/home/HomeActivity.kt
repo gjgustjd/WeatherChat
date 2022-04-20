@@ -39,48 +39,47 @@ import java.lang.IndexOutOfBoundsException
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
 class HomeActivity : MisoActivity() {
     private val viewModel: HomeViewModel by viewModels()
 
-    lateinit var binding: ActivityHomeBinding
-    lateinit var weatherLayout: ConstraintLayout
-    lateinit var txtNickName: TextView
-    lateinit var txtEmoji: TextView
-    lateinit var txtLocation: TextView
-    lateinit var txtWeatherEmoji: TextView
-    lateinit var txtWeatherDegree: TextView
-    lateinit var btnShowWeatherDetail: ImageButton
-    lateinit var btnProfile: ImageButton
-    lateinit var btngoToSurvey: ImageButton
-    lateinit var recyclerChat: RecyclerView
-    lateinit var recyclerChatAdapter: RecyclerChatsAdapter
-    lateinit var txtFirstAnswer: TextView
-    lateinit var txtSecondAnswer: TextView
-    lateinit var txtThirdAnswer: TextView
-    lateinit var txtFirstRatio: TextView
-    lateinit var txtSecondRatio: TextView
-    lateinit var txtThirdRatio: TextView
-    lateinit var imgIconCheckFirst: ImageView
-    lateinit var imgbtnChangeLocation: ImageButton
-    lateinit var firstProgressLayout: ConstraintLayout
-    lateinit var secondProgressLayout: ConstraintLayout
-    lateinit var thirdProgressLayout: ConstraintLayout
-    lateinit var chartLayout: ConstraintLayout
-    lateinit var txtEmptyChart: TextView
-    lateinit var isSurveyed: String
-    lateinit var lastSurveyedDate: String
-    lateinit var defaultRegionId: String
-    lateinit var misoToken: String
-    lateinit var bigScale: String
-    lateinit var midScale: String
-    lateinit var smallScale: String
-    var briefForecastData: ForecastBriefData? = null
+    private lateinit var binding: ActivityHomeBinding
+    private lateinit var weatherLayout: ConstraintLayout
+    private lateinit var txtNickName: TextView
+    private lateinit var txtEmoji: TextView
+    private lateinit var txtLocation: TextView
+    private lateinit var txtWeatherEmoji: TextView
+    private lateinit var txtWeatherDegree: TextView
+    private lateinit var btnShowWeatherDetail: ImageButton
+    private lateinit var btnProfile: ImageButton
+    private lateinit var btngoToSurvey: ImageButton
+    private lateinit var recyclerChat: RecyclerView
+    private lateinit var recyclerChatAdapter: RecyclerChatsAdapter
+    private lateinit var txtFirstAnswer: TextView
+    private lateinit var txtSecondAnswer: TextView
+    private lateinit var txtThirdAnswer: TextView
+    private lateinit var txtFirstRatio: TextView
+    private lateinit var txtSecondRatio: TextView
+    private lateinit var txtThirdRatio: TextView
+    private lateinit var imgIconCheckFirst: ImageView
+    private lateinit var imgbtnChangeLocation: ImageButton
+    private lateinit var firstProgressLayout: ConstraintLayout
+    private lateinit var secondProgressLayout: ConstraintLayout
+    private lateinit var thirdProgressLayout: ConstraintLayout
+    private lateinit var chartLayout: ConstraintLayout
+    private lateinit var txtEmptyChart: TextView
+    private lateinit var isSurveyed: String
+    private lateinit var lastSurveyedDate: String
+    private lateinit var defaultRegionId: String
+    private lateinit var misoToken: String
+    private lateinit var bigScale: String
+    private lateinit var midScale: String
+    private lateinit var smallScale: String
+    private var briefForecastData: ForecastBriefData? = null
 
-    var isAllInitialized = false
+    private var isAllInitialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -117,39 +116,39 @@ class HomeActivity : MisoActivity() {
             }
         }
         viewModel.updateProperties()
-        viewModel.isSurveyed.observe(this, {
+        viewModel.isSurveyed.observe(this) {
             isSurveyed = it!!
             checkInitializedAll()
-        })
-        viewModel.lastSurveyedDate.observe(this, {
+        }
+        viewModel.lastSurveyedDate.observe(this) {
             lastSurveyedDate = it!!
             checkInitializedAll()
-        })
-        viewModel.defaultRegionId.observe(this, {
+        }
+        viewModel.defaultRegionId.observe(this) {
             defaultRegionId = it!!
             checkInitializedAll()
-        })
-        viewModel.misoToken.observe(this, {
+        }
+        viewModel.misoToken.observe(this) {
             misoToken = it!!
             checkInitializedAll()
-        })
-        viewModel.bigScale.observe(this, {
+        }
+        viewModel.bigScale.observe(this) {
             bigScale = it!!
             checkInitializedAll()
-        })
-        viewModel.midScale.observe(this, {
+        }
+        viewModel.midScale.observe(this) {
             midScale = it!!
             checkInitializedAll()
-        })
-        viewModel.smallScale.observe(this, {
+        }
+        viewModel.smallScale.observe(this) {
             smallScale = it!!
             checkInitializedAll()
-        })
+        }
 
         Log.i("initializeProperties", "Launched")
     }
 
-    fun initializeViews() {
+    private fun initializeViews() {
         fun initWeatherLayout() {
             try {
                 weatherLayout = binding.weatherLayout
@@ -261,14 +260,14 @@ class HomeActivity : MisoActivity() {
 
     private fun logout() {
         viewModel.logout()
-        viewModel.logoutResponseString.observe(this, {
+        viewModel.logoutResponseString.observe(this) {
             if (!it.equals("OK")) {
                 Toast.makeText(this, "카카오 로그아웃에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
             startActivity(Intent(this, LoginActivity::class.java))
             transferToBack()
             finish()
-        })
+        }
     }
 
     private fun goToChatMainActivity() {
@@ -310,7 +309,7 @@ class HomeActivity : MisoActivity() {
                 Log.i("defaultRegionId", defaultRegionId)
                 var previousBigScale = bigScale
                 viewModel.getBriefForecast(defaultRegionId.toInt())
-                viewModel.forecastBriefResponse.observe(this, {
+                viewModel.forecastBriefResponse.observe(this) {
                     try {
                         if (it != null) {
                             if (it is Response<*>) {
@@ -351,7 +350,7 @@ class HomeActivity : MisoActivity() {
                         Toast.makeText(this, "날씨 단기예보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT)
                             .show()
                     }
-                })
+                }
             } else {
                 Log.e("getBriefForecast", "defaultRegionId is blank")
                 Toast.makeText(this, "날씨 단기예보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT)
@@ -361,15 +360,15 @@ class HomeActivity : MisoActivity() {
     }
 
 
-    fun getCommentList() {
+    private fun getCommentList() {
         viewModel.getCommentList(null, 5)
-        viewModel.commentListResponse.observe(this, {
+        viewModel.commentListResponse.observe(this) {
             setRecyclerChats(it!!.body()!! as CommentListResponseDto)
-        })
+        }
     }
 
 
-    fun setRecyclerChats(responseDto: CommentListResponseDto) {
+    private fun setRecyclerChats(responseDto: CommentListResponseDto) {
         try {
             recyclerChatAdapter =
                 RecyclerChatsAdapter(this, responseDto.data.commentList, false)
@@ -381,13 +380,13 @@ class HomeActivity : MisoActivity() {
         }
     }
 
-    fun getUserInfo() {
+    private fun getUserInfo() {
         fun onSuccessful(response: Response<MemberInfoResponseDto>) {
             try {
                 val memberInfoResponseDto = response.body()!!
-                var memberInfo = memberInfoResponseDto.data
-                txtNickName.setText("${memberInfo.regionName}의 ${memberInfo.nickname}님!")
-                txtEmoji.setText(memberInfo.emoji)
+                val memberInfo = memberInfoResponseDto.data
+                txtNickName.text = "${memberInfo.regionName}의 ${memberInfo.nickname}님!"
+                txtEmoji.text = memberInfo.emoji
 
                 Log.i("getUserInfo", "성공")
             } catch (e: Exception) {
@@ -403,12 +402,14 @@ class HomeActivity : MisoActivity() {
         }
 
         viewModel.getUserInfo(misoToken)
-        viewModel.memberInfoResponse.observe(this, {
+        viewModel.memberInfoResponse.observe(
+            this
+        ) {
             if (it == null) {
                 Log.i("getUserInfo", "에러 발생")
             } else {
-                var responseDto = it as Response<MemberInfoResponseDto>
-                if (it!!.isSuccessful) {
+                val responseDto = it as Response<MemberInfoResponseDto>
+                if (it.isSuccessful) {
                     onSuccessful(responseDto)
                 } else {
                     onFail(responseDto)
@@ -417,10 +418,9 @@ class HomeActivity : MisoActivity() {
 
             getBriefForecast()
         }
-        )
     }
 
-    fun setupSurveyResult() {
+    private fun setupSurveyResult() {
         val answerViews = listOf(txtFirstAnswer, txtSecondAnswer, txtThirdAnswer)
         val ratioViews = listOf(txtFirstRatio, txtSecondRatio, txtThirdRatio)
         val progressLayouts =
@@ -456,7 +456,7 @@ class HomeActivity : MisoActivity() {
                 if (it == null) {
                     throw Exception("null")
                 } else {
-                    var responseDto = it as Response<SurveyResultResponseDto>
+                    val responseDto = it as Response<SurveyResultResponseDto>
                     if (it.isSuccessful) {
                         val todaySurveyResultDto =
                             responseDto.body()!!.data.responseList.first { it.surveyId == 2 }

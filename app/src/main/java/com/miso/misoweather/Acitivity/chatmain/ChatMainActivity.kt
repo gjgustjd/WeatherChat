@@ -21,10 +21,7 @@ import com.miso.misoweather.Fragment.surveyFragment.SurveyFragment
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityChatMainBinding
-import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
 import dagger.hilt.android.AndroidEntryPoint
-import retrofit2.Response
-import java.lang.Exception
 import javax.inject.Inject
 
 
@@ -39,23 +36,23 @@ class ChatMainActivity : MisoActivity() {
     @Inject
     lateinit var commentsFragment: CommentsFragment
 
-    lateinit var binding: ActivityChatMainBinding
-    lateinit var btn_back: ImageButton
-    lateinit var btnSurvey: Button
-    lateinit var btnChat: Button
-    lateinit var txtLocation: TextView
-    lateinit var txtSurveyBtn: TextView
-    lateinit var txtChatBtn: TextView
-    lateinit var selectedRegion: String
-    lateinit var locationLayout: ConstraintLayout
-    lateinit var previousActivity: String
-    lateinit var currentFragment: Fragment
-    lateinit var goToPreviousActivity: () -> Unit
-    lateinit var misoToken: String
-    lateinit var surveyRegion: String
-    lateinit var bigScale: String
-    lateinit var defaultRegionId: String
-    var isAllInitialized = false
+    private lateinit var binding: ActivityChatMainBinding
+    private lateinit var btn_back: ImageButton
+    private lateinit var btnSurvey: Button
+    private lateinit var btnChat: Button
+    private lateinit var txtLocation: TextView
+    private lateinit var txtSurveyBtn: TextView
+    private lateinit var txtChatBtn: TextView
+    private lateinit var selectedRegion: String
+    private lateinit var locationLayout: ConstraintLayout
+    private lateinit var previousActivity: String
+    private lateinit var currentFragment: Fragment
+    private lateinit var goToPreviousActivity: () -> Unit
+    private lateinit var misoToken: String
+    private lateinit var surveyRegion: String
+    private lateinit var bigScale: String
+    private lateinit var defaultRegionId: String
+    private var isAllInitialized = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +62,7 @@ class ChatMainActivity : MisoActivity() {
         initializeProperties()
     }
 
-    fun initializeProperties() {
+    private fun initializeProperties() {
         fun checkInitializedAll() {
             if (!isAllInitialized) {
                 if (this::bigScale.isInitialized &&
@@ -79,25 +76,25 @@ class ChatMainActivity : MisoActivity() {
             }
         }
         viewModel.updateProperties()
-        viewModel.misoToken.observe(this, {
+        viewModel.misoToken.observe(this) {
             misoToken = it
             checkInitializedAll()
-        })
-        viewModel.surveyRegion.observe(this, {
+        }
+        viewModel.surveyRegion.observe(this) {
             surveyRegion = it
             checkInitializedAll()
-        })
-        viewModel.bigScaleRegion.observe(this, {
+        }
+        viewModel.bigScaleRegion.observe(this) {
             bigScale = it
             checkInitializedAll()
-        })
-        viewModel.defaultRegionId.observe(this, {
+        }
+        viewModel.defaultRegionId.observe(this) {
             defaultRegionId = it
             checkInitializedAll()
-        })
+        }
     }
 
-    fun initializeViews() {
+    private fun initializeViews() {
         selectedRegion =
             if (surveyRegion.isNullOrBlank())
                 getBigShortScale(bigScale)
@@ -165,11 +162,11 @@ class ChatMainActivity : MisoActivity() {
         setupFragment(surveyFragment)
     }
 
-    fun View.startBackgroundAlphaAnimation(fromValue: Float, toValue: Float) {
+    private fun View.startBackgroundAlphaAnimation(fromValue: Float, toValue: Float) {
         ObjectAnimator.ofFloat(this, "alpha", fromValue, toValue).start()
     }
 
-    fun turnLocationButton(turnOn: Boolean) {
+    private fun turnLocationButton(turnOn: Boolean) {
         if (turnOn) {
             locationLayout.visibility = View.VISIBLE
             locationLayout.startBackgroundAlphaAnimation(0f, 1f)
@@ -179,7 +176,7 @@ class ChatMainActivity : MisoActivity() {
         }
     }
 
-    fun setButtonPressed(button: Button) {
+    private fun setButtonPressed(button: Button) {
         if (button.equals(btnChat)) {
             btnChat.startBackgroundAlphaAnimation(0f, 1f)
             txtChatBtn.setTextColor(Color.WHITE)
@@ -189,7 +186,7 @@ class ChatMainActivity : MisoActivity() {
         }
     }
 
-    fun setButtonUnpressed(button: Button) {
+    private fun setButtonUnpressed(button: Button) {
         if (button.equals(btnChat)) {
             txtChatBtn.setTextColor(getColor(R.color.textBlack))
             btnChat.startBackgroundAlphaAnimation(1f, 0f)
@@ -204,7 +201,7 @@ class ChatMainActivity : MisoActivity() {
         goToPreviousActivity()
     }
 
-    fun setupFragment(fragment: Fragment) {
+    private fun setupFragment(fragment: Fragment) {
         currentFragment = fragment
         supportFragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)

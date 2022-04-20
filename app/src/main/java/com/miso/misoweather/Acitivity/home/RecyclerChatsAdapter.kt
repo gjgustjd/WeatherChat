@@ -20,17 +20,17 @@ import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 class RecyclerChatsAdapter(
-    var context: Context,
+    private val context: Context,
     @Getter
     var comments: List<Comment>,
-    var isCommentsFragment: Boolean,
+    private val isCommentsFragment: Boolean,
 ) :
     RecyclerView.Adapter<RecyclerChatsAdapter.Holder>() {
 
     @Inject
     lateinit var viewModel: ChatMainViewModel
-    var viewHolders: ArrayList<Holder> = ArrayList()
-    var currentBindedPosition = MutableLiveData<Int>()
+    private var viewHolders: ArrayList<Holder> = ArrayList()
+    val currentBindedPosition = MutableLiveData<Int>()
 
     override fun getItemCount(): Int {
         return comments.size
@@ -46,7 +46,8 @@ class RecyclerChatsAdapter(
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         currentBindedPosition.value = position
-        holder.nickname.text = "${comments.get(position).bigScale}의 ${comments.get(position).nickname}"
+        holder.nickname.text =
+            "${comments.get(position).bigScale}의 ${comments.get(position).nickname}"
         holder.comment.text = comments.get(position).content
 
         val currentTimeString =
@@ -87,7 +88,7 @@ class RecyclerChatsAdapter(
         return Holder(ListItemChatBinding.bind(view))
     }
 
-    class Holder(itemView: ListItemChatBinding) : RecyclerView.ViewHolder(itemView.root) {
+    inner class Holder(itemView: ListItemChatBinding) : RecyclerView.ViewHolder(itemView.root) {
         var background = itemView.background
         var nickname = itemView.txtNickname
         var comment = itemView.txtMessage

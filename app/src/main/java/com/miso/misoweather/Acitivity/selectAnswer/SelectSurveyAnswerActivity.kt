@@ -28,13 +28,13 @@ import kotlin.random.Random
 @AndroidEntryPoint
 class SelectSurveyAnswerActivity : MisoActivity() {
     private val viewModel: SelectAnswerViewModel by viewModels()
-    lateinit var binding: ActivitySurveyAnswerBinding
-    lateinit var btn_back: ImageButton
-    lateinit var btn_action: Button
-    lateinit var txtQuestion: TextView
-    lateinit var surveyItem: SurveyItem
-    lateinit var recycler_answers: RecyclerView
-    lateinit var recyclerAdapter: RecyclerSurveyAnswersAdapter
+    private lateinit var binding: ActivitySurveyAnswerBinding
+    private lateinit var btn_back: ImageButton
+    private lateinit var btn_action: Button
+    private lateinit var txtQuestion: TextView
+    private lateinit var surveyItem: SurveyItem
+    private lateinit var recycler_answers: RecyclerView
+    private lateinit var recyclerAdapter: RecyclerSurveyAnswersAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -43,10 +43,10 @@ class SelectSurveyAnswerActivity : MisoActivity() {
         checkAndInitializeViews()
     }
 
-    fun checkAndInitializeViews() {
+    private fun checkAndInitializeViews() {
         if (intent.getSerializableExtra("SurveyItem") == null) {
-            var questions = resources.getStringArray(R.array.survey_questions)
-            var randomIndex = Random.nextInt(questions.size)
+            val questions = resources.getStringArray(R.array.survey_questions)
+            val randomIndex = Random.nextInt(questions.size)
             getSurveyAnswer(randomIndex + 1)
         } else {
             surveyItem = intent.getSerializableExtra("SurveyItem") as SurveyItem
@@ -55,7 +55,7 @@ class SelectSurveyAnswerActivity : MisoActivity() {
         }
     }
 
-    fun initializeViews() {
+    private fun initializeViews() {
         txtQuestion = binding.txtItemText
         txtQuestion.text = surveyItem.surveyQuestion.substring(3)
         btn_back = binding.imgbtnBack
@@ -75,7 +75,7 @@ class SelectSurveyAnswerActivity : MisoActivity() {
     }
 
     override fun doBack() {
-        var aIntent: Intent
+        val aIntent: Intent
         if (intent.getStringExtra("previousActivity").equals("Home"))
             aIntent = Intent(this, HomeActivity::class.java)
         else if (intent.getStringExtra("previousActivity").equals("Weather"))
@@ -89,25 +89,25 @@ class SelectSurveyAnswerActivity : MisoActivity() {
         finish()
     }
 
-    fun getSurveyAnswer(surveyId: Int) {
+    private fun getSurveyAnswer(surveyId: Int) {
         viewModel.getSurveyAnswer(surveyId, resources.getStringArray(R.array.survey_questions))
-        viewModel.surveyItem.observe(this, {
+        viewModel.surveyItem.observe(this) {
             surveyItem = it!!
             initializeViews()
             setupRecycler()
-        })
+        }
     }
 
-    fun setupRecycler() {
+    private fun setupRecycler() {
         recyclerAdapter = RecyclerSurveyAnswersAdapter(this, surveyItem.surveyAnswers)
         recycler_answers.adapter = recyclerAdapter
         recycler_answers.layoutManager = LinearLayoutManager(baseContext)
     }
 
-    fun putSurveyAnswer() {
-        var selectedAnswer = recyclerAdapter.getSelectedAnswerItem()
+    private fun putSurveyAnswer() {
+        val selectedAnswer = recyclerAdapter.getSelectedAnswerItem()
         viewModel.putSurveyAnswer(selectedAnswer, surveyItem.surveyId)
-        viewModel.surveyAnswerResponse.observe(this, {
+        viewModel.surveyAnswerResponse.observe(this) {
             if (it == null) {
                 Toast.makeText(this, "답변 선택에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 doBack()
@@ -124,6 +124,6 @@ class SelectSurveyAnswerActivity : MisoActivity() {
                     doBack()
                 }
             }
-        })
+        }
     }
 }

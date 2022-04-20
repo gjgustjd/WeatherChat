@@ -19,13 +19,14 @@ import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 class SurveyFragment @Inject constructor() : Fragment() {
-    lateinit var binding: FragmentSurveyBinding
-    lateinit var recyclerSurvey: RecyclerView
-    lateinit var recyclerSurveysAdapter: RecyclerSurveysAdapter
-    lateinit var currentLocation: String
-    lateinit var bigShortScale: String
-    lateinit var activity: ChatMainActivity
+    private lateinit var binding: FragmentSurveyBinding
+    private lateinit var recyclerSurvey: RecyclerView
+    private lateinit var recyclerSurveysAdapter: RecyclerSurveysAdapter
+    private lateinit var currentLocation: String
+    private lateinit var bigShortScale: String
+    private lateinit var activity: ChatMainActivity
     private val viewModel: ChatMainViewModel by activityViewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentSurveyBinding.inflate(layoutInflater)
@@ -35,7 +36,7 @@ class SurveyFragment @Inject constructor() : Fragment() {
         setupData()
     }
 
-    fun setupData() {
+    private fun setupData() {
         if (viewModel.surveyItems.value.isNullOrEmpty()) {
             viewModel.setupSurveyAnswerList(activity)
             setupSurveyResult(bigShortScale)
@@ -43,17 +44,17 @@ class SurveyFragment @Inject constructor() : Fragment() {
         }
     }
 
-    fun initializeView() {
+    private fun initializeView() {
         currentLocation = activity.selectedRegion
         recyclerSurvey = binding.recyclerSurveys
-        viewModel.surveyItems.observe(this, {
+        viewModel.surveyItems.observe(this) {
             if (it.size > 0)
                 setupRecyclerSurveys(it as ArrayList<SurveyItem>)
-        })
+        }
     }
 
 
-    fun setupRecyclerSurveys(surveyItems: ArrayList<SurveyItem>) {
+    private fun setupRecyclerSurveys(surveyItems: ArrayList<SurveyItem>) {
         try {
             recyclerSurveysAdapter = RecyclerSurveysAdapter(activity, surveyItems)
             recyclerSurvey.adapter = recyclerSurveysAdapter
@@ -73,11 +74,11 @@ class SurveyFragment @Inject constructor() : Fragment() {
         return view
     }
 
-    fun setupSurveyResult(bigShortScale: String) {
+    private fun setupSurveyResult(bigShortScale: String) {
         viewModel.getSurveyResult(bigShortScale)
     }
 
-    fun setupSurveyMyAnswer() {
+    private fun setupSurveyMyAnswer() {
         viewModel.getSurveyMyAnswers(
             (requireActivity() as MisoActivity).getPreference("misoToken")!!
         )

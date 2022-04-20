@@ -1,10 +1,12 @@
 package com.miso.misoweather.Acitivity.selectRegion
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.home.HomeActivity
@@ -16,14 +18,15 @@ import com.miso.misoweather.Acitivity.login.LoginActivity
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
 import java.lang.Exception
 
+@RequiresApi(Build.VERSION_CODES.O)
 class SelectRegionActivity : MisoActivity() {
-    lateinit var binding: ActivitySelectRegionBinding
-    lateinit var gridAdapter: RecyclerRegionsAdapter
-    lateinit var grid_region: RecyclerView
-    lateinit var list_towns: RecyclerView
-    lateinit var btn_back: ImageButton
-    lateinit var btn_next: Button
-    lateinit var aPurpose: String
+    private lateinit var binding: ActivitySelectRegionBinding
+    private lateinit var gridAdapter: RecyclerRegionsAdapter
+    private lateinit var grid_region: RecyclerView
+    private lateinit var list_towns: RecyclerView
+    private lateinit var btn_back: ImageButton
+    private lateinit var btn_next: Button
+    private lateinit var aPurpose: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
@@ -32,7 +35,7 @@ class SelectRegionActivity : MisoActivity() {
         setRecyclerRegions()
     }
 
-    fun initializeViews() {
+    private fun initializeViews() {
         aPurpose = intent.getStringExtra("for") ?: ""
         grid_region = binding.gridRegions
         list_towns = binding.recyclerTowns
@@ -47,8 +50,8 @@ class SelectRegionActivity : MisoActivity() {
                 if (gridAdapter.selectedIndex == -1)
                     Toast.makeText(this, "지역을 선택해 주세요", Toast.LENGTH_SHORT).show()
                 else {
-                    var intent = Intent(this, SelectTownActivity::class.java)
-                    var bigScaleRegion = gridAdapter.getSelectedItemShortName()
+                    val intent = Intent(this, SelectTownActivity::class.java)
+                    val bigScaleRegion = gridAdapter.getSelectedItemShortName()
                     intent.putExtra("for", aPurpose)
                     intent.putExtra("region", bigScaleRegion)
                     startActivity(intent)
@@ -64,10 +67,9 @@ class SelectRegionActivity : MisoActivity() {
         }
     }
 
-    override fun doBack()
-    {
+    override fun doBack() {
         if (aPurpose.equals("change")) {
-            var intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
             transferToBack()
             finish()
@@ -78,7 +80,7 @@ class SelectRegionActivity : MisoActivity() {
         }
     }
 
-    fun setRecyclerRegions() {
+    private fun setRecyclerRegions() {
         gridAdapter = RecyclerRegionsAdapter(this@SelectRegionActivity, getRegionItems())
         grid_region.adapter = gridAdapter
         grid_region.layoutManager = GridLayoutManager(this, 4)
@@ -86,14 +88,14 @@ class SelectRegionActivity : MisoActivity() {
         grid_region.addItemDecoration(spaceDecoration)
     }
 
-    fun getRegionItems(): ArrayList<RegionItem> {
-        var regions = resources.getStringArray(R.array.regions)
-        var regions_full = resources.getStringArray(R.array.regions_full)
-        var regionItems: ArrayList<RegionItem> = ArrayList<RegionItem>()
-        for (i: Int in 0..regions.size - 1) {
-            var item: RegionItem = RegionItem()
-            item.shortName = regions.get(i)
-            item.longName = regions_full.get(i)
+    private fun getRegionItems(): ArrayList<RegionItem> {
+        val regions = resources.getStringArray(R.array.regions)
+        val regions_full = resources.getStringArray(R.array.regions_full)
+        val regionItems: ArrayList<RegionItem> = ArrayList()
+        for (i: Int in regions.indices) {
+            val item = RegionItem()
+            item.shortName = regions[i]
+            item.longName = regions_full[i]
             regionItems.add(item)
         }
 

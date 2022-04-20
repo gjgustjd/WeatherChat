@@ -1,10 +1,12 @@
 package com.miso.misoweather.Acitivity.updateRegion
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
@@ -19,17 +21,18 @@ import java.lang.Exception
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@RequiresApi(Build.VERSION_CODES.O)
 class UpdateRegionActivity : MisoActivity() {
     private val viewModel: UpdateRegionViewModel by viewModels()
-    lateinit var binding: ActivityUpdateRegionBinding
-    lateinit var gridAdapter: RecyclerRegionsAdapter
-    lateinit var grid_region: RecyclerView
-    lateinit var btn_back: ImageButton
-    lateinit var btn_next: Button
-    lateinit var currentRegion: String
-    lateinit var surveyRegion: String
-    lateinit var bigScaleRegion: String
-    var isAllInitialized = false
+    private lateinit var binding: ActivityUpdateRegionBinding
+    private lateinit var gridAdapter: RecyclerRegionsAdapter
+    private lateinit var grid_region: RecyclerView
+    private lateinit var btn_back: ImageButton
+    private lateinit var btn_next: Button
+    private lateinit var currentRegion: String
+    private lateinit var surveyRegion: String
+    private lateinit var bigScaleRegion: String
+    private var isAllInitialized = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityUpdateRegionBinding.inflate(layoutInflater)
@@ -37,7 +40,7 @@ class UpdateRegionActivity : MisoActivity() {
         initializeProperties()
     }
 
-    fun initializeProperties() {
+    private fun initializeProperties() {
         fun checkinitializedAll() {
             if (!isAllInitialized) {
                 if (
@@ -51,17 +54,17 @@ class UpdateRegionActivity : MisoActivity() {
             }
         }
         viewModel.updateProperties()
-        viewModel.surveyRegion.observe(this, {
+        viewModel.surveyRegion.observe(this) {
             surveyRegion = it!!
             checkinitializedAll()
-        })
-        viewModel.bigScaleRegion.observe(this, {
+        }
+        viewModel.bigScaleRegion.observe(this) {
             bigScaleRegion = it!!
             checkinitializedAll()
-        })
+        }
     }
 
-    fun initializeViews() {
+    private fun initializeViews() {
         currentRegion =
             intent.getStringExtra("region") ?: bigScaleRegion
         grid_region = binding.gridRegions
@@ -73,7 +76,7 @@ class UpdateRegionActivity : MisoActivity() {
         btn_next.setOnClickListener()
         {
             try {
-                var bigScaleRegion = gridAdapter.getSelectedItemShortName()
+                val bigScaleRegion = gridAdapter.getSelectedItemShortName()
                 viewModel.updateSurveyRegion(bigScaleRegion)
                 startActivity(Intent(this, ChatMainActivity::class.java))
                 transferToBack()
@@ -90,10 +93,10 @@ class UpdateRegionActivity : MisoActivity() {
         finish()
     }
 
-    fun setRecyclerRegions() {
-        var regionItems = getRegionItems()
-        var regionList = resources.getStringArray(R.array.regions)
-        var index = regionList.indexOf(currentRegion)
+    private fun setRecyclerRegions() {
+        val regionItems = getRegionItems()
+        val regionList = resources.getStringArray(R.array.regions)
+        val index = regionList.indexOf(currentRegion)
         gridAdapter = RecyclerRegionsAdapter(this@UpdateRegionActivity, regionItems, index)
         grid_region.adapter = gridAdapter
         grid_region.layoutManager = GridLayoutManager(this, 4)
@@ -102,14 +105,14 @@ class UpdateRegionActivity : MisoActivity() {
 
     }
 
-    fun getRegionItems(): ArrayList<RegionItem> {
-        var regions = resources.getStringArray(R.array.regions)
-        var regions_full = resources.getStringArray(R.array.regions_full)
-        var regionItems: ArrayList<RegionItem> = ArrayList<RegionItem>()
-        for (i: Int in 0..regions.size - 1) {
-            var item: RegionItem = RegionItem()
-            item.shortName = regions.get(i)
-            item.longName = regions_full.get(i)
+    private fun getRegionItems(): ArrayList<RegionItem> {
+        val regions = resources.getStringArray(R.array.regions)
+        val regions_full = resources.getStringArray(R.array.regions_full)
+        val regionItems: ArrayList<RegionItem> = ArrayList<RegionItem>()
+        for (i: Int in regions.indices) {
+            val item = RegionItem()
+            item.shortName = regions[i]
+            item.longName = regions_full[i]
             regionItems.add(item)
         }
 

@@ -11,7 +11,9 @@ import com.miso.misoweather.common.CommonUtil
 import com.miso.misoweather.model.DTO.Forecast.Forecast
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecast
 
-class RecyclerForecastOnTimeAdapter(var context: Context, var forecasts: List<HourlyForecast>) :
+class RecyclerForecastOnTimeAdapter(
+    private val forecasts: List<HourlyForecast>
+) :
     RecyclerView.Adapter<RecyclerForecastOnTimeAdapter.Holder>() {
 
     var viewHolders: ArrayList<Holder> = ArrayList()
@@ -22,8 +24,8 @@ class RecyclerForecastOnTimeAdapter(var context: Context, var forecasts: List<Ho
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.degree.text = CommonUtil.toIntString(forecasts.get(position).temperature) + "˚"
-        holder.emoji.text = forecasts.get(position).weather
-        holder.time.text = forecasts.get(position).forecastTime
+        holder.emoji.text = forecasts[position].weather
+        holder.time.text = forecasts[position].forecastTime
             .split("T")[1]
             .split(":")[0] + "시"
         viewHolders.add(holder)
@@ -37,9 +39,9 @@ class RecyclerForecastOnTimeAdapter(var context: Context, var forecasts: List<Ho
     }
 
     class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var emoji = itemView.findViewById<TextView>(R.id.txt_weather_emoji)
-        var degree = itemView.findViewById<TextView>(R.id.txt_weather_degree)
-        var time = itemView.findViewById<TextView>(R.id.txt_time)
+        val emoji = itemView.findViewById<TextView>(R.id.txt_weather_emoji)
+        val degree = itemView.findViewById<TextView>(R.id.txt_weather_degree)
+        val time = itemView.findViewById<TextView>(R.id.txt_time)
     }
 
 }

@@ -398,7 +398,7 @@ class WeatherDetailActivity : MisoActivity() {
 
     fun setupWeatherOnDayRecycler() {
         weatherOnDayAdapter =
-            RecyclerForecastOnDayAdapter(this, dailyForecastData.dailyForecastList)
+            RecyclerForecastOnDayAdapter(dailyForecastData.dailyForecastList)
         recyclerWeaterOnDay.adapter = weatherOnDayAdapter
         recyclerWeaterOnDay.layoutManager =
             LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -407,7 +407,7 @@ class WeatherDetailActivity : MisoActivity() {
 
     fun setupWeatherOnTimeRecycler() {
         weatherOnTimeAdapter =
-            RecyclerForecastOnTimeAdapter(this, hourlyForecastData.hourlyForecastList)
+            RecyclerForecastOnTimeAdapter(hourlyForecastData.hourlyForecastList)
         recyclerWeatherOnTime.adapter = weatherOnTimeAdapter
         recyclerWeatherOnTime.layoutManager =
             LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)

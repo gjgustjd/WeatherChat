@@ -11,10 +11,13 @@ import com.miso.misoweather.databinding.ListSurveyAnswerBinding
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import java.lang.Exception
 
-class RecyclerSurveyAnswersAdapter(var context: Context, var surveyItems: List<SurveyAnswerDto>) :
+class RecyclerSurveyAnswersAdapter(
+    private val context: Context,
+    private val surveyItems: List<SurveyAnswerDto>
+) :
     RecyclerView.Adapter<RecyclerSurveyAnswersAdapter.Holder>() {
 
-    var viewHolders: ArrayList<Holder> = ArrayList()
+    private var viewHolders: ArrayList<Holder> = ArrayList()
     var selectedIndex: Int = -1
 
     override fun getItemViewType(position: Int): Int {
@@ -47,26 +50,26 @@ class RecyclerSurveyAnswersAdapter(var context: Context, var surveyItems: List<S
         return surveyItems.get(selectedIndex)
     }
 
-    fun applyHolderSelection(position: Int, value: Boolean) {
+    private fun applyHolderSelection(position: Int, value: Boolean) {
         if (value)
             selectHolder(position)
         else
             unselectHolder(position)
     }
 
-    fun selectHolder(position: Int) {
-        var selectedHolder = viewHolders.get(position)
+    private fun selectHolder(position: Int) {
+        val selectedHolder = viewHolders.get(position)
         selectedHolder.itemView.background =
-            context.resources.getDrawable(R.drawable.toggle_track_background_purple)
+            context.resources.getDrawable(R.drawable.toggle_track_background_purple, null)
         selectedHolder.txtAnswer.setTextColor(Color.WHITE)
         selectedHolder.txtDescription.setTextColor(Color.WHITE)
         selectedHolder.imgCheck.visibility = View.VISIBLE
     }
 
-    fun unselectHolder(position: Int) {
-        var unselectedHolder = viewHolders.get(position)
+    private fun unselectHolder(position: Int) {
+        val unselectedHolder = viewHolders.get(position)
         unselectedHolder.itemView.background =
-            context.resources.getDrawable(R.drawable.toggle_track_background_stroke)
+            context.resources.getDrawable(R.drawable.toggle_track_background_stroke, null)
         unselectedHolder.txtAnswer.setTextColor(Color.BLACK)
         unselectedHolder.txtDescription.setTextColor(Color.BLACK)
         unselectedHolder.imgCheck.visibility = View.GONE
@@ -79,10 +82,10 @@ class RecyclerSurveyAnswersAdapter(var context: Context, var surveyItems: List<S
     }
 
     class Holder(itemView: ListSurveyAnswerBinding) : RecyclerView.ViewHolder(itemView.root) {
-        var txtAnswer = itemView.txtAnswer
-        var txtDescription = itemView.txtDescription
-        var imgCheck = itemView.imgCheck
-        var itemView = itemView.itemView
+        val txtAnswer = itemView.txtAnswer
+        val txtDescription = itemView.txtDescription
+        val imgCheck = itemView.imgCheck
+        val itemView = itemView.itemView
     }
 
 }

@@ -1,6 +1,7 @@
 package com.miso.misoweather.Acitivity.mypage
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -8,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.login.LoginActivity
@@ -21,16 +23,17 @@ import java.lang.Exception
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@RequiresApi(Build.VERSION_CODES.O)
 class MyPageActivity : MisoActivity() {
     private val viewModel: MyPageViewModel by viewModels()
-    lateinit var binding: ActivityMypageBinding
-    lateinit var btn_back: ImageButton
-    lateinit var btn_logout: Button
-    lateinit var btn_unregister: Button
-    lateinit var btn_version: Button
-    lateinit var txt_version: TextView
-    lateinit var txt_emoji: TextView
-    lateinit var txt_nickname: TextView
+    private lateinit var binding: ActivityMypageBinding
+    private lateinit var btn_back: ImageButton
+    private lateinit var btn_logout: Button
+    private lateinit var btn_unregister: Button
+    private lateinit var btn_version: Button
+    private lateinit var txt_version: TextView
+    private lateinit var txt_emoji: TextView
+    private lateinit var txt_nickname: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,11 +42,11 @@ class MyPageActivity : MisoActivity() {
         initializeView()
     }
 
-    fun getVersionString(): String {
+    private fun getVersionString(): String {
         return this.packageManager.getPackageInfo(this.packageName, 0).versionName
     }
 
-    fun initializeView() {
+    private fun initializeView() {
         btn_back = binding.imgbtnBack
         btn_logout = binding.btnLogout
         btn_unregister = binding.btnUnregister
@@ -108,15 +111,15 @@ class MyPageActivity : MisoActivity() {
         finish()
     }
 
-    fun goToLoginActivity() {
+    private fun goToLoginActivity() {
         startActivity(Intent(this, LoginActivity::class.java))
         transferToBack()
         finish()
     }
 
-    fun unregister() {
+    private fun unregister() {
         viewModel.unRegister(makeLoginRequestDto())
-        viewModel.unRegisterResponse.observe(this, {
+        viewModel.unRegisterResponse.observe(this) {
             try {
                 if (it is Response<*>) {
                     if (it.isSuccessful) {
@@ -141,10 +144,10 @@ class MyPageActivity : MisoActivity() {
                 Log.e("unregister", e.message.toString())
                 Toast.makeText(this, "카카오 계정 연결 해제에 실패하였습니다.", Toast.LENGTH_SHORT).show()
             }
-        })
+        }
     }
 
-    fun makeLoginRequestDto(): LoginRequestDto {
+    private fun makeLoginRequestDto(): LoginRequestDto {
         var loginRequestDto = LoginRequestDto(
             getPreference("socialId"),
             getPreference("socialType")
@@ -152,7 +155,7 @@ class MyPageActivity : MisoActivity() {
         return loginRequestDto
     }
 
-    fun logout() {
+    private fun logout() {
         UserApiClient.instance.logout { error ->
             if (error != null) {
                 Log.e("kakaoLogout", "로그아웃 실패. SDK에서 토큰 삭제됨", error)

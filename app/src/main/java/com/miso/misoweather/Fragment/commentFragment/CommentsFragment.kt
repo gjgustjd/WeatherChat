@@ -27,13 +27,14 @@ import javax.inject.Inject
 @RequiresApi(Build.VERSION_CODES.O)
 class CommentsFragment @Inject constructor() : Fragment() {
     private val viewModel: ChatMainViewModel by viewModels()
-    lateinit var binding: FragmentCommentBinding
-    lateinit var recyclerChatAdapter: RecyclerChatsAdapter
-    lateinit var refreshLayout: SwipeRefreshLayout
-    lateinit var recyclerChat: RecyclerView
-    lateinit var edtComment: EditText
-    lateinit var btnSubmit: Button
-    lateinit var activity: MisoActivity
+    private lateinit var binding: FragmentCommentBinding
+    private lateinit var recyclerChatAdapter: RecyclerChatsAdapter
+    private lateinit var refreshLayout: SwipeRefreshLayout
+    private lateinit var recyclerChat: RecyclerView
+    private lateinit var edtComment: EditText
+    private lateinit var btnSubmit: Button
+    private lateinit var activity: MisoActivity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentCommentBinding.inflate(layoutInflater)
@@ -51,7 +52,7 @@ class CommentsFragment @Inject constructor() : Fragment() {
         return view
     }
 
-    fun initializeViews() {
+    private fun initializeViews() {
         activity = getActivity() as MisoActivity
         recyclerChat = binding.recyclerChat
         refreshLayout = binding.refreshLayout
@@ -78,7 +79,7 @@ class CommentsFragment @Inject constructor() : Fragment() {
                 }
             }
         })
-        viewModel.commentListResponse.observe(activity, {
+        viewModel.commentListResponse.observe(activity) {
             try {
                 var responseDto = it!!.body() as CommentListResponseDto
                 Log.i("결과", "성공")
@@ -93,8 +94,8 @@ class CommentsFragment @Inject constructor() : Fragment() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        })
-        viewModel.addCommentResponse.observe(activity, {
+        }
+        viewModel.addCommentResponse.observe(activity) {
             try {
                 Log.i("결과", "성공")
                 getCommentList(null)
@@ -102,10 +103,10 @@ class CommentsFragment @Inject constructor() : Fragment() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        })
+        }
     }
 
-    fun addComent() {
+    private fun addComent() {
         if (edtComment.text.toString().length < 2) {
             Toast.makeText(context, "텍스트를 2자 이상 입력해주세요.", Toast.LENGTH_SHORT).show()
         } else {
@@ -116,14 +117,14 @@ class CommentsFragment @Inject constructor() : Fragment() {
         }
     }
 
-    fun getCommentList(commentId: Int?) {
+    private fun getCommentList(commentId: Int?) {
         viewModel.getCommentList(
             commentId,
             10
         )
     }
 
-    fun setRecyclerChats(commentListResponseDto: CommentListResponseDto) {
+    private fun setRecyclerChats(commentListResponseDto: CommentListResponseDto) {
         try {
             recyclerChatAdapter = RecyclerChatsAdapter(
                 activity.baseContext,
@@ -132,11 +133,11 @@ class CommentsFragment @Inject constructor() : Fragment() {
             )
             recyclerChat.adapter = recyclerChatAdapter
             recyclerChat.layoutManager = LinearLayoutManager(activity.baseContext)
-            recyclerChatAdapter.currentBindedPosition.observe(activity, {
+            recyclerChatAdapter.currentBindedPosition.observe(activity) {
                 if (it == recyclerChatAdapter.comments.size - 1) {
                     getCommentList(recyclerChatAdapter.getCommentItem(it).id)
                 }
-            })
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
