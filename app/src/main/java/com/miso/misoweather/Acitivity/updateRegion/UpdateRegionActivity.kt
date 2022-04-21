@@ -30,43 +30,17 @@ class UpdateRegionActivity : MisoActivity() {
     private lateinit var btn_back: ImageButton
     private lateinit var btn_next: Button
     private lateinit var currentRegion: String
-    private lateinit var surveyRegion: String
-    private lateinit var bigScaleRegion: String
-    private var isAllInitialized = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityUpdateRegionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initializeProperties()
+        initializeViews()
+        setRecyclerRegions()
     }
-
-    private fun initializeProperties() {
-        fun checkinitializedAll() {
-            if (!isAllInitialized) {
-                if (
-                    this::bigScaleRegion.isInitialized &&
-                    this::surveyRegion.isInitialized
-                ) {
-                    initializeViews()
-                    setRecyclerRegions()
-                    isAllInitialized = true
-                }
-            }
-        }
-        viewModel.updateProperties()
-        viewModel.surveyRegion.observe(this) {
-            surveyRegion = it!!
-            checkinitializedAll()
-        }
-        viewModel.bigScaleRegion.observe(this) {
-            bigScaleRegion = it!!
-            checkinitializedAll()
-        }
-    }
-
     private fun initializeViews() {
         currentRegion =
-            intent.getStringExtra("region") ?: bigScaleRegion
+            intent.getStringExtra("region") ?: viewModel.bigScaleRegion
         grid_region = binding.gridRegions
         btn_back = binding.imgbtnBack
         btn_next = binding.btnAction
