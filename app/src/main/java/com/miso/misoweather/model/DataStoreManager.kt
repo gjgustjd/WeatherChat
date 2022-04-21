@@ -16,7 +16,11 @@ import javax.inject.Singleton
 
 @Singleton
 class DataStoreManager @Inject constructor(@ApplicationContext private val context: Context) {
-    private val Context.settingDataStore: DataStore<Preferences> by preferencesDataStore(name = "misoweather")
+    private val Context.settingDataStore: DataStore<Preferences> by preferencesDataStore(
+        name = "misoweather",
+        produceMigrations = { context ->
+            listOf(SharedPreferencesMigration(context, "misoweather"))
+        })
 
     companion object {
         val SOCIAL_ID = stringPreferencesKey("socialId")
@@ -34,9 +38,10 @@ class DataStoreManager @Inject constructor(@ApplicationContext private val conte
         val NICKNAME = stringPreferencesKey("nickname")
     }
 
-    fun getPreferenceAsFlow(pref: Preferences.Key<String>) = context.settingDataStore.data.map {
-        it[pref] ?: ""
-    }
+    fun getPreferenceAsFlow(pref: Preferences.Key<String>) =
+        context.settingDataStore.data.map {
+            it[pref] ?: ""
+        }
 
     fun getPreference(pref: Preferences.Key<String>) = runBlocking {
         getPreferenceAsFlow(pref).first()
