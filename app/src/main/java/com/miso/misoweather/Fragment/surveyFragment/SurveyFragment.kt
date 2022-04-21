@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
 import com.miso.misoweather.Acitivity.chatmain.ChatMainViewModel
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
-import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.FragmentSurveyBinding
 import javax.inject.Inject
 
@@ -82,7 +81,7 @@ class SurveyFragment @Inject constructor() : Fragment() {
 
     private fun setupSurveyMyAnswer() {
         viewModel.getSurveyMyAnswers(
-            (requireActivity() as MisoActivity).getPreference("misoToken")!!
+            viewModel.misoToken
         )
     }
 
