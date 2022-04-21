@@ -54,8 +54,8 @@ class MisoRepository {
     }
 
     fun removePreference(vararg pref: String) {
-        for (i in 0..pref.size - 1) {
-            val pair = Pair(pref[i], "")
+        for (element in pref) {
+            val pair = Pair(element, "")
             pairList.add(pair)
         }
     }
@@ -73,12 +73,6 @@ class MisoRepository {
         edit.apply()
         pairList.clear()
     }
-
-    fun savePreferences(key: Preferences.Key<String>, value: String) {
-        dataStoreManager.savePreferences(key, value)
-    }
-
-    fun getPreference(key: Preferences.Key<String>) = dataStoreManager.getPreference(key)
 
     fun checkRegistered(
         socialId: String,

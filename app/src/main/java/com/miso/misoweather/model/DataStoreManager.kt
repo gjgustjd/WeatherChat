@@ -8,15 +8,15 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DataStoreManager @Inject constructor(@ApplicationContext private val context: Context) {
-    val Context.settingDataStore: DataStore<Preferences> by preferencesDataStore(name = "misoweather")
+    private val Context.settingDataStore: DataStore<Preferences> by preferencesDataStore(name = "misoweather")
 
     companion object {
         val SOCIAL_ID = stringPreferencesKey("socialId")
@@ -34,16 +34,35 @@ class DataStoreManager @Inject constructor(@ApplicationContext private val conte
         val NICKNAME = stringPreferencesKey("nickname")
     }
 
-    fun getPreference(pref: Preferences.Key<String>) = context.settingDataStore.data.map {
+    fun getPreferenceAsFlow(pref: Preferences.Key<String>) = context.settingDataStore.data.map {
         it[pref] ?: ""
     }
 
-    fun savePreferences(key: Preferences.Key<String>, value: String) {
+    fun getPreference(pref: Preferences.Key<String>) = runBlocking {
+        getPreferenceAsFlow(pref).first()
+    }
+
+    fun savePreference(key: Preferences.Key<String>, value: String) {
         CoroutineScope(Dispatchers.IO).launch()
         {
             context.settingDataStore.edit { preferences ->
                 preferences[key] = value
             }
+        }
+    }
+
+    fun removePreference(key: Preferences.Key<String>) {
+        CoroutineScope(Dispatchers.IO).launch()
+        {
+            context.settingDataStore.edit { preferences ->
+                preferences[key] = ""
+            }
+        }
+    }
+
+    fun removePreferences(vararg keys: Preferences.Key<String>) {
+        for (element in keys) {
+            removePreference(element)
         }
     }
 }
