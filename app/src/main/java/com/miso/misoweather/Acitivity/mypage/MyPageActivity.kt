@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.asLiveData
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.login.LoginActivity
@@ -17,6 +18,7 @@ import com.miso.misoweather.Dialog.GeneralConfirmDialog
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityMypageBinding
 import com.miso.misoweather.model.DTO.LoginRequestDto
+import com.miso.misoweather.model.DataStoreManager
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Response
 import java.lang.Exception
@@ -40,11 +42,34 @@ class MyPageActivity : MisoActivity() {
         binding = ActivityMypageBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initializeView()
+        setupObservers()
     }
 
     private fun getVersionString(): String {
         return this.packageManager.getPackageInfo(this.packageName, 0).versionName
     }
+
+    private fun setupObservers() {
+        viewModel.emoji.observe(this)
+        {
+            txt_emoji.text = it
+        }
+        viewModel.nickname.observe(this)
+        {
+            setNickNameText()
+        }
+        viewModel.bigScaleRegion.observe(this)
+        {
+            setNickNameText()
+        }
+    }
+
+    private fun setNickNameText() {
+        if (viewModel.nickname.value != null && viewModel.bigScaleRegion.value != null)
+            txt_nickname.text =
+                "${getBigShortScale(viewModel.bigScaleRegion.value!!)}의 ${viewModel.nickname.value}"
+    }
+
 
     private fun initializeView() {
         btn_back = binding.imgbtnBack
@@ -54,11 +79,8 @@ class MyPageActivity : MisoActivity() {
         txt_version = binding.txtVersion
         txt_emoji = binding.txtEmoji
         txt_nickname = binding.txtNickname
-
-        txt_emoji.text = getPreference("emoji")
-        txt_nickname.text =
-            "${getBigShortScale(getPreference("BigScaleRegion")!!)}의 ${getPreference("nickname")}"
         txt_version.text = getVersionString()
+
         btn_version.setOnClickListener()
         {
             val dialog = GeneralConfirmDialog(
@@ -105,6 +127,14 @@ class MyPageActivity : MisoActivity() {
         }
     }
 
+    private fun makeLoginRequestDto(): LoginRequestDto {
+        val loginRequestDto = LoginRequestDto(
+            viewModel.socialId,
+            viewModel.socialType
+        )
+        return loginRequestDto
+    }
+
     override fun doBack() {
         startActivity(Intent(this, HomeActivity::class.java))
         transferToBack()
@@ -147,13 +177,6 @@ class MyPageActivity : MisoActivity() {
         }
     }
 
-    private fun makeLoginRequestDto(): LoginRequestDto {
-        val loginRequestDto = LoginRequestDto(
-            getPreference("socialId"),
-            getPreference("socialType")
-        )
-        return loginRequestDto
-    }
 
     private fun logout() {
         UserApiClient.instance.logout { error ->
