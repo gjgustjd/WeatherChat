@@ -3,10 +3,12 @@ package com.miso.misoweather.Acitivity.getnickname
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.DTO.SignUpRequestDto
+import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Response
@@ -14,41 +16,32 @@ import java.lang.Exception
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class SelectNicknameViewModel @Inject constructor() : ViewModel() {
-    @Inject
-    lateinit var repository: MisoRepository
+class SelectNicknameViewModel @Inject constructor(private val repository: MisoRepository) :
+    ViewModel() {
 
     @MutableResponseLiveData
     @Inject
     lateinit var nicknameResponseDto: MutableLiveData<Response<*>?>
 
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var smallScaleRegion: MutableLiveData<String?>
+    val smallScaleRegion by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.SMALLSCALE_REGION)
+    }
 
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var bigScaleRegion: MutableLiveData<String?>
+    val bigScaleRegion by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.BIGSCALE_REGION)
+    }
 
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var middleScaleRegion: MutableLiveData<String?>
+    val accessToken by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.ACCESS_TOKEN)
+    }
 
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var accessToken: MutableLiveData<String?>
+    val socialId by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.SOCIAL_ID)
+    }
 
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var misoToken: MutableLiveData<String?>
-
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var socialId: MutableLiveData<String?>
-
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var socialType: MutableLiveData<String?>
+    val socialType by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.SOCIAL_TYPE)
+    }
 
     @MutableNullableStringLiveData
     @Inject
@@ -57,44 +50,6 @@ class SelectNicknameViewModel @Inject constructor() : ViewModel() {
     lateinit var loginRequestDto: LoginRequestDto
     lateinit var signUpRequestDto: SignUpRequestDto
     lateinit var defaultRegionId: String
-
-    fun setupSocialId() {
-        socialId.value = repository.getPreference("socialId")
-    }
-
-    fun setupSocialType() {
-        socialType.value = repository.getPreference("socialType")
-    }
-
-    fun setupMisoToken() {
-        misoToken.value = repository.getPreference("misoToken")
-    }
-
-    fun setupAccessToken() {
-        accessToken.value = repository.getPreference("accessToken")
-    }
-
-    fun setupBigScaleRegion() {
-        bigScaleRegion.value = repository.getPreference("BigScaleRegion")
-    }
-
-    fun setupMiddleScaleRegion() {
-        middleScaleRegion.value = repository.getPreference("MidScaleRegion")
-    }
-
-    fun setupSmallScaleRegion() {
-        smallScaleRegion.value = repository.getPreference("SmallScaleRegion")
-    }
-
-    fun updatePreferences() {
-        setupSocialType()
-        setupSocialId()
-        setupMisoToken()
-        setupSmallScaleRegion()
-        setupMiddleScaleRegion()
-        setupBigScaleRegion()
-        setupAccessToken()
-    }
 
     fun registerMember(
         signUpRequestDto: SignUpRequestDto,
@@ -106,11 +61,11 @@ class SelectNicknameViewModel @Inject constructor() : ViewModel() {
             signUpRequestDto,
             socialToken,
             { call, response ->
-                issueMisoToken(loginRequestDto)
+                issueMisoToken(loginRequestDto, defaultRegionId)
             },
             { call, response ->
-                if (response.errorBody()!!.source().toString().contains("UNAUTHORIZED") &&
-                    isResetedToken == false
+                if (response.errorBody()!!.source().toString()
+                        .contains("UNAUTHORIZED") && !isResetedToken
                 ) {
                     resetAccessToken()
                 } else {
@@ -143,48 +98,37 @@ class SelectNicknameViewModel @Inject constructor() : ViewModel() {
                 Log.e("resetAccessToken", "로그인 실패", error)
             } else if (token != null) {
                 Log.i("resetAccessToken", "로그인 성공 ${token.accessToken}")
-                repository.apply {
-                    addPreferencePair("accessToken", token.accessToken)
-                    savePreferences()
-                }
-                updatePreferences()
-                registerMember(signUpRequestDto, socialType.value!!, true)
+                repository.dataStoreManager.savePreference(
+                    DataStoreManager.ACCESS_TOKEN,
+                    token.accessToken
+                )
+                registerMember(signUpRequestDto, socialType, true)
             }
         }
     }
 
-    fun removeRegionPref() {
-        repository.apply {
-            removePreference("BigScaleRegion")
-            removePreference("MidScaleRegion")
-            removePreference("SmallScaleRegion")
-        }
-    }
-
     fun issueMisoToken(
-        loginRequestDto: LoginRequestDto
+        loginRequestDto: LoginRequestDto,
+        defaultRegionId: String
     ) {
         repository.issueMisoToken(
             loginRequestDto,
-            accessToken.value!!,
+            accessToken,
             { call, response ->
                 try {
                     Log.i("결과", "성공")
                     val headers = response.headers()
                     val serverToken = headers.get("servertoken")
-                    repository.apply {
-                        addPreferencePair("misoToken", serverToken!!)
-                        addPreferencePair("defaultRegionId", defaultRegionId)
-                        savePreferences()
+                    repository.dataStoreManager.apply {
+                        savePreference(DataStoreManager.MISO_TOKEN, serverToken!!)
+                        savePreference(DataStoreManager.DEFAULT_REGION_ID, defaultRegionId)
                     }
-                    updatePreferences()
-                    if (!misoToken.value.isNullOrBlank()) {
+                    if (!serverToken.isNullOrBlank()) {
                         registerResultString.value = "OK"
                     } else
                         registerResultString.value = "Failed"
                 } catch (e: Exception) {
                     e.printStackTrace()
-                } finally {
                 }
             },
             { call, response ->
