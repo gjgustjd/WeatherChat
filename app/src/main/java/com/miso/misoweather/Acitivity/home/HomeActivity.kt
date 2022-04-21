@@ -70,23 +70,21 @@ class HomeActivity : MisoActivity() {
     private lateinit var thirdProgressLayout: ConstraintLayout
     private lateinit var chartLayout: ConstraintLayout
     private lateinit var txtEmptyChart: TextView
+    private var briefForecastData: ForecastBriefData? = null
     private lateinit var isSurveyed: String
-    private lateinit var lastSurveyedDate: String
     private lateinit var defaultRegionId: String
-    private lateinit var misoToken: String
     private lateinit var bigScale: String
     private lateinit var midScale: String
     private lateinit var smallScale: String
-    private var briefForecastData: ForecastBriefData? = null
+    private var isAllInitialized: Boolean = false
 
-    private var isAllInitialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initializeViews()
         initializeProperties()
+        initializeViews()
     }
 
 
@@ -95,7 +93,7 @@ class HomeActivity : MisoActivity() {
         getCommentList()
         setupSurveyResult()
 
-        txtLocation.text = bigScale + " " + midScale + " " + smallScale
+        txtLocation.text = "${bigScale} ${midScale} ${smallScale}"
     }
 
     private fun initializeProperties() {
@@ -103,9 +101,7 @@ class HomeActivity : MisoActivity() {
             if (!isAllInitialized) {
                 if (
                     this::isSurveyed.isInitialized &&
-                    this::lastSurveyedDate.isInitialized &&
                     this::defaultRegionId.isInitialized &&
-                    this::misoToken.isInitialized &&
                     this::bigScale.isInitialized &&
                     this::midScale.isInitialized &&
                     this::smallScale.isInitialized
@@ -115,21 +111,12 @@ class HomeActivity : MisoActivity() {
                 }
             }
         }
-        viewModel.updateProperties()
         viewModel.isSurveyed.observe(this) {
             isSurveyed = it!!
             checkInitializedAll()
         }
-        viewModel.lastSurveyedDate.observe(this) {
-            lastSurveyedDate = it!!
-            checkInitializedAll()
-        }
         viewModel.defaultRegionId.observe(this) {
             defaultRegionId = it!!
-            checkInitializedAll()
-        }
-        viewModel.misoToken.observe(this) {
-            misoToken = it!!
             checkInitializedAll()
         }
         viewModel.bigScale.observe(this) {
@@ -296,7 +283,7 @@ class HomeActivity : MisoActivity() {
             val currentDate =
                 ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
                     .format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
-            lastSurveyedDate.equals(currentDate)
+            viewModel.lastSurveyedDate.equals(currentDate)
         } catch (e: Exception) {
             Log.e("isTodaySurveyed", e.stackTraceToString())
             true
@@ -321,7 +308,8 @@ class HomeActivity : MisoActivity() {
                                     txtWeatherDegree.setText(
                                         CommonUtil.toIntString(forecastBriefResponseDto.data.temperature) + "˚"
                                     )
-                                    txtLocation.text = bigScale + " " + midScale + " " + smallScale
+                                    txtLocation.text =
+                                        "${bigScale} ${midScale} ${smallScale}"
 
                                     if (!previousBigScale.equals(bigScale))
                                         setupSurveyResult()
@@ -346,7 +334,7 @@ class HomeActivity : MisoActivity() {
                             Log.e("getBriefForecast", e.message.toString())
 
                         Log.e("getBriefForecast", e.stackTraceToString())
-                        Log.e("getBriefForecast", "defaultRegionId:${defaultRegionId}")
+                        Log.e("getBriefForecast", "defaultRegionId:${viewModel.defaultRegionId}")
                         Toast.makeText(this, "날씨 단기예보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT)
                             .show()
                     }
@@ -403,7 +391,7 @@ class HomeActivity : MisoActivity() {
             Log.e("getUserInfo", response.errorBody()!!.source().toString())
         }
 
-        viewModel.getUserInfo(misoToken)
+        viewModel.getUserInfo()
         viewModel.memberInfoResponse.observe(
             this
         ) {
