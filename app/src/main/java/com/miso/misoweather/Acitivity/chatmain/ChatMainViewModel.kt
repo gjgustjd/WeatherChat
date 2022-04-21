@@ -3,6 +3,7 @@ package com.miso.misoweather.Acitivity.chatmain
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.miso.misoweather.R
 import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
@@ -14,6 +15,7 @@ import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultData
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
+import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -24,21 +26,18 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatMainViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
 
-    @MutableStringLiveData
-    @Inject
-    lateinit var surveyRegion: MutableLiveData<String>
+    val surveyRegion by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.SURVEY_REGION)
+    }
 
-    @MutableStringLiveData
-    @Inject
-    lateinit var bigScaleRegion: MutableLiveData<String>
+    val bigScaleRegion by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.BIGSCALE_REGION)
+    }
+    val nickname by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.NICKNAME)
+    }
 
-    @MutableStringLiveData
-    @Inject
-    lateinit var misoToken: MutableLiveData<String>
-
-    @MutableStringLiveData
-    @Inject
-    lateinit var defaultRegionId: MutableLiveData<String>
+    val misoToken by lazy { repository.dataStoreManager.getPreference(DataStoreManager.MISO_TOKEN) }
 
     @MutableNullableAnyLiveData
     @Inject
@@ -77,16 +76,6 @@ class ChatMainViewModel @Inject constructor(private val repository: MisoReposito
     @Inject
     lateinit var surveyItems: MutableLiveData<ArrayList<Any>>
 
-
-    fun updateProperties() {
-        repository.apply {
-            surveyRegion.value = getPreference("surveyRegion")
-            bigScaleRegion.value = getPreference("BigScaleRegion")
-            misoToken.value = getPreference("misoToken")
-            defaultRegionId.value = getPreference("defaultRegionId")
-        }
-    }
-
     fun getCommentList(commentId: Int?, size: Int) {
         repository.getCommentList(
             commentId,
@@ -102,10 +91,7 @@ class ChatMainViewModel @Inject constructor(private val repository: MisoReposito
     }
 
     fun removeSurveyRegion() {
-        repository.apply {
-            removePreference("surveyRegion")
-            savePreferences()
-        }
+        repository.dataStoreManager.removePreference(DataStoreManager.SURVEY_REGION)
     }
 
     fun addComment(

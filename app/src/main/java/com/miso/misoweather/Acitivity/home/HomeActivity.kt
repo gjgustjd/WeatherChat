@@ -87,7 +87,6 @@ class HomeActivity : MisoActivity() {
         initializeViews()
     }
 
-
     private fun setupData() {
         getUserInfo()
         getCommentList()
