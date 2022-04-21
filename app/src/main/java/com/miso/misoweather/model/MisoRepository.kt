@@ -28,51 +28,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MisoRepository {
-    var prefs: SharedPreferences
-    var pairList: ArrayList<Pair<String, String>>
-    var context: Context
+class MisoRepository @Inject constructor(@ApplicationContext val context: Context) {
 
     @Inject
     lateinit var dataStoreManager: DataStoreManager
-
-    @Inject
-    constructor(@ApplicationContext aContext: Context) {
-        context = aContext
-        prefs = context.getSharedPreferences("misoweather", Context.MODE_PRIVATE)
-        pairList = ArrayList()
-    }
-
-    fun addPreferencePair(first: String, second: String) {
-        val pair = Pair(first, second)
-        pairList.add(pair)
-    }
-
-    fun removePreference(pref: String) {
-        val pair = Pair(pref, "")
-        pairList.add(pair)
-    }
-
-    fun removePreference(vararg pref: String) {
-        for (element in pref) {
-            val pair = Pair(element, "")
-            pairList.add(pair)
-        }
-    }
-
-    fun getPreference(pref: String): String? {
-        return prefs!!.getString(pref, "")
-    }
-
-    fun savePreferences() {
-        var edit = prefs!!.edit()
-        for (i in 0..pairList.size - 1) {
-            val pair = pairList.get(i)
-            edit.putString(pair.first, pair.second)
-        }
-        edit.apply()
-        pairList.clear()
-    }
 
     fun checkRegistered(
         socialId: String,
