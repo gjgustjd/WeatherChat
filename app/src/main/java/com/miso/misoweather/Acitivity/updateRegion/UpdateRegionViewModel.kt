@@ -1,14 +1,13 @@
 package com.miso.misoweather.Acitivity.updateRegion
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import com.miso.misoweather.model.DataStoreManager
-import com.miso.misoweather.model.MisoRepository
+import com.miso.misoweather.model.MisoRepository2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class UpdateRegionViewModel @Inject constructor(private val repository: MisoRepository) :
+class UpdateRegionViewModel @Inject constructor(private val repository: MisoRepository2) :
     ViewModel() {
 
     val bigScaleRegion by lazy {

@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout.VERTICAL
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +22,7 @@ import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.lang.Exception
 
@@ -88,41 +90,36 @@ class SelectAreaActivity : MisoActivity() {
 
 
     private fun changeRegion() {
-        var currentItem = recyclerAdapter.getSelectedItem()
-        viewModel.updateRegion(
-            currentItem,
-            currentItem.id
-        )
-        viewModel.updateRegionResponse.observe(this) {
-            if (it == null) {
-            } else {
+        val currentItem = recyclerAdapter.getSelectedItem()
+        lifecycleScope.launch {
+            viewModel.updateRegion(
+                currentItem,
+                currentItem.id
+            )
+            {
                 if (it.isSuccessful) {
-                    startActivity(Intent(this, HomeActivity::class.java))
+                    startActivity(Intent(this@SelectAreaActivity, HomeActivity::class.java))
                     transferToNext()
                     finish()
-                } else {
                 }
             }
         }
     }
 
     private fun getAreaList() {
-        viewModel.getAreaList(
-            selectedRegion,
-            selectedTown
-        )
-        viewModel.areaRequestResult.observe(this) {
-            val responseDto = it as Response<RegionListResponseDto>
-            if (it == null) {
-            } else {
+        lifecycleScope.launch {
+            viewModel.getAreaList(
+                selectedRegion,
+                selectedTown
+            )
+            {
                 if (it.isSuccessful) {
                     try {
                         Log.i("getAreaList", "3단계 지역 받아오기 성공")
-                        setRecyclerTowns(responseDto.body()!!.data.regionList)
+                        setRecyclerTowns(it.body()!!.data.regionList)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
-                } else {
                 }
             }
         }
