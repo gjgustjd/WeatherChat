@@ -1,31 +1,31 @@
 package com.miso.misoweather.Acitivity.chatmain
 
-import android.util.Log
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.miso.misoweather.R
+import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
+import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import com.miso.misoweather.model.DataStoreManager
-import com.miso.misoweather.model.MisoRepository
+import com.miso.misoweather.model.MisoRepository2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import retrofit2.Response
 import javax.inject.Inject
 
 
 @HiltViewModel
-class ChatMainViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
-    val surveyItems by lazy { MutableLiveData<ArrayList<Any>>() }
-    val commentListResponse by lazy { MutableLiveData<Response<*>?>() }
-    val addCommentResponse by lazy { MutableLiveData<Response<*>?>() }
-
+class ChatMainViewModel @Inject constructor(private val repository: MisoRepository2) : ViewModel() {
+    val surveyItems by lazy { MutableLiveData<ArrayList<SurveyItem>>() }
     val surveyRegion by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.SURVEY_REGION)
     }
-
     val bigScaleRegion by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.BIGSCALE_REGION)
     }
@@ -35,107 +35,49 @@ class ChatMainViewModel @Inject constructor(private val repository: MisoReposito
 
     val misoToken by lazy { repository.dataStoreManager.getPreference(DataStoreManager.MISO_TOKEN) }
 
+    private lateinit var surveyQuestions: Array<String>
 
-    lateinit var surveyQuestions: Array<String>
-    var surveyAnswerMap: HashMap<Int, List<SurveyAnswerDto>> = HashMap()
-
-    @Inject
-    lateinit var surveyResultResponseDto: SurveyResultResponseDto
-
-    @Inject
-    lateinit var surveyMyAnswerResponseDto: SurveyMyAnswerResponseDto
-
-
-    fun getCommentList(commentId: Int?, size: Int) {
-        repository.getCommentList(
-            commentId,
-            size,
-            { call, response ->
-                commentListResponse.value = response
-            },
-            { call, response ->
-                commentListResponse.value = response
-            },
-            { call, throwable -> }
-        )
-    }
+    suspend fun getCommentList(
+        commentId: Int?,
+        size: Int,
+        action: (response: Response<CommentListResponseDto>) -> Unit
+    ) = action(repository.getCommentList(commentId, size))
 
     fun removeSurveyRegion() {
         repository.dataStoreManager.removePreference(DataStoreManager.SURVEY_REGION)
     }
 
-    fun addComment(
+    suspend fun addComment(
         shortBigScale: String,
         commentRegisterRequestDto: CommentRegisterRequestDto,
-    ) {
-        repository.addComment(
-            shortBigScale,
-            commentRegisterRequestDto,
-            { call, response ->
-                addCommentResponse.value = response
-            },
-            { call, response ->
-                addCommentResponse.value = response
-            },
-            { call, t ->
-//                    Log.i("결과", "실패 : $t")
-            },
-        )
-    }
+        action: (response: Response<GeneralResponseDto>) -> Unit
+    ) = action(repository.addComment(shortBigScale, commentRegisterRequestDto))
 
-    fun setupSurveyAnswerList(activity: ChatMainActivity) {
-        surveyQuestions = activity.resources.getStringArray(R.array.survey_questions)
-        surveyQuestions.forEachIndexed { i, item ->
-            Log.i("surveyAnswer", "surveyId:" + (i + 1).toString())
-            getSurveyAnswer(i + 1)
+
+    suspend fun setupSurveyAnswerList(context: Context) = viewModelScope.async {
+        val surveyAnswerMap = HashMap<Int, List<SurveyAnswerDto>>()
+        surveyQuestions = context.resources.getStringArray(R.array.survey_questions)
+        surveyQuestions.forEachIndexed { i, _ ->
+            surveyAnswerMap[i + 1] = getSurveyAnswer(i + 1).await()
         }
+
+        surveyAnswerMap
     }
 
-    fun getSurveyAnswer(surveyId: Int) {
-        repository.getSurveyAnswers(
-            surveyId,
-            { call, response ->
-                initializeDataAndSetupRecycler {
-                    surveyAnswerMap[surveyId] = (response.body()!!).data.responseList
-                }
-            },
-            { call, response -> },
-            { call, t -> },
-        )
-    }
+    private fun getSurveyAnswer(surveyId: Int) =
+        viewModelScope.async { repository.getSurveyAnswers(surveyId).body()!!.data.responseList }
 
-    fun getSurveyResult(shortBigScale: String) {
-        Log.i("getSurveyResult", shortBigScale)
-        repository.getSurveyResults(
-            shortBigScale,
-            { call, reponse ->
-                initializeDataAndSetupRecycler {
-                    surveyResultResponseDto = reponse.body()!!
-                }
-            },
-            { call, reponse ->
-            },
-            { call, t ->
+    private fun getSurveyResult(shortBigScale: String) =
+        viewModelScope.async { repository.getSurveyResults(shortBigScale).body() }
 
-            },
-        )
-    }
+    private fun getSurveyMyAnswers(serverToken: String) =
+        viewModelScope.async { repository.getSurveyMyAnswers(serverToken).body() }
 
-    fun getSurveyMyAnswers(serverToken: String) {
-        repository.getSurveyMyAnswers(
-            serverToken,
-            { call, reponse ->
-                initializeDataAndSetupRecycler {
-                    surveyMyAnswerResponseDto = reponse.body()!!
-                }
-            },
-            { call, response ->
-            },
-            { call, throwable -> }
-        )
-    }
-
-    private fun makeSurveyItems() {
+    private fun makeSurveyItems(
+        surveyMyAnswerResponseDto: SurveyMyAnswerResponseDto,
+        surveyAnswerMap: HashMap<Int, List<SurveyAnswerDto>>,
+        surveyResultResponseDto: SurveyResultResponseDto
+    ) {
         surveyItems.value = ArrayList()
         val comparator: Comparator<SurveyMyAnswerDto> = compareBy { it.surveyId }
         val sortedMyanswerList = surveyMyAnswerResponseDto.data.responseList.sortedWith(comparator)
@@ -154,15 +96,11 @@ class ChatMainViewModel @Inject constructor(private val repository: MisoReposito
         }
     }
 
-    fun initializeDataAndSetupRecycler(func: () -> Unit) {
-        func()
-        if (isAllSurveyResponseInitialized())
-            makeSurveyItems()
-    }
-
-    fun isAllSurveyResponseInitialized(): Boolean {
-        return ((surveyAnswerMap.size >= surveyQuestions.size) &&
-                (surveyMyAnswerResponseDto.data.responseList.size >= surveyQuestions.size) &&
-                (surveyResultResponseDto.data.responseList.size >= surveyQuestions.size))
+    suspend fun setupSurveyItems(context: ChatMainActivity) {
+        makeSurveyItems(
+            getSurveyMyAnswers(misoToken).await()!!,
+            setupSurveyAnswerList(context).await(),
+            getSurveyResult(context.getBigShortScale(bigScaleRegion)).await()!!
+        )
     }
 }

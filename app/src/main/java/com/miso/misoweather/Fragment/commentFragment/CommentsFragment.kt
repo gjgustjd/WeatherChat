@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -21,10 +22,13 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.FragmentCommentBinding
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
+@ActivityRetainedScoped
 class CommentsFragment @Inject constructor() : Fragment() {
     private val viewModel by activityViewModels<ChatMainViewModel>()
     private lateinit var binding: FragmentCommentBinding
@@ -79,51 +83,52 @@ class CommentsFragment @Inject constructor() : Fragment() {
                 }
             }
         })
-        viewModel.commentListResponse.observe(activity) {
-            try {
-                val responseDto = it!!.body() as CommentListResponseDto
-                Log.i("결과", "성공")
-                if (this::recyclerChatAdapter.isInitialized) {
-                    recyclerChatAdapter.apply {
-                        if (currentBindedPosition.value == itemCount - 1) {
-                            comments += responseDto.data.commentList
-                            notifyDataSetChanged()
-                        } else if (recyclerChat.adapter == null)
-                            setRecyclerChats(responseDto)
-                    }
-                } else
-                    setRecyclerChats(responseDto)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-        viewModel.addCommentResponse.observe(activity) {
-            try {
-                Log.i("결과", "성공")
-                getCommentList(null)
-                edtComment.text.clear()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
     }
 
     private fun addComent() {
         if (edtComment.text.toString().length < 2) {
             Toast.makeText(context, "텍스트를 2자 이상 입력해주세요.", Toast.LENGTH_SHORT).show()
         } else {
-            viewModel.addComment(
-                viewModel.misoToken,
-                CommentRegisterRequestDto(edtComment.text.toString())
-            )
+            lifecycleScope.launch {
+                viewModel.addComment(
+                    viewModel.misoToken,
+                    CommentRegisterRequestDto(edtComment.text.toString())
+                )
+                {
+                    try {
+                        Log.i("결과", "성공")
+                        getCommentList(null)
+                        edtComment.text.clear()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
         }
     }
 
     private fun getCommentList(commentId: Int?) {
-        viewModel.getCommentList(
-            commentId,
-            10
-        )
+        lifecycleScope.launch {
+            viewModel.getCommentList(commentId, 10)
+            {
+                try {
+                    val responseDto = it.body()!!
+                    Log.i("결과", "성공")
+                    if (this@CommentsFragment::recyclerChatAdapter.isInitialized) {
+                        recyclerChatAdapter.apply {
+                            if (currentBindedPosition.value == itemCount - 1) {
+                                comments += responseDto.data.commentList
+                                notifyDataSetChanged()
+                            } else if (recyclerChat.adapter == null)
+                                setRecyclerChats(responseDto)
+                        }
+                    } else
+                        setRecyclerChats(responseDto)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
     private fun setRecyclerChats(commentListResponseDto: CommentListResponseDto) {

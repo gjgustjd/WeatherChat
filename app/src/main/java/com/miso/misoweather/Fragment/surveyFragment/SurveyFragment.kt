@@ -8,15 +8,19 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
 import com.miso.misoweather.Acitivity.chatmain.ChatMainViewModel
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
 import com.miso.misoweather.databinding.FragmentSurveyBinding
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
+@ActivityRetainedScoped
 class SurveyFragment @Inject constructor() : Fragment() {
     private lateinit var binding: FragmentSurveyBinding
     private lateinit var recyclerSurvey: RecyclerView
@@ -37,9 +41,7 @@ class SurveyFragment @Inject constructor() : Fragment() {
 
     private fun setupData() {
         if (viewModel.surveyItems.value.isNullOrEmpty()) {
-            viewModel.setupSurveyAnswerList(activity)
-            setupSurveyResult(bigShortScale)
-            setupSurveyMyAnswer()
+            lifecycleScope.launch { viewModel.setupSurveyItems(activity) }
         }
     }
 
@@ -48,10 +50,9 @@ class SurveyFragment @Inject constructor() : Fragment() {
         recyclerSurvey = binding.recyclerSurveys
         viewModel.surveyItems.observe(this) {
             if (it.size > 0)
-                setupRecyclerSurveys(it as ArrayList<SurveyItem>)
+                setupRecyclerSurveys(it)
         }
     }
-
 
     private fun setupRecyclerSurveys(surveyItems: ArrayList<SurveyItem>) {
         try {
@@ -65,7 +66,6 @@ class SurveyFragment @Inject constructor() : Fragment() {
         }
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -73,16 +73,6 @@ class SurveyFragment @Inject constructor() : Fragment() {
         val view = binding.root
         // 처리
         return view
-    }
-
-    private fun setupSurveyResult(bigShortScale: String) {
-        viewModel.getSurveyResult(bigShortScale)
-    }
-
-    private fun setupSurveyMyAnswer() {
-        viewModel.getSurveyMyAnswers(
-            viewModel.misoToken
-        )
     }
 
 }
