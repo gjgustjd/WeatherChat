@@ -3,19 +3,21 @@ package com.miso.misoweather.Acitivity.login
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.model.AccessTokenInfo
 import com.miso.misoweather.model.DTO.LoginRequestDto
-import com.miso.misoweather.model.MisoRepository
+import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DataStoreManager
+import com.miso.misoweather.model.MisoRepository2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
-    val checkRegistered by lazy { MutableLiveData<Boolean?>() }
-    val issueMisoTokenResponse by lazy { MutableLiveData<Any?>() }
-
+class LoginViewModel @Inject constructor(private val repository: MisoRepository2) : ViewModel() {
     val socialId by lazy {
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.SOCIAL_ID).asLiveData()
     }
@@ -28,21 +30,10 @@ class LoginViewModel @Inject constructor(private val repository: MisoRepository)
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.ACCESS_TOKEN).asLiveData()
     }
 
-
-    fun checkRegistered() {
-        repository.checkRegistered(
-            socialId.value!!,
-            socialType.value!!,
-            { call, response ->
-                checkRegistered.value = true
-            },
-            { call, response ->
-                checkRegistered.value = false
-            },
-            { call, throwable ->
-                checkRegistered.value = false
-            })
-    }
+    suspend fun checkRegistered() =
+        viewModelScope.async {
+            repository.checkRegistered(socialId.value!!, socialType.value!!).isSuccessful
+        }.await()
 
     fun makeLoginRequestDto(): LoginRequestDto {
         return LoginRequestDto(
@@ -59,25 +50,26 @@ class LoginViewModel @Inject constructor(private val repository: MisoRepository)
         }
     }
 
-    fun issueMisoToken() {
-        repository.issueMisoToken(
-            makeLoginRequestDto(),
-            accessToken.value!!,
-            { call, response ->
+    fun issueMisoToken(action: (response: Response<GeneralResponseDto>) -> Unit) {
+        viewModelScope.launch {
+            val response = repository.issueMisoToken(
+                makeLoginRequestDto(),
+                accessToken.value!!
+            )
+            if (response.isSuccessful) {
                 val headers = response.headers()
                 val serverToken = headers.get("servertoken")!!
                 repository.dataStoreManager.savePreference(
                     DataStoreManager.MISO_TOKEN,
                     serverToken
                 )
-                issueMisoTokenResponse.value = response
-            },
-            { call, response ->
-                issueMisoTokenResponse.value = response
-            },
-            { call, t ->
-                issueMisoTokenResponse.value = t
-                repository.dataStoreManager.removePreference(DataStoreManager.MISO_TOKEN)
-            })
+            } else {
+                response.errorBody()?.let {
+                    repository.dataStoreManager.removePreference(DataStoreManager.MISO_TOKEN)
+                }
+            }
+
+            action(response)
+        }
     }
 }

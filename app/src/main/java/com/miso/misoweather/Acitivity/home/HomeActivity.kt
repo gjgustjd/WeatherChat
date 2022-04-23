@@ -14,6 +14,7 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
@@ -33,6 +34,7 @@ import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import dagger.hilt.android.AndroidEntryPoint
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
+import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.lang.Exception
 import java.lang.IndexOutOfBoundsException
@@ -77,7 +79,6 @@ class HomeActivity : MisoActivity() {
     private lateinit var midScale: String
     private lateinit var smallScale: String
     private var isAllInitialized: Boolean = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -294,48 +295,43 @@ class HomeActivity : MisoActivity() {
             if (!defaultRegionId.isNullOrBlank()) {
                 Log.i("defaultRegionId", defaultRegionId)
                 val previousBigScale = bigScale
-                viewModel.getBriefForecast(defaultRegionId.toInt())
-                viewModel.forecastBriefResponse.observe(this) {
-                    try {
-                        if (it != null) {
-                            if (it is Response<*>) {
-                                if (it.isSuccessful) {
-                                    val forecastBriefResponseDto =
-                                        it.body()!! as ForecastBriefResponseDto
-                                    briefForecastData = forecastBriefResponseDto.data
-                                    txtWeatherEmoji.setText(forecastBriefResponseDto.data.weather)
-                                    txtWeatherDegree.setText(
-                                        CommonUtil.toIntString(forecastBriefResponseDto.data.temperature) + "˚"
-                                    )
-                                    txtLocation.text =
-                                        "${bigScale} ${midScale} ${smallScale}"
+                lifecycleScope.launch {
+                    viewModel.getBriefForecast(defaultRegionId.toInt())
+                    {
+                        try {
+                            if (it.isSuccessful) {
+                                val forecastBriefResponseDto =
+                                    it.body()!!
+                                briefForecastData = forecastBriefResponseDto.data
+                                txtWeatherEmoji.setText(forecastBriefResponseDto.data.weather)
+                                txtWeatherDegree.setText(
+                                    CommonUtil.toIntString(forecastBriefResponseDto.data.temperature) + "˚"
+                                )
+                                txtLocation.text =
+                                    "${bigScale} ${midScale} ${smallScale}"
 
-                                    if (!previousBigScale.equals(bigScale))
-                                        setupSurveyResult()
+                                if (!previousBigScale.equals(bigScale))
+                                    setupSurveyResult()
 
-                                    Log.i("결과", "성공")
-                                } else
-                                    throw Exception(it.errorBody()!!.source().toString())
+                                Log.i("결과", "성공")
+                            } else
+                                throw Exception(it.errorBody()!!.source().toString())
+                        } catch (e: Exception) {
+                            if (!e.message.isNullOrBlank())
+                                Log.e("getBriefForecast", e.message.toString())
 
-                            } else {
-                                if (it is String)
-                                    throw Exception(it)
-                                else if (it is Throwable)
-                                    throw it
-                                else
-                                    throw Exception("실패")
-                            }
-                        } else {
-                            throw Exception("null")
+                            Log.e("getBriefForecast", e.stackTraceToString())
+                            Log.e(
+                                "getBriefForecast",
+                                "defaultRegionId:${viewModel.defaultRegionId}"
+                            )
+                            Toast.makeText(
+                                this@HomeActivity,
+                                "날씨 단기예보 불러오기에 실패하였습니다.",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
                         }
-                    } catch (e: Exception) {
-                        if (!e.message.isNullOrBlank())
-                            Log.e("getBriefForecast", e.message.toString())
-
-                        Log.e("getBriefForecast", e.stackTraceToString())
-                        Log.e("getBriefForecast", "defaultRegionId:${viewModel.defaultRegionId}")
-                        Toast.makeText(this, "날씨 단기예보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT)
-                            .show()
                     }
                 }
             } else {
@@ -348,9 +344,11 @@ class HomeActivity : MisoActivity() {
 
 
     private fun getCommentList() {
-        viewModel.getCommentList(null, 5)
-        viewModel.commentListResponse.observe(this) {
-            setRecyclerChats(it!!.body()!! as CommentListResponseDto)
+        lifecycleScope.launch {
+            viewModel.getCommentList(null, 5)
+            {
+                setRecyclerChats(it!!.body()!! as CommentListResponseDto)
+            }
         }
     }
 
@@ -390,22 +388,16 @@ class HomeActivity : MisoActivity() {
             Log.e("getUserInfo", response.errorBody()!!.source().toString())
         }
 
-        viewModel.getUserInfo()
-        viewModel.memberInfoResponse.observe(
-            this
-        ) {
-            if (it == null) {
-                Log.i("getUserInfo", "에러 발생")
-            } else {
-                val responseDto = it as Response<MemberInfoResponseDto>
+        lifecycleScope.launch {
+            viewModel.getUserInfo()
+            {
                 if (it.isSuccessful) {
-                    onSuccessful(responseDto)
+                    onSuccessful(it)
                 } else {
-                    onFail(responseDto)
+                    onFail(it)
                 }
+                getBriefForecast()
             }
-
-            getBriefForecast()
         }
     }
 
@@ -439,16 +431,13 @@ class HomeActivity : MisoActivity() {
                 imgIconCheckFirst.visibility = View.VISIBLE
         }
 
-        viewModel.getSurveyResult()
-        viewModel.surveyResultResponse.observe(this, Observer {
-            try {
-                if (it == null) {
-                    throw Exception("null")
-                } else {
-                    val responseDto = it as Response<SurveyResultResponseDto>
+        lifecycleScope.launch {
+            viewModel.getSurveyResult()
+            {
+                try {
                     if (it.isSuccessful) {
                         val todaySurveyResultDto =
-                            responseDto.body()!!.data.responseList.first { it.surveyId == 2 }
+                            it.body()!!.data.responseList.first { it.surveyId == 2 }
 
                         todaySurveyResultDto.keyList.forEachIndexed { index, it ->
                             try {
@@ -474,17 +463,18 @@ class HomeActivity : MisoActivity() {
                     } else {
                         throw Exception(it.errorBody()!!.source().toString())
                     }
+                } catch (e: Exception) {
+                    showEmptyChartText()
+
+                    if (!e.message.toString().equals(""))
+                        Log.e("setupSurveyResult", e.message.toString())
+                    else
+                        Log.e("setupSurveyResult", e.stackTraceToString())
+
+                    Toast.makeText(this@HomeActivity, "차트를 불러오는데에 실패하였습니다.", Toast.LENGTH_SHORT)
+                        .show()
                 }
-            } catch (e: Exception) {
-                showEmptyChartText()
-
-                if (!e.message.toString().equals(""))
-                    Log.e("setupSurveyResult", e.message.toString())
-                else
-                    Log.e("setupSurveyResult", e.stackTraceToString())
-
-                Toast.makeText(this, "차트를 불러오는데에 실패하였습니다.", Toast.LENGTH_SHORT).show()
             }
-        })
+        }
     }
 }

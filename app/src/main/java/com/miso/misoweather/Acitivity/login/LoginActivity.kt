@@ -15,6 +15,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.usermgmt.response.model.User
@@ -26,6 +27,7 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityLoginBinding
 import com.rd.PageIndicatorView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import retrofit2.Response
 
 @AndroidEntryPoint
@@ -259,9 +261,9 @@ class LoginActivity : MisoActivity() {
     }
 
     private fun issueMisoToken() {
-        Log.i("issueMisoToekn","실행됨")
+        Log.i("issueMisoToekn", "실행됨")
         viewModel.issueMisoToken()
-        viewModel.issueMisoTokenResponse.observe(this) {
+        {
             if (it is Response<*>) {
                 if (it.isSuccessful) {
                     startHomeActivity()
@@ -285,9 +287,8 @@ class LoginActivity : MisoActivity() {
 
 
     private fun checkRegistered() {
-        viewModel.checkRegistered()
-        viewModel.checkRegistered.observe(this) {
-            if (it!!)
+        lifecycleScope.launch {
+            if (viewModel.checkRegistered())
                 issueMisoToken()
             else
                 startRegionActivity()
