@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
@@ -16,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SelectAreaViewModel @Inject constructor(private val repository: MisoRepository) :
     ViewModel() {
-
+    val areaRequestResult by lazy { MutableLiveData<Response<*>?>() }
+    val updateRegionResponse by lazy { MutableLiveData<Response<*>?>() }
     val smallScaleRegion by lazy {
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.SMALLSCALE_REGION)
             .asLiveData()
@@ -33,14 +33,6 @@ class SelectAreaViewModel @Inject constructor(private val repository: MisoReposi
     val misoToken by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.MISO_TOKEN)
     }
-
-    @MutableResponseLiveData
-    @Inject
-    lateinit var areaRequestResult: MutableLiveData<Response<*>?>
-
-    @MutableResponseLiveData
-    @Inject
-    lateinit var updateRegionResponse: MutableLiveData<Response<*>?>
 
     fun updateRegion(selectedRegion: Region, regionId: Int) {
         repository.updateRegion(

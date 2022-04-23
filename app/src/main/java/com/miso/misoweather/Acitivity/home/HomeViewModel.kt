@@ -3,17 +3,20 @@ package com.miso.misoweather.Acitivity.home
 import android.util.Log
 import androidx.lifecycle.*
 import com.kakao.sdk.user.UserApiClient
-import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
+    val logoutResponseString by lazy { MutableLiveData<String?>() }
+    val forecastBriefResponse by lazy { MutableLiveData<Any?>() }
+    val memberInfoResponse by lazy { MutableLiveData<Response<*>?>() }
+    val commentListResponse by lazy { MutableLiveData<Response<*>?>() }
+    val surveyResultResponse by lazy { MutableLiveData<Response<*>?>() }
 
     val isSurveyed =
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.IS_SURVEYED)
@@ -66,42 +69,6 @@ class HomeViewModel @Inject constructor(private val repository: MisoRepository) 
             .asLiveData()
     }
 
-
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var logoutResponseString: MutableLiveData<String?>
-
-    @MutableBooleanLiveData
-    @Inject
-    lateinit var isWeatherLoaded: MutableLiveData<Boolean>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var forecastBriefResponse: MutableLiveData<Any?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var dailyForecastResponse: MutableLiveData<Any?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var hourlyForecastResponse: MutableLiveData<Any?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var currentAirResponse: MutableLiveData<Any?>
-
-    @MutableResponseLiveData
-    @Inject
-    lateinit var memberInfoResponse: MutableLiveData<Response<*>?>
-
-    @MutableResponseLiveData
-    @Inject
-    lateinit var commentListResponse: MutableLiveData<Response<*>?>
-
-    @MutableResponseLiveData
-    @Inject
-    lateinit var surveyResultResponse: MutableLiveData<Response<*>?>
 
     fun getUserInfo() {
         repository.getUserInfo(

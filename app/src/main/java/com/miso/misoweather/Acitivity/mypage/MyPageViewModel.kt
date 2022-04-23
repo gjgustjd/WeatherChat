@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
@@ -14,11 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var unRegisterResponse: MutableLiveData<Any?>
-
+    val unRegisterResponse by lazy { MutableLiveData<Any?>() }
     val misoToken by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.MISO_TOKEN)
     }
@@ -30,8 +25,9 @@ class MyPageViewModel @Inject constructor(private val repository: MisoRepository
             .asLiveData()
     }
 
-    val nickname by lazy{
-        repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.NICKNAME).asLiveData()}
+    val nickname by lazy {
+        repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.NICKNAME).asLiveData()
+    }
 
     val socialId by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.SOCIAL_ID)

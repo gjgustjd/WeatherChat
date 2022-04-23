@@ -7,13 +7,14 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.model.AccessTokenInfo
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.MisoRepository
-import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.DataStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
+    val checkRegistered by lazy { MutableLiveData<Boolean?>() }
+    val issueMisoTokenResponse by lazy { MutableLiveData<Any?>() }
 
     val socialId by lazy {
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.SOCIAL_ID).asLiveData()
@@ -27,21 +28,6 @@ class LoginViewModel @Inject constructor(private val repository: MisoRepository)
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.ACCESS_TOKEN).asLiveData()
     }
 
-    @MutableNullableBooleanLiveData
-    @Inject
-    lateinit var checkRegistered: MutableLiveData<Boolean?>
-
-    @MutableNullableBooleanLiveData
-    @Inject
-    lateinit var isCheckValid: MutableLiveData<Boolean?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var issueMisoTokenResponse: MutableLiveData<Any?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var loginWithKakaoTalkResponse: MutableLiveData<Any?>
 
     fun checkRegistered() {
         repository.checkRegistered(

@@ -5,9 +5,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
-import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.R
 import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerRequestDto
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
@@ -16,10 +14,6 @@ import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.runBlocking
 import retrofit2.Response
 import java.lang.Exception
 import java.time.ZoneId
@@ -36,11 +30,7 @@ class SelectAnswerViewModel @Inject constructor(private val repository: MisoRepo
         repository.dataStoreManager.getPreference(DataStoreManager.BIGSCALE_REGION)
     val misoToken =
         repository.dataStoreManager.getPreference(DataStoreManager.MISO_TOKEN)
-
-
-    @MutableResponseLiveData
-    @Inject
-    lateinit var surveyAnswerResponse: MutableLiveData<Response<*>?>
+    val surveyAnswerResponse by lazy { MutableLiveData<Response<*>?>() }
 
     fun getSurveyAnswer(surveyId: Int, questions: Array<String>) {
         repository.getSurveyAnswers(

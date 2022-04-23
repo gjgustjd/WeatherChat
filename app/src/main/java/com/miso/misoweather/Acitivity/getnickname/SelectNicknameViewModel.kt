@@ -3,9 +3,7 @@ package com.miso.misoweather.Acitivity.getnickname
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import com.kakao.sdk.user.UserApiClient
-import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.DTO.SignUpRequestDto
 import com.miso.misoweather.model.DataStoreManager
@@ -19,9 +17,7 @@ import javax.inject.Inject
 class SelectNicknameViewModel @Inject constructor(private val repository: MisoRepository) :
     ViewModel() {
 
-    @MutableResponseLiveData
-    @Inject
-    lateinit var nicknameResponseDto: MutableLiveData<Response<*>?>
+    val nicknameResponseDto by lazy { MutableLiveData<Response<*>?>() }
 
     val smallScaleRegion by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.SMALLSCALE_REGION)
@@ -43,9 +39,7 @@ class SelectNicknameViewModel @Inject constructor(private val repository: MisoRe
         repository.dataStoreManager.getPreference(DataStoreManager.SOCIAL_TYPE)
     }
 
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var registerResultString: MutableLiveData<String?>
+    val registerResultString by lazy { MutableLiveData<String?>() }
 
     lateinit var loginRequestDto: LoginRequestDto
     lateinit var signUpRequestDto: SignUpRequestDto

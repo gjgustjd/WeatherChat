@@ -2,8 +2,6 @@ package com.miso.misoweather.Acitivity.weatherdetail
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +10,10 @@ import javax.inject.Inject
 @HiltViewModel
 class WeatherDetailViewModel @Inject constructor(private val repository: MisoRepository) :
     ViewModel() {
+    val forecastBriefResponse by lazy { MutableLiveData<Any?>() }
+    val dailyForecastResponse by lazy { MutableLiveData<Any?>() }
+    val hourlyForecastResponse by lazy { MutableLiveData<Any?>() }
+    val currentAirResponse by lazy { MutableLiveData<Any?>() }
 
     val defaultRegionId by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.DEFAULT_REGION_ID)
@@ -28,22 +30,6 @@ class WeatherDetailViewModel @Inject constructor(private val repository: MisoRep
     val smallScale by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.SMALLSCALE_REGION)
     }
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var forecastBriefResponse: MutableLiveData<Any?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var dailyForecastResponse: MutableLiveData<Any?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var hourlyForecastResponse: MutableLiveData<Any?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var currentAirResponse: MutableLiveData<Any?>
 
 
     fun setupWeatherData() {
