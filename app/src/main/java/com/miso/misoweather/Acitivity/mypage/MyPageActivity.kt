@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.login.LoginActivity
@@ -20,6 +21,7 @@ import com.miso.misoweather.databinding.ActivityMypageBinding
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.DataStoreManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject
@@ -148,10 +150,10 @@ class MyPageActivity : MisoActivity() {
     }
 
     private fun unregister() {
-        viewModel.unRegister(makeLoginRequestDto())
-        viewModel.unRegisterResponse.observe(this) {
-            try {
-                if (it is Response<*>) {
+        lifecycleScope.launch {
+            viewModel.unRegister(makeLoginRequestDto())
+            {
+                try {
                     if (it.isSuccessful) {
                         goToLoginActivity()
                         Log.i("unregister", "성공")
@@ -159,20 +161,15 @@ class MyPageActivity : MisoActivity() {
                         goToLoginActivity()
                         throw Exception(it.errorBody()!!.source().toString())
                     }
-                } else {
-                    if (it is String) {
-                        throw Exception(it)
-                    } else {
-                        if (it is Throwable)
-                            throw it
-                        else
-                            throw Exception()
-                    }
+                } catch (e: Exception) {
+                    Log.e("unregister", e.stackTraceToString())
+                    Log.e("unregister", e.message.toString())
+                    Toast.makeText(
+                        this@MyPageActivity,
+                        "카카오 계정 연결 해제에 실패하였습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-            } catch (e: Exception) {
-                Log.e("unregister", e.stackTraceToString())
-                Log.e("unregister", e.message.toString())
-                Toast.makeText(this, "카카오 계정 연결 해제에 실패하였습니다.", Toast.LENGTH_SHORT).show()
             }
         }
     }

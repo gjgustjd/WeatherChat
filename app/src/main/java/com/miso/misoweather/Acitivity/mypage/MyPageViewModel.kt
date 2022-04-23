@@ -4,16 +4,19 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
+import com.miso.misoweather.model.MisoRepository2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject
+import kotlin.math.log
 
 @HiltViewModel
-class MyPageViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
-    val unRegisterResponse by lazy { MutableLiveData<Any?>() }
+class MyPageViewModel @Inject constructor(private val repository: MisoRepository2) : ViewModel() {
     val misoToken by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.MISO_TOKEN)
     }
@@ -36,36 +39,33 @@ class MyPageViewModel @Inject constructor(private val repository: MisoRepository
         repository.dataStoreManager.getPreference(DataStoreManager.SOCIAL_TYPE)
     }
 
-    fun unRegister(loginRequestDto: LoginRequestDto) {
-        repository.unregisterMember(
+    suspend fun unRegister(
+        loginRequestDto: LoginRequestDto,
+        action: (response: Response<GeneralResponseDto>) -> Unit
+    ) {
+        val response = repository.unregisterMember(
             misoToken,
-            loginRequestDto,
-            { call, response ->
-                try {
-                    Log.i("결과", "성공")
-                    repository.dataStoreManager.removePreferences(
-                        DataStoreManager.MISO_TOKEN,
-                        DataStoreManager.DEFAULT_REGION_ID,
-                        DataStoreManager.IS_SURVEYED,
-                        DataStoreManager.LAST_SURVEYED_DATE,
-//                            "bigScale",
-                        DataStoreManager.BIGSCALE_REGION,
-                        DataStoreManager.MIDSCALE_REGION,
-                        DataStoreManager.SMALLSCALE_REGION,
-                        DataStoreManager.NICKNAME
-                    )
-                    unRegisterResponse.value = response
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            },
-            { call, response ->
-                unRegisterResponse.value = response
-            },
-            { call, t ->
-//                Log.i("결과", "실패 : $t")
-            }
+            loginRequestDto
         )
-    }
+        if (response.isSuccessful
+        ) {
+            try {
+                Log.i("결과", "성공")
+                repository.dataStoreManager.removePreferences(
+                    DataStoreManager.MISO_TOKEN,
+                    DataStoreManager.DEFAULT_REGION_ID,
+                    DataStoreManager.IS_SURVEYED,
+                    DataStoreManager.LAST_SURVEYED_DATE,
+                    DataStoreManager.BIGSCALE_REGION,
+                    DataStoreManager.MIDSCALE_REGION,
+                    DataStoreManager.SMALLSCALE_REGION,
+                    DataStoreManager.NICKNAME
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
 
+        action(response)
+    }
 }
