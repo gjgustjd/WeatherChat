@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
@@ -28,6 +29,7 @@ import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
 import com.miso.misoweather.model.DTO.Region
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.lang.Exception
 import java.time.ZoneId
@@ -76,7 +78,6 @@ class WeatherDetailActivity : MisoActivity() {
         super.onCreate(savedInstanceState);
         binding = ActivityWeatherMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel.setupWeatherData()
         initializeViews()
         setupWeatherInfo()
     }
@@ -118,9 +119,9 @@ class WeatherDetailActivity : MisoActivity() {
     }
 
     private fun setupBriefForecastData() {
-        viewModel.forecastBriefResponse.observe(this) {
-            try {
-                if (it is Response<*>) {
+        lifecycleScope.launch {
+            viewModel.getBriefForecast {
+                try {
                     if (it.isSuccessful) {
                         val briefResponseDto = it.body() as ForecastBriefResponseDto
                         briefForecastData = briefResponseDto.data
@@ -129,121 +130,91 @@ class WeatherDetailActivity : MisoActivity() {
                     } else {
                         throw Exception(it.errorBody()!!.source().toString())
                     }
-                } else {
-                    if (it is String)
-                        throw Exception(it)
-                    else if (it is Throwable)
-                        throw it
+                } catch (e: Exception) {
+                    if (e.message!!.isNotBlank())
+                        Log.e("forecastBriefResponse", e.message.toString())
+                    Log.e("forecastBriefResponse", e.stackTraceToString())
                 }
-            } catch (e: Exception) {
-                if (e.message!!.isNotBlank())
-                    Log.e("forecastBriefResponse", e.message.toString())
-                Log.e("forecastBriefResponse", e.stackTraceToString())
             }
         }
     }
 
     private fun setupDailyForecastData() {
-        var repeatCount = 0
-        viewModel.dailyForecastResponse.observe(this) {
-            try {
-                if (it is Response<*>) {
+        lifecycleScope.launch {
+            viewModel.getDailyForecast {
+                try {
                     if (it.isSuccessful) {
-                        val dailyForecastResponse = it.body() as DailyForecastResponseDto
+                        val dailyForecastResponse = it.body()!!
                         dailyForecastData = dailyForecastResponse.data
                         setupDailyForecastViews()
                         Log.i("setupDailyForecastData", "성공")
                     } else {
                         throw Exception(it.errorBody()!!.source().toString())
                     }
-                } else {
-                    if (it is String)
-                        throw Exception(it)
-                    else if (it is Throwable)
-                        throw it
-                }
-            } catch (e: Exception) {
-                if (repeatCount > 2)
-                    Toast.makeText(this, "일 별 예보를 불러오는데 실패하였습니다.", Toast.LENGTH_SHORT).show()
-                else {
-                    repeatCount++
-                    Log.e("setupDailyForecastData", "repeated:${repeatCount}")
-                    viewModel.getDailyForecast()
-                }
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        this@WeatherDetailActivity,
+                        "일 별 예보를 불러오는데 실패하였습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
-                if (e.message!!.isNotBlank())
-                    Log.e("setupDailyForecastData", e.message.toString())
-                Log.e("setupDailyForecastData", e.stackTraceToString())
+                    if (e.message!!.isNotBlank())
+                        Log.e("setupDailyForecastData", e.message.toString())
+                    Log.e("setupDailyForecastData", e.stackTraceToString())
+                }
             }
         }
     }
 
     private fun setupHourlyForecastData() {
-        var repeatCount = 0
-        viewModel.hourlyForecastResponse.observe(this) {
-            try {
-                if (it is Response<*>) {
+        lifecycleScope.launch {
+            viewModel.getHourlyForecast {
+                try {
                     if (it.isSuccessful) {
-                        val hourlyForecastResponse = it.body() as HourlyForecastResponseDto
+                        val hourlyForecastResponse = it.body()!!
                         hourlyForecastData = hourlyForecastResponse.data
                         setupWeatherOnTimeRecycler()
                         Log.i("setupHourlyForecastData", "성공")
                     } else {
                         throw Exception(it.errorBody()!!.source().toString())
                     }
-                } else {
-                    if (it is String)
-                        throw Exception(it)
-                    else if (it is Throwable)
-                        throw it
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        this@WeatherDetailActivity,
+                        "시간 별 예보를 불러오는데 실패하였습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    if (e.message!!.isNotBlank())
+                        Log.e("setupHourlyForecastData", e.message.toString())
+                    Log.e("setupHourlyForecastData", e.stackTraceToString())
                 }
-            } catch (e: Exception) {
-                if (repeatCount > 2)
-                    Toast.makeText(this, "시간 별 예보를 불러오는데 실패하였습니다.", Toast.LENGTH_SHORT).show()
-                else {
-                    repeatCount++
-                    Log.e("setupHourlyForecastData", "repeated:${repeatCount}")
-                    viewModel.getDailyForecast()
-                }
-
-                if (e.message!!.isNotBlank())
-                    Log.e("setupHourlyForecastData", e.message.toString())
-                Log.e("setupHourlyForecastData", e.stackTraceToString())
             }
         }
     }
 
     private fun setupCurrentAir() {
-        var repeatCount = 0
-        viewModel.currentAirResponse.observe(this) {
-            try {
-                if (it is Response<*>) {
+        lifecycleScope.launch {
+            viewModel.getCurrentAir {
+                try {
                     if (it.isSuccessful) {
-                        val currentAirResponse = it.body() as CurrentAirResponseDto
+                        val currentAirResponse = it.body()!!
                         currentAirData = currentAirResponse.data
                         setupCurrentAirViews()
                         Log.i("currentAirData", "성공")
                     } else {
                         throw Exception(it.errorBody()!!.source().toString())
                     }
-                } else {
-                    if (it is String)
-                        throw Exception(it)
-                    else if (it is Throwable)
-                        throw it
-                }
-            } catch (e: Exception) {
-                if (repeatCount > 2)
-                    Toast.makeText(this, "미세먼지 정보를 불러오는데 실패하였습니다.", Toast.LENGTH_SHORT).show()
-                else {
-                    repeatCount++
-                    Log.e("setupCurrentAir", "repeated:${repeatCount}")
-                    viewModel.getDailyForecast()
-                }
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        this@WeatherDetailActivity,
+                        "미세먼지 정보를 불러오는데 실패하였습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
-                if (e.message!!.isNotBlank())
-                    Log.e("currentAirData", e.message.toString())
-                Log.e("currentAirData", e.stackTraceToString())
+                    if (e.message!!.isNotBlank())
+                        Log.e("currentAirData", e.message.toString())
+                    Log.e("currentAirData", e.stackTraceToString())
+                }
             }
         }
     }
@@ -357,7 +328,6 @@ class WeatherDetailActivity : MisoActivity() {
                 LinearLayoutManager(this@WeatherDetailActivity, RecyclerView.VERTICAL, false)
         }
     }
-
 
     private fun setupWeatherOnTimeRecycler() {
         weatherOnTimeAdapter =

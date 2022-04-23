@@ -1,20 +1,19 @@
 package com.miso.misoweather.Acitivity.weatherdetail
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
+import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirResponseDto
+import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
+import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
 import com.miso.misoweather.model.DataStoreManager
-import com.miso.misoweather.model.MisoRepository
+import com.miso.misoweather.model.MisoRepository2
 import dagger.hilt.android.lifecycle.HiltViewModel
+import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class WeatherDetailViewModel @Inject constructor(private val repository: MisoRepository) :
+class WeatherDetailViewModel @Inject constructor(private val repository: MisoRepository2) :
     ViewModel() {
-    val forecastBriefResponse by lazy { MutableLiveData<Any?>() }
-    val dailyForecastResponse by lazy { MutableLiveData<Any?>() }
-    val hourlyForecastResponse by lazy { MutableLiveData<Any?>() }
-    val currentAirResponse by lazy { MutableLiveData<Any?>() }
-
     val defaultRegionId by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.DEFAULT_REGION_ID)
     }
@@ -31,84 +30,39 @@ class WeatherDetailViewModel @Inject constructor(private val repository: MisoRep
         repository.dataStoreManager.getPreference(DataStoreManager.SMALLSCALE_REGION)
     }
 
-
-    fun setupWeatherData() {
-        getBriefForecast(defaultRegionId.toInt())
-        getHourlyForecast(defaultRegionId.toInt())
-        getCurrentAir(defaultRegionId.toInt())
-        getDailyForecast()
-    }
-
-
-    fun getBriefForecast(regionId: Int) {
-        repository.getBriefForecast(
-            regionId,
-            { call, response ->
-                val region = response.body()!!.data.region
-                repository.dataStoreManager.apply {
-                    savePreference(DataStoreManager.BIGSCALE_REGION, region.bigScale)
-                    savePreference(
-                        DataStoreManager.MIDSCALE_REGION,
-                        if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
-                    )
-                    savePreference(
-                        DataStoreManager.SMALLSCALE_REGION,
-                        if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
-                    )
-                }
-                forecastBriefResponse.value = response
-            },
-            { call, response ->
-                forecastBriefResponse.value = response
-            },
-            { call, t ->
-                forecastBriefResponse.value = null
+    suspend fun getBriefForecast(
+        regionId: Int = defaultRegionId.toInt(),
+        action: (response: Response<ForecastBriefResponseDto>) -> Unit
+    ) {
+        val response = repository.getBriefForecast(regionId)
+        if (response.isSuccessful) {
+            val region = response.body()!!.data.region
+            repository.dataStoreManager.apply {
+                savePreference(DataStoreManager.BIGSCALE_REGION, region.bigScale)
+                savePreference(
+                    DataStoreManager.MIDSCALE_REGION,
+                    if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
+                )
+                savePreference(
+                    DataStoreManager.SMALLSCALE_REGION,
+                    if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
+                )
             }
-        )
+        }
+
+        action(response)
     }
 
-    fun getDailyForecast() {
-        repository.getDailyForecast(
-            defaultRegionId.toInt(),
-            { call, response ->
-                dailyForecastResponse.value = response
-            },
-            { call, response ->
-                dailyForecastResponse.value = response
-            },
-            { call, t ->
-                dailyForecastResponse.value = t
-            },
-        )
-    }
+    suspend fun getDailyForecast(action: (response: Response<DailyForecastResponseDto>) -> Unit) =
+        action(repository.getDailyForecast(defaultRegionId.toInt()))
 
-    fun getHourlyForecast(regionId: Int? = defaultRegionId.toInt()) {
-        repository.getHourlyForecast(
-            regionId!!,
-            { call, response ->
-                hourlyForecastResponse.value = response
-            },
-            { call, response ->
-                hourlyForecastResponse.value = response
-            },
-            { call, t ->
-                hourlyForecastResponse.value = t
-            },
-        )
-    }
+    suspend fun getHourlyForecast(
+        regionId: Int? = defaultRegionId.toInt(),
+        action: (response: Response<HourlyForecastResponseDto>) -> Unit
+    ) = action(repository.getHourlyForecast(regionId!!))
 
-    fun getCurrentAir(regionId: Int? = defaultRegionId.toInt()) {
-        repository.getCurrentAir(
-            regionId!!,
-            { call, response ->
-                currentAirResponse.value = response
-            },
-            { call, response ->
-                currentAirResponse.value = response
-            },
-            { call, t ->
-                currentAirResponse.value = t
-            },
-        )
-    }
+    suspend fun getCurrentAir(
+        regionId: Int? = defaultRegionId.toInt(),
+        action: (response: Response<CurrentAirResponseDto>) -> Unit
+    ) = action(repository.getCurrentAir(regionId!!))
 }
