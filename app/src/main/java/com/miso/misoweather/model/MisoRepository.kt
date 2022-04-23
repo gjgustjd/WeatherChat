@@ -3,6 +3,7 @@ package com.miso.misoweather.model
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.datastore.preferences.core.Preferences
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
@@ -27,48 +28,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MisoRepository {
-    var prefs: SharedPreferences
-    var pairList: ArrayList<Pair<String, String>>
-    var context: Context
+class MisoRepository @Inject constructor(@ApplicationContext val context: Context) {
 
     @Inject
-    constructor(@ApplicationContext aContext:Context) {
-        context = aContext
-        prefs = context.getSharedPreferences("misoweather", Context.MODE_PRIVATE)
-        pairList = ArrayList()
-    }
-
-    fun addPreferencePair(first: String, second: String) {
-        val pair = Pair(first, second)
-        pairList.add(pair)
-    }
-
-    fun removePreference(pref: String) {
-        val pair = Pair(pref, "")
-        pairList.add(pair)
-    }
-
-    fun removePreference(vararg pref: String) {
-        for (i in 0..pref.size - 1) {
-            val pair = Pair(pref[i], "")
-            pairList.add(pair)
-        }
-    }
-
-    fun getPreference(pref: String): String? {
-        return prefs!!.getString(pref, "")
-    }
-
-    fun savePreferences() {
-        var edit = prefs!!.edit()
-        for (i in 0..pairList.size - 1) {
-            val pair = pairList.get(i)
-            edit.putString(pair.first, pair.second)
-        }
-        edit.apply()
-        pairList.clear()
-    }
+    lateinit var dataStoreManager: DataStoreManager
 
     fun checkRegistered(
         socialId: String,

@@ -16,9 +16,14 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.Acitivity.login.LoginActivity
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
+import com.miso.misoweather.model.DataStoreManager
+import com.miso.misoweather.model.MisoRepository
+import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
+@AndroidEntryPoint
 class SelectRegionActivity : MisoActivity() {
     private lateinit var binding: ActivitySelectRegionBinding
     private lateinit var gridAdapter: RecyclerRegionsAdapter
@@ -27,6 +32,9 @@ class SelectRegionActivity : MisoActivity() {
     private lateinit var btn_back: ImageButton
     private lateinit var btn_next: Button
     private lateinit var aPurpose: String
+
+    @Inject
+    lateinit var repository: MisoRepository
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
@@ -44,11 +52,13 @@ class SelectRegionActivity : MisoActivity() {
         btn_back.setOnClickListener() {
             doBack()
         }
-        btn_next.setOnClickListener()
-        {
+        btn_next.setOnClickListener() {
             try {
-                if (gridAdapter.selectedIndex == -1)
-                    Toast.makeText(this, "지역을 선택해 주세요", Toast.LENGTH_SHORT).show()
+                if (gridAdapter.selectedIndex == -1) Toast.makeText(
+                    this,
+                    "지역을 선택해 주세요",
+                    Toast.LENGTH_SHORT
+                ).show()
                 else {
                     val intent = Intent(this, SelectTownActivity::class.java)
                     val bigScaleRegion = gridAdapter.getSelectedItemShortName()
@@ -57,14 +67,14 @@ class SelectRegionActivity : MisoActivity() {
                         putExtra("region", bigScaleRegion)
                     }
                     startActivity(intent)
-                    addPreferencePair("BigScaleRegion", bigScaleRegion)
+                    repository.dataStoreManager.savePreference(
+                        DataStoreManager.BIGSCALE_REGION, bigScaleRegion
+                    )
                     transferToNext()
                     finish()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-            } finally {
-                savePreferences()
             }
         }
     }

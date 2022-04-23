@@ -3,13 +3,11 @@ package com.miso.misoweather.Acitivity.selectArea
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.miso.misoweather.Module.LiveDataModule.*
-import com.miso.misoweather.model.DTO.GeneralResponseDto
+import androidx.lifecycle.asLiveData
 import com.miso.misoweather.model.DTO.Region
-import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
+import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject
@@ -17,60 +15,36 @@ import javax.inject.Inject
 @HiltViewModel
 class SelectAreaViewModel @Inject constructor(private val repository: MisoRepository) :
     ViewModel() {
-
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var smallScaleRegion: MutableLiveData<String?>
-
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var midScaleRegion: MutableLiveData<String?>
-
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var bigScaleRegion: MutableLiveData<String?>
-
-    @MutableResponseLiveData
-    @Inject
-    lateinit var areaRequestResult: MutableLiveData<Response<*>?>
-
-    @MutableResponseLiveData
-    @Inject
-    lateinit var updateRegionResponse: MutableLiveData<Response<*>?>
-
-    fun setupSmallScaleRegion() {
-        smallScaleRegion.value = repository.getPreference("SmallScaleRegion")
+    val areaRequestResult by lazy { MutableLiveData<Response<*>?>() }
+    val updateRegionResponse by lazy { MutableLiveData<Response<*>?>() }
+    val smallScaleRegion by lazy {
+        repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.SMALLSCALE_REGION)
+            .asLiveData()
     }
 
-    fun setupMidScaleRegion() {
-        midScaleRegion.value = repository.getPreference("MidScaleRegion")
+    val midScaleRegion by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.MIDSCALE_REGION)
     }
 
-    fun setupBigScaleRegion() {
-        bigScaleRegion.value = repository.getPreference("BigScaleRegion")
+    val bigScaleRegion by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.BIGSCALE_REGION)
     }
 
-    fun updateProperties() {
-        setupBigScaleRegion()
-        setupMidScaleRegion()
-        setupSmallScaleRegion()
+    val misoToken by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.MISO_TOKEN)
     }
 
     fun updateRegion(selectedRegion: Region, regionId: Int) {
         repository.updateRegion(
-            repository.getPreference("misoToken")!!,
+            misoToken,
             regionId,
             { call, response ->
                 try {
                     Log.i("changeRegion", "성공")
                     addRegionPreferences(selectedRegion)
-                    repository.apply {
-                        addPreferencePair(
-                            "defaultRegionId",
-                            regionId.toString()
-                        )
-                        savePreferences()
-                    }
+                    repository.dataStoreManager.savePreference(
+                        DataStoreManager.DEFAULT_REGION_ID, regionId.toString()
+                    )
                     updateRegionResponse.value = response
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -86,14 +60,13 @@ class SelectAreaViewModel @Inject constructor(private val repository: MisoReposi
     }
 
     fun addRegionPreferences(selectedRegion: Region) {
-        var midScaleRegion = selectedRegion.midScale
-        var bigScaleRegion = selectedRegion.bigScale
-        var smallScaleRegion = selectedRegion.smallScale
-        repository.apply {
-            addPreferencePair("BigScaleRegion", bigScaleRegion)
-            addPreferencePair("MidScaleRegion", midScaleRegion)
-            addPreferencePair("SmallScaleRegion", smallScaleRegion)
-            savePreferences()
+        val mid = selectedRegion.midScale
+        val big = selectedRegion.bigScale
+        val small = selectedRegion.smallScale
+        repository.dataStoreManager.apply {
+            savePreference(DataStoreManager.BIGSCALE_REGION, big)
+            savePreference(DataStoreManager.MIDSCALE_REGION, mid)
+            savePreference(DataStoreManager.SMALLSCALE_REGION, small)
         }
     }
 

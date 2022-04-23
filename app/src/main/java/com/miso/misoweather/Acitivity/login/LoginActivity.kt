@@ -35,9 +35,9 @@ class LoginActivity : MisoActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var viewpager_onboarding: ViewPager2
     private lateinit var pageIndicatorView: PageIndicatorView
+    private lateinit var accessToken: String
     private lateinit var socialId: String
     private lateinit var socialType: String
-    private lateinit var accessToken: String
     private val onBoardFragmentList =
         listOf(
             OnBoardInitFragment(),
@@ -48,41 +48,12 @@ class LoginActivity : MisoActivity() {
         )
     private var isCheckValid = false
     private var currentPosition = 0
-    private var isAllInitialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initializeProperties()
-    }
-
-    private fun initializeProperties() {
-        fun checkinitializedAll() {
-            if (!isAllInitialized) {
-                if (
-                    this::accessToken.isInitialized &&
-                    this::socialId.isInitialized &&
-                    this::socialType.isInitialized
-                ) {
-                    initializeView()
-                    isAllInitialized = true
-                }
-            }
-        }
-        viewModel.updateProperties()
-        viewModel.accessToken.observe(this) {
-            accessToken = it!!
-            checkinitializedAll()
-        }
-        viewModel.socialType.observe(this) {
-            socialType = it!!
-            checkinitializedAll()
-        }
-        viewModel.socialId.observe(this) {
-            socialId = it!!
-            checkinitializedAll()
-        }
+        initializeView()
     }
 
     @SuppressLint("LongLogTag")
@@ -144,6 +115,18 @@ class LoginActivity : MisoActivity() {
                 checkRegistered()
             else
                 kakaoLogin()
+        }
+        viewModel.accessToken.observe(this)
+        {
+            accessToken = it
+        }
+        viewModel.socialId.observe(this)
+        {
+            socialId = it
+        }
+        viewModel.socialType.observe(this)
+        {
+            socialType = it
         }
     }
 
@@ -276,6 +259,7 @@ class LoginActivity : MisoActivity() {
     }
 
     private fun issueMisoToken() {
+        Log.i("issueMisoToekn","실행됨")
         viewModel.issueMisoToken()
         viewModel.issueMisoTokenResponse.observe(this) {
             if (it is Response<*>) {

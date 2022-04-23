@@ -4,65 +4,37 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.miso.misoweather.R
-import com.miso.misoweather.Module.LiveDataModule.*
-import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
-import com.miso.misoweather.model.DTO.GeneralResponseDto
-import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerData
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
-import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultData
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
+import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Response
 import javax.inject.Inject
 
 
 @HiltViewModel
 class ChatMainViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
+    val surveyItems by lazy { MutableLiveData<ArrayList<Any>>() }
+    val commentListResponse by lazy { MutableLiveData<Response<*>?>() }
+    val addCommentResponse by lazy { MutableLiveData<Response<*>?>() }
 
-    @MutableStringLiveData
-    @Inject
-    lateinit var surveyRegion: MutableLiveData<String>
+    val surveyRegion by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.SURVEY_REGION)
+    }
 
-    @MutableStringLiveData
-    @Inject
-    lateinit var bigScaleRegion: MutableLiveData<String>
+    val bigScaleRegion by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.BIGSCALE_REGION)
+    }
+    val nickname by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.NICKNAME)
+    }
 
-    @MutableStringLiveData
-    @Inject
-    lateinit var misoToken: MutableLiveData<String>
+    val misoToken by lazy { repository.dataStoreManager.getPreference(DataStoreManager.MISO_TOKEN) }
 
-    @MutableStringLiveData
-    @Inject
-    lateinit var defaultRegionId: MutableLiveData<String>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var forecastBriefResponse: MutableLiveData<Any?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var dailyForecastResponse: MutableLiveData<Any?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var hourlyForecastResponse: MutableLiveData<Any?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var currentAirData: MutableLiveData<Any?>
-
-    @MutableResponseLiveData
-    @Inject
-    lateinit var commentListResponse: MutableLiveData<Response<*>?>
-
-    @MutableResponseLiveData
-    @Inject
-    lateinit var addCommentResponse: MutableLiveData<Response<*>?>
 
     lateinit var surveyQuestions: Array<String>
     var surveyAnswerMap: HashMap<Int, List<SurveyAnswerDto>> = HashMap()
@@ -73,19 +45,6 @@ class ChatMainViewModel @Inject constructor(private val repository: MisoReposito
     @Inject
     lateinit var surveyMyAnswerResponseDto: SurveyMyAnswerResponseDto
 
-    @MutableAnyArrayListLiveData
-    @Inject
-    lateinit var surveyItems: MutableLiveData<ArrayList<Any>>
-
-
-    fun updateProperties() {
-        repository.apply {
-            surveyRegion.value = getPreference("surveyRegion")
-            bigScaleRegion.value = getPreference("BigScaleRegion")
-            misoToken.value = getPreference("misoToken")
-            defaultRegionId.value = getPreference("defaultRegionId")
-        }
-    }
 
     fun getCommentList(commentId: Int?, size: Int) {
         repository.getCommentList(
@@ -102,10 +61,7 @@ class ChatMainViewModel @Inject constructor(private val repository: MisoReposito
     }
 
     fun removeSurveyRegion() {
-        repository.apply {
-            removePreference("surveyRegion")
-            savePreferences()
-        }
+        repository.dataStoreManager.removePreference(DataStoreManager.SURVEY_REGION)
     }
 
     fun addComment(

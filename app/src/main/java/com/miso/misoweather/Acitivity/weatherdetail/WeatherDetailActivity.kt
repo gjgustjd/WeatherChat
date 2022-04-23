@@ -66,13 +66,6 @@ class WeatherDetailActivity : MisoActivity() {
     private lateinit var txtEmojiUltraDust: TextView
     private lateinit var txtDegreeUltraDust: TextView
     private lateinit var txtGradeUltraDust: TextView
-    private lateinit var bigScale: String
-    private lateinit var midScale: String
-    private lateinit var smallScale: String
-    private lateinit var isSurveyed: String
-    private lateinit var lastSurveyedDate: String
-    private lateinit var defaultRegionId: String
-    private var isAllInitialized = false
     private lateinit var briefForecastData: ForecastBriefData
     private lateinit var dailyForecastData: DailyForecastData
     private lateinit var hourlyForecastData: HourlyForecastData
@@ -83,53 +76,11 @@ class WeatherDetailActivity : MisoActivity() {
         super.onCreate(savedInstanceState);
         binding = ActivityWeatherMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initializeProperties()
+        viewModel.setupWeatherData()
+        initializeViews()
+        setupWeatherInfo()
     }
 
-    private fun initializeProperties() {
-        fun checkinitializedAll() {
-            if (!isAllInitialized) {
-                if (
-                    this::isSurveyed.isInitialized &&
-                    this::defaultRegionId.isInitialized &&
-                    this::lastSurveyedDate.isInitialized &&
-                    this::bigScale.isInitialized &&
-                    this::midScale.isInitialized &&
-                    this::smallScale.isInitialized
-                ) {
-                    initializeViews()
-                    setupWeatherInfo()
-                    isAllInitialized = true
-                }
-            }
-        }
-        viewModel.updateProperties()
-        viewModel.isSurveyed.observe(this) {
-            isSurveyed = it!!
-            checkinitializedAll()
-        }
-        viewModel.lastSurveyedDate.observe(this) {
-            lastSurveyedDate = it!!
-            checkinitializedAll()
-        }
-        viewModel.defaultRegionId.observe(this) {
-            defaultRegionId = it!!
-            checkinitializedAll()
-        }
-        viewModel.bigScale.observe(this) {
-            bigScale = it!!
-            checkinitializedAll()
-        }
-        viewModel.midScale.observe(this) {
-            midScale = it!!
-            checkinitializedAll()
-        }
-        viewModel.smallScale.observe(this) {
-            smallScale = it!!
-            checkinitializedAll()
-        }
-
-    }
 
     private fun setupWeatherInfo() {
         setForecastInfo()
@@ -361,17 +312,17 @@ class WeatherDetailActivity : MisoActivity() {
 
 
     private fun setForecastInfo() {
-        val midScaleString = if (midScale.equals("선택 안 함")) "전체" else midScale
+        val midScaleString = if (viewModel.midScale.equals("선택 안 함")) "전체" else viewModel.midScale
         val smallScaleString =
             if (midScaleString.equals("전체"))
                 ""
             else
-                if (smallScale.equals("선택 안 함"))
+                if (viewModel.smallScale.equals("선택 안 함"))
                     "전체"
                 else
-                    smallScale
+                    viewModel.smallScale
 
-        txtLocation.text = bigScale + " " + midScaleString + " " + smallScaleString
+        txtLocation.text = viewModel.bigScale + " " + midScaleString + " " + smallScaleString
     }
 
     private fun getDegreeRainOnHour(): String {

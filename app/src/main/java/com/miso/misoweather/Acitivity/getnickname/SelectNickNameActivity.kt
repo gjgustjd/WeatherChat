@@ -32,20 +32,12 @@ class SelectNickNameActivity : MisoActivity() {
     private lateinit var btn_back: ImageButton
     private lateinit var btn_next: Button
     private var nickName: String = ""
-    private var accessToken: String = ""
-    private var misoToken: String = ""
-    private var smallScaleRegion: String = ""
-    private var midScaleRegion: String = ""
-    private var bigScaleRegion: String = ""
-    private var socialId: String = ""
-    private var socialType: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySelectNicknameBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initializeViews()
-        initializeProperties()
     }
 
     private fun initializeViews() {
@@ -64,44 +56,14 @@ class SelectNickNameActivity : MisoActivity() {
         {
             registerMember()
         }
-        getNickname()
-    }
 
-    private fun initializeProperties() {
-        viewModel.setupAccessToken()
-        viewModel.accessToken.observe(this) {
-            accessToken = it!!
-        }
-        viewModel.setupMisoToken()
-        viewModel.misoToken.observe(this) {
-            misoToken = it!!
-        }
-        viewModel.setupBigScaleRegion()
-        viewModel.bigScaleRegion.observe(this) {
-            bigScaleRegion = it!!
-        }
-        viewModel.setupMiddleScaleRegion()
-        viewModel.middleScaleRegion.observe(this) {
-            midScaleRegion = it!!
-        }
-        viewModel.setupSmallScaleRegion()
-        viewModel.smallScaleRegion.observe(this) {
-            smallScaleRegion = it!!
-        }
-        viewModel.setupSocialId()
-        viewModel.socialId.observe(this) {
-            socialId = it!!
-        }
-        viewModel.setupSocialType()
-        viewModel.socialType.observe(this) {
-            socialType = it!!
-        }
-        viewModel.defaultRegionId = intent.getStringExtra("RegionId")!!
+        getNickname()
+        viewModel.defaultRegionId = intent.getStringExtra("RegionId")!!.toString()
     }
 
     override fun doBack() {
         val intent: Intent?
-        if (smallScaleRegion.isBlank())
+        if (viewModel.smallScaleRegion.isBlank())
             intent = Intent(this, SelectTownActivity::class.java)
         else
             intent = Intent(this, SelectAreaActivity::class.java)
@@ -120,7 +82,7 @@ class SelectNickNameActivity : MisoActivity() {
         viewModel.loginRequestDto = makeLoginRequestDto()
         viewModel.registerMember(
             getSignUpInfo(),
-            accessToken,
+            viewModel.accessToken,
             false
         )
         viewModel.registerResultString.observe(this) {
@@ -141,20 +103,20 @@ class SelectNickNameActivity : MisoActivity() {
 
     private fun makeLoginRequestDto(): LoginRequestDto {
         return LoginRequestDto(
-            socialId,
-            socialType
+            viewModel.socialId,
+            viewModel.socialType
         )
     }
 
-    private fun getSignUpInfo(): SignUpRequestDto {
-        return SignUpRequestDto().apply {
+    private fun getSignUpInfo(): SignUpRequestDto =
+        SignUpRequestDto().apply {
             defaultRegionId = intent.getStringExtra("RegionId")!!.toString()
             emoji = binding.txtEmoji.text.toString()
             nickname = this@SelectNickNameActivity.nickName
-            socialId = this@SelectNickNameActivity.socialId
-            socialType = this@SelectNickNameActivity.socialType
+            socialId = viewModel.socialId
+            socialType = viewModel.socialType
         }
-    }
+
 
     private fun getNickname() {
         viewModel.getNickname()
@@ -173,7 +135,7 @@ class SelectNickNameActivity : MisoActivity() {
                     val nicknameResponseDto = responseDto.body()!!
                     nickName = nicknameResponseDto.data.nickname
                     binding.txtGreetingBold.text =
-                        "${getBigShortScale(bigScaleRegion)}의 ${nickName}님!"
+                        "${getBigShortScale(viewModel.bigScaleRegion)}의 ${nickName}님!"
                     binding.txtEmoji.text = nicknameResponseDto.data.emoji
                 } else {
                     Log.i("결과", "실패")

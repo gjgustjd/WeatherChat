@@ -6,15 +6,14 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.miso.misoweather.Acitivity.chatmain.SurveyItem
-import com.miso.misoweather.Module.LiveDataModule.*
 import com.miso.misoweather.R
 import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerRequestDto
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
+import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Response
 import java.lang.Exception
 import java.time.ZoneId
@@ -27,10 +26,11 @@ class SelectAnswerViewModel @Inject constructor(private val repository: MisoRepo
     ViewModel() {
 
     val surveyItem: MutableLiveData<SurveyItem?> = MutableLiveData()
-
-    @MutableResponseLiveData
-    @Inject
-    lateinit var surveyAnswerResponse: MutableLiveData<Response<*>?>
+    val bigScaleRegion =
+        repository.dataStoreManager.getPreference(DataStoreManager.BIGSCALE_REGION)
+    val misoToken =
+        repository.dataStoreManager.getPreference(DataStoreManager.MISO_TOKEN)
+    val surveyAnswerResponse by lazy { MutableLiveData<Response<*>?>() }
 
     fun getSurveyAnswer(surveyId: Int, questions: Array<String>) {
         repository.getSurveyAnswers(
@@ -63,27 +63,26 @@ class SelectAnswerViewModel @Inject constructor(private val repository: MisoRepo
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun putSurveyAnswer(selectedAnswer: SurveyAnswerDto, surveyId: Int) {
-        Log.i("putSurveyAnswer", repository.getPreference("BigScaleRegion")!!)
+        Log.i("putSurveyAnswer", bigScaleRegion!!)
         repository.putSurveyMyAnswer(
-            repository.getPreference("misoToken")!!,
+            misoToken!!,
             SurveyAddMyAnswerRequestDto(
                 selectedAnswer.answerId,
-                getBigShortScale(repository.getPreference("BigScaleRegion")!!),
-                surveyId
+                getBigShortScale(bigScaleRegion!!),
+                surveyId,
             ),
             { call, response ->
-                repository.apply {
-                    addPreferencePair("isSurveyed", "true")
-                    addPreferencePair(
-                        "LastSurveyedDate",
+                repository.dataStoreManager.apply {
+                    savePreference(DataStoreManager.IS_SURVEYED, "true")
+                    savePreference(
+                        DataStoreManager.LAST_SURVEYED_DATE,
                         ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
                             .format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
                     )
-                    addPreferencePair(
-                        "surveyRegion",
-                        getBigShortScale(getPreference("BigScaleRegion")!!)
+                    savePreference(
+                        DataStoreManager.SURVEY_REGION,
+                        getBigShortScale(bigScaleRegion!!)
                     )
-                    savePreferences()
                 }
                 surveyAnswerResponse.value = response!!
             },

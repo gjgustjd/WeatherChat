@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -63,8 +62,8 @@ class CommentsFragment @Inject constructor() : Fragment() {
         }
         edtComment = binding.edtComment
         edtComment.hint = "오늘 날씨에 대한 " +
-                "${activity.getBigShortScale(activity.getPreference("BigScaleRegion")!!)}의" +
-                " ${activity.getPreference("nickname")!!}님의 느낌은 어떠신가요?"
+                "${activity.getBigShortScale(viewModel.bigScaleRegion!!)}의" +
+                " ${viewModel.nickname}님의 느낌은 어떠신가요?"
         btnSubmit = binding.btnSubmit
         btnSubmit.setOnClickListener()
         {
@@ -114,7 +113,7 @@ class CommentsFragment @Inject constructor() : Fragment() {
             Toast.makeText(context, "텍스트를 2자 이상 입력해주세요.", Toast.LENGTH_SHORT).show()
         } else {
             viewModel.addComment(
-                activity.getPreference("misoToken")!!,
+                viewModel.misoToken,
                 CommentRegisterRequestDto(edtComment.text.toString())
             )
         }

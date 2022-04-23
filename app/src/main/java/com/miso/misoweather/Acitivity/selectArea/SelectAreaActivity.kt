@@ -23,7 +23,6 @@ import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Response
 import java.lang.Exception
-import javax.inject.Inject
 
 @AndroidEntryPoint
 @RequiresApi(Build.VERSION_CODES.O)
@@ -38,51 +37,18 @@ class SelectAreaActivity : MisoActivity() {
     private lateinit var selectedTown: String
     private lateinit var aPurpose: String
     private lateinit var recyclerAdapter: RecyclerAreaAdapter
-    private lateinit var smallScaleRegion: String
-    private lateinit var midScaleRegion: String
-    private lateinit var bigScaleRegion: String
-    private var isAllInitialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initializeProperties()
-
-    }
-
-    private fun initializeProperties() {
-        fun checkinitializedAll() {
-            if (!isAllInitialized) {
-                if (
-                    this::smallScaleRegion.isInitialized &&
-                    this::midScaleRegion.isInitialized &&
-                    this::bigScaleRegion.isInitialized
-                ) {
-                    initializeViews()
-                    getAreaList()
-                    isAllInitialized = true
-                }
-            }
-        }
-        viewModel.updateProperties()
-        viewModel.smallScaleRegion.observe(this) {
-            smallScaleRegion = it!!
-            checkinitializedAll()
-        }
-        viewModel.midScaleRegion.observe(this) {
-            midScaleRegion = it!!
-            checkinitializedAll()
-        }
-        viewModel.bigScaleRegion.observe(this) {
-            bigScaleRegion = it!!
-            checkinitializedAll()
-        }
+        initializeViews()
+        getAreaList()
     }
 
     private fun initializeViews() {
-        selectedRegion = intent.getStringExtra("region") ?: bigScaleRegion
-        selectedTown = intent.getStringExtra("town") ?: midScaleRegion
+        selectedRegion = intent.getStringExtra("region") ?: viewModel.bigScaleRegion
+        selectedTown = intent.getStringExtra("town") ?: viewModel.midScaleRegion
         aPurpose = intent.getStringExtra("for") ?: ""
         grid_region = binding.gridRegions
         list_towns = binding.recyclerTowns
@@ -170,9 +136,9 @@ class SelectAreaActivity : MisoActivity() {
                 layoutManager = LinearLayoutManager(this@SelectAreaActivity)
                 addItemDecoration(DividerItemDecoration(applicationContext, VERTICAL))
             }
-            if (!smallScaleRegion.equals(""))
+            if (!viewModel.smallScaleRegion.equals(""))
                 recyclerAdapter.selectItem(townList.indexOf(townList.first {
-                    it.smallScale == smallScaleRegion
+                    it.smallScale.equals(viewModel.smallScaleRegion)
                 }))
         } catch (e: Exception) {
             e.printStackTrace()

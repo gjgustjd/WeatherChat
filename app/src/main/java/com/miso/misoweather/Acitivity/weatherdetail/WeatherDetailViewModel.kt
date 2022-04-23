@@ -2,114 +2,59 @@ package com.miso.misoweather.Acitivity.weatherdetail
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.miso.misoweather.Module.LiveDataModule.*
+import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
 @HiltViewModel
 class WeatherDetailViewModel @Inject constructor(private val repository: MisoRepository) :
     ViewModel() {
+    val forecastBriefResponse by lazy { MutableLiveData<Any?>() }
+    val dailyForecastResponse by lazy { MutableLiveData<Any?>() }
+    val hourlyForecastResponse by lazy { MutableLiveData<Any?>() }
+    val currentAirResponse by lazy { MutableLiveData<Any?>() }
 
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var isSurveyed: MutableLiveData<String?>
-
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var lastSurveyedDate: MutableLiveData<String?>
-
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var defaultRegionId: MutableLiveData<String?>
-
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var bigScale: MutableLiveData<String?>
-
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var midScale: MutableLiveData<String?>
-
-    @MutableNullableStringLiveData
-    @Inject
-    lateinit var smallScale: MutableLiveData<String?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var forecastBriefResponse: MutableLiveData<Any?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var dailyForecastResponse: MutableLiveData<Any?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var hourlyForecastResponse: MutableLiveData<Any?>
-
-    @MutableNullableAnyLiveData
-    @Inject
-    lateinit var currentAirResponse: MutableLiveData<Any?>
-
-    fun updateProperties() {
-        setupBigScale()
-        setupMidScale()
-        setupSmallScale()
-        setupSurveyed()
-        setupLastSurveyedDate()
-        setupDefaultRegionId()
-        setupWeatherData()
+    val defaultRegionId by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.DEFAULT_REGION_ID)
     }
+
+    val bigScale by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.BIGSCALE_REGION)
+    }
+
+    val midScale by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.MIDSCALE_REGION)
+    }
+
+    val smallScale by lazy {
+        repository.dataStoreManager.getPreference(DataStoreManager.SMALLSCALE_REGION)
+    }
+
 
     fun setupWeatherData() {
-        val defaultRegion = defaultRegionId.value!!.toInt()
-        getBriefForecast(defaultRegion)
-        getDailyForecast(defaultRegion)
-        getHourlyForecast(defaultRegion)
-        getCurrentAir(defaultRegion)
+        getBriefForecast(defaultRegionId.toInt())
+        getHourlyForecast(defaultRegionId.toInt())
+        getCurrentAir(defaultRegionId.toInt())
+        getDailyForecast()
     }
 
-    fun setupBigScale() {
-        bigScale.value = repository.getPreference("BigScaleRegion")
-    }
-
-    fun setupMidScale() {
-        midScale.value = repository.getPreference("MidScaleRegion")
-    }
-
-    fun setupSmallScale() {
-        smallScale.value = repository.getPreference("SmallScaleRegion")
-    }
-
-    fun setupSurveyed() {
-        isSurveyed.value = repository.getPreference("isSurveyed")
-    }
-
-    fun setupLastSurveyedDate() {
-        lastSurveyedDate.value = repository.getPreference("LastSurveyedDate")
-    }
-
-    fun setupDefaultRegionId() {
-        defaultRegionId.value = repository.getPreference("defaultRegionId")
-    }
 
     fun getBriefForecast(regionId: Int) {
         repository.getBriefForecast(
             regionId,
             { call, response ->
                 val region = response.body()!!.data.region
-                repository.apply {
-                    addPreferencePair("BigScaleRegion", region.bigScale)
-                    addPreferencePair(
-                        "MidScaleRegion",
+                repository.dataStoreManager.apply {
+                    savePreference(DataStoreManager.BIGSCALE_REGION, region.bigScale)
+                    savePreference(
+                        DataStoreManager.MIDSCALE_REGION,
                         if (region.midScale.equals("선택 안 함")) "전체" else region.midScale
                     )
-                    addPreferencePair(
-                        "SmallScaleRegion",
+                    savePreference(
+                        DataStoreManager.SMALLSCALE_REGION,
                         if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
                     )
-                    savePreferences()
                 }
                 forecastBriefResponse.value = response
             },
@@ -122,9 +67,9 @@ class WeatherDetailViewModel @Inject constructor(private val repository: MisoRep
         )
     }
 
-    fun getDailyForecast(regionId: Int? = defaultRegionId.value!!.toInt()) {
+    fun getDailyForecast() {
         repository.getDailyForecast(
-            regionId!!,
+            defaultRegionId.toInt(),
             { call, response ->
                 dailyForecastResponse.value = response
             },
@@ -137,7 +82,7 @@ class WeatherDetailViewModel @Inject constructor(private val repository: MisoRep
         )
     }
 
-    fun getHourlyForecast(regionId: Int? = defaultRegionId.value!!.toInt()) {
+    fun getHourlyForecast(regionId: Int? = defaultRegionId.toInt()) {
         repository.getHourlyForecast(
             regionId!!,
             { call, response ->
@@ -152,7 +97,7 @@ class WeatherDetailViewModel @Inject constructor(private val repository: MisoRep
         )
     }
 
-    fun getCurrentAir(regionId: Int? = defaultRegionId.value!!.toInt()) {
+    fun getCurrentAir(regionId: Int? = defaultRegionId.toInt()) {
         repository.getCurrentAir(
             regionId!!,
             { call, response ->

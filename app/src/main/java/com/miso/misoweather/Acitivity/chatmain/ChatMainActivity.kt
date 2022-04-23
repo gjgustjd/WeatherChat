@@ -43,62 +43,25 @@ class ChatMainActivity : MisoActivity() {
     private lateinit var txtLocation: TextView
     private lateinit var txtSurveyBtn: TextView
     private lateinit var txtChatBtn: TextView
-    lateinit var selectedRegion: String
     private lateinit var locationLayout: ConstraintLayout
     private lateinit var previousActivity: String
     private lateinit var currentFragment: Fragment
     private lateinit var goToPreviousActivity: () -> Unit
-    private lateinit var misoToken: String
-    private lateinit var surveyRegion: String
-    private lateinit var bigScale: String
-    private lateinit var defaultRegionId: String
-    private var isAllInitialized = false
-
+    lateinit var selectedRegion: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivityChatMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initializeProperties()
-    }
-
-    private fun initializeProperties() {
-        fun checkInitializedAll() {
-            if (!isAllInitialized) {
-                if (this::bigScale.isInitialized &&
-                    this::surveyRegion.isInitialized &&
-                    this::misoToken.isInitialized &&
-                    this::defaultRegionId.isInitialized
-                ) {
-                    initializeViews()
-                    isAllInitialized = true
-                }
-            }
-        }
-        viewModel.updateProperties()
-        viewModel.misoToken.observe(this) {
-            misoToken = it
-            checkInitializedAll()
-        }
-        viewModel.surveyRegion.observe(this) {
-            surveyRegion = it
-            checkInitializedAll()
-        }
-        viewModel.bigScaleRegion.observe(this) {
-            bigScale = it
-            checkInitializedAll()
-        }
-        viewModel.defaultRegionId.observe(this) {
-            defaultRegionId = it
-            checkInitializedAll()
-        }
+        initializeViews()
     }
 
     private fun initializeViews() {
+        val surveyRegion = viewModel.surveyRegion
         selectedRegion =
             if (surveyRegion.isNullOrBlank())
-                getBigShortScale(bigScale)
-            else surveyRegion!!
+                getBigShortScale(viewModel.bigScaleRegion)
+            else surveyRegion
 
         previousActivity = intent.getStringExtra("previousActivity") ?: ""
         btnSurvey = binding.btnSurvey

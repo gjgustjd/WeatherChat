@@ -39,46 +39,19 @@ class SelectTownActivity : MisoActivity() {
     private lateinit var townRequestResult: RegionListResponseDto
     private lateinit var recyclerAdapter: RecyclerTownsAdapter
     private lateinit var aPurpose: String
-    private lateinit var midScaleRegion: String
-    private lateinit var bigScaleRegion: String
-    private var isAllInitialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initializeProperties()
-
+        initializeViews()
+        getTownList()
     }
 
     private fun getShortRegionName(): String {
         val regionsList = resources.getStringArray(R.array.regions).toList()
         val regionsFullList = resources.getStringArray(R.array.regions_full).toList()
-        return regionsList[regionsFullList.indexOf(bigScaleRegion)]
-    }
-
-    private fun initializeProperties() {
-        fun checkinitializedAll() {
-            if (!isAllInitialized) {
-                if (
-                    this::midScaleRegion.isInitialized &&
-                    this::bigScaleRegion.isInitialized
-                ) {
-                    initializeViews()
-                    getTownList()
-                    isAllInitialized = true
-                }
-            }
-        }
-        viewModel.updateProperties()
-        viewModel.midScaleRegion.observe(this) {
-            midScaleRegion = it!!
-            checkinitializedAll()
-        }
-        viewModel.bigScaleRegion.observe(this) {
-            bigScaleRegion = it!!
-            checkinitializedAll()
-        }
+        return regionsList[regionsFullList.indexOf(viewModel.bigScaleRegion)]
     }
 
     private fun initializeViews() {
@@ -115,9 +88,9 @@ class SelectTownActivity : MisoActivity() {
                     intent = Intent(this, SelectAreaActivity::class.java)
 
                 intent.apply {
-                    intent.putExtra("for", aPurpose)
-                    intent.putExtra("region", recyclerAdapter.getSelectedItem().bigScale)
-                    intent.putExtra("town", midScaleRegion)
+                    putExtra("for", aPurpose)
+                    putExtra("region", recyclerAdapter.getSelectedItem().bigScale)
+                    putExtra("town", midScaleRegion)
                 }
                 startActivity(intent)
                 transferToNext()
@@ -183,10 +156,10 @@ class SelectTownActivity : MisoActivity() {
                 adapter = recyclerAdapter
                 layoutManager = LinearLayoutManager(this@SelectTownActivity)
                 addItemDecoration(DividerItemDecoration(applicationContext, VERTICAL))
-                if (!midScaleRegion.equals(""))
+                if (!viewModel.midScaleRegion.equals(""))
                     recyclerAdapter.selectItem(townList.indexOf(townList.first() {
                         it.midScale.equals(
-                            midScaleRegion
+                            viewModel.midScaleRegion
                         )
                     }))
             }
