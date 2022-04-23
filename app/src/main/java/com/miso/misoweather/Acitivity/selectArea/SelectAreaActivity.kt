@@ -20,10 +20,8 @@ import com.miso.misoweather.Acitivity.getnickname.SelectNickNameActivity
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
-import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import java.lang.Exception
 
 @AndroidEntryPoint

@@ -23,7 +23,6 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySurveyAnswerBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.random.Random
 
 @RequiresApi(Build.VERSION_CODES.O)

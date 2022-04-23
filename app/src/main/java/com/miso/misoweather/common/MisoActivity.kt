@@ -3,7 +3,6 @@ package com.miso.misoweather.common
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import com.miso.misoweather.R
 

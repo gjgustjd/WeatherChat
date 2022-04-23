@@ -1,7 +1,6 @@
 package com.miso.misoweather.Acitivity.mypage
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.miso.misoweather.model.DTO.GeneralResponseDto
@@ -12,7 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(private val repository: MisoRepository2) : ViewModel() {

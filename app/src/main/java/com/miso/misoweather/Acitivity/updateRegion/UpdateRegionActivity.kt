@@ -18,7 +18,6 @@ import com.miso.misoweather.Acitivity.selectRegion.RegionItem
 import com.miso.misoweather.databinding.ActivityUpdateRegionBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
-import javax.inject.Inject
 
 @AndroidEntryPoint
 @RequiresApi(Build.VERSION_CODES.O)

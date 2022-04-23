@@ -1,6 +1,5 @@
 package com.miso.misoweather.Acitivity.selectArea
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface.BOLD
 import android.graphics.Typeface.NORMAL

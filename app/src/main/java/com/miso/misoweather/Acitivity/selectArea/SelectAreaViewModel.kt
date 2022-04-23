@@ -1,7 +1,6 @@
 package com.miso.misoweather.Acitivity.selectArea
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.miso.misoweather.model.DTO.GeneralResponseDto

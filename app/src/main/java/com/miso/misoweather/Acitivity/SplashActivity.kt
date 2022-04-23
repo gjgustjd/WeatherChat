@@ -9,7 +9,6 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySplashBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.login.LoginActivity
-import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
 
 class SplashActivity : MisoActivity() {
     lateinit var binding: ActivitySplashBinding

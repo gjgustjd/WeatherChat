@@ -1,6 +1,5 @@
 package com.miso.misoweather.Acitivity.home
 
-import android.content.Context
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater

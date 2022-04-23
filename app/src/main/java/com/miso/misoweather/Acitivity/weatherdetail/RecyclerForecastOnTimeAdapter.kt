@@ -1,15 +1,12 @@
 package com.miso.misoweather.Acitivity.weatherdetail
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.transition.Hold
 import com.miso.misoweather.R
 import com.miso.misoweather.common.CommonUtil
-import com.miso.misoweather.model.DTO.Forecast.Forecast
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecast
 
 class RecyclerForecastOnTimeAdapter(

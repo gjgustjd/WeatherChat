@@ -19,11 +19,8 @@ import com.miso.misoweather.Acitivity.login.LoginActivity
 import com.miso.misoweather.model.DTO.*
 import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
-import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import retrofit2.Response
-import javax.inject.Inject
 
 @AndroidEntryPoint
 @RequiresApi(Build.VERSION_CODES.O)

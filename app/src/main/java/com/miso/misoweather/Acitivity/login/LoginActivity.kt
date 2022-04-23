@@ -18,7 +18,6 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.kakao.sdk.user.UserApiClient
-import com.kakao.usermgmt.response.model.User
 import com.miso.misoweather.Acitivity.home.HomeActivity
 import com.miso.misoweather.Acitivity.login.viewPagerFragments.*
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity

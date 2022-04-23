@@ -10,7 +10,6 @@ import android.widget.ImageButton
 import android.widget.LinearLayout.VERTICAL
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
