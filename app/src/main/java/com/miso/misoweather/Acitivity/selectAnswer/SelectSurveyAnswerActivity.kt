@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.answerAnimationActivity.AnswerAnimationActivity
@@ -21,6 +22,7 @@ import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySurveyAnswerBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -90,11 +92,15 @@ class SelectSurveyAnswerActivity : MisoActivity() {
     }
 
     private fun getSurveyAnswer(surveyId: Int) {
-        viewModel.getSurveyAnswer(surveyId, resources.getStringArray(R.array.survey_questions))
+        lifecycleScope.launch {
+            viewModel.getSurveyAnswer(surveyId, resources.getStringArray(R.array.survey_questions))
+        }
         viewModel.surveyItem.observe(this) {
-            surveyItem = it!!
-            initializeViews()
-            setupRecycler()
+            it?.let {
+                surveyItem = it!!
+                initializeViews()
+                setupRecycler()
+            }
         }
     }
 
@@ -106,21 +112,24 @@ class SelectSurveyAnswerActivity : MisoActivity() {
 
     private fun putSurveyAnswer() {
         val selectedAnswer = recyclerAdapter.getSelectedAnswerItem()
-        viewModel.putSurveyAnswer(selectedAnswer, surveyItem.surveyId)
-        viewModel.surveyAnswerResponse.observe(this) {
-            if (it == null) {
-                Toast.makeText(this, "답변 선택에 실패했습니다.", Toast.LENGTH_SHORT).show()
-                doBack()
-            } else {
+        lifecycleScope.launch {
+            viewModel.putSurveyAnswer(selectedAnswer, surveyItem.surveyId)
+            {
                 if (it.isSuccessful) {
-                    val intent = Intent(this, AnswerAnimationActivity::class.java)
+                    val intent =
+                        Intent(this@SelectSurveyAnswerActivity, AnswerAnimationActivity::class.java)
                     intent.putExtra("answer", selectedAnswer.answer)
                     startActivity(intent)
                     overFromUnder()
                     finish()
                 } else {
                     Log.e("putSurveyAnswer", it.errorBody()!!.source().toString())
-                    Toast.makeText(this, "답변 선택에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@SelectSurveyAnswerActivity,
+                        "답변 선택에 실패했습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
                     doBack()
                 }
             }
