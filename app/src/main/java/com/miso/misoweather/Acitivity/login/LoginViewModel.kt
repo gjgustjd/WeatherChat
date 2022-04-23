@@ -8,7 +8,7 @@ import com.kakao.sdk.user.model.AccessTokenInfo
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DataStoreManager
-import com.miso.misoweather.model.MisoRepository2
+import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -16,7 +16,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val repository: MisoRepository2) : ViewModel() {
+class LoginViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
     val socialId by lazy {
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.SOCIAL_ID).asLiveData()
     }

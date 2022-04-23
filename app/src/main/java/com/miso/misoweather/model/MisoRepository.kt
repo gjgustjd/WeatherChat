@@ -4,15 +4,15 @@ import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.DTO.SignUpRequestDto
 import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerRequestDto
-import com.miso.misoweather.model.interfaces.MisoWeatherAPI2
+import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MisoRepository2 @Inject constructor(private val api: MisoWeatherAPI2) {
-
-    @Inject
-    lateinit var dataStoreManager: DataStoreManager
+class MisoRepository @Inject constructor(
+    private val api: MisoWeatherAPI,
+    val dataStoreManager: DataStoreManager
+) {
 
     suspend fun checkRegistered(socialId: String, socialType: String) =
         api.checkRegistered(socialId, socialType)

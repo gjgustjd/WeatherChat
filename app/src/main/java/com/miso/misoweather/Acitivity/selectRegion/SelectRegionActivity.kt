@@ -17,7 +17,7 @@ import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.Acitivity.login.LoginActivity
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
 import com.miso.misoweather.model.DataStoreManager
-import com.miso.misoweather.model.MisoRepository2
+import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
 import javax.inject.Inject
@@ -34,7 +34,7 @@ class SelectRegionActivity : MisoActivity() {
     private lateinit var aPurpose: String
 
     @Inject
-    lateinit var repository: MisoRepository2
+    lateinit var repository: MisoRepository
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)

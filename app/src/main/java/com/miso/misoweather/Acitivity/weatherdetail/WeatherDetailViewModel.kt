@@ -6,13 +6,13 @@ import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
 import com.miso.misoweather.model.DataStoreManager
-import com.miso.misoweather.model.MisoRepository2
+import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class WeatherDetailViewModel @Inject constructor(private val repository: MisoRepository2) :
+class WeatherDetailViewModel @Inject constructor(private val repository: MisoRepository) :
     ViewModel() {
     val defaultRegionId by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.DEFAULT_REGION_ID)

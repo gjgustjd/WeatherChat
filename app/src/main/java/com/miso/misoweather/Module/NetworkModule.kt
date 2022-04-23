@@ -2,7 +2,7 @@ package com.miso.misoweather.Module
 
 import com.google.gson.GsonBuilder
 import com.miso.misoweather.common.MisoActivity
-import com.miso.misoweather.model.interfaces.MisoWeatherAPI2
+import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,12 +15,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 class NetworkModule {
 
     @Provides
-    fun getRetrofitApi(): MisoWeatherAPI2 {
+    fun getRetrofitApi(): MisoWeatherAPI {
         val gson = GsonBuilder().setLenient().create()
         val retrofit = Retrofit.Builder()
             .baseUrl(MisoActivity.MISOWEATHER_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
-        return retrofit.create(MisoWeatherAPI2::class.java)
+        return retrofit.create(MisoWeatherAPI::class.java)
     }
 }

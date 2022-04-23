@@ -14,11 +14,10 @@ import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerRespons
 import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
-interface MisoWeatherAPI2 {
+interface MisoWeatherAPI {
     @GET("api/member/nickname")
     suspend fun getNickname(): Response<NicknameResponseDto>
 

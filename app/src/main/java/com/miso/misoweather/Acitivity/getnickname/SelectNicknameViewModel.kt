@@ -11,7 +11,7 @@ import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.DTO.SignUpRequestDto
 import com.miso.misoweather.model.DataStoreManager
-import com.miso.misoweather.model.MisoRepository2
+import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.launch
@@ -20,7 +20,7 @@ import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class SelectNicknameViewModel @Inject constructor(private val repository: MisoRepository2) :
+class SelectNicknameViewModel @Inject constructor(private val repository: MisoRepository) :
     ViewModel() {
 
     @ActivityContext

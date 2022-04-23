@@ -7,14 +7,14 @@ import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.DataStoreManager
-import com.miso.misoweather.model.MisoRepository2
+import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class SelectAreaViewModel @Inject constructor(private val repository: MisoRepository2) :
+class SelectAreaViewModel @Inject constructor(private val repository: MisoRepository) :
     ViewModel() {
     val smallScaleRegion by lazy {
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.SMALLSCALE_REGION)

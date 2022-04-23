@@ -6,14 +6,14 @@ import androidx.lifecycle.asLiveData
 import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.LoginRequestDto
 import com.miso.misoweather.model.DataStoreManager
-import com.miso.misoweather.model.MisoRepository2
+import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class MyPageViewModel @Inject constructor(private val repository: MisoRepository2) : ViewModel() {
+class MyPageViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
     val misoToken by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.MISO_TOKEN)
     }

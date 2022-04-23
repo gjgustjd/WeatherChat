@@ -13,7 +13,7 @@ import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 import com.miso.misoweather.model.DataStoreManager
-import com.miso.misoweather.model.MisoRepository2
+import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import retrofit2.Response
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class ChatMainViewModel @Inject constructor(private val repository: MisoRepository2) : ViewModel() {
+class ChatMainViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
     val surveyItems by lazy { MutableLiveData<ArrayList<SurveyItem>>() }
     val surveyRegion by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.SURVEY_REGION)

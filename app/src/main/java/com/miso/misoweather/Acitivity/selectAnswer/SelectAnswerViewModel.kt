@@ -13,7 +13,7 @@ import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import com.miso.misoweather.model.DataStoreManager
-import com.miso.misoweather.model.MisoRepository2
+import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ActivityContext
 import retrofit2.Response
@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
-class SelectAnswerViewModel @Inject constructor(private val repository: MisoRepository2) :
+class SelectAnswerViewModel @Inject constructor(private val repository: MisoRepository) :
     ViewModel() {
     @ActivityContext
     lateinit var context: Context
