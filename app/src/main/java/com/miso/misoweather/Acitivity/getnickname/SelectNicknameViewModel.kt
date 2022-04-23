@@ -1,23 +1,30 @@
 package com.miso.misoweather.Acitivity.getnickname
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.kakao.sdk.user.UserApiClient
+import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.LoginRequestDto
+import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import com.miso.misoweather.model.DTO.SignUpRequestDto
 import com.miso.misoweather.model.DataStoreManager
-import com.miso.misoweather.model.MisoRepository
-import dagger.hilt.android.scopes.ActivityRetainedScoped
+import com.miso.misoweather.model.MisoRepository2
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ActivityContext
+import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject
 
-@ActivityRetainedScoped
-class SelectNicknameViewModel @Inject constructor(private val repository: MisoRepository) :
+@HiltViewModel
+class SelectNicknameViewModel @Inject constructor(private val repository: MisoRepository2) :
     ViewModel() {
 
-    val nicknameResponseDto by lazy { MutableLiveData<Response<*>?>() }
+    @ActivityContext
+    lateinit var context: Context
 
     val smallScaleRegion by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.SMALLSCALE_REGION)
@@ -45,49 +52,39 @@ class SelectNicknameViewModel @Inject constructor(private val repository: MisoRe
     lateinit var signUpRequestDto: SignUpRequestDto
     lateinit var defaultRegionId: String
 
-    fun registerMember(
+    suspend fun registerMember(
         signUpRequestDto: SignUpRequestDto,
         socialToken: String,
-        isResetedToken: Boolean
+        isResetedToken: Boolean,
+        action: ((response: Response<GeneralResponseDto>) -> Unit)? = null
     ) {
         this.signUpRequestDto = signUpRequestDto
-        repository.registerMember(
+        val response = repository.registerMember(
             signUpRequestDto,
-            socialToken,
-            { call, response ->
-                issueMisoToken(loginRequestDto, defaultRegionId)
-            },
-            { call, response ->
-                if (response.errorBody()!!.source().toString()
-                        .contains("UNAUTHORIZED") && !isResetedToken
-                ) {
-                    resetAccessToken()
-                } else {
-                    registerResultString.value = "Failed"
-                }
-            },
-            { call, t ->
-                registerResultString.value = t.toString()
-            }
+            socialToken
         )
+        if (response.isSuccessful)
+            issueMisoToken(loginRequestDto, defaultRegionId)
+        else {
+            if (response.errorBody()!!.source().toString()
+                    .contains("UNAUTHORIZED") && !isResetedToken
+            ) {
+                resetAccessToken()
+            } else {
+                registerResultString.value = "Failed"
+            }
+        }
+
+        if (action != null) {
+            action(response)
+        }
     }
 
-    fun getNickname() {
-        repository.getNickname(
-            { call, response ->
-                nicknameResponseDto.value = response
-            },
-            { call, response ->
-                nicknameResponseDto.value = response
-            },
-            { call, t ->
-                nicknameResponseDto.value = null
-            },
-        )
-    }
+    suspend fun getNickname(action: (response: Response<NicknameResponseDto>) -> Unit) =
+        action(repository.getNickname())
 
     private fun resetAccessToken() {
-        UserApiClient.instance.loginWithKakaoTalk(repository.context) { token, error ->
+        UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
             if (error != null) {
                 Log.e("resetAccessToken", "로그인 실패", error)
             } else if (token != null) {
@@ -96,40 +93,42 @@ class SelectNicknameViewModel @Inject constructor(private val repository: MisoRe
                     DataStoreManager.ACCESS_TOKEN,
                     token.accessToken
                 )
-                registerMember(signUpRequestDto, socialType, true)
+                viewModelScope.launch {
+                    registerMember(signUpRequestDto, socialType, true)
+                }
             }
         }
     }
 
-    fun issueMisoToken(
+    suspend fun issueMisoToken(
         loginRequestDto: LoginRequestDto,
-        defaultRegionId: String
+        defaultRegionId: String,
+        action: ((response: Response<GeneralResponseDto>) -> Unit)? = null
     ) {
-        repository.issueMisoToken(
+        val response = repository.issueMisoToken(
             loginRequestDto,
-            accessToken,
-            { call, response ->
-                try {
-                    Log.i("결과", "성공")
-                    val headers = response.headers()
-                    val serverToken = headers.get("servertoken")
-                    repository.dataStoreManager.apply {
-                        savePreference(DataStoreManager.MISO_TOKEN, serverToken!!)
-                        savePreference(DataStoreManager.DEFAULT_REGION_ID, defaultRegionId)
-                    }
-                    if (!serverToken.isNullOrBlank()) {
-                        registerResultString.value = "OK"
-                    } else
-                        registerResultString.value = "Failed"
-                } catch (e: Exception) {
-                    e.printStackTrace()
+            accessToken
+        )
+        if (response.isSuccessful) {
+            try {
+                Log.i("결과", "성공")
+                val headers = response.headers()
+                val serverToken = headers.get("servertoken")
+                repository.dataStoreManager.apply {
+                    savePreference(DataStoreManager.MISO_TOKEN, serverToken!!)
+                    savePreference(DataStoreManager.DEFAULT_REGION_ID, defaultRegionId)
                 }
-            },
-            { call, response ->
-                registerResultString.value = "Failed"
-            },
-            { call, t ->
-                registerResultString.value = t.toString()
-            })
+                if (!serverToken.isNullOrBlank()) {
+                    registerResultString.value = "OK"
+                } else
+                    registerResultString.value = "Failed"
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        if (action != null) {
+            action(response)
+        }
     }
 }

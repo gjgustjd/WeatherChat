@@ -9,7 +9,9 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectNicknameBinding
 import com.miso.misoweather.Acitivity.home.HomeActivity
@@ -19,14 +21,14 @@ import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
 import com.miso.misoweather.Acitivity.selectTown.SelectTownActivity
 import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 
 @AndroidEntryPoint
 @RequiresApi(Build.VERSION_CODES.O)
 class SelectNickNameActivity : MisoActivity() {
-    @Inject
-    lateinit var viewModel: SelectNicknameViewModel
+    private val viewModel: SelectNicknameViewModel by viewModels()
     private lateinit var binding: ActivitySelectNicknameBinding
     private lateinit var txt_get_new_nick: TextView
     private lateinit var btn_back: ImageButton
@@ -79,18 +81,20 @@ class SelectNickNameActivity : MisoActivity() {
                 .show()
             goToLoginActivity()
         }
+
         viewModel.loginRequestDto = makeLoginRequestDto()
-        viewModel.registerMember(
-            getSignUpInfo(),
-            viewModel.accessToken,
-            false
-        )
-        viewModel.registerResultString.observe(this) {
-            if (it.equals("OK")) {
-                val intent = Intent(this@SelectNickNameActivity, HomeActivity::class.java)
-                startActivity(intent)
-            } else {
-                inCaseFailedRegister()
+        lifecycleScope.launch {
+            viewModel.registerMember(
+                getSignUpInfo(),
+                viewModel.accessToken,
+                false
+            )
+            {
+                if (it.isSuccessful) {
+                    startActivity(Intent(this@SelectNickNameActivity, HomeActivity::class.java))
+                } else {
+                    inCaseFailedRegister()
+                }
             }
         }
     }
@@ -117,22 +121,14 @@ class SelectNickNameActivity : MisoActivity() {
             socialType = viewModel.socialType
         }
 
-
     private fun getNickname() {
-        viewModel.getNickname()
-        viewModel.nicknameResponseDto.observe(this) {
-            val responseDto = it as Response<NicknameResponseDto>
-            if (it == null) {
-                Toast.makeText(
-                    this@SelectNickNameActivity,
-                    "닉네임 받기에 실패하였습니다.",
-                    Toast.LENGTH_LONG
-                ).show()
-            } else {
+        lifecycleScope.launch {
+            viewModel.getNickname()
+            {
                 if (it.isSuccessful) {
                     Log.i("결과", "성공")
-                    Log.i("결과", "닉네임 : ${responseDto.body()?.data?.nickname}")
-                    val nicknameResponseDto = responseDto.body()!!
+                    Log.i("결과", "닉네임 : ${it.body()?.data?.nickname}")
+                    val nicknameResponseDto = it.body()!!
                     nickName = nicknameResponseDto.data.nickname
                     binding.txtGreetingBold.text =
                         "${getBigShortScale(viewModel.bigScaleRegion)}의 ${nickName}님!"
@@ -146,7 +142,6 @@ class SelectNickNameActivity : MisoActivity() {
                     ).show()
                 }
             }
-
         }
     }
 }
