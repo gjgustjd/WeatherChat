@@ -1,21 +1,20 @@
 package com.miso.misoweather.Acitivity.selectTown
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.miso.misoweather.model.DTO.GeneralResponseDto
 import com.miso.misoweather.model.DTO.Region
+import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.DataStoreManager
-import com.miso.misoweather.model.MisoRepository
+import com.miso.misoweather.model.MisoRepository2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class SelectTownViewModel @Inject constructor(private val repository: MisoRepository) :
+class SelectTownViewModel @Inject constructor(private val repository: MisoRepository2) :
     ViewModel() {
-    val townRequestResult by lazy { MutableLiveData<Response<*>?>() }
-    val updateRegionResponse by lazy { MutableLiveData<Response<*>?>() }
 
     val midScaleRegion by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.MIDSCALE_REGION)
@@ -43,44 +42,39 @@ class SelectTownViewModel @Inject constructor(private val repository: MisoReposi
         }
     }
 
-    fun updateRegion(selectedRegion: Region, regionId: Int) {
-        repository.updateRegion(
-            misoToken,
-            regionId,
-            { call, response ->
-                try {
-                    Log.i("changeRegion", "성공")
-                    addRegionPreferences(selectedRegion)
-                    repository.dataStoreManager.savePreference(
-                        DataStoreManager.DEFAULT_REGION_ID,
-                        regionId.toString()
-                    )
-                    updateRegionResponse.value = response
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            },
-            { call, response ->
-                updateRegionResponse.value = response
-            },
-            { call, t ->
-//                Log.i("changeRegion", "실패")
-            },
-        )
+    suspend fun updateRegion(
+        selectedRegion: Region,
+        regionId: Int,
+        action: (response: Response<GeneralResponseDto>) -> Unit
+    ) {
+        val response =
+            repository.updateRegion(
+                misoToken,
+                regionId
+            )
+        if (response.isSuccessful) {
+            try {
+                Log.i("changeRegion", "성공")
+                addRegionPreferences(selectedRegion)
+                repository.dataStoreManager.savePreference(
+                    DataStoreManager.DEFAULT_REGION_ID,
+                    regionId.toString()
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        action(response)
     }
 
-    fun getTownList(bigScaleRegion: String) {
-        repository.getCity(
-            bigScaleRegion,
-            { call, response ->
-                townRequestResult.value = response
-            },
-            { call, response ->
-                townRequestResult.value = response
-            },
-            { call, t ->
-                townRequestResult.value = null
-            }
+    suspend fun getTownList(
+        bigScaleRegion: String,
+        action: (response: Response<RegionListResponseDto>) -> Unit
+    ) {
+        val response = repository.getCity(
+            bigScaleRegion
         )
+        action(response)
     }
 }

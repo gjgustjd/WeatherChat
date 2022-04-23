@@ -11,6 +11,7 @@ import android.widget.LinearLayout.VERTICAL
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +25,7 @@ import com.miso.misoweather.model.DTO.Region
 import com.miso.misoweather.Acitivity.selectArea.SelectAreaActivity
 import com.miso.misoweather.Acitivity.selectRegion.SelectRegionActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 @AndroidEntryPoint
@@ -102,19 +104,17 @@ class SelectTownActivity : MisoActivity() {
     }
 
     private fun changeRegion() {
-        var currentItem = recyclerAdapter.getSelectedItem()
-        viewModel.updateRegion(
-            currentItem,
-            currentItem.id
-        )
-        viewModel.updateRegionResponse.observe(this) {
-            if (it == null) {
-            } else {
+        val currentItem = recyclerAdapter.getSelectedItem()
+        lifecycleScope.launch {
+            viewModel.updateRegion(
+                currentItem,
+                currentItem.id
+            )
+            {
                 if (it.isSuccessful) {
-                    startActivity(Intent(this, HomeActivity::class.java))
+                    startActivity(Intent(this@SelectTownActivity, HomeActivity::class.java))
                     transferToNext()
                     finish()
-                } else {
                 }
             }
         }
@@ -129,10 +129,9 @@ class SelectTownActivity : MisoActivity() {
     }
 
     private fun getTownList() {
-        viewModel.getTownList(selectedRegion)
-        viewModel.townRequestResult.observe(this) {
-            if (it == null) {
-            } else {
+        lifecycleScope.launch {
+            viewModel.getTownList(selectedRegion)
+            {
                 if (it.isSuccessful) {
                     try {
                         Log.i("getTownList", "2단계 지역 받아오기 성공")
@@ -141,7 +140,6 @@ class SelectTownActivity : MisoActivity() {
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
-                } else {
                 }
             }
         }
