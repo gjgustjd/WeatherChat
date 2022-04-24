@@ -14,21 +14,29 @@ import com.miso.misoweather.R
 import com.miso.misoweather.common.VerticalSpaceItemDecoration
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.Acitivity.selectRegion.RecyclerRegionsAdapter
-import com.miso.misoweather.Acitivity.selectRegion.RegionItem
 import com.miso.misoweather.databinding.ActivityUpdateRegionBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
+import javax.inject.Inject
 
 @AndroidEntryPoint
 @RequiresApi(Build.VERSION_CODES.O)
 class UpdateRegionActivity : MisoActivity() {
     private val viewModel: UpdateRegionViewModel by viewModels()
     private lateinit var binding: ActivityUpdateRegionBinding
-    private lateinit var gridAdapter: RecyclerRegionsAdapter
     private lateinit var grid_region: RecyclerView
     private lateinit var btn_back: ImageButton
     private lateinit var btn_next: Button
     private lateinit var currentRegion: String
+
+    @Inject
+    lateinit var gridAdapter: RecyclerRegionsAdapter
+
+    @Inject
+    lateinit var gridLayoutManager: GridLayoutManager
+
+    @Inject
+    lateinit var decoration: VerticalSpaceItemDecoration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -37,6 +45,7 @@ class UpdateRegionActivity : MisoActivity() {
         initializeViews()
         setRecyclerRegions()
     }
+
     private fun initializeViews() {
         currentRegion =
             intent.getStringExtra("region") ?: viewModel.bigScaleRegion
@@ -49,8 +58,7 @@ class UpdateRegionActivity : MisoActivity() {
         btn_next.setOnClickListener()
         {
             try {
-                val bigScaleRegion = gridAdapter.getSelectedItemShortName()
-                viewModel.updateSurveyRegion(bigScaleRegion)
+                viewModel.updateSurveyRegion(gridAdapter.getSelectedItemShortName())
                 startActivity(Intent(this, ChatMainActivity::class.java))
                 transferToBack()
                 finish()
@@ -67,31 +75,12 @@ class UpdateRegionActivity : MisoActivity() {
     }
 
     private fun setRecyclerRegions() {
-        val regionItems = getRegionItems()
         val regionList = resources.getStringArray(R.array.regions)
-        val index = regionList.indexOf(currentRegion)
-        val context = this@UpdateRegionActivity
-        gridAdapter = RecyclerRegionsAdapter(context, regionItems, index)
+        gridAdapter.selectedIndex = regionList.indexOf(currentRegion)
         grid_region.apply {
             adapter = gridAdapter
-            layoutManager = GridLayoutManager(context, 4)
-            addItemDecoration(VerticalSpaceItemDecoration(30))
+            layoutManager = gridLayoutManager
+            addItemDecoration(decoration)
         }
-
-    }
-
-    private fun getRegionItems(): ArrayList<RegionItem> {
-        val regions = resources.getStringArray(R.array.regions)
-        val regions_full = resources.getStringArray(R.array.regions_full)
-        val regionItems = arrayListOf<RegionItem>()
-        for (i: Int in regions.indices) {
-            val item = RegionItem().apply {
-                shortName = regions[i]
-                longName = regions_full[i]
-            }
-            regionItems.add(item)
-        }
-
-        return regionItems
     }
 }

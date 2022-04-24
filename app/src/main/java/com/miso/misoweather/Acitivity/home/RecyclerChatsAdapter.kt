@@ -11,7 +11,6 @@ import com.miso.misoweather.Acitivity.chatmain.ChatMainViewModel
 import com.miso.misoweather.R
 import com.miso.misoweather.databinding.ListItemChatBinding
 import com.miso.misoweather.model.DTO.CommentList.Comment
-import lombok.Getter
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -19,7 +18,6 @@ import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 class RecyclerChatsAdapter(
-    @Getter
     var comments: List<Comment>,
     private val isCommentsFragment: Boolean,
 ) :

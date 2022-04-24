@@ -10,7 +10,6 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.Acitivity.home.HomeActivity
-import com.miso.misoweather.R
 import com.miso.misoweather.common.VerticalSpaceItemDecoration
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
@@ -26,7 +25,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SelectRegionActivity : MisoActivity() {
     private lateinit var binding: ActivitySelectRegionBinding
-    private lateinit var gridAdapter: RecyclerRegionsAdapter
+
     private lateinit var grid_region: RecyclerView
     private lateinit var list_towns: RecyclerView
     private lateinit var btn_back: ImageButton
@@ -35,6 +34,13 @@ class SelectRegionActivity : MisoActivity() {
 
     @Inject
     lateinit var repository: MisoRepository
+    @Inject
+    lateinit var gridAdapter: RecyclerRegionsAdapter
+    @Inject
+    lateinit var gridLayoutManager: GridLayoutManager
+    @Inject
+    lateinit var decoration: VerticalSpaceItemDecoration
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = ActivitySelectRegionBinding.inflate(layoutInflater)
@@ -49,10 +55,10 @@ class SelectRegionActivity : MisoActivity() {
         list_towns = binding.recyclerTowns
         btn_back = binding.imgbtnBack
         btn_next = binding.btnAction
-        btn_back.setOnClickListener() {
+        btn_back.setOnClickListener {
             doBack()
         }
-        btn_next.setOnClickListener() {
+        btn_next.setOnClickListener {
             try {
                 if (gridAdapter.selectedIndex == -1) Toast.makeText(
                     this,
@@ -60,16 +66,17 @@ class SelectRegionActivity : MisoActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
                 else {
-                    val intent = Intent(this, SelectTownActivity::class.java)
                     val bigScaleRegion = gridAdapter.getSelectedItemShortName()
+                    repository.dataStoreManager.savePreference(
+                        DataStoreManager.BIGSCALE_REGION, bigScaleRegion
+                    )
+
+                    val intent = Intent(this, SelectTownActivity::class.java)
                     intent.apply {
                         putExtra("for", aPurpose)
                         putExtra("region", bigScaleRegion)
                     }
                     startActivity(intent)
-                    repository.dataStoreManager.savePreference(
-                        DataStoreManager.BIGSCALE_REGION, bigScaleRegion
-                    )
                     transferToNext()
                     finish()
                 }
@@ -93,26 +100,10 @@ class SelectRegionActivity : MisoActivity() {
     }
 
     private fun setRecyclerRegions() {
-        gridAdapter = RecyclerRegionsAdapter(this@SelectRegionActivity, getRegionItems())
         grid_region.apply {
             adapter = gridAdapter
-            layoutManager = GridLayoutManager(this@SelectRegionActivity, 4)
-            addItemDecoration(VerticalSpaceItemDecoration(30))
+            layoutManager = gridLayoutManager
+            addItemDecoration(decoration)
         }
-    }
-
-    private fun getRegionItems(): ArrayList<RegionItem> {
-        val regions = resources.getStringArray(R.array.regions)
-        val regions_full = resources.getStringArray(R.array.regions_full)
-        val regionItems: ArrayList<RegionItem> = ArrayList()
-        for (i: Int in regions.indices) {
-            val item = RegionItem().apply {
-                shortName = regions[i]
-                longName = regions_full[i]
-            }
-            regionItems.add(item)
-        }
-
-        return regionItems
     }
 }
