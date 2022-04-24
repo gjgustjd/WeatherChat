@@ -11,9 +11,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.miso.misoweather.Acitivity.chatmain.ChatMainActivity
-import com.miso.misoweather.Acitivity.chatmain.ChatMainViewModel
-import com.miso.misoweather.Acitivity.chatmain.SurveyItem
+import com.miso.misoweather.activity.chatmain.ChatMainActivity
+import com.miso.misoweather.activity.chatmain.ChatMainViewModel
+import com.miso.misoweather.activity.chatmain.SurveyItem
 import com.miso.misoweather.databinding.FragmentSurveyBinding
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.launch

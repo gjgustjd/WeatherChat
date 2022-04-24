@@ -16,8 +16,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.miso.misoweather.Acitivity.chatmain.ChatMainViewModel
-import com.miso.misoweather.Acitivity.home.RecyclerChatsAdapter
+import com.miso.misoweather.activity.chatmain.ChatMainViewModel
+import com.miso.misoweather.activity.home.RecyclerChatsAdapter
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.FragmentCommentBinding
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto

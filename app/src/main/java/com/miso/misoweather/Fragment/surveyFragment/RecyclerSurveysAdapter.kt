@@ -11,8 +11,8 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.miso.misoweather.Acitivity.chatmain.SurveyItem
-import com.miso.misoweather.Acitivity.selectAnswer.SelectSurveyAnswerActivity
+import com.miso.misoweather.activity.chatmain.SurveyItem
+import com.miso.misoweather.activity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ListItemSurveyBinding

@@ -4,8 +4,8 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
-import com.miso.misoweather.Acitivity.selectRegion.RecyclerRegionsAdapter
-import com.miso.misoweather.Acitivity.selectRegion.RegionItem
+import com.miso.misoweather.activity.selectRegion.RecyclerRegionsAdapter
+import com.miso.misoweather.activity.selectRegion.RegionItem
 import com.miso.misoweather.R
 import com.miso.misoweather.common.VerticalSpaceItemDecoration
 import dagger.Module
@@ -13,7 +13,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ActivityContext
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import dagger.hilt.android.scopes.ActivityScoped
 
 @Module

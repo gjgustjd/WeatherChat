@@ -15,47 +15,47 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WeatherChat">
         <activity
-            android:name=".Acitivity.answerAnimationActivity.AnswerAnimationActivity"
+            android:name=".activity.answerAnimationActivity.AnswerAnimationActivity"
             android:screenOrientation="portrait"
             android:exported="true"></activity>
         <activity
-            android:name=".Acitivity.updateRegion.UpdateRegionActivity"
+            android:name=".activity.updateRegion.UpdateRegionActivity"
             android:exported="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".Acitivity.selectAnswer.SelectSurveyAnswerActivity"
+            android:name=".activity.selectAnswer.SelectSurveyAnswerActivity"
             android:exported="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".Acitivity.home.HomeActivity"
+            android:name=".activity.home.HomeActivity"
             android:exported="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".Acitivity.getnickname.SelectNickNameActivity"
+            android:name=".activity.getnickname.SelectNickNameActivity"
             android:exported="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".Acitivity.selectRegion.SelectRegionActivity"
+            android:name=".activity.selectRegion.SelectRegionActivity"
             android:exported="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".Acitivity.mypage.MyPageActivity"
+            android:name=".activity.mypage.MyPageActivity"
             android:exported="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".Acitivity.selectTown.SelectTownActivity"
+            android:name=".activity.selectTown.SelectTownActivity"
             android:exported="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".Acitivity.selectArea.SelectAreaActivity"
+            android:name=".activity.selectArea.SelectAreaActivity"
             android:exported="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".Acitivity.chatmain.ChatMainActivity"
+            android:name=".activity.chatmain.ChatMainActivity"
             android:exported="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.miso.misoweather.Acitivity.SplashActivity"
+            android:name="com.miso.misoweather.activity.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -64,11 +64,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.miso.misoweather.Acitivity.login.LoginActivity"
+            android:name="com.miso.misoweather.activity.login.LoginActivity"
             android:exported="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.miso.misoweather.Acitivity.weatherdetail.WeatherDetailActivity"
+            android:name="com.miso.misoweather.activity.weatherdetail.WeatherDetailActivity"
             android:exported="true"
             android:screenOrientation="portrait"></activity>
         <activity
