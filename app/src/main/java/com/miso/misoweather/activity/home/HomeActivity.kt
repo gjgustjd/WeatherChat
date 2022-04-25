@@ -1,18 +1,12 @@
 package com.miso.misoweather.activity.home
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,17 +16,15 @@ import com.miso.misoweather.activity.login.LoginActivity
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityHomeBinding
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
-import com.miso.misoweather.activity.weatherdetail.WeatherDetailActivity
 import com.miso.misoweather.activity.mypage.MyPageActivity
 import com.miso.misoweather.activity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.activity.selectRegion.SelectRegionActivity
 import com.miso.misoweather.Dialog.GeneralConfirmDialog
 import com.miso.misoweather.R
-import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
+import com.miso.misoweather.activity.weatherdetail.WeatherDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import java.lang.IndexOutOfBoundsException
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -43,9 +35,6 @@ class HomeActivity : MisoActivity() {
     private val viewModel: HomeViewModel by viewModels()
 
     private lateinit var binding: ActivityHomeBinding
-    private lateinit var weatherLayout: ConstraintLayout
-    private lateinit var btnProfile: ImageButton
-    private lateinit var btngoToSurvey: ImageButton
     private lateinit var recyclerChat: RecyclerView
     private lateinit var recyclerChatAdapter: RecyclerChatsAdapter
     private lateinit var imgbtnChangeLocation: ImageButton
@@ -54,8 +43,6 @@ class HomeActivity : MisoActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = this
         initializeViews()
         setupData()
     }
@@ -67,88 +54,36 @@ class HomeActivity : MisoActivity() {
     }
 
     private fun initializeViews() {
-        fun initWeatherLayout() {
-            try {
-                weatherLayout = binding.weatherLayout
-                weatherLayout.setOnClickListener()
-                {
-                    val intent = Intent(this, WeatherDetailActivity::class.java)
-                    intent.putExtra(
-                        "isTodaySurveyed",
-                        (viewModel.isSurveyed.value.equals("surveyed") || isTodaySurveyed())
-                    )
-                    startActivity(intent)
-                    transferToNext()
-                    finish()
-                }
-            } catch (e: Exception) {
-                Log.e("initWeatherLayout", e.stackTraceToString())
-            }
-        }
-
-        fun initBtnGoToSurvey() {
-            try {
-                btngoToSurvey = binding.imgbtnSurvey
-                btngoToSurvey.setOnClickListener()
-                {
-                    goToChatMainActivity()
-                }
-            } catch (e: Exception) {
-                Log.e("initBtnGoToSurvey", e.stackTraceToString())
-            }
-        }
-
-        fun initChartLayout() {
-            try {
-                chartLayout = binding.chartLayout
-                chartLayout.setOnClickListener()
-                {
-                    goToChatMainActivity()
-                }
-            } catch (e: Exception) {
-                Log.e("initChartLayout", e.stackTraceToString())
-            }
-        }
-
-        fun initBtnProfile() {
-            try {
-                btnProfile = binding.imgbtnProfile
-                btnProfile.setOnClickListener()
-                {
-                    startActivity(Intent(this, MyPageActivity::class.java))
-                    transferToNext()
-                    finish()
-                }
-            } catch (e: Exception) {
-                Log.e("initBtnProfile", e.stackTraceToString())
-            }
-        }
-
-        @SuppressLint("LongLogTag")
-        fun initImgBtnChangeLocation() {
-            try {
-                imgbtnChangeLocation = binding.imgbtnChangeLocation
-                imgbtnChangeLocation.setOnClickListener()
-                {
-                    val intent = Intent(this, SelectRegionActivity::class.java)
-                    intent.putExtra("for", "change")
-                    startActivity(intent)
-                    transferToNext()
-                    finish()
-                }
-            } catch (e: Exception) {
-                Log.e("initImgBtnChangeLctn", e.stackTraceToString())
-            }
-        }
         recyclerChat = binding.recyclerChats
-
-        initWeatherLayout()
-        initChartLayout()
-        initBtnGoToSurvey()
-        initBtnProfile()
-        initImgBtnChangeLocation()
+        binding.viewModel = viewModel
+        binding.activity = this
+        binding.lifecycleOwner = this
     }
 
+    fun goToWeatherDetailActivity() {
+        val intent = Intent(this, WeatherDetailActivity::class.java)
+        intent.putExtra(
+            "isTodaySurveyed",
+            (viewModel.isSurveyed.value.equals("surveyed") || isTodaySurveyed())
+        )
+        startActivity(intent)
+        transferToNext()
+        finish()
+    }
+
+    fun goToSelectRegionActivity() {
+        val intent = Intent(this, SelectRegionActivity::class.java)
+        intent.putExtra("for", "change")
+        startActivity(intent)
+        transferToNext()
+        finish()
+    }
+
+    fun goToMyPageActivity() {
+        startActivity(Intent(this, MyPageActivity::class.java))
+        transferToNext()
+        finish()
+    }
 
     override fun doBack() {
         GeneralConfirmDialog(
@@ -171,7 +106,7 @@ class HomeActivity : MisoActivity() {
         }
     }
 
-    private fun goToChatMainActivity() {
+    fun goToChatMainActivity() {
         try {
             val intent: Intent
 

@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="activity"
+            type="com.miso.misoweather.activity.home.HomeActivity" />
+
+        <variable
             name="viewModel"
             type="com.miso.misoweather.activity.home.HomeViewModel" />
     </data>
@@ -47,6 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
+            android:onClick="@{()->activity.goToMyPageActivity()}"
             app:layout_constraintBottom_toBottomOf="@+id/img_banner"
             app:layout_constraintEnd_toEndOf="@+id/scrollView2"
             app:layout_constraintTop_toTopOf="@+id/img_banner"
@@ -61,6 +66,7 @@
             android:background="@android:color/transparent"
             android:cropToPadding="true"
             android:scaleType="fitCenter"
+            android:onClick="@{()->activity.goToSelectRegionActivity()}"
             app:layout_constraintBottom_toBottomOf="@+id/imgbtn_profile"
             app:layout_constraintEnd_toStartOf="@+id/imgbtn_profile"
             app:layout_constraintTop_toTopOf="@+id/imgbtn_profile"
@@ -123,6 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:background="@drawable/unit_background"
+                    android:onClick="@{()->activity.goToWeatherDetailActivity()}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txt_nickname">
@@ -237,6 +244,7 @@
                         android:adjustViewBounds="true"
                         android:background="@android:color/transparent"
                         android:cropToPadding="true"
+                        android:onClick="@{()->activity.goToChatMainActivity()}"
                         android:scaleType="fitCenter"
                         app:layout_constraintBottom_toBottomOf="@+id/txt_chart_title"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -253,6 +261,7 @@
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="15dp"
                         android:background="@drawable/unit_background_white"
+                        android:onClick="@{()->activity.goToChatMainActivity()}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txt_chart_title">
@@ -397,8 +406,8 @@
                         <TextView
                             android:id="@+id/txt_ratio_first"
                             style="@style/boldBlack"
-                            ratio="@{viewModel.todaySurveyResultResponseDto}"
                             ItemVisibility="@{viewModel.todaySurveyResultResponseDto}"
+                            ratio="@{viewModel.todaySurveyResultResponseDto}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
@@ -413,8 +422,8 @@
                         <TextView
                             android:id="@+id/txt_ratio_second"
                             style="@style/boldBlack"
-                            ratio="@{viewModel.todaySurveyResultResponseDto}"
                             ItemVisibility="@{viewModel.todaySurveyResultResponseDto}"
+                            ratio="@{viewModel.todaySurveyResultResponseDto}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
@@ -428,8 +437,8 @@
                         <TextView
                             android:id="@+id/txt_ratio_third"
                             style="@style/boldBlack"
-                            ratio="@{viewModel.todaySurveyResultResponseDto}"
                             ItemVisibility="@{viewModel.todaySurveyResultResponseDto}"
+                            ratio="@{viewModel.todaySurveyResultResponseDto}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
