@@ -11,7 +11,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectNicknameBinding
 import com.miso.misoweather.activity.home.HomeActivity
@@ -27,37 +29,15 @@ import kotlinx.coroutines.launch
 class SelectNickNameActivity : MisoActivity() {
     private val viewModel: SelectNicknameViewModel by viewModels()
     private lateinit var binding: ActivitySelectNicknameBinding
-    private lateinit var txt_get_new_nick: TextView
-    private lateinit var btn_back: ImageButton
-    private lateinit var btn_next: Button
-    private var nickName: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySelectNicknameBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        initializeViews()
-    }
-
-    private fun initializeViews() {
-        txt_get_new_nick = binding.txtGetNewNickname
-        txt_get_new_nick.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-        btn_back = binding.imgbtnBack
-        btn_next = binding.btnAction
-        txt_get_new_nick.setOnClickListener {
-            getNickname()
-        }
-        btn_back.setOnClickListener()
-        {
-            doBack()
-        }
-        btn_next.setOnClickListener()
-        {
-            registerMember()
-        }
-
-        getNickname()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_select_nickname)
+        binding.lifecycleOwner = this
+        binding.activity = this
+        binding.viewModel = viewModel
         viewModel.defaultRegionId = intent.getStringExtra("RegionId")!!.toString()
+        getNickname()
     }
 
     override fun doBack() {
@@ -72,7 +52,7 @@ class SelectNickNameActivity : MisoActivity() {
         finish()
     }
 
-    private fun registerMember() {
+    fun registerMember() {
         fun inCaseFailedRegister() {
             Toast.makeText(this@SelectNickNameActivity, "회원가입에 실패하였습니다.", Toast.LENGTH_LONG)
                 .show()
@@ -96,7 +76,7 @@ class SelectNickNameActivity : MisoActivity() {
         }
     }
 
-    private fun goToLoginActivity() {
+    fun goToLoginActivity() {
         startActivity(Intent(this@SelectNickNameActivity, LoginActivity::class.java))
         transferToBack()
         finish()
@@ -113,24 +93,16 @@ class SelectNickNameActivity : MisoActivity() {
         SignUpRequestDto().apply {
             defaultRegionId = intent.getStringExtra("RegionId")!!.toString()
             emoji = binding.txtEmoji.text.toString()
-            nickname = this@SelectNickNameActivity.nickName
+            nickname = viewModel.nickname.value!!
             socialId = viewModel.socialId
             socialType = viewModel.socialType
         }
 
-    private fun getNickname() {
+    fun getNickname() {
         lifecycleScope.launch {
             viewModel.getNickname()
             {
-                if (it.isSuccessful) {
-                    Log.i("결과", "성공")
-                    Log.i("결과", "닉네임 : ${it.body()?.data?.nickname}")
-                    val nicknameResponseDto = it.body()!!
-                    nickName = nicknameResponseDto.data.nickname
-                    binding.txtGreetingBold.text =
-                        "${getBigShortScale(viewModel.bigScaleRegion)}의 ${nickName}님!"
-                    binding.txtEmoji.text = nicknameResponseDto.data.emoji
-                } else {
+                if (!it.isSuccessful) {
                     Log.i("결과", "실패")
                     Toast.makeText(
                         this@SelectNickNameActivity,

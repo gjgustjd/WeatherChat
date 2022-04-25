@@ -1,11 +1,13 @@
 package com.miso.misoweather.activity.getnickname
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kakao.sdk.user.UserApiClient
+import com.miso.misoweather.R
 import com.miso.misoweather.model.dto.GeneralResponseDto
 import com.miso.misoweather.model.dto.LoginRequestDto
 import com.miso.misoweather.model.dto.nicknameResponse.NicknameResponseDto
@@ -13,18 +15,18 @@ import com.miso.misoweather.model.dto.SignUpRequestDto
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class SelectNicknameViewModel @Inject constructor(private val repository: MisoRepository) :
-    ViewModel() {
-
-    @ActivityContext
-    lateinit var context: Context
+class SelectNicknameViewModel @Inject constructor(
+    application: Application,
+    private val repository: MisoRepository
+) :
+    AndroidViewModel(application) {
+    val context:Context = application
 
     val smallScaleRegion by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.SMALLSCALE_REGION)
@@ -47,6 +49,9 @@ class SelectNicknameViewModel @Inject constructor(private val repository: MisoRe
     }
 
     val registerResultString by lazy { MutableLiveData<String?>() }
+    val emoji by lazy { MutableLiveData("") }
+    val nickname by lazy { MutableLiveData("") }
+    val greetingText by lazy { MutableLiveData("") }
 
     lateinit var loginRequestDto: LoginRequestDto
     lateinit var signUpRequestDto: SignUpRequestDto
@@ -80,8 +85,14 @@ class SelectNicknameViewModel @Inject constructor(private val repository: MisoRe
         }
     }
 
-    suspend fun getNickname(action: (response: Response<NicknameResponseDto>) -> Unit) =
-        action(repository.getNickname())
+    suspend fun getNickname(action: (response: Response<NicknameResponseDto>) -> Unit) {
+        val response = repository.getNickname()
+        emoji.value = response.body()!!.data.emoji
+        nickname.value = response.body()!!.data.nickname
+        greetingText.value =
+            "${getBigShortScale(bigScaleRegion)}의 ${nickname.value}님!"
+        action(response)
+    }
 
     private fun resetAccessToken() {
         UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
@@ -127,8 +138,21 @@ class SelectNicknameViewModel @Inject constructor(private val repository: MisoRe
             }
         }
 
-        if (action != null) {
-            action(response)
+        action?.let {
+            it(response)
+        }
+    }
+
+    private fun getBigShortScale(bigScale: String): String {
+        return try {
+            val regionList = context.resources.getStringArray(R.array.regions_full)
+            val index = regionList.indexOf(bigScale)
+            val regionSmallList = context.resources.getStringArray(R.array.regions)
+
+            regionSmallList[index]
+        } catch (e: Exception) {
+            Log.e("getBigShortScale", e.toString())
+            ""
         }
     }
 }

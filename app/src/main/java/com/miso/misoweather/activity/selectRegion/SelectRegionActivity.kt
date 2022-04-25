@@ -25,7 +25,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SelectRegionActivity : MisoActivity() {
     private lateinit var binding: ActivitySelectRegionBinding
-
     private lateinit var grid_region: RecyclerView
     private lateinit var list_towns: RecyclerView
     private lateinit var btn_back: ImageButton
