@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.common.CommonUtil
+import com.miso.misoweather.model.DTO.CommentList.Comment
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
@@ -32,7 +33,7 @@ class HomeViewModel @Inject constructor(
             )
     val logoutResponseString by lazy { MutableLiveData<String?>() }
     val todaySurveyResultResponseDto by lazy { MutableLiveData<SurveyResultResponseDto>() }
-
+    val commentList by lazy { MutableLiveData<List<Comment>>() }
     val isSurveyed =
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.IS_SURVEYED)
             .map {
@@ -161,8 +162,12 @@ class HomeViewModel @Inject constructor(
     suspend fun getCommentList(
         commentId: Int?,
         size: Int,
-        action: (response: Response<CommentListResponseDto>) -> Unit
-    ) = action(repository.getCommentList(commentId, size))
+        action: ((response: Response<CommentListResponseDto>) -> Unit)? = null
+    ) {
+        val response = repository.getCommentList(commentId, size)
+        commentList.value = response.body()!!.data.commentList
+        action?.let { action(response) }
+    }
 
     suspend fun getSurveyResult(
         shortBigScale: String? = null,

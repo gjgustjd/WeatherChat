@@ -9,13 +9,10 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.activity.chatmain.ChatMainActivity
 import com.miso.misoweather.activity.login.LoginActivity
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityHomeBinding
-import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.activity.mypage.MyPageActivity
 import com.miso.misoweather.activity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.activity.selectRegion.SelectRegionActivity
@@ -28,19 +25,12 @@ import java.lang.Exception
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
 class HomeActivity : MisoActivity() {
     private val viewModel: HomeViewModel by viewModels()
-
     private lateinit var binding: ActivityHomeBinding
-    private lateinit var recyclerChat: RecyclerView
-    private lateinit var recyclerChatAdapter: RecyclerChatsAdapter
-
-    @Inject
-    private lateinit var recyclerLayoutManager: LinearLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -56,7 +46,6 @@ class HomeActivity : MisoActivity() {
     }
 
     private fun initializeViews() {
-        recyclerChat = binding.recyclerChats
         binding.viewModel = viewModel
         binding.activity = this
         binding.lifecycleOwner = this
@@ -134,6 +123,7 @@ class HomeActivity : MisoActivity() {
             val currentDate =
                 ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
                     .format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString()
+
             viewModel.lastSurveyedDate.equals(currentDate)
         } catch (e: Exception) {
             Log.e("isTodaySurveyed", e.stackTraceToString())
@@ -169,26 +159,8 @@ class HomeActivity : MisoActivity() {
     private fun getCommentList() {
         lifecycleScope.launch {
             viewModel.getCommentList(null, 5)
-            {
-                setRecyclerChats(it.body()!!)
-            }
         }
     }
-
-    private fun setRecyclerChats(responseDto: CommentListResponseDto) {
-        try {
-            recyclerChatAdapter =
-                RecyclerChatsAdapter(responseDto.data.commentList, false)
-            recyclerChat.apply {
-                adapter = recyclerChatAdapter
-                layoutManager = recyclerLayoutManager
-            }
-            Log.i("setRecyclerChats", "성공")
-        } catch (e: Exception) {
-            Toast.makeText(this, "한줄평 목록을 불러오는 중 오류가 발생하였습니다.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
     private fun getUserInfo() {
         lifecycleScope.launch {
             viewModel.getUserInfo()
@@ -213,16 +185,8 @@ class HomeActivity : MisoActivity() {
         lifecycleScope.launch {
             viewModel.getSurveyResult()
             {
-                try {
-                    if (!it.isSuccessful) {
-                        throw Exception(it.errorBody()!!.source().toString())
-                    }
-                } catch (e: Exception) {
-                    if (!e.message.toString().equals(""))
-                        Log.e("setupSurveyResult", e.message.toString())
-                    else
-                        Log.e("setupSurveyResult", e.stackTraceToString())
-
+                if (!it.isSuccessful) {
+                    Log.e("setupSurveyResult", it.errorBody()!!.source().toString())
                     Toast.makeText(this@HomeActivity, "차트를 불러오는데에 실패하였습니다.", Toast.LENGTH_SHORT)
                         .show()
                 }

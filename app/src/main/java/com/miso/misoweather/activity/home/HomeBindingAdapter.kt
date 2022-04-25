@@ -1,8 +1,13 @@
 package com.miso.misoweather.activity.home
 
+import android.os.Build
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.miso.misoweather.model.DTO.CommentList.Comment
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
 
 object HomeBindingAdapter {
@@ -56,6 +61,16 @@ object HomeBindingAdapter {
                 val index = view.tag.toString().toInt()
                 view.text = "${it.valueList[index]} %"
             }
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @BindingAdapter("bindData")
+    @JvmStatic
+    fun setRecycerData(view: RecyclerView, commentList: List<Comment>?) {
+        commentList?.let { it ->
+            view.adapter = RecyclerChatsAdapter(commentList, false)
         }
     }
 }
