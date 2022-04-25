@@ -23,6 +23,13 @@ import kotlin.coroutines.coroutineContext
 class HomeViewModel @Inject constructor(
     private val repository: MisoRepository
 ) : ViewModel() {
+    val misoToken =
+        repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.MISO_TOKEN)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = repository.dataStoreManager.getPreference(DataStoreManager.MISO_TOKEN)
+            )
     val logoutResponseString by lazy { MutableLiveData<String?>() }
     val todaySurveyResultResponseDto by lazy { MutableLiveData<SurveyResultResponseDto>() }
 
@@ -30,7 +37,7 @@ class HomeViewModel @Inject constructor(
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.IS_SURVEYED)
             .map {
                 if (it.isNullOrBlank()) {
-                    getSurveyMyAnswer(misoToken, null)
+                    getSurveyMyAnswer(misoToken.value, null)
                     ""
                 } else
                     it
@@ -58,20 +65,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    val misoToken by lazy {
-        repository.dataStoreManager.getPreference(DataStoreManager.MISO_TOKEN)
-    }
 
     val bigScale by lazy {
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.BIGSCALE_REGION)
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Eagerly,
-                initialValue = ""
+                initialValue = repository.dataStoreManager.getPreference(DataStoreManager.BIGSCALE_REGION)
             )
     }
 
-    val midScale by lazy {
+    val midScale =
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.MIDSCALE_REGION)
             .map {
                 if (it.equals("선택 안 함")) "전체" else it
@@ -80,7 +84,6 @@ class HomeViewModel @Inject constructor(
                 started = SharingStarted.Eagerly,
                 initialValue = ""
             )
-    }
 
     val smallScale by lazy {
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.SMALLSCALE_REGION)
@@ -114,7 +117,7 @@ class HomeViewModel @Inject constructor(
     val weatherDegree: MutableStateFlow<String> = MutableStateFlow("")
 
     suspend fun getUserInfo(action: (response: Response<MemberInfoResponseDto>) -> Unit) {
-        val response = repository.getUserInfo(misoToken)
+        val response = repository.getUserInfo(misoToken.value)
         if (response.isSuccessful) {
             val memberInfoResponseDto = response.body()!!
             val memberInfo = memberInfoResponseDto.data

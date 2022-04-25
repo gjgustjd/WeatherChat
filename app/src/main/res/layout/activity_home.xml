@@ -1,467 +1,506 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/imgbtn_back"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginStart="@dimen/root_side_margin"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="30dp"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:cropToPadding="true"
-        android:scaleType="fitCenter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_misoweather_colored_vector" />
+    <data>
 
-    <ImageView
-        android:id="@+id/img_banner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imgbtn_back"
-        app:layout_constraintStart_toEndOf="@+id/imgbtn_back"
-        app:layout_constraintTop_toTopOf="@+id/imgbtn_back"
-        app:srcCompat="@drawable/misoweather_banner" />
+        <variable
+            name="viewModel"
+            type="com.miso.misoweather.activity.home.HomeViewModel" />
+    </data>
 
-    <ImageButton
-        android:id="@+id/imgbtn_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="@+id/img_banner"
-        app:layout_constraintEnd_toEndOf="@+id/scrollView2"
-        app:layout_constraintTop_toTopOf="@+id/img_banner"
-        app:srcCompat="@drawable/person_vector" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/imgbtn_change_location"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="5dp"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:cropToPadding="true"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="@+id/imgbtn_profile"
-        app:layout_constraintEnd_toStartOf="@+id/imgbtn_profile"
-        app:layout_constraintTop_toTopOf="@+id/imgbtn_profile"
-        app:srcCompat="@drawable/location_on_vector" />
+        <ImageView
+            android:id="@+id/imgbtn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="@dimen/root_side_margin"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="30dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:cropToPadding="true"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/logo_misoweather_colored_vector" />
 
-    <ScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/root_side_margin"
-        android:layout_marginEnd="@dimen/root_side_margin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgbtn_change_location">
+        <ImageView
+            android:id="@+id/img_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imgbtn_back"
+            app:layout_constraintStart_toEndOf="@+id/imgbtn_back"
+            app:layout_constraintTop_toTopOf="@+id/imgbtn_back"
+            app:srcCompat="@drawable/misoweather_banner" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/imgbtn_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/img_banner"
+            app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+            app:layout_constraintTop_toTopOf="@+id/img_banner"
+            app:srcCompat="@drawable/person_vector" />
 
-            <TextView
-                android:id="@+id/txt_greeting"
-                style="@style/basicText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:text="안녕하세요!"
-                android:textSize="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <ImageButton
+            android:id="@+id/imgbtn_change_location"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="5dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:cropToPadding="true"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/imgbtn_profile"
+            app:layout_constraintEnd_toStartOf="@+id/imgbtn_profile"
+            app:layout_constraintTop_toTopOf="@+id/imgbtn_profile"
+            app:srcCompat="@drawable/location_on_vector" />
 
-            <TextView
-                android:id="@+id/txt_nickname"
-                style="@style/basicText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/txt_greeting"
-                app:layout_constraintTop_toBottomOf="@+id/txt_greeting" />
-
-            <TextView
-                android:id="@+id/txt_emoji"
-                style="@style/basicText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/txt_nickname"
-                app:layout_constraintStart_toEndOf="@+id/txt_nickname"
-                app:layout_constraintTop_toTopOf="@+id/txt_nickname" />
+        <ScrollView
+            android:id="@+id/scrollView2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/root_side_margin"
+            android:layout_marginEnd="@dimen/root_side_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgbtn_change_location">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/weatherLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/unit_background"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_nickname">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/txt_weather_emoji"
+                    android:id="@+id/txt_greeting"
                     style="@style/basicText"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="5dp"
-                    android:singleLine="true"
-                    app:layout_constraintBottom_toBottomOf="@+id/txt_location"
-                    app:layout_constraintEnd_toStartOf="@id/txt_degree"
-                    app:layout_constraintHorizontal_bias="0.95"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toEndOf="@+id/txt_location"
-                    app:layout_constraintTop_toTopOf="@+id/txt_location" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:text="안녕하세요!"
+                    android:textSize="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/txt_degree"
+                    android:id="@+id/txt_nickname"
                     style="@style/basicText"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="5dp"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:textColor="@color/textBlack"
-                    android:textSize="16dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@{viewModel.nickname}"
+                    android:textSize="20dp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/txt_weather_emoji"
-                    app:layout_constraintEnd_toStartOf="@+id/imgbtn_show_weather"
-                    app:layout_constraintTop_toTopOf="@+id/txt_weather_emoji" />
+                    app:layout_constraintStart_toStartOf="@+id/txt_greeting"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_greeting" />
 
                 <TextView
-                    android:id="@+id/txt_location"
+                    android:id="@+id/txt_emoji"
                     style="@style/basicText"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:singleLine="true"
-                    android:textColor="@color/textBlack"
-                    android:textSize="16dp"
+                    android:text="@{viewModel.emoji}"
+                    android:textSize="20dp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/txt_weather_emoji"
-                    app:layout_constraintHorizontal_bias="0"
-                    app:layout_constraintStart_toEndOf="@id/img_location"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/img_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="20dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/txt_location"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/txt_location"
-                    app:srcCompat="@drawable/location_on_vector" />
-
-                <ImageButton
-                    android:id="@+id/imgbtn_show_weather"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="15dp"
-                    android:adjustViewBounds="true"
-                    android:background="@android:color/transparent"
-                    android:cropToPadding="true"
-                    android:scaleType="fitCenter"
-                    app:layout_constraintBottom_toBottomOf="@+id/txt_degree"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/txt_degree"
-                    app:srcCompat="@drawable/icon_next_vector" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/contentLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/unit_background"
-                app:layout_constraintEnd_toEndOf="@id/weatherLayout"
-                app:layout_constraintStart_toStartOf="@id/weatherLayout"
-                app:layout_constraintTop_toBottomOf="@id/weatherLayout">
-
-                <TextView
-                    android:id="@+id/txt_chart_title"
-                    style="@style/basicText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="30dp"
-                    android:text="오늘은 뭘 입을까?"
-                    android:textColor="@color/black"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/imgbtn_survey"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="15dp"
-                    android:adjustViewBounds="true"
-                    android:background="@android:color/transparent"
-                    android:cropToPadding="true"
-                    android:scaleType="fitCenter"
-                    app:layout_constraintBottom_toBottomOf="@+id/txt_chart_title"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1"
-                    app:layout_constraintStart_toEndOf="@+id/txt_chart_title"
-                    app:layout_constraintTop_toTopOf="@+id/txt_chart_title"
-                    app:srcCompat="@drawable/icon_next_vector" />
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_nickname"
+                    app:layout_constraintStart_toEndOf="@+id/txt_nickname"
+                    app:layout_constraintTop_toTopOf="@+id/txt_nickname" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/chartLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="140dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="15dp"
-                    android:background="@drawable/unit_background_white"
+                    android:id="@+id/weatherLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/unit_background"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_chart_title">
+                    app:layout_constraintTop_toBottomOf="@+id/txt_nickname">
 
                     <TextView
-                        android:id="@+id/txt_empty_chart"
+                        android:id="@+id/txt_weather_emoji"
+                        style="@style/basicText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="5dp"
+                        android:singleLine="true"
+                        android:text="@{viewModel.weatherEmoji}"
+                        app:layout_constraintBottom_toBottomOf="@+id/txt_location"
+                        app:layout_constraintEnd_toStartOf="@id/txt_degree"
+                        app:layout_constraintHorizontal_bias="0.95"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toEndOf="@+id/txt_location"
+                        app:layout_constraintTop_toTopOf="@+id/txt_location" />
+
+                    <TextView
+                        android:id="@+id/txt_degree"
+                        style="@style/basicText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="5dp"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="@{viewModel.weatherDegree}"
+                        android:textColor="@color/textBlack"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/txt_weather_emoji"
+                        app:layout_constraintEnd_toStartOf="@+id/imgbtn_show_weather"
+                        app:layout_constraintTop_toTopOf="@+id/txt_weather_emoji" />
+
+                    <TextView
+                        android:id="@+id/txt_location"
+                        style="@style/basicText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:singleLine="true"
+                        android:text="@{viewModel.location}"
+                        android:textColor="@color/textBlack"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/txt_weather_emoji"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toEndOf="@id/img_location"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/img_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="20dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/txt_location"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/txt_location"
+                        app:srcCompat="@drawable/location_on_vector" />
+
+                    <ImageButton
+                        android:id="@+id/imgbtn_show_weather"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="15dp"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:cropToPadding="true"
+                        android:scaleType="fitCenter"
+                        app:layout_constraintBottom_toBottomOf="@+id/txt_degree"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/txt_degree"
+                        app:srcCompat="@drawable/icon_next_vector" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/contentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/unit_background"
+                    app:layout_constraintEnd_toEndOf="@id/weatherLayout"
+                    app:layout_constraintStart_toStartOf="@id/weatherLayout"
+                    app:layout_constraintTop_toBottomOf="@id/weatherLayout">
+
+                    <TextView
+                        android:id="@+id/txt_chart_title"
                         style="@style/basicText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="진행된 투표가 없어요.\n투표를 진행해주세요."
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="30dp"
+                        android:text="오늘은 뭘 입을까?"
+                        android:textColor="@color/black"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/itemThirdLayout"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:background="@drawable/gradient_vertical_background_lightpurple"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHeight_percent="0.2"
-                        app:layout_constraintStart_toEndOf="@+id/itemFirstLayout"
-                        app:layout_constraintWidth_percent="0.2">
-
-                        <TextView
-                            android:id="@+id/textView10"
-                            style="@style/boldWhite"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:text="3"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/itemSecondLayout"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:background="@drawable/gradient_vertical_background_lightpurple"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/itemFirstLayout"
-                        app:layout_constraintHeight_percent="0.35"
-                        app:layout_constraintHorizontal_chainStyle="spread"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintWidth_percent="0.2">
-
-                        <TextView
-                            android:id="@+id/textView9"
-                            style="@style/boldWhite"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:text="2"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/itemFirstLayout"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/gradient_vertical_background_purple"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/itemThirdLayout"
-                        app:layout_constraintHeight_percent="0.5"
-                        app:layout_constraintStart_toEndOf="@id/itemSecondLayout"
-                        app:layout_constraintTop_toBottomOf="@+id/txt_ratio_first"
-                        app:layout_constraintWidth_percent="0.2">
-
-                        <TextView
-                            android:id="@+id/textView8"
-                            style="@style/boldWhite"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:text="1"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <TextView
-                        android:id="@+id/txt_answer_first"
-                        style="@style/boldBlack"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/primaryPurple"
-                        android:textSize="18dp"
-                        app:layout_constraintBottom_toTopOf="@id/txt_ratio_first"
-                        app:layout_constraintEnd_toEndOf="@+id/itemFirstLayout"
-                        app:layout_constraintStart_toStartOf="@+id/itemFirstLayout"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_chainStyle="packed" />
-
-                    <TextView
-                        android:id="@+id/txt_answer_second"
-                        style="@style/boldBlack"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14dp"
-                        app:layout_constraintBottom_toTopOf="@+id/txt_ratio_second"
-                        app:layout_constraintEnd_toEndOf="@+id/itemSecondLayout"
-                        app:layout_constraintStart_toStartOf="@+id/itemSecondLayout"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="1"
-                        app:layout_constraintVertical_chainStyle="packed" />
-
-                    <TextView
-                        android:id="@+id/txt_answer_third"
-                        style="@style/boldBlack"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14dp"
-                        app:layout_constraintBottom_toTopOf="@+id/txt_ratio_third"
-                        app:layout_constraintEnd_toEndOf="@+id/itemThirdLayout"
-                        app:layout_constraintStart_toStartOf="@+id/itemThirdLayout"
-                        app:layout_constraintVertical_chainStyle="packed" />
-
-                    <TextView
-                        android:id="@+id/txt_ratio_first"
-                        style="@style/boldBlack"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:textColor="@color/primaryPurple"
-                        android:textSize="10dp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="@+id/txt_answer_first"
-                        app:layout_constraintStart_toEndOf="@id/img_icon_first"
-                        app:layout_constraintTop_toBottomOf="@+id/txt_answer_first" />
-
-                    <TextView
-                        android:id="@+id/txt_ratio_second"
-                        style="@style/boldBlack"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:textSize="10dp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/itemSecondLayout"
-                        app:layout_constraintEnd_toEndOf="@+id/itemSecondLayout"
-                        app:layout_constraintStart_toStartOf="@+id/itemSecondLayout" />
-
-                    <TextView
-                        android:id="@+id/txt_ratio_third"
-                        style="@style/boldBlack"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:textSize="10dp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/itemThirdLayout"
-                        app:layout_constraintEnd_toEndOf="@+id/itemThirdLayout"
-                        app:layout_constraintStart_toStartOf="@+id/itemThirdLayout" />
-
-                    <ImageView
-                        android:id="@+id/img_icon_first"
+                    <ImageButton
+                        android:id="@+id/imgbtn_survey"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
+                        android:layout_marginEnd="15dp"
                         android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
                         android:cropToPadding="true"
-                        android:padding="1dp"
                         android:scaleType="fitCenter"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="@+id/txt_ratio_first"
-                        app:layout_constraintEnd_toStartOf="@+id/txt_ratio_first"
-                        app:layout_constraintHorizontal_chainStyle="packed"
-                        app:layout_constraintStart_toStartOf="@+id/txt_answer_first"
-                        app:layout_constraintTop_toTopOf="@+id/txt_ratio_first"
-                        app:srcCompat="@drawable/icon_survey_check" />
+                        app:layout_constraintBottom_toBottomOf="@+id/txt_chart_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1"
+                        app:layout_constraintStart_toEndOf="@+id/txt_chart_title"
+                        app:layout_constraintTop_toTopOf="@+id/txt_chart_title"
+                        app:srcCompat="@drawable/icon_next_vector" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/chartLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="15dp"
+                        android:background="@drawable/unit_background_white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_chart_title">
+
+                        <TextView
+                            android:id="@+id/txt_empty_chart"
+                            style="@style/basicText"
+                            emptyLayoutVisibility="@{viewModel.todaySurveyResultResponseDto}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="진행된 투표가 없어요.\n투표를 진행해주세요."
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/itemThirdLayout"
+                            ItemVisibility="@{viewModel.todaySurveyResultResponseDto}"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:background="@drawable/gradient_vertical_background_lightpurple"
+                            android:tag="2"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHeight_percent="0.2"
+                            app:layout_constraintStart_toEndOf="@+id/itemFirstLayout"
+                            app:layout_constraintWidth_percent="0.2">
+
+                            <TextView
+                                android:id="@+id/textView10"
+                                style="@style/boldWhite"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="3"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/itemSecondLayout"
+                            ItemVisibility="@{viewModel.todaySurveyResultResponseDto}"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:background="@drawable/gradient_vertical_background_lightpurple"
+                            android:tag="1"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/itemFirstLayout"
+                            app:layout_constraintHeight_percent="0.35"
+                            app:layout_constraintHorizontal_chainStyle="spread"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintWidth_percent="0.2">
+
+                            <TextView
+                                android:id="@+id/textView9"
+                                style="@style/boldWhite"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="2"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/itemFirstLayout"
+                            ItemVisibility="@{viewModel.todaySurveyResultResponseDto}"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/gradient_vertical_background_purple"
+                            android:tag="0"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/itemThirdLayout"
+                            app:layout_constraintHeight_percent="0.5"
+                            app:layout_constraintStart_toEndOf="@id/itemSecondLayout"
+                            app:layout_constraintTop_toBottomOf="@+id/txt_ratio_first"
+                            app:layout_constraintWidth_percent="0.2">
+
+                            <TextView
+                                android:id="@+id/textView8"
+                                style="@style/boldWhite"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="1"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <TextView
+                            android:id="@+id/txt_answer_first"
+                            style="@style/boldBlack"
+                            answer="@{viewModel.todaySurveyResultResponseDto}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:tag="0"
+                            android:textColor="@color/primaryPurple"
+                            android:textSize="18dp"
+                            app:layout_constraintBottom_toTopOf="@id/txt_ratio_first"
+                            app:layout_constraintEnd_toEndOf="@+id/itemFirstLayout"
+                            app:layout_constraintStart_toStartOf="@+id/itemFirstLayout"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_chainStyle="packed" />
+
+                        <TextView
+                            android:id="@+id/txt_answer_second"
+                            style="@style/boldBlack"
+                            answer="@{viewModel.todaySurveyResultResponseDto}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:tag="1"
+                            android:textSize="14dp"
+                            app:layout_constraintBottom_toTopOf="@+id/txt_ratio_second"
+                            app:layout_constraintEnd_toEndOf="@+id/itemSecondLayout"
+                            app:layout_constraintStart_toStartOf="@+id/itemSecondLayout"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="1"
+                            app:layout_constraintVertical_chainStyle="packed" />
+
+                        <TextView
+                            android:id="@+id/txt_answer_third"
+                            style="@style/boldBlack"
+                            answer="@{viewModel.todaySurveyResultResponseDto}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:tag="2"
+                            android:textSize="14dp"
+                            app:layout_constraintBottom_toTopOf="@+id/txt_ratio_third"
+                            app:layout_constraintEnd_toEndOf="@+id/itemThirdLayout"
+                            app:layout_constraintStart_toStartOf="@+id/itemThirdLayout"
+                            app:layout_constraintVertical_chainStyle="packed" />
+
+                        <TextView
+                            android:id="@+id/txt_ratio_first"
+                            style="@style/boldBlack"
+                            ratio="@{viewModel.todaySurveyResultResponseDto}"
+                            ItemVisibility="@{viewModel.todaySurveyResultResponseDto}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:tag="0"
+                            android:textColor="@color/primaryPurple"
+                            android:textSize="10dp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="@+id/txt_answer_first"
+                            app:layout_constraintStart_toEndOf="@id/img_icon_first"
+                            app:layout_constraintTop_toBottomOf="@+id/txt_answer_first" />
+
+                        <TextView
+                            android:id="@+id/txt_ratio_second"
+                            style="@style/boldBlack"
+                            ratio="@{viewModel.todaySurveyResultResponseDto}"
+                            ItemVisibility="@{viewModel.todaySurveyResultResponseDto}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:tag="1"
+                            android:textSize="10dp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toTopOf="@+id/itemSecondLayout"
+                            app:layout_constraintEnd_toEndOf="@+id/itemSecondLayout"
+                            app:layout_constraintStart_toStartOf="@+id/itemSecondLayout" />
+
+                        <TextView
+                            android:id="@+id/txt_ratio_third"
+                            style="@style/boldBlack"
+                            ratio="@{viewModel.todaySurveyResultResponseDto}"
+                            ItemVisibility="@{viewModel.todaySurveyResultResponseDto}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:tag="2"
+                            android:textSize="10dp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toTopOf="@+id/itemThirdLayout"
+                            app:layout_constraintEnd_toEndOf="@+id/itemThirdLayout"
+                            app:layout_constraintStart_toStartOf="@+id/itemThirdLayout" />
+
+                        <ImageView
+                            android:id="@+id/img_icon_first"
+                            ItemVisibility="@{viewModel.todaySurveyResultResponseDto}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:adjustViewBounds="true"
+                            android:cropToPadding="true"
+                            android:padding="1dp"
+                            android:scaleType="fitCenter"
+                            android:tag="0"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="@+id/txt_ratio_first"
+                            app:layout_constraintEnd_toStartOf="@+id/txt_ratio_first"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintStart_toStartOf="@+id/txt_answer_first"
+                            app:layout_constraintTop_toTopOf="@+id/txt_ratio_first"
+                            app:srcCompat="@drawable/icon_survey_check" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:id="@+id/txt_chat_title"
+                        style="@style/basicText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="40dp"
+                        android:text="오늘 날씨 어때요?"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/chartLayout" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_chats"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@android:color/transparent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/chartLayout"
+                        app:layout_constraintStart_toStartOf="@+id/chartLayout"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_chat_title"
+                        tools:listitem="@layout/list_item_chat" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/txt_chat_title"
-                    style="@style/basicText"
+                <ImageView
+                    android:id="@+id/img_copyright_misobuild"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="40dp"
-                    android:text="오늘 날씨 어때요?"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/chartLayout" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_chats"
-                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
-                    android:background="@android:color/transparent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/chartLayout"
-                    app:layout_constraintStart_toStartOf="@+id/chartLayout"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_chat_title"
-                    tools:listitem="@layout/list_item_chat" />
+                    app:layout_constraintEnd_toEndOf="@id/contentLayout"
+                    app:layout_constraintStart_toStartOf="@id/contentLayout"
+                    app:layout_constraintTop_toBottomOf="@id/contentLayout"
+                    app:srcCompat="@drawable/copyright_misobuild" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
 
-            <ImageView
-                android:id="@+id/img_copyright_misobuild"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/contentLayout"
-                app:layout_constraintStart_toStartOf="@id/contentLayout"
-                app:layout_constraintTop_toBottomOf="@id/contentLayout"
-                app:srcCompat="@drawable/copyright_misobuild" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

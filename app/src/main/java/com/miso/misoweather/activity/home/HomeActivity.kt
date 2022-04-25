@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,19 +22,15 @@ import com.miso.misoweather.activity.login.LoginActivity
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityHomeBinding
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
-import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
 import com.miso.misoweather.activity.weatherdetail.WeatherDetailActivity
 import com.miso.misoweather.activity.mypage.MyPageActivity
 import com.miso.misoweather.activity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.activity.selectRegion.SelectRegionActivity
 import com.miso.misoweather.Dialog.GeneralConfirmDialog
 import com.miso.misoweather.R
-import com.miso.misoweather.common.CommonUtil
-import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
 import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import java.lang.Exception
 import java.lang.IndexOutOfBoundsException
 import java.time.ZoneId
@@ -47,90 +44,26 @@ class HomeActivity : MisoActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var weatherLayout: ConstraintLayout
-    private lateinit var txtNickName: TextView
-    private lateinit var txtEmoji: TextView
-    private lateinit var txtLocation: TextView
-    private lateinit var txtWeatherEmoji: TextView
-    private lateinit var txtWeatherDegree: TextView
-    private lateinit var btnShowWeatherDetail: ImageButton
     private lateinit var btnProfile: ImageButton
     private lateinit var btngoToSurvey: ImageButton
     private lateinit var recyclerChat: RecyclerView
     private lateinit var recyclerChatAdapter: RecyclerChatsAdapter
-    private lateinit var txtFirstAnswer: TextView
-    private lateinit var txtSecondAnswer: TextView
-    private lateinit var txtThirdAnswer: TextView
-    private lateinit var txtFirstRatio: TextView
-    private lateinit var txtSecondRatio: TextView
-    private lateinit var txtThirdRatio: TextView
-    private lateinit var imgIconCheckFirst: ImageView
     private lateinit var imgbtnChangeLocation: ImageButton
-    private lateinit var firstProgressLayout: ConstraintLayout
-    private lateinit var secondProgressLayout: ConstraintLayout
-    private lateinit var thirdProgressLayout: ConstraintLayout
     private lateinit var chartLayout: ConstraintLayout
-    private lateinit var txtEmptyChart: TextView
-    private var briefForecastData: ForecastBriefData? = null
-    private lateinit var isSurveyed: String
-    private lateinit var defaultRegionId: String
-    private lateinit var bigScale: String
-    private lateinit var midScale: String
-    private lateinit var smallScale: String
-    private var isAllInitialized: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
-        binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        initializeProperties()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
         initializeViews()
+        setupData()
     }
 
     private fun setupData() {
         getUserInfo()
         getCommentList()
         setupSurveyResult()
-
-        txtLocation.text = "${bigScale} ${midScale} ${smallScale}"
-    }
-
-    private fun initializeProperties() {
-        fun checkInitializedAll() {
-            if (!isAllInitialized) {
-                if (
-                    this::isSurveyed.isInitialized &&
-                    this::defaultRegionId.isInitialized &&
-                    this::bigScale.isInitialized &&
-                    this::midScale.isInitialized &&
-                    this::smallScale.isInitialized
-                ) {
-                    setupData()
-                    isAllInitialized = true
-                }
-            }
-        }
-        viewModel.isSurveyed.observe(this) {
-            isSurveyed = it!!
-            checkInitializedAll()
-        }
-        viewModel.defaultRegionId.observe(this) {
-            defaultRegionId = it!!
-            checkInitializedAll()
-        }
-        viewModel.bigScale.observe(this) {
-            bigScale = it!!
-            checkInitializedAll()
-        }
-        viewModel.midScale.observe(this) {
-            midScale = it!!
-            checkInitializedAll()
-        }
-        viewModel.smallScale.observe(this) {
-            smallScale = it!!
-            checkInitializedAll()
-        }
-
-        Log.i("initializeProperties", "Launched")
     }
 
     private fun initializeViews() {
@@ -142,7 +75,7 @@ class HomeActivity : MisoActivity() {
                     val intent = Intent(this, WeatherDetailActivity::class.java)
                     intent.putExtra(
                         "isTodaySurveyed",
-                        (isSurveyed.equals("surveyed") || isTodaySurveyed())
+                        (viewModel.isSurveyed.value.equals("surveyed") || isTodaySurveyed())
                     )
                     startActivity(intent)
                     transferToNext()
@@ -207,23 +140,6 @@ class HomeActivity : MisoActivity() {
                 Log.e("initImgBtnChangeLctn", e.stackTraceToString())
             }
         }
-        txtNickName = binding.txtNickname
-        txtEmoji = binding.txtEmoji
-        txtLocation = binding.txtLocation
-        txtWeatherDegree = binding.txtDegree
-        txtWeatherEmoji = binding.txtWeatherEmoji
-        btnShowWeatherDetail = binding.imgbtnShowWeather
-        txtFirstAnswer = binding.txtAnswerFirst
-        txtSecondAnswer = binding.txtAnswerSecond
-        txtThirdAnswer = binding.txtAnswerThird
-        txtFirstRatio = binding.txtRatioFirst
-        txtSecondRatio = binding.txtRatioSecond
-        txtThirdRatio = binding.txtRatioThird
-        imgIconCheckFirst = binding.imgIconFirst
-        firstProgressLayout = binding.itemFirstLayout
-        secondProgressLayout = binding.itemSecondLayout
-        thirdProgressLayout = binding.itemThirdLayout
-        txtEmptyChart = binding.txtEmptyChart
         recyclerChat = binding.recyclerChats
 
         initWeatherLayout()
@@ -259,7 +175,7 @@ class HomeActivity : MisoActivity() {
         try {
             val intent: Intent
 
-            if (isTodaySurveyed() || isSurveyed.equals("surveyed")) {
+            if (isTodaySurveyed() || viewModel.isSurveyed.value.equals("surveyed")) {
                 intent = Intent(this, ChatMainActivity::class.java)
             } else {
                 intent = Intent(this, SelectSurveyAnswerActivity::class.java)
@@ -289,67 +205,38 @@ class HomeActivity : MisoActivity() {
     }
 
     private fun getBriefForecast() {
-        if (briefForecastData == null) {
-            if (!defaultRegionId.isNullOrBlank()) {
-                Log.i("defaultRegionId", defaultRegionId)
-                val previousBigScale = bigScale
-                lifecycleScope.launch {
-                    viewModel.getBriefForecast(defaultRegionId.toInt())
-                    {
-                        try {
-                            if (it.isSuccessful) {
-                                val forecastBriefResponseDto =
-                                    it.body()!!
-                                briefForecastData = forecastBriefResponseDto.data
-                                txtWeatherEmoji.setText(forecastBriefResponseDto.data.weather)
-                                txtWeatherDegree.setText(
-                                    CommonUtil.toIntString(forecastBriefResponseDto.data.temperature) + "˚"
-                                )
-                                txtLocation.text =
-                                    "${bigScale} ${midScale} ${smallScale}"
+        val previousBigScale = viewModel.bigScale.value
+        lifecycleScope.launch {
+            viewModel.getBriefForecast()
+            {
+                try {
+                    if (it.isSuccessful) {
+                        if (!previousBigScale.equals(viewModel.bigScale.value))
+                            setupSurveyResult()
 
-                                if (!previousBigScale.equals(bigScale))
-                                    setupSurveyResult()
-
-                                Log.i("결과", "성공")
-                            } else
-                                throw Exception(it.errorBody()!!.source().toString())
-                        } catch (e: Exception) {
-                            if (!e.message.isNullOrBlank())
-                                Log.e("getBriefForecast", e.message.toString())
-
-                            Log.e("getBriefForecast", e.stackTraceToString())
-                            Log.e(
-                                "getBriefForecast",
-                                "defaultRegionId:${viewModel.defaultRegionId}"
-                            )
-                            Toast.makeText(
-                                this@HomeActivity,
-                                "날씨 단기예보 불러오기에 실패하였습니다.",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
-                        }
-                    }
+                        Log.i("결과", "성공")
+                    } else
+                        throw Exception(it.errorBody()!!.source().toString())
+                } catch (e: Exception) {
+                    Log.e("getBriefForecast", e.stackTraceToString())
+                    Toast.makeText(
+                        this@HomeActivity,
+                        "날씨 단기예보 불러오기에 실패하였습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-            } else {
-                Log.e("getBriefForecast", "defaultRegionId is blank")
-                Toast.makeText(this, "날씨 단기예보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT)
-                    .show()
             }
         }
     }
-
 
     private fun getCommentList() {
         lifecycleScope.launch {
             viewModel.getCommentList(null, 5)
             {
-                setRecyclerChats(it!!.body()!! as CommentListResponseDto)
+                setRecyclerChats(it.body()!!)
             }
         }
     }
-
 
     private fun setRecyclerChats(responseDto: CommentListResponseDto) {
         try {
@@ -366,103 +253,34 @@ class HomeActivity : MisoActivity() {
     }
 
     private fun getUserInfo() {
-        fun onSuccessful(response: Response<MemberInfoResponseDto>) {
-            try {
-                val memberInfoResponseDto = response.body()!!
-                val memberInfo = memberInfoResponseDto.data
-                txtEmoji.text = memberInfo.emoji
-
-                Log.i("getUserInfo", "성공")
-            } catch (e: Exception) {
-                Toast.makeText(this, "사용자 정보를 불러오는 중 문제가 발생했습니다.", Toast.LENGTH_SHORT)
-                    .show()
-                Log.e("getUserInfo", e.stackTraceToString())
-            }
-        }
-
-        fun onFail(response: Response<MemberInfoResponseDto>) {
-            Toast.makeText(this, "사용자 정보를 불러오는 중 문제가 발생했습니다.", Toast.LENGTH_SHORT).show()
-            Log.e("getUserInfo", response.errorBody()!!.source().toString())
-        }
-
         lifecycleScope.launch {
             viewModel.getUserInfo()
             {
                 if (it.isSuccessful) {
-                    onSuccessful(it)
+                    Log.i("getUserInfo", "성공")
                 } else {
-                    onFail(it)
+                    Toast.makeText(
+                        this@HomeActivity,
+                        "사용자 정보를 불러오는 중 문제가 발생했습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.e("getUserInfo", it.errorBody()!!.source().toString())
                 }
+
                 getBriefForecast()
             }
         }
     }
 
     private fun setupSurveyResult() {
-        val answerViews = listOf(txtFirstAnswer, txtSecondAnswer, txtThirdAnswer)
-        val ratioViews = listOf(txtFirstRatio, txtSecondRatio, txtThirdRatio)
-        val progressLayouts =
-            listOf(firstProgressLayout, secondProgressLayout, thirdProgressLayout)
-
-        fun showEmptyChartText() {
-            txtFirstRatio.visibility = View.GONE
-            imgIconCheckFirst.visibility = View.GONE
-            txtEmptyChart.visibility = View.VISIBLE
-        }
-
-        fun showChartItem(
-            surveyResult: SurveyResult,
-            index: Int
-        ) {
-            answerViews[index].text = surveyResult.keyList[index].toString()
-            ratioViews[index].text = surveyResult.valueList[index].toString() + "%"
-            progressLayouts[index].visibility = View.VISIBLE
-        }
-
-        fun showFirstItem(surveyResultDto: SurveyResult) {
-            showChartItem(surveyResultDto, 0)
-
-            if (txtFirstRatio.text.equals("")) {
-                showEmptyChartText()
-            } else
-                imgIconCheckFirst.visibility = View.VISIBLE
-        }
-
         lifecycleScope.launch {
             viewModel.getSurveyResult()
             {
                 try {
-                    if (it.isSuccessful) {
-                        val todaySurveyResultDto =
-                            it.body()!!.data.responseList.first { it.surveyId == 2 }
-
-                        todaySurveyResultDto.keyList.forEachIndexed { index, it ->
-                            try {
-                                if (index >= answerViews.size)
-                                    return@forEachIndexed
-                                else {
-                                    if (index == 0) {
-                                        if (it != null)
-                                            showFirstItem(todaySurveyResultDto)
-                                        else
-                                            showEmptyChartText()
-                                    } else
-                                        if (it != null)
-                                            showChartItem(todaySurveyResultDto, index)
-                                        else
-                                            return@forEachIndexed
-                                }
-                            } catch (e: IndexOutOfBoundsException) {
-                                Log.e("setupSurveyResult", e.stackTraceToString())
-                                return@forEachIndexed
-                            }
-                        }
-                    } else {
+                    if (!it.isSuccessful) {
                         throw Exception(it.errorBody()!!.source().toString())
                     }
                 } catch (e: Exception) {
-                    showEmptyChartText()
-
                     if (!e.message.toString().equals(""))
                         Log.e("setupSurveyResult", e.message.toString())
                     else
