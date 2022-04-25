@@ -1,8 +1,10 @@
 package com.miso.misoweather.activity.home
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
 import com.kakao.sdk.user.UserApiClient
+import com.miso.misoweather.common.CommonUtil
 import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
 import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
 import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
@@ -10,13 +12,19 @@ import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseD
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.map
+import dagger.hilt.android.qualifiers.ActivityContext
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.*
 import retrofit2.Response
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val repository: MisoRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val repository: MisoRepository
+) : ViewModel() {
     val logoutResponseString by lazy { MutableLiveData<String?>() }
+    val todaySurveyResultResponseDto by lazy { MutableLiveData<SurveyResultResponseDto>() }
 
     val isSurveyed =
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.IS_SURVEYED)
@@ -27,15 +35,27 @@ class HomeViewModel @Inject constructor(private val repository: MisoRepository) 
                 } else
                     it
             }
-            .asLiveData()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = ""
+            )
 
     val lastSurveyedDate by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.LAST_SURVEYED_DATE)
     }
 
     val defaultRegionId by lazy {
-        repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.DEFAULT_REGION_ID)
-            .asLiveData()
+        viewModelScope.async {
+            val valueFlow =
+                repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.DEFAULT_REGION_ID)
+            valueFlow
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.Eagerly,
+                    initialValue = valueFlow.first()
+                )
+        }
     }
 
     val misoToken by lazy {
@@ -44,20 +64,27 @@ class HomeViewModel @Inject constructor(private val repository: MisoRepository) 
 
     val bigScale by lazy {
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.BIGSCALE_REGION)
-            .asLiveData()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = ""
+            )
     }
 
     val midScale by lazy {
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.MIDSCALE_REGION)
-            .asLiveData()
             .map {
                 if (it.equals("선택 안 함")) "전체" else it
-            }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = ""
+            )
     }
 
     val smallScale by lazy {
         repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.SMALLSCALE_REGION)
-            .map {
+            .mapLatest {
                 if (midScale.value.equals("선택 안 함") || midScale.value.equals("전체"))
                     ""
                 else
@@ -65,10 +92,26 @@ class HomeViewModel @Inject constructor(private val repository: MisoRepository) 
                         "전체"
                     else
                         it
-            }
-            .asLiveData()
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = ""
+            )
     }
 
+    val location: StateFlow<String> =
+        flow {
+            emit("${bigScale.value} ${midScale.value} ${smallScale.value}")
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = "${bigScale.value} ${midScale.value} ${smallScale.value}"
+        )
+
+    val nickname: MutableStateFlow<String> = MutableStateFlow("")
+    val emoji: MutableStateFlow<String> = MutableStateFlow("")
+    val weatherEmoji: MutableStateFlow<String> = MutableStateFlow("")
+    val weatherDegree: MutableStateFlow<String> = MutableStateFlow("")
 
     suspend fun getUserInfo(action: (response: Response<MemberInfoResponseDto>) -> Unit) {
         val response = repository.getUserInfo(misoToken)
@@ -83,15 +126,16 @@ class HomeViewModel @Inject constructor(private val repository: MisoRepository) 
                 savePreference(DataStoreManager.EMOJI, memberInfo.emoji)
                 savePreference(DataStoreManager.NICKNAME, memberInfo.nickname)
             }
+            nickname.value = "${memberInfo.regionName}의 ${memberInfo.nickname}님!"
+            emoji.value = memberInfo.emoji
         }
         action(response)
     }
 
     suspend fun getBriefForecast(
-        regionId: Int,
         action: (response: Response<ForecastBriefResponseDto>) -> Unit
     ) {
-        val response = repository.getBriefForecast(regionId)
+        val response = repository.getBriefForecast(defaultRegionId.await().value.toInt())
         if (response.isSuccessful) {
             val region = response.body()!!.data.region
             repository.dataStoreManager.apply {
@@ -105,6 +149,8 @@ class HomeViewModel @Inject constructor(private val repository: MisoRepository) 
                     if (region.smallScale.equals("선택 안 함")) "전체" else region.smallScale
                 )
             }
+            weatherEmoji.value = response.body()!!.data.weather
+            weatherDegree.value = CommonUtil.toIntString(response.body()!!.data.temperature)
         }
         action(response)
     }
@@ -113,20 +159,16 @@ class HomeViewModel @Inject constructor(private val repository: MisoRepository) 
         commentId: Int?,
         size: Int,
         action: (response: Response<CommentListResponseDto>) -> Unit
-    ) =
-        action(
-            repository.getCommentList(
-                commentId,
-                size
-            )
-        )
+    ) = action(repository.getCommentList(commentId, size))
 
     suspend fun getSurveyResult(
         shortBigScale: String? = null,
         action: (response: Response<SurveyResultResponseDto>) -> Unit
-    ) =
-        action(repository.getSurveyResults(shortBigScale))
-
+    ) {
+        val response = repository.getSurveyResults(shortBigScale)
+        todaySurveyResultResponseDto.value = response.body()
+        action(response)
+    }
 
     fun logout() {
         UserApiClient.instance.logout { error ->
