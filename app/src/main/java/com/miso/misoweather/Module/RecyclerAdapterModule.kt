@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.miso.misoweather.activity.selectRegion.RecyclerRegionsAdapter
 import com.miso.misoweather.activity.selectRegion.RegionItem
 import com.miso.misoweather.R
@@ -43,6 +44,12 @@ class RecyclerAdapterModule {
     @ActivityScoped
     fun getGridLayoutManager(@ActivityContext context: Context): GridLayoutManager {
         return GridLayoutManager(context, 4)
+    }
+
+    @Provides
+    @ActivityScoped
+    fun getVerticalLinearLayoutManager(@ActivityContext context: Context): LinearLayoutManager {
+        return LinearLayoutManager(context)
     }
 
     @Provides

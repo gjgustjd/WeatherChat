@@ -28,6 +28,7 @@ import java.lang.Exception
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
@@ -37,8 +38,9 @@ class HomeActivity : MisoActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var recyclerChat: RecyclerView
     private lateinit var recyclerChatAdapter: RecyclerChatsAdapter
-    private lateinit var imgbtnChangeLocation: ImageButton
-    private lateinit var chartLayout: ConstraintLayout
+
+    @Inject
+    private lateinit var recyclerLayoutManager: LinearLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -179,7 +181,7 @@ class HomeActivity : MisoActivity() {
                 RecyclerChatsAdapter(responseDto.data.commentList, false)
             recyclerChat.apply {
                 adapter = recyclerChatAdapter
-                layoutManager = LinearLayoutManager(this@HomeActivity)
+                layoutManager = recyclerLayoutManager
             }
             Log.i("setRecyclerChats", "성공")
         } catch (e: Exception) {
