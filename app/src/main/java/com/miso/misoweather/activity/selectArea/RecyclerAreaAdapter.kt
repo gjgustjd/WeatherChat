@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
-import com.miso.misoweather.model.DTO.Region
+import com.miso.misoweather.model.dto.Region
 import java.lang.Exception
 
 @RequiresApi(Build.VERSION_CODES.M)

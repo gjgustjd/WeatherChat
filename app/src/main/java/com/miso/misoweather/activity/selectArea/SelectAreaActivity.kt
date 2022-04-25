@@ -18,7 +18,7 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.activity.getnickname.SelectNickNameActivity
 import com.miso.misoweather.activity.home.HomeActivity
-import com.miso.misoweather.model.DTO.Region
+import com.miso.misoweather.model.dto.Region
 import com.miso.misoweather.activity.selectTown.SelectTownActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

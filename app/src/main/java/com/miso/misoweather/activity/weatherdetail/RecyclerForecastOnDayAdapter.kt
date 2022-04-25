@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
 import com.miso.misoweather.common.CommonUtil
 import com.miso.misoweather.databinding.ListWeatherDayBinding
-import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecast
+import com.miso.misoweather.model.dto.forecast.daily.DailyForecast
 import java.time.ZoneId
 import java.time.ZonedDateTime
 

@@ -7,11 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.miso.misoweather.activity.chatmain.SurveyItem
 import com.miso.misoweather.R
-import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerRequestDto
-import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerResponseDto
-import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
-import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
-import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
+import com.miso.misoweather.model.dto.surveyAddMyAnswer.SurveyAddMyAnswerRequestDto
+import com.miso.misoweather.model.dto.surveyAddMyAnswer.SurveyAddMyAnswerResponseDto
+import com.miso.misoweather.model.dto.surveyMyAnswer.SurveyMyAnswerDto
+import com.miso.misoweather.model.dto.surveyResponse.SurveyAnswerDto
+import com.miso.misoweather.model.dto.surveyResultResponse.SurveyResult
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

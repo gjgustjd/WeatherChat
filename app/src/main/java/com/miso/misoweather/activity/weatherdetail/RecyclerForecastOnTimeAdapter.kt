@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
 import com.miso.misoweather.common.CommonUtil
-import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecast
+import com.miso.misoweather.model.dto.forecast.hourly.HourlyForecast
 
 class RecyclerForecastOnTimeAdapter(
     private val forecasts: List<HourlyForecast>

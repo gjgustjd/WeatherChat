@@ -14,10 +14,10 @@ import androidx.lifecycle.lifecycleScope
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.activity.home.HomeActivity
 import com.miso.misoweather.activity.login.LoginActivity
-import com.miso.misoweather.Dialog.GeneralConfirmDialog
+import com.miso.misoweather.dialog.GeneralConfirmDialog
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityMypageBinding
-import com.miso.misoweather.model.DTO.LoginRequestDto
+import com.miso.misoweather.model.dto.LoginRequestDto
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.lang.Exception

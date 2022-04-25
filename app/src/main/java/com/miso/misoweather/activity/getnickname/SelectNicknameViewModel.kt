@@ -6,10 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kakao.sdk.user.UserApiClient
-import com.miso.misoweather.model.DTO.GeneralResponseDto
-import com.miso.misoweather.model.DTO.LoginRequestDto
-import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
-import com.miso.misoweather.model.DTO.SignUpRequestDto
+import com.miso.misoweather.model.dto.GeneralResponseDto
+import com.miso.misoweather.model.dto.LoginRequestDto
+import com.miso.misoweather.model.dto.nicknameResponse.NicknameResponseDto
+import com.miso.misoweather.model.dto.SignUpRequestDto
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

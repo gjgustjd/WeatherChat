@@ -19,11 +19,11 @@ import com.miso.misoweather.databinding.ActivityWeatherMainBinding
 import com.miso.misoweather.activity.home.HomeActivity
 import com.miso.misoweather.activity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.common.CommonUtil
-import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefData
-import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
-import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirData
-import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastData
-import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastData
+import com.miso.misoweather.model.dto.forecast.brief.ForecastBriefData
+import com.miso.misoweather.model.dto.forecast.brief.ForecastBriefResponseDto
+import com.miso.misoweather.model.dto.forecast.currentAir.CurrentAirData
+import com.miso.misoweather.model.dto.forecast.daily.DailyForecastData
+import com.miso.misoweather.model.dto.forecast.hourly.HourlyForecastData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.lang.Exception

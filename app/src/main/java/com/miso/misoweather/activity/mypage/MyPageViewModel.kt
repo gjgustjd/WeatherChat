@@ -3,8 +3,8 @@ package com.miso.misoweather.activity.mypage
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.miso.misoweather.model.DTO.GeneralResponseDto
-import com.miso.misoweather.model.DTO.LoginRequestDto
+import com.miso.misoweather.model.dto.GeneralResponseDto
+import com.miso.misoweather.model.dto.LoginRequestDto
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

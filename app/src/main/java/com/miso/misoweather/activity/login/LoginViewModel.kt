@@ -5,8 +5,8 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.model.AccessTokenInfo
-import com.miso.misoweather.model.DTO.LoginRequestDto
-import com.miso.misoweather.model.DTO.GeneralResponseDto
+import com.miso.misoweather.model.dto.LoginRequestDto
+import com.miso.misoweather.model.dto.GeneralResponseDto
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

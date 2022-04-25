@@ -1,9 +1,9 @@
 package com.miso.misoweather.model
 
-import com.miso.misoweather.model.DTO.CommentRegisterRequestDto
-import com.miso.misoweather.model.DTO.LoginRequestDto
-import com.miso.misoweather.model.DTO.SignUpRequestDto
-import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerRequestDto
+import com.miso.misoweather.model.dto.CommentRegisterRequestDto
+import com.miso.misoweather.model.dto.LoginRequestDto
+import com.miso.misoweather.model.dto.SignUpRequestDto
+import com.miso.misoweather.model.dto.surveyAddMyAnswer.SurveyAddMyAnswerRequestDto
 import com.miso.misoweather.model.interfaces.MisoWeatherAPI
 import javax.inject.Inject
 import javax.inject.Singleton

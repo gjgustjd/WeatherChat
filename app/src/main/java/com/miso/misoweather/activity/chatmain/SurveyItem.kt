@@ -1,8 +1,8 @@
 package com.miso.misoweather.activity.chatmain
 
-import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerDto
-import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
-import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResult
+import com.miso.misoweather.model.dto.surveyMyAnswer.SurveyMyAnswerDto
+import com.miso.misoweather.model.dto.surveyResponse.SurveyAnswerDto
+import com.miso.misoweather.model.dto.surveyResultResponse.SurveyResult
 import java.io.Serializable
 
 data class SurveyItem(

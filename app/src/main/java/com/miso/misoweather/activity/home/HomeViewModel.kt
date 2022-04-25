@@ -1,24 +1,21 @@
 package com.miso.misoweather.activity.home
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
 import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.common.CommonUtil
-import com.miso.misoweather.model.DTO.CommentList.Comment
-import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
-import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
-import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
-import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
+import com.miso.misoweather.model.dto.commentList.Comment
+import com.miso.misoweather.model.dto.commentList.CommentListResponseDto
+import com.miso.misoweather.model.dto.forecast.brief.ForecastBriefResponseDto
+import com.miso.misoweather.model.dto.memberInfoResponse.MemberInfoResponseDto
+import com.miso.misoweather.model.dto.surveyResultResponse.SurveyResultResponseDto
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.*
 import retrofit2.Response
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(

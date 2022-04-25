@@ -16,7 +16,7 @@ import com.miso.misoweather.databinding.ActivityHomeBinding
 import com.miso.misoweather.activity.mypage.MyPageActivity
 import com.miso.misoweather.activity.selectAnswer.SelectSurveyAnswerActivity
 import com.miso.misoweather.activity.selectRegion.SelectRegionActivity
-import com.miso.misoweather.Dialog.GeneralConfirmDialog
+import com.miso.misoweather.dialog.GeneralConfirmDialog
 import com.miso.misoweather.R
 import com.miso.misoweather.activity.weatherdetail.WeatherDetailActivity
 import dagger.hilt.android.AndroidEntryPoint

@@ -19,8 +19,8 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.activity.getnickname.SelectNickNameActivity
 import com.miso.misoweather.activity.home.HomeActivity
-import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
-import com.miso.misoweather.model.DTO.Region
+import com.miso.misoweather.model.dto.regionListResponse.RegionListResponseDto
+import com.miso.misoweather.model.dto.Region
 import com.miso.misoweather.activity.selectArea.SelectAreaActivity
 import com.miso.misoweather.activity.selectRegion.SelectRegionActivity
 import dagger.hilt.android.AndroidEntryPoint

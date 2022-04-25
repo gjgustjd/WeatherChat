@@ -5,10 +5,9 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.miso.misoweather.model.DTO.CommentList.Comment
-import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
+import com.miso.misoweather.model.dto.commentList.Comment
+import com.miso.misoweather.model.dto.surveyResultResponse.SurveyResultResponseDto
 
 object HomeBindingAdapter {
     @BindingAdapter("emptyLayoutVisibility")

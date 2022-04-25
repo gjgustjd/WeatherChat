@@ -21,7 +21,7 @@ import com.kakao.sdk.user.UserApiClient
 import com.miso.misoweather.activity.home.HomeActivity
 import com.miso.misoweather.activity.login.viewPagerFragments.*
 import com.miso.misoweather.activity.selectRegion.SelectRegionActivity
-import com.miso.misoweather.Dialog.GeneralConfirmDialog
+import com.miso.misoweather.dialog.GeneralConfirmDialog
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityLoginBinding
 import com.rd.PageIndicatorView

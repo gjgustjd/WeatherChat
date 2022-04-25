@@ -3,9 +3,9 @@ package com.miso.misoweather.activity.selectArea
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.miso.misoweather.model.DTO.GeneralResponseDto
-import com.miso.misoweather.model.DTO.Region
-import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
+import com.miso.misoweather.model.dto.GeneralResponseDto
+import com.miso.misoweather.model.dto.Region
+import com.miso.misoweather.model.dto.regionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

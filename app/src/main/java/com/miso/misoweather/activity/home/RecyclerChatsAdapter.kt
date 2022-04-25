@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.activity.chatmain.ChatMainViewModel
 import com.miso.misoweather.R
 import com.miso.misoweather.databinding.ListItemChatBinding
-import com.miso.misoweather.model.DTO.CommentList.Comment
+import com.miso.misoweather.model.dto.commentList.Comment
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -84,12 +84,12 @@ class RecyclerChatsAdapter(
         return Holder(ListItemChatBinding.bind(view))
     }
 
-    inner class Holder(itemView: ListItemChatBinding) : RecyclerView.ViewHolder(itemView.root) {
-        var background = itemView.background
-        var nickname = itemView.txtNickname
-        var comment = itemView.txtMessage
-        var time = itemView.txtTime
-        var emoji = itemView.txtEmoji
+    inner class Holder(binding: ListItemChatBinding) : RecyclerView.ViewHolder(binding.root) {
+        var background = binding.background
+        var nickname = binding.txtNickname
+        var comment = binding.txtMessage
+        var time = binding.txtTime
+        var emoji = binding.txtEmoji
     }
 
 }

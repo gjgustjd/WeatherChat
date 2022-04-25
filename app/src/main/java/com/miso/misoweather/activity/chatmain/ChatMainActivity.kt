@@ -16,8 +16,8 @@ import androidx.fragment.app.Fragment
 import com.miso.misoweather.activity.home.HomeActivity
 import com.miso.misoweather.activity.updateRegion.UpdateRegionActivity
 import com.miso.misoweather.activity.weatherdetail.WeatherDetailActivity
-import com.miso.misoweather.Fragment.commentFragment.CommentsFragment
-import com.miso.misoweather.Fragment.surveyFragment.SurveyFragment
+import com.miso.misoweather.fragment.commentFragment.CommentsFragment
+import com.miso.misoweather.fragment.surveyFragment.SurveyFragment
 import com.miso.misoweather.R
 import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivityChatMainBinding

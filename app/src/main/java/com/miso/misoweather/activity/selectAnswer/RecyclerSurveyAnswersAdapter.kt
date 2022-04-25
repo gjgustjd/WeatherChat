@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
 import com.miso.misoweather.databinding.ListSurveyAnswerBinding
-import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerDto
+import com.miso.misoweather.model.dto.surveyResponse.SurveyAnswerDto
 import java.lang.Exception
 
 class RecyclerSurveyAnswersAdapter(

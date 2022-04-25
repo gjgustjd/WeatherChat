@@ -1,19 +1,19 @@
 package com.miso.misoweather.model.interfaces
 
-import com.miso.misoweather.model.DTO.*
-import com.miso.misoweather.model.DTO.CommentList.CommentListResponseDto
-import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
-import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirResponseDto
-import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
-import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
-import com.miso.misoweather.model.DTO.MemberInfoResponse.MemberInfoResponseDto
-import com.miso.misoweather.model.DTO.NicknameResponse.NicknameResponseDto
-import com.miso.misoweather.model.DTO.RegionListResponse.RegionListResponseDto
-import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerRequestDto
-import com.miso.misoweather.model.DTO.SurveyAddMyAnswer.SurveyAddMyAnswerResponseDto
-import com.miso.misoweather.model.DTO.SurveyMyAnswer.SurveyMyAnswerResponseDto
-import com.miso.misoweather.model.DTO.SurveyResponse.SurveyAnswerResponseDto
-import com.miso.misoweather.model.DTO.SurveyResultResponse.SurveyResultResponseDto
+import com.miso.misoweather.model.dto.*
+import com.miso.misoweather.model.dto.commentList.CommentListResponseDto
+import com.miso.misoweather.model.dto.forecast.brief.ForecastBriefResponseDto
+import com.miso.misoweather.model.dto.forecast.currentAir.CurrentAirResponseDto
+import com.miso.misoweather.model.dto.forecast.daily.DailyForecastResponseDto
+import com.miso.misoweather.model.dto.forecast.hourly.HourlyForecastResponseDto
+import com.miso.misoweather.model.dto.memberInfoResponse.MemberInfoResponseDto
+import com.miso.misoweather.model.dto.nicknameResponse.NicknameResponseDto
+import com.miso.misoweather.model.dto.regionListResponse.RegionListResponseDto
+import com.miso.misoweather.model.dto.surveyAddMyAnswer.SurveyAddMyAnswerRequestDto
+import com.miso.misoweather.model.dto.surveyAddMyAnswer.SurveyAddMyAnswerResponseDto
+import com.miso.misoweather.model.dto.surveyMyAnswer.SurveyMyAnswerResponseDto
+import com.miso.misoweather.model.dto.surveyResponse.SurveyAnswerResponseDto
+import com.miso.misoweather.model.dto.surveyResultResponse.SurveyResultResponseDto
 import retrofit2.Response
 import retrofit2.http.*
 

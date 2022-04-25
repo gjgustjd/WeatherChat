@@ -1,10 +1,10 @@
 package com.miso.misoweather.activity.weatherdetail
 
 import androidx.lifecycle.ViewModel
-import com.miso.misoweather.model.DTO.Forecast.Brief.ForecastBriefResponseDto
-import com.miso.misoweather.model.DTO.Forecast.CurrentAir.CurrentAirResponseDto
-import com.miso.misoweather.model.DTO.Forecast.Daily.DailyForecastResponseDto
-import com.miso.misoweather.model.DTO.Forecast.Hourly.HourlyForecastResponseDto
+import com.miso.misoweather.model.dto.forecast.brief.ForecastBriefResponseDto
+import com.miso.misoweather.model.dto.forecast.currentAir.CurrentAirResponseDto
+import com.miso.misoweather.model.dto.forecast.daily.DailyForecastResponseDto
+import com.miso.misoweather.model.dto.forecast.hourly.HourlyForecastResponseDto
 import com.miso.misoweather.model.DataStoreManager
 import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
