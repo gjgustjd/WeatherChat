@@ -1,105 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageButton
-        android:id="@+id/imgbtn_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/root_side_margin_big"
-        android:layout_marginTop="@dimen/backbutton_top_margin"
-        android:background="@android:color/transparent"
-        android:cropToPadding="true"
-        android:scaleType="fitCenter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_back_vector" />
+    <data>
+
+        <variable
+            name="activity"
+            type="com.miso.misoweather.activity.selectAnswer.SelectSurveyAnswerActivity" />
+
+        <variable
+            name="viewModel"
+            type="com.miso.misoweather.activity.selectAnswer.SelectAnswerViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/titleLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/root_side_margin_big"
-        android:layout_marginEnd="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/recycler_answers"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgbtn_back"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintVertical_weight="1">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/txt_titleText"
-            style="@style/basicText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="오늘 날씨엔"
-            android:textSize="20dp"
-            app:layout_constraintBottom_toTopOf="@id/txt_itemText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1"
-            app:layout_constraintVertical_chainStyle="packed" />
-
-        <TextView
-            android:id="@+id/txt_itemText"
-            style="@style/basicText"
+        <ImageButton
+            android:id="@+id/imgbtn_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="어떤 외투 입으실래요?"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/txt_titleText"
-            app:layout_constraintTop_toBottomOf="@+id/txt_titleText" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_answers"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:paddingTop="30dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonLayout"
-        app:layout_constraintEnd_toEndOf="@+id/titleLayout"
-        app:layout_constraintStart_toStartOf="@+id/titleLayout"
-        app:layout_constraintTop_toBottomOf="@+id/titleLayout"
-        app:layout_constraintVertical_chainStyle="spread"
-        app:layout_constraintVertical_weight="4"
-        tools:listitem="@layout/list_survey_answer">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/buttonLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/recycler_answers"
-        app:layout_constraintStart_toStartOf="@+id/recycler_answers"
-        app:layout_constraintTop_toBottomOf="@+id/recycler_answers"
-        app:layout_constraintVertical_weight="2">
-
-        <Button
-            android:id="@+id/btn_action"
-            style="@style/basicText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_light_purple_background"
-            android:text="답변 완료!"
-            android:textColor="@color/primaryPurple"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="@dimen/root_side_margin_big"
+            android:layout_marginTop="@dimen/backbutton_top_margin"
+            android:background="@android:color/transparent"
+            android:cropToPadding="true"
+            android:onClick="@{()->activity.doBack()}"
+            android:scaleType="fitCenter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.1" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:srcCompat="@drawable/icon_back_vector" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/titleLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/root_side_margin_big"
+            android:layout_marginEnd="40dp"
+            app:layout_constraintBottom_toTopOf="@+id/recycler_answers"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgbtn_back"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintVertical_weight="1">
+
+            <TextView
+                android:id="@+id/txt_titleText"
+                style="@style/basicText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="오늘 날씨엔"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toTopOf="@id/txt_itemText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/txt_itemText"
+                style="@style/basicText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                surveyQuestionText="@{activity.surveyItem}"
+                android:text="어떤 외투 입으실래요?"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/txt_titleText"
+                app:layout_constraintTop_toBottomOf="@+id/txt_titleText" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_answers"
+            bindSelectSurveyAnswerData="@{activity.surveyItem}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:paddingTop="30dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/buttonLayout"
+            app:layout_constraintEnd_toEndOf="@+id/titleLayout"
+            app:layout_constraintStart_toStartOf="@+id/titleLayout"
+            app:layout_constraintTop_toBottomOf="@+id/titleLayout"
+            app:layout_constraintVertical_chainStyle="spread"
+            app:layout_constraintVertical_weight="4"
+            tools:listitem="@layout/list_survey_answer">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttonLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/recycler_answers"
+            app:layout_constraintStart_toStartOf="@+id/recycler_answers"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_answers"
+            app:layout_constraintVertical_weight="2">
+
+            <Button
+                android:id="@+id/btn_action"
+                style="@style/basicText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_light_purple_background"
+                android:onClick="@{()->activity.submitAnswer()}"
+                android:text="답변 완료!"
+                android:textColor="@color/primaryPurple"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.1" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
