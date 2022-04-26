@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout.VERTICAL
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,29 +24,26 @@ import com.miso.misoweather.model.dto.regionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.dto.Region
 import com.miso.misoweather.activity.selectArea.SelectAreaActivity
 import com.miso.misoweather.activity.selectRegion.SelectRegionActivity
+import com.miso.misoweather.common.RegionActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 @AndroidEntryPoint
 @RequiresApi(Build.VERSION_CODES.O)
-class SelectTownActivity : MisoActivity() {
+class SelectTownActivity : RegionActivity() {
     private val viewModel: SelectTownViewModel by viewModels()
     private lateinit var binding: ActivitySelectRegionBinding
-    private lateinit var grid_region: RecyclerView
-    private lateinit var list_towns: RecyclerView
-    private lateinit var btn_back: ImageButton
-    private lateinit var btn_next: Button
-    private lateinit var selectedRegion: String
-    private lateinit var townRequestResult: RegionListResponseDto
-    private lateinit var recyclerAdapter: RecyclerTownsAdapter
-    private lateinit var aPurpose: String
+    private val aPurpose by lazy { intent.getStringExtra("for") ?: "" }
+    private val selectedRegion by lazy { intent.getStringExtra("region") ?: getShortRegionName() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySelectRegionBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        initializeViews()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_select_region)
+        binding.activity = this
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        initializeScale()
         getTownList()
     }
 
@@ -55,55 +53,47 @@ class SelectTownActivity : MisoActivity() {
         return regionsList[regionsFullList.indexOf(viewModel.bigScaleRegion)]
     }
 
-    private fun initializeViews() {
-        selectedRegion = intent.getStringExtra("region") ?: getShortRegionName()
-        aPurpose = intent.getStringExtra("for") ?: ""
-        grid_region = binding.gridRegions
-        list_towns = binding.recyclerTowns
+    fun initializeScale(){
+        bigScale = viewModel.bigScaleRegion
+        midScale = viewModel.midScaleRegion
+    }
 
-        grid_region.visibility = INVISIBLE
-        list_towns.visibility = VISIBLE
-        btn_back = binding.imgbtnBack
-        btn_next = binding.btnAction
-        btn_back.setOnClickListener() {
-            doBack()
-        }
-        btn_next.setOnClickListener()
-        {
-            try {
-                val selectedRegion = recyclerAdapter.getSelectedItem()
-                val midScaleRegion = selectedRegion.midScale
-                viewModel.addRegionPreferences(selectedRegion)
+    override fun goToNextActivity() {
+        super.goToNextActivity()
+        try {
+            val adapter = binding.recyclerTowns.adapter as RecyclerTownsAdapter
+            val selectedRegion = adapter.getSelectedItem()
+            val midScaleRegion = selectedRegion.midScale
+            viewModel.addRegionPreferences(selectedRegion)
 
-                lateinit var intent: Intent
-                if (selectedRegion.midScale.contains("선택 안 함")) {
-                    if (aPurpose.equals("change")) {
-                        changeRegion()
-                    } else {
-                        viewModel.addRegionPreferences(selectedRegion)
-                        viewModel.updateSmallScaleRegion("")
-                        intent = Intent(this, SelectNickNameActivity::class.java)
-                        intent.putExtra("RegionId", selectedRegion.id.toString())
-                    }
-                } else
-                    intent = Intent(this, SelectAreaActivity::class.java)
-
-                intent.apply {
-                    putExtra("for", aPurpose)
-                    putExtra("region", recyclerAdapter.getSelectedItem().bigScale)
-                    putExtra("town", midScaleRegion)
+            lateinit var intent: Intent
+            if (selectedRegion.midScale.contains("선택 안 함")) {
+                if (aPurpose.equals("change")) {
+                    changeRegion(adapter)
+                } else {
+                    viewModel.addRegionPreferences(selectedRegion)
+                    viewModel.updateSmallScaleRegion("")
+                    intent = Intent(this, SelectNickNameActivity::class.java)
+                    intent.putExtra("RegionId", selectedRegion.id.toString())
                 }
-                startActivity(intent)
-                transferToNext()
-                finish()
-            } catch (e: Exception) {
-                e.printStackTrace()
+            } else
+                intent = Intent(this, SelectAreaActivity::class.java)
+
+            intent.apply {
+                putExtra("for", aPurpose)
+                putExtra("region", adapter.getSelectedItem().bigScale)
+                putExtra("town", midScaleRegion)
             }
+            startActivity(intent)
+            transferToNext()
+            finish()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-    private fun changeRegion() {
-        val currentItem = recyclerAdapter.getSelectedItem()
+    private fun changeRegion(adapter: RecyclerTownsAdapter) {
+        val currentItem = adapter.getSelectedItem()
         lifecycleScope.launch {
             viewModel.updateRegion(
                 currentItem,
@@ -132,37 +122,10 @@ class SelectTownActivity : MisoActivity() {
             viewModel.getTownList(selectedRegion)
             {
                 if (it.isSuccessful) {
-                    try {
-                        Log.i("getTownList", "2단계 지역 받아오기 성공")
-                        townRequestResult = it.body()!! as RegionListResponseDto
-                        setRecyclerTowns()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+                    Log.i("getTownList", "2단계 지역 받아오기 성공")
+                    recyclerData.value = it.body()!!.data.regionList
                 }
             }
-        }
-    }
-
-    private fun setRecyclerTowns() {
-        try {
-            val regionListData = townRequestResult.data
-            val townList: List<Region> = regionListData.regionList
-            recyclerAdapter = RecyclerTownsAdapter(this@SelectTownActivity, townList)
-            list_towns.apply {
-                adapter = recyclerAdapter
-                layoutManager = LinearLayoutManager(this@SelectTownActivity)
-                addItemDecoration(DividerItemDecoration(applicationContext, VERTICAL))
-                if (!viewModel.midScaleRegion.equals(""))
-                    recyclerAdapter.selectItem(townList.indexOf(townList.first() {
-                        it.midScale.equals(
-                            viewModel.midScaleRegion
-                        )
-                    }))
-            }
-
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 }

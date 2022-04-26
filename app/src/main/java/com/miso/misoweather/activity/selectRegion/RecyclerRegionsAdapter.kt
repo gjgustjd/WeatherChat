@@ -18,7 +18,7 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class RecyclerRegionsAdapter @Inject constructor(
     @ActivityContext val context: Context,
-    private val regions: ArrayList<RegionItem>
+    private val regions: List<RegionItem>
 ) :
     RecyclerView.Adapter<RecyclerRegionsAdapter.Holder>() {
 

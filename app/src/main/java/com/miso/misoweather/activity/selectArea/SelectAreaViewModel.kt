@@ -17,8 +17,7 @@ import javax.inject.Inject
 class SelectAreaViewModel @Inject constructor(private val repository: MisoRepository) :
     ViewModel() {
     val smallScaleRegion by lazy {
-        repository.dataStoreManager.getPreferenceAsFlow(DataStoreManager.SMALLSCALE_REGION)
-            .asLiveData()
+        repository.dataStoreManager.getPreference(DataStoreManager.SMALLSCALE_REGION)
     }
 
     val midScaleRegion by lazy {

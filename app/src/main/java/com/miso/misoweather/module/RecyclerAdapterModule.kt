@@ -23,7 +23,7 @@ class RecyclerAdapterModule {
     @Provides
     @ActivityScoped
     fun getRegionAdapter(@ActivityContext context: Context): RecyclerRegionsAdapter {
-        fun getRegionItems(): ArrayList<RegionItem> {
+        fun getRegionItems(): List<RegionItem> {
             val resource = context.resources
             val regions = resource.getStringArray(R.array.regions)
             val regions_full = resource.getStringArray(R.array.regions_full)
@@ -35,7 +35,7 @@ class RecyclerAdapterModule {
                 }
                 regionItems.add(item)
             }
-            return regionItems
+            return regionItems.map { it }
         }
         return RecyclerRegionsAdapter(context, getRegionItems())
     }
