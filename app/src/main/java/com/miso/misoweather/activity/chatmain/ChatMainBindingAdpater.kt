@@ -9,8 +9,11 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
 import com.miso.misoweather.fragment.commentFragment.CommentsFragment
+import com.miso.misoweather.fragment.surveyFragment.RecyclerSurveysAdapter
 import com.miso.misoweather.fragment.surveyFragment.SurveyFragment
 import com.miso.misoweather.fragment.surveyFragment.SurveyFragment_Factory
 
@@ -86,6 +89,15 @@ object ChatMainBindingAdpater {
                 view.setTextColor(Color.WHITE)
             else
                 view.setTextColor(view.context.resources.getColor(R.color.textBlack, null))
+        }
+    }
+
+
+    @BindingAdapter("recyclerSurveyItems")
+    @JvmStatic
+    fun setRecyclerSurveyItems(view: RecyclerView, surveyItems: ArrayList<SurveyItem>?) {
+        surveyItems?.let{
+            view.adapter = RecyclerSurveysAdapter(view.context, surveyItems)
         }
     }
 }
