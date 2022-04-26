@@ -1,130 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/img_copyright_misobuild2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/profileLayout"
-        app:layout_constraintStart_toStartOf="@+id/profileLayout"
-        app:srcCompat="@drawable/copyright_misobuild" />
+    <data>
 
-    <ImageButton
-        android:id="@+id/imgbtn_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/root_side_margin"
-        android:layout_marginTop="@dimen/backbutton_top_margin"
-        android:background="@android:color/transparent"
-        android:cropToPadding="true"
-        android:scaleType="fitCenter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_back_vector" />
+        <variable
+            name="activity"
+            type="com.miso.misoweather.activity.mypage.MyPageActivity" />
 
-    <TextView
-        android:id="@+id/txt_mypage_title"
-        style="@style/boldBlack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="마이페이지"
-        android:textSize="@dimen/subactivity_title_text_size"
-        app:layout_constraintBottom_toBottomOf="@+id/imgbtn_back"
-        app:layout_constraintStart_toEndOf="@+id/imgbtn_back"
-        app:layout_constraintTop_toTopOf="@+id/imgbtn_back" />
+        <variable
+            name="viewModel"
+            type="com.miso.misoweather.activity.mypage.MyPageViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/profileLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/root_side_margin"
-        android:layout_marginEnd="@dimen/root_side_margin"
-        android:background="@drawable/unit_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.25"
-        app:layout_constraintStart_toStartOf="@+id/imgbtn_back"
-        app:layout_constraintTop_toBottomOf="@+id/imgbtn_back">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/txt_nickname"
-            style="@style/boldBlack"
+        <ImageView
+            android:id="@+id/img_copyright_misobuild2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:textSize="@dimen/subactivity_title_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="@+id/profileLayout"
+            app:layout_constraintStart_toStartOf="@+id/profileLayout"
+            app:srcCompat="@drawable/copyright_misobuild" />
+
+        <ImageButton
+            android:id="@+id/imgbtn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/root_side_margin"
+            android:layout_marginTop="@dimen/backbutton_top_margin"
+            android:background="@android:color/transparent"
+            android:cropToPadding="true"
+            android:onClick="@{()->activity.doBack()}"
+            android:scaleType="fitCenter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/icon_back_vector" />
 
         <TextView
-            android:id="@+id/txt_emoji"
-            style="@style/basicText"
+            android:id="@+id/txt_mypage_title"
+            style="@style/boldBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="마이페이지"
+            android:textSize="@dimen/subactivity_title_text_size"
+            app:layout_constraintBottom_toBottomOf="@+id/imgbtn_back"
+            app:layout_constraintStart_toEndOf="@+id/imgbtn_back"
+            app:layout_constraintTop_toTopOf="@+id/imgbtn_back" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/profileLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:textSize="20dp"
-            app:autoSizeTextType="uniform"
-            app:layout_constraintBottom_toTopOf="@+id/txt_nickname"
+            android:layout_marginTop="@dimen/root_side_margin"
+            android:layout_marginEnd="@dimen/root_side_margin"
+            android:background="@drawable/unit_background"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintHeight_percent="0.25"
+            app:layout_constraintStart_toStartOf="@+id/imgbtn_back"
+            app:layout_constraintTop_toBottomOf="@+id/imgbtn_back">
+
+            <TextView
+                android:id="@+id/txt_nickname"
+                style="@style/boldBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="@{viewModel.fullNickName}"
+                android:textSize="@dimen/subactivity_title_text_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_emoji"
+                style="@style/basicText"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="@{viewModel.emoji}"
+                android:textSize="20dp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toTopOf="@+id/txt_nickname"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/btn_logout"
+            style="@style/basicText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/button_transparent_underline"
+            android:gravity="start|center_vertical"
+            android:onClick="@{()->activity.showLogoutDialog()}"
+            android:text="🔑 로그아웃"
+            app:layout_constraintEnd_toEndOf="@+id/profileLayout"
+            app:layout_constraintStart_toStartOf="@+id/profileLayout"
+            app:layout_constraintTop_toBottomOf="@+id/profileLayout" />
+
+        <Button
+            android:id="@+id/btn_version"
+            style="@style/basicText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/button_transparent_underline"
+            android:gravity="start|center_vertical"
+            android:onClick="@{()->activity.showVersionDialog()}"
+            android:text="📱 앱 버전"
+            app:layout_constraintEnd_toEndOf="@+id/profileLayout"
+            app:layout_constraintStart_toStartOf="@+id/profileLayout"
+            app:layout_constraintTop_toBottomOf="@+id/btn_logout" />
+
+        <TextView
+            android:id="@+id/txt_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:text="@{activity.versionString}"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_version"
+            app:layout_constraintEnd_toEndOf="@+id/profileLayout"
+            app:layout_constraintTop_toTopOf="@+id/btn_version" />
+
+        <Button
+            android:id="@+id/btn_unregister"
+            style="@style/basicText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/button_transparent_underline"
+            android:gravity="start|center_vertical"
+            android:onClick="@{()->activity.showUnRegisterDialog()}"
+            android:text="💔 계정 삭제"
+            app:layout_constraintEnd_toEndOf="@+id/profileLayout"
+            app:layout_constraintStart_toStartOf="@+id/profileLayout"
+            app:layout_constraintTop_toBottomOf="@+id/btn_version" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <Button
-        android:id="@+id/btn_logout"
-        style="@style/basicText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/button_transparent_underline"
-        android:gravity="start|center_vertical"
-        android:text="🔑 로그아웃"
-        app:layout_constraintEnd_toEndOf="@+id/profileLayout"
-        app:layout_constraintStart_toStartOf="@+id/profileLayout"
-        app:layout_constraintTop_toBottomOf="@+id/profileLayout" />
-
-    <Button
-        android:id="@+id/btn_version"
-        style="@style/basicText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/button_transparent_underline"
-        android:gravity="start|center_vertical"
-        android:text="📱 앱 버전"
-        app:layout_constraintEnd_toEndOf="@+id/profileLayout"
-        app:layout_constraintStart_toStartOf="@+id/profileLayout"
-        app:layout_constraintTop_toBottomOf="@+id/btn_logout" />
-
-    <TextView
-        android:id="@+id/txt_version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="start|center_vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_version"
-        app:layout_constraintEnd_toEndOf="@+id/profileLayout"
-        app:layout_constraintTop_toTopOf="@+id/btn_version" />
-
-    <Button
-        android:id="@+id/btn_unregister"
-        style="@style/basicText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/button_transparent_underline"
-        android:gravity="start|center_vertical"
-        android:text="💔 계정 삭제"
-        app:layout_constraintEnd_toEndOf="@+id/profileLayout"
-        app:layout_constraintStart_toStartOf="@+id/profileLayout"
-        app:layout_constraintTop_toBottomOf="@+id/btn_version" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

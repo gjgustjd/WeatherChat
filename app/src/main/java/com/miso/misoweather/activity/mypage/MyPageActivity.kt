@@ -10,13 +10,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.kakao.sdk.user.UserApiClient
+import com.miso.misoweather.R
 import com.miso.misoweather.activity.home.HomeActivity
 import com.miso.misoweather.activity.login.LoginActivity
 import com.miso.misoweather.dialog.GeneralConfirmDialog
 import com.miso.misoweather.common.MisoActivity
-import com.miso.misoweather.databinding.ActivityMypageBinding
 import com.miso.misoweather.model.dto.LoginRequestDto
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -26,103 +27,56 @@ import java.lang.Exception
 @RequiresApi(Build.VERSION_CODES.O)
 class MyPageActivity : MisoActivity() {
     private val viewModel: MyPageViewModel by viewModels()
-    private lateinit var binding: ActivityMypageBinding
-    private lateinit var btn_back: ImageButton
-    private lateinit var btn_logout: Button
-    private lateinit var btn_unregister: Button
-    private lateinit var btn_version: Button
-    private lateinit var txt_version: TextView
-    private lateinit var txt_emoji: TextView
-    private lateinit var txt_nickname: TextView
+    private lateinit var binding: com.miso.misoweather.databinding.ActivityMypageBinding
+    lateinit var versionString: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMypageBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        initializeView()
-        setupObservers()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_mypage)
+        versionString = this.packageManager.getPackageInfo(this.packageName, 0).versionName
+        binding.lifecycleOwner = this
+        binding.activity = this
+        binding.viewModel = viewModel
     }
 
-    private fun getVersionString(): String {
-        return this.packageManager.getPackageInfo(this.packageName, 0).versionName
+    fun showVersionDialog() {
+        val dialog = GeneralConfirmDialog(
+            this,
+            null,
+            "버전 ${versionString}\n\n" + "\uD83D\uDC65만든이\n" +
+                    "-\uD83E\uDD16안드로이드 개발: 허현성\n" +
+                    "-\uD83C\uDF4EiOS 개발: 허지인,강경훈\n" +
+                    "-\uD83D\uDCE6서버 개발: 강승연\n" +
+                    "-\uD83C\uDFA8UI/UX 디자인: 정한나",
+            "확인",
+            0.8f,
+            0.4f
+        )
+        dialog.show(supportFragmentManager, "generalConfirmDialog")
     }
 
-    private fun setupObservers() {
-        viewModel.emoji.observe(this)
-        {
-            txt_emoji.text = it
-        }
-        viewModel.nickname.observe(this)
-        {
-            setNickNameText()
-        }
-        viewModel.bigScaleRegion.observe(this)
-        {
-            setNickNameText()
-        }
+    fun showUnRegisterDialog() {
+        val dialog = GeneralConfirmDialog(
+            this,
+            {
+                unregister()
+            },
+            "정말로 계정을 삭제할까요? \uD83D\uDE22",
+            "삭제"
+        )
+        dialog.show(supportFragmentManager, "generalConfirmDialog")
     }
 
-    private fun setNickNameText() {
-        if (viewModel.nickname.value != null && viewModel.bigScaleRegion.value != null)
-            txt_nickname.text =
-                "${getBigShortScale(viewModel.bigScaleRegion.value!!)}의 ${viewModel.nickname.value}"
-    }
-
-
-    private fun initializeView() {
-        btn_back = binding.imgbtnBack
-        btn_logout = binding.btnLogout
-        btn_unregister = binding.btnUnregister
-        btn_version = binding.btnVersion
-        txt_version = binding.txtVersion
-        txt_emoji = binding.txtEmoji
-        txt_nickname = binding.txtNickname
-        txt_version.text = getVersionString()
-
-        btn_version.setOnClickListener()
-        {
-            val dialog = GeneralConfirmDialog(
-                this,
-                null,
-                "버전 ${getVersionString()}\n\n" + "\uD83D\uDC65만든이\n" +
-                        "-\uD83E\uDD16안드로이드 개발: 허현성\n" +
-                        "-\uD83C\uDF4EiOS 개발: 허지인,강경훈\n" +
-                        "-\uD83D\uDCE6서버 개발: 강승연\n" +
-                        "-\uD83C\uDFA8UI/UX 디자인: 정한나",
-                "확인",
-                0.8f,
-                0.4f
-            )
-            dialog.show(supportFragmentManager, "generalConfirmDialog")
-        }
-        btn_back.setOnClickListener()
-        {
-            doBack()
-        }
-        btn_unregister.setOnClickListener()
-        {
-            val dialog = GeneralConfirmDialog(
-                this,
-                {
-                    unregister()
-                },
-                "정말로 계정을 삭제할까요? \uD83D\uDE22",
-                "삭제"
-            )
-            dialog.show(supportFragmentManager, "generalConfirmDialog")
-        }
-        btn_logout.setOnClickListener()
-        {
-            val dialog = GeneralConfirmDialog(
-                this,
-                {
-                    logout()
-                },
-                "로그아웃 하시겠습니까? \uD83D\uDD13",
-                "로그아웃"
-            )
-            dialog.show(supportFragmentManager, "generalConfirmDialog")
-        }
+    fun showLogoutDialog() {
+        val dialog = GeneralConfirmDialog(
+            this,
+            {
+                logout()
+            },
+            "로그아웃 하시겠습니까? \uD83D\uDD13",
+            "로그아웃"
+        )
+        dialog.show(supportFragmentManager, "generalConfirmDialog")
     }
 
     private fun makeLoginRequestDto(): LoginRequestDto {
@@ -150,11 +104,11 @@ class MyPageActivity : MisoActivity() {
             viewModel.unRegister(makeLoginRequestDto())
             {
                 try {
+                    goToLoginActivity()
+
                     if (it.isSuccessful) {
-                        goToLoginActivity()
                         Log.i("unregister", "성공")
                     } else {
-                        goToLoginActivity()
                         throw Exception(it.errorBody()!!.source().toString())
                     }
                 } catch (e: Exception) {
