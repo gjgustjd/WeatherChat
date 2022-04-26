@@ -15,6 +15,7 @@
 .cxx
 local.properties
 /.idea
+.idea/
 .apk
 /app/release/
 *.jks
