@@ -1,164 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/itemView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/txt_day"
-        style="@style/basicText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:autoText="false"
-        android:gravity="center"
-        android:maxLines="1"
-        android:singleLine="false"
-        android:text="오늘"
-        android:textSize="12dp"
-        android:textStyle="bold"
-        app:autoSizeMinTextSize="3dp"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/margin_day"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.1" />
+    <data>
+
+        <variable
+            name="forecast"
+            type="com.miso.misoweather.model.dto.forecast.daily.DailyForecast" />
+
+        <variable
+            name="position"
+            type="Integer" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/margin_day"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toStartOf="@id/txt_date"
-        app:layout_constraintStart_toEndOf="@id/txt_day"
-        app:layout_constraintWidth_percent="0.05"
-        tools:layout_editor_absoluteY="19dp">
+        android:id="@+id/itemView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_day"
+            style="@style/basicText"
+            forecastOnDayday="@{forecast}"
+            position="@{position}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:autoText="false"
+            android:gravity="center"
+            android:maxLines="1"
+            android:singleLine="false"
+            android:text="오늘"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            app:autoSizeMinTextSize="3dp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/margin_day"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.1" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/margin_day"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toStartOf="@id/txt_date"
+            app:layout_constraintStart_toEndOf="@id/txt_day"
+            app:layout_constraintWidth_percent="0.05"
+            tools:layout_editor_absoluteY="19dp">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/txt_date"
+            style="@style/basicText"
+            forecastOnDaytime="@{forecast}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:autoText="false"
+            android:maxLines="1"
+            android:singleLine="false"
+            android:text="12/31"
+            android:textSize="12dp"
+            app:autoSizeMinTextSize="3dp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/margin_day"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.15" />
+
+        <TextView
+            android:id="@+id/txt_weather_emoji"
+            style="@style/basicText"
+            forecastOnDayemoji="@{forecast}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:singleLine="false"
+            android:textSize="12dp"
+            app:autoSizeMinTextSize="3dp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/margin_center"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/txt_date"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.05" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/margin_center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="@id/txt_weather_emoji"
+            app:layout_constraintEnd_toStartOf="@id/txt_pop_emoji"
+            app:layout_constraintStart_toEndOf="@id/txt_weather_emoji"
+            app:layout_constraintTop_toTopOf="@id/txt_weather_emoji"
+            app:layout_constraintWidth_percent="0.05">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/txt_pop_emoji"
+            style="@style/basicText"
+            forecastOnDaypopEmoji="@{forecast}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/txt_pop_degree"
+            app:layout_constraintStart_toEndOf="@id/margin_center"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_pop_degree"
+            style="@style/basicText"
+            forecastOnDaypopDegree="@{forecast}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center|end"
+            android:maxLines="1"
+            android:singleLine="false"
+            android:textSize="12dp"
+            app:autoSizeMinTextSize="3dp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/txt_degree_min"
+            app:layout_constraintStart_toEndOf="@+id/txt_pop_emoji"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.12" />
+
+        <TextView
+            android:id="@+id/txt_degree_min"
+            style="@style/basicText"
+            forecastOnDaydegreeMin="@{forecast}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:singleLine="false"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            app:autoSizeMinTextSize="3dp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_day"
+            app:layout_constraintEnd_toStartOf="@id/txt_degree_max"
+            app:layout_constraintTop_toTopOf="@+id/txt_day"
+            app:layout_constraintWidth_percent="0.1" />
+
+        <TextView
+            android:id="@+id/txt_degree_max"
+            style="@style/basicText"
+            forecastOnDaydegreeMax="@{forecast}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:singleLine="false"
+            android:text="0"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            app:autoSizeMinTextSize="3dp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_day"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txt_day"
+            app:layout_constraintWidth_percent="0.1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/txt_date"
-        style="@style/basicText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:autoText="false"
-        android:maxLines="1"
-        android:singleLine="false"
-        android:text="12/31"
-        android:textSize="12dp"
-        app:autoSizeMinTextSize="3dp"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/margin_day"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.15" />
-
-    <TextView
-        android:id="@+id/txt_weather_emoji"
-        style="@style/basicText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:maxLines="1"
-        android:singleLine="false"
-        android:textSize="12dp"
-        app:autoSizeMinTextSize="3dp"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/margin_center"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toEndOf="@+id/txt_date"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.05" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/margin_center"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="@id/txt_weather_emoji"
-        app:layout_constraintEnd_toStartOf="@id/txt_pop_emoji"
-        app:layout_constraintStart_toEndOf="@id/txt_weather_emoji"
-        app:layout_constraintTop_toTopOf="@id/txt_weather_emoji"
-        app:layout_constraintWidth_percent="0.05">
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/txt_pop_emoji"
-        style="@style/basicText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:singleLine="true"
-        android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/txt_pop_degree"
-        app:layout_constraintStart_toEndOf="@id/margin_center"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/txt_pop_degree"
-        style="@style/basicText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:gravity="center|end"
-        android:maxLines="1"
-        android:singleLine="false"
-        android:textSize="12dp"
-        app:autoSizeMinTextSize="3dp"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/txt_degree_min"
-        app:layout_constraintStart_toEndOf="@+id/txt_pop_emoji"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.12" />
-
-    <TextView
-        android:id="@+id/txt_degree_min"
-        style="@style/basicText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:maxLines="1"
-        android:singleLine="false"
-        android:text="0"
-        android:textSize="12dp"
-        android:textStyle="bold"
-        app:autoSizeMinTextSize="3dp"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toBottomOf="@+id/txt_day"
-        app:layout_constraintEnd_toStartOf="@id/txt_degree_max"
-        app:layout_constraintTop_toTopOf="@+id/txt_day"
-        app:layout_constraintWidth_percent="0.1" />
-
-    <TextView
-        android:id="@+id/txt_degree_max"
-        style="@style/basicText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:maxLines="1"
-        android:singleLine="false"
-        android:text="0"
-        android:textSize="12dp"
-        android:textStyle="bold"
-        app:autoSizeMinTextSize="3dp"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toBottomOf="@+id/txt_day"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/txt_day"
-        app:layout_constraintWidth_percent="0.1" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
