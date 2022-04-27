@@ -1,10 +1,12 @@
 package com.miso.misoweather.activity.selectTown
 
-import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
 import com.miso.misoweather.model.dto.Region
 import android.os.Build
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -78,7 +80,7 @@ object SelectTownBindingAdapter {
             try {
                 val recyclerData =
                     data as List<Region>
-                val recyclerAdapter = RecyclerTownsAdapter(view.context, recyclerData)
+                val recyclerAdapter = RecyclerAreaAdapter(activity!!,recyclerData)
                 view.apply {
                     adapter = recyclerAdapter
                     layoutManager = LinearLayoutManager(context)
@@ -98,7 +100,7 @@ object SelectTownBindingAdapter {
             try {
                 val recyclerData =
                     data as List<Region>
-                val recyclerAdapter = RecyclerAreaAdapter(recyclerData)
+                val recyclerAdapter = RecyclerAreaAdapter(activity!!,recyclerData)
                 view.apply {
                     adapter = recyclerAdapter
                     layoutManager = LinearLayoutManager(context)
@@ -131,6 +133,4 @@ object SelectTownBindingAdapter {
             }
         }
     }
-
-
 }

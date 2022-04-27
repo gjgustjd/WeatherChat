@@ -20,6 +20,7 @@ import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.activity.getnickname.SelectNickNameActivity
 import com.miso.misoweather.activity.home.HomeActivity
+import com.miso.misoweather.activity.selectArea.RecyclerAreaAdapter
 import com.miso.misoweather.model.dto.regionListResponse.RegionListResponseDto
 import com.miso.misoweather.model.dto.Region
 import com.miso.misoweather.activity.selectArea.SelectAreaActivity
@@ -61,7 +62,7 @@ class SelectTownActivity : RegionActivity() {
     override fun goToNextActivity() {
         super.goToNextActivity()
         try {
-            val adapter = binding.recyclerTowns.adapter as RecyclerTownsAdapter
+            val adapter = binding.recyclerTowns.adapter as RecyclerAreaAdapter
             val selectedRegion = adapter.getSelectedItem()
             val midScaleRegion = selectedRegion.midScale
             viewModel.addRegionPreferences(selectedRegion)
@@ -92,7 +93,7 @@ class SelectTownActivity : RegionActivity() {
         }
     }
 
-    private fun changeRegion(adapter: RecyclerTownsAdapter) {
+    private fun changeRegion(adapter: RecyclerAreaAdapter) {
         val currentItem = adapter.getSelectedItem()
         lifecycleScope.launch {
             viewModel.updateRegion(
