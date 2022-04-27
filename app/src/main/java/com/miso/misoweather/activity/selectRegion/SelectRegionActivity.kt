@@ -3,17 +3,11 @@ package com.miso.misoweather.activity.selectRegion
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.miso.misoweather.R
 import com.miso.misoweather.activity.home.HomeActivity
-import com.miso.misoweather.common.VerticalSpaceItemDecoration
-import com.miso.misoweather.common.MisoActivity
 import com.miso.misoweather.databinding.ActivitySelectRegionBinding
 import com.miso.misoweather.activity.login.LoginActivity
 import com.miso.misoweather.activity.selectTown.SelectTownActivity
@@ -45,7 +39,7 @@ class SelectRegionActivity : RegionActivity() {
         super.goToNextActivity()
         try {
             val gridAdapter = binding.gridRegions.adapter as RecyclerRegionsAdapter
-            if (gridAdapter.selectedIndex == -1) Toast.makeText(
+            if (gridAdapter.selectedIndex.value == -1) Toast.makeText(
                 this,
                 "지역을 선택해 주세요",
                 Toast.LENGTH_SHORT

@@ -34,6 +34,16 @@ object SelectAreaBindingAdapter {
         }
     }
 
+    @BindingAdapter("regionLayoutParams")
+    @JvmStatic
+    fun setRegionLayoutParams(view: View, isSet: Boolean) {
+        if (isSet) {
+            val layoutParams = view.layoutParams
+            layoutParams.height = 100
+            view.requestLayout()
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.M)
     @BindingAdapter("isAreaSelected")
     @JvmStatic
@@ -45,6 +55,32 @@ object SelectAreaBindingAdapter {
             } else {
                 setTextColor(Color.BLACK)
                 setTypeface(null, Typeface.NORMAL)
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    @BindingAdapter("isRegionSelected")
+    @JvmStatic
+    fun applyRegionSelection(view: TextView, isSelected: Boolean) {
+        view.apply {
+            if (isSelected) {
+                view.setTextColor(Color.WHITE)
+            } else {
+                view.setTextColor(context.resources.getColor(R.color.black, null))
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    @BindingAdapter("isRegionSelected")
+    @JvmStatic
+    fun applyRegionSelection(view: View, isSelected: Boolean) {
+        view.apply {
+            if (isSelected) {
+                view.setBackgroundResource(R.drawable.grid_region_background_purple)
+            } else {
+                view.setBackgroundResource(R.drawable.grid_region_background)
             }
         }
     }

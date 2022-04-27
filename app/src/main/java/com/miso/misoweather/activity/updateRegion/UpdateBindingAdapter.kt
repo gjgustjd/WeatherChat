@@ -10,7 +10,6 @@ import com.miso.misoweather.R
 import com.miso.misoweather.activity.selectRegion.RecyclerRegionsAdapter
 import com.miso.misoweather.activity.selectRegion.RegionItem
 import com.miso.misoweather.common.VerticalSpaceItemDecoration
-import javax.inject.Inject
 
 object UpdateBindingAdapter {
 
@@ -34,10 +33,10 @@ object UpdateBindingAdapter {
         }
 
         val context = view.context
-        val adapter = RecyclerRegionsAdapter(context, getRegionItems(context))
+        val adapter = RecyclerRegionsAdapter(activity, getRegionItems(context))
         val layoutManager = GridLayoutManager(context, 4)
         val regionList = context.resources.getStringArray(R.array.regions)
-        adapter.selectedIndex = regionList.indexOf(activity.currentRegion)
+        adapter.selectedIndex.value = regionList.indexOf(activity.currentRegion)
         view.adapter = adapter
         view.layoutManager = layoutManager
         view.addItemDecoration(VerticalSpaceItemDecoration(30))
