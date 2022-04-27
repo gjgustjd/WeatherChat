@@ -1,92 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="activity"
+            type="com.miso.misoweather.activity.chatmain.ChatMainActivity" />
+
+        <variable
+            name="fragment"
+            type="com.miso.misoweather.fragment.commentFragment.CommentsFragment" />
+
+        <variable
+            name="viewModel"
+            type="com.miso.misoweather.activity.chatmain.ChatMainViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/myCommentLayout"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:background="@drawable/unit_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <EditText
-            android:id="@+id/edt_comment"
-            style="@style/basicText"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:background="@android:color/transparent"
-            android:backgroundTint="@color/primaryPurple"
-            android:gravity="start|top"
-            android:hint="오늘 날씨에 대한 \n유쾌한 막내사자님의 느낌은 어떠신가요?"
-            android:maxLength="40"
-            android:textColorHighlight="@color/purple_100"
-            android:textColorLink="@color/primaryPurple"
-            android:textCursorDrawable="@drawable/text_cursor_purple"
-            android:textSize="14dp"
-            android:theme="@style/editTextColoredHandle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.55"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/divider"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="@color/dividerDefault"
-            app:layout_constraintBottom_toBottomOf="@+id/edt_comment"
-            app:layout_constraintEnd_toEndOf="@+id/edt_comment"
-            app:layout_constraintStart_toStartOf="@+id/edt_comment"
-            app:layout_constraintTop_toBottomOf="@+id/edt_comment">
+            android:id="@+id/myCommentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:background="@drawable/unit_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <EditText
+                android:id="@+id/edt_comment"
+                style="@style/basicText"
+                commentHint="@{fragment}"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@android:color/transparent"
+                android:backgroundTint="@color/primaryPurple"
+                android:gravity="start|top"
+                android:hint="오늘 날씨에 대한 \n유쾌한 막내사자님의 느낌은 어떠신가요?"
+                android:maxLength="40"
+                android:textColorHighlight="@color/purple_100"
+                android:textColorLink="@color/primaryPurple"
+                android:textCursorDrawable="@drawable/text_cursor_purple"
+                android:textSize="14dp"
+                android:theme="@style/editTextColoredHandle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.55"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/divider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/dividerDefault"
+                app:layout_constraintBottom_toBottomOf="@+id/edt_comment"
+                app:layout_constraintEnd_toEndOf="@+id/edt_comment"
+                app:layout_constraintStart_toStartOf="@+id/edt_comment"
+                app:layout_constraintTop_toBottomOf="@+id/edt_comment">
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/btn_submit"
+                style="@style/boldWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/toggle_track_background_purple"
+                android:onClick="@{()->fragment.addComent()}"
+                android:text="공유하기"
+                android:textSize="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/edt_comment"
+                app:layout_constraintTop_toBottomOf="@+id/edt_comment" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
-            android:id="@+id/btn_submit"
-            style="@style/boldWhite"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refreshLayout"
+            refreshAction="@{fragment}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/toggle_track_background_purple"
-            android:text="공유하기"
-            android:textSize="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/edt_comment"
-            app:layout_constraintTop_toBottomOf="@+id/edt_comment" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refreshLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myCommentLayout">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerChat"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            tools:listitem="@layout/list_item_chat">
+            app:layout_constraintTop_toBottomOf="@+id/myCommentLayout">
 
-        </androidx.recyclerview.widget.RecyclerView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerChat"
+                commentRecycler="@{fragment.commentListResponseDto}"
+                lifecycleOwner="@{activity}"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"
+                tools:listitem="@layout/list_item_chat">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.recyclerview.widget.RecyclerView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -23,7 +23,7 @@ import javax.inject.Inject
 @RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
 class ChatMainActivity : MisoActivity() {
-    private val viewModel: ChatMainViewModel by viewModels()
+    val viewModel: ChatMainViewModel by viewModels()
 
     @Inject
     lateinit var surveyFragment: SurveyFragment

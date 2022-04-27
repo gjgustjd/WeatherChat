@@ -5,17 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miso.misoweather.R
-import com.miso.misoweather.model.dto.commentList.CommentListResponseDto
+import com.miso.misoweather.model.DataStoreManager
+import com.miso.misoweather.model.MisoRepository
 import com.miso.misoweather.model.dto.CommentRegisterRequestDto
 import com.miso.misoweather.model.dto.GeneralResponseDto
+import com.miso.misoweather.model.dto.commentList.Comment
+import com.miso.misoweather.model.dto.commentList.CommentListResponseDto
 import com.miso.misoweather.model.dto.surveyMyAnswer.SurveyMyAnswerDto
 import com.miso.misoweather.model.dto.surveyMyAnswer.SurveyMyAnswerResponseDto
 import com.miso.misoweather.model.dto.surveyResponse.SurveyAnswerDto
 import com.miso.misoweather.model.dto.surveyResultResponse.SurveyResultResponseDto
-import com.miso.misoweather.model.DataStoreManager
-import com.miso.misoweather.model.MisoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -32,16 +34,22 @@ class ChatMainViewModel @Inject constructor(private val repository: MisoReposito
     val nickname by lazy {
         repository.dataStoreManager.getPreference(DataStoreManager.NICKNAME)
     }
-
     val misoToken by lazy { repository.dataStoreManager.getPreference(DataStoreManager.MISO_TOKEN) }
 
     private lateinit var surveyQuestions: Array<String>
+    val commentList = MutableLiveData<List<Comment>>()
 
     suspend fun getCommentList(
         commentId: Int?,
         size: Int,
-        action: (response: Response<CommentListResponseDto>) -> Unit
-    ) = action(repository.getCommentList(commentId, size))
+        action: ((response: Response<CommentListResponseDto>) -> Unit)? = null
+    ) = withContext(viewModelScope.coroutineContext) {
+        val response = repository.getCommentList(commentId, size)
+        action?.let {
+            it(response)
+        }
+        response
+    }
 
     fun removeSurveyRegion() {
         repository.dataStoreManager.removePreference(DataStoreManager.SURVEY_REGION)
